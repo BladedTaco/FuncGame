@@ -42,16 +42,6 @@ public:
 	UPROPERTY()
 	class AHonoursProjBlockGrid* OwningGrid;
 
-	/** Handle the block being clicked */
-	UFUNCTION()
-	void BlockClicked(UPrimitiveComponent* ClickedComp, FKey ButtonClicked);
-
-	/** Handle the block being touched  */
-	UFUNCTION()
-	void OnFingerPressedBlock(ETouchIndex::Type FingerIndex, UPrimitiveComponent* TouchedComponent);
-
-	void HandleClicked();
-
 	void Highlight(bool bOn);
 
 public:
@@ -62,10 +52,9 @@ public:
 
 	FVector MousePos();
 	void Tick(float DeltaSeconds);
-	void ClickStart();
-	void ClickEnd(UPrimitiveComponent* ClickedComp, FKey ButtonClicked);
+	virtual void HandleClick(UPrimitiveComponent* ClickedComponent);
+	virtual void HandleRClick(UPrimitiveComponent* ClickedComponent);
 
-	bool drag = false;
 	FVector clickOffset = FVector::ZeroVector;
 };
 

@@ -37,10 +37,6 @@ AHonoursProjBlock::AHonoursProjBlock() {
 	BlockMesh->SetMaterial(0, ConstructorStatics.BlueMaterial.Get());
 	BlockMesh->SetupAttachment(DummyRoot);
 
-	BlockMesh->OnInputTouchBegin.AddDynamic(this, &AHonoursProjBlock::OnFingerPressedBlock);
-	BlockMesh->OnClicked.AddDynamic(this, &AHonoursProjBlock::BlockClicked);
-
-
 	// Save a pointer to the orange material
 	BaseMaterial = ConstructorStatics.BaseMaterial.Get();
 	BlueMaterial = ConstructorStatics.BlueMaterial.Get();
@@ -50,68 +46,39 @@ AHonoursProjBlock::AHonoursProjBlock() {
 	SetActorTickEnabled(true);
 }
 
-void AHonoursProjBlock::BlockClicked(UPrimitiveComponent* ClickedComp, FKey ButtonClicked) {
-	UE_LOG(LogTemp, Warning, TEXT("Click"));
-
-	ClickStart();
-	HandleClicked();
-}
-
-
-void AHonoursProjBlock::OnFingerPressedBlock(ETouchIndex::Type FingerIndex, UPrimitiveComponent* TouchedComponent) {
-	UE_LOG(LogTemp, Warning, TEXT("Finger"));
-	ClickStart();
-	HandleClicked();
-}
 
 FVector AHonoursProjBlock::MousePos() {
-	float x, y;
-	auto playerCon = GetWorld()->GetFirstPlayerController<AHonoursProjPlayerController>();
-	playerCon->GetMousePosition(x, y);
 	FVector worldPos, worldDir;
-	UGameplayStatics::DeprojectScreenToWorld(playerCon, FVector2D(x, y), worldPos, worldDir);
+	auto playerCon = GetWorld()->GetFirstPlayerController<AHonoursProjPlayerController>();
+	playerCon->DeprojectMousePositionToWorld(worldPos, worldDir);
 	return worldPos;
 }
 
 void AHonoursProjBlock::Tick(float DeltaSeconds) {
-	if (drag) {
+	if (bIsActive) {
 		SetActorLocation(MousePos() - clickOffset);
-	} else {
-		SetActorLocation(GetActorLocation() + FVector(DeltaSeconds, 0, 0));
 	}
 }
 
 
-void AHonoursProjBlock::ClickStart() {
-	if ((drag = !drag, drag)) {
+void AHonoursProjBlock::HandleClick(UPrimitiveComponent* ClickedComponent) {
+	bIsActive = !bIsActive;
+	if (bIsActive) {
 		clickOffset = MousePos() - GetActorLocation();
-	}
-}
-
-void AHonoursProjBlock::ClickEnd(UPrimitiveComponent* ClickedComp, FKey ButtonClicked) {
-	UE_LOG(LogTemp, Warning, TEXT("End"));
-	drag = false;
-}
-
-
-
-void AHonoursProjBlock::HandleClicked() {
-	// Check we are not already active
-	if (!bIsActive) {
-		bIsActive = true;
-
 		// Change material
 		BlockMesh->SetMaterial(0, OrangeMaterial);
-
-		// Tell the Grid
-		if (OwningGrid != nullptr) {
-			OwningGrid->AddScore();
-		}
 	} else {
-		bIsActive = false;
+		// Change material
 		BlockMesh->SetMaterial(0, BlueMaterial);
 	}
 }
+
+void AHonoursProjBlock::HandleRClick(UPrimitiveComponent* ClickedComponent) {
+	if (ClickedComponent == BlockMesh) {
+		Destroy();
+	}
+}
+
 
 void AHonoursProjBlock::Highlight(bool bOn) {
 	// Do not highlight if the block has already been activated.

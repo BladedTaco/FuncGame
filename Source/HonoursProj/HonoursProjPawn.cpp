@@ -20,22 +20,10 @@ void AHonoursProjPawn::Tick(float DeltaSeconds)
 
 	if (APlayerController* PC = Cast<APlayerController>(GetController()))
 	{
-		if (UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled())
-		{
-			if (UCameraComponent* OurCamera = PC->GetViewTarget()->FindComponentByClass<UCameraComponent>())
-			{
-				FVector Start = OurCamera->GetComponentLocation();
-				FVector End = Start + (OurCamera->GetComponentRotation().Vector() * 8000.0f);
-				TraceForBlock(Start, End, true);
-			}
-		}
-		else
-		{
-			FVector Start, Dir, End;
-			PC->DeprojectMousePositionToWorld(Start, Dir);
-			End = Start + (Dir * 8000.0f);
-			TraceForBlock(Start, End, false);
-		}
+		FVector Start, Dir, End;
+		PC->DeprojectMousePositionToWorld(Start, Dir);
+		End = Start + (Dir * 8000.0f);
+		TraceForBlock(Start, End, false);
 	}
 }
 
@@ -43,8 +31,13 @@ void AHonoursProjPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAction("ResetVR", EInputEvent::IE_Pressed, this, &AHonoursProjPawn::OnResetVR);
-	PlayerInputComponent->BindAction("TriggerClick", EInputEvent::IE_Pressed, this, &AHonoursProjPawn::TriggerClick);
+	PlayerInputComponent->BindAction("LClick", EInputEvent::IE_Pressed, this, &AHonoursProjPawn::OnLClickPress);
+	PlayerInputComponent->BindAction("LClick", EInputEvent::IE_Released, this, &AHonoursProjPawn::OnLClickRelease);
+
+	PlayerInputComponent->BindAction("RClick", EInputEvent::IE_Pressed, this, &AHonoursProjPawn::OnRClickPress);
+	PlayerInputComponent->BindAction("RClick", EInputEvent::IE_Released, this, &AHonoursProjPawn::OnRClickRelease);
+
+	PlayerInputComponent->BindAxis("Scroll", this, &AHonoursProjPawn::OnScroll);
 }
 
 void AHonoursProjPawn::CalcCamera(float DeltaTime, struct FMinimalViewInfo& OutResult)
@@ -54,23 +47,45 @@ void AHonoursProjPawn::CalcCamera(float DeltaTime, struct FMinimalViewInfo& OutR
 	OutResult.Rotation = FRotator(-90.0f, -90.0f, 0.0f);
 }
 
-void AHonoursProjPawn::OnResetVR()
-{
-	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
+
+void AHonoursProjPawn::OnLClickPress() {
+	UE_LOG(LogTemp, Warning, TEXT("L Click Down"));
+	// Valid Block and Component
+	if (CurrentBlockFocus && CurrentComponentFocus.IsValid()) {
+		// Dispatch Click
+		CurrentBlockFocus->HandleClick(CurrentComponentFocus.Get());
+	}
+}
+void AHonoursProjPawn::OnLClickRelease() {
+	UE_LOG(LogTemp, Warning, TEXT("L Click Up"));
+}
+void AHonoursProjPawn::OnRClickPress(){
+	UE_LOG(LogTemp, Warning, TEXT("R Click Down"));
+	// Valid Block and Component
+	if (CurrentBlockFocus && CurrentComponentFocus.IsValid()) {
+		// Dispatch Click
+		CurrentBlockFocus->HandleRClick(CurrentComponentFocus.Get());
+	}
+}
+void AHonoursProjPawn::OnRClickRelease(){
+	UE_LOG(LogTemp, Warning, TEXT("R Click Up"));
+
 }
 
-void AHonoursProjPawn::TriggerClick()
-{
-	if (CurrentBlockFocus)
-	{
-		CurrentBlockFocus->HandleClicked();
-	}
+void AHonoursProjPawn::OnScroll(float axis) {
+	if (-0.01 < axis && axis < 0.01) { return; }
+	UE_LOG(LogTemp, Warning, TEXT("Scroll %f"), axis);
+
+	AActor* camera = GetWorld()->GetFirstPlayerController()->PlayerCameraManager;
+	camera->SetActorLocation(camera->GetActorLocation() + FVector(axis * 100, 0, 0));
+
 }
 
 void AHonoursProjPawn::TraceForBlock(const FVector& Start, const FVector& End, bool bDrawDebugHelpers)
 {
 	FHitResult HitResult;
 	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility);
+	
 	if (bDrawDebugHelpers)
 	{
 		DrawDebugLine(GetWorld(), Start, HitResult.Location, FColor::Red);
@@ -79,6 +94,7 @@ void AHonoursProjPawn::TraceForBlock(const FVector& Start, const FVector& End, b
 	if (HitResult.Actor.IsValid())
 	{
 		AHonoursProjBlock* HitBlock = Cast<AHonoursProjBlock>(HitResult.Actor.Get());
+		CurrentComponentFocus = HitResult.Component;
 		if (CurrentBlockFocus != HitBlock)
 		{
 			if (CurrentBlockFocus)

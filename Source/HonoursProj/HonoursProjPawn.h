@@ -20,10 +20,19 @@ public:
 	virtual void CalcCamera(float DeltaTime, struct FMinimalViewInfo& OutResult) override;
 
 protected:
-	void OnResetVR();
-	void TriggerClick();
 	void TraceForBlock(const FVector& Start, const FVector& End, bool bDrawDebugHelpers);
+
+	void OnLClickPress();
+	void OnLClickRelease();
+
+	void OnRClickPress();
+	void OnRClickRelease();
+
+	void OnScroll(float axis);
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite)
 	class AHonoursProjBlock* CurrentBlockFocus;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite)
+	TWeakObjectPtr<UPrimitiveComponent> CurrentComponentFocus;
 };
