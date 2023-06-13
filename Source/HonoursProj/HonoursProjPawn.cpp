@@ -49,7 +49,6 @@ void AHonoursProjPawn::CalcCamera(float DeltaTime, struct FMinimalViewInfo& OutR
 
 
 void AHonoursProjPawn::OnLClickPress() {
-	UE_LOG(LogTemp, Warning, TEXT("L Click Down"));
 	// Valid Block and Component
 	if (CurrentBlockFocus && CurrentComponentFocus.IsValid()) {
 		// Dispatch Click
@@ -57,10 +56,9 @@ void AHonoursProjPawn::OnLClickPress() {
 	}
 }
 void AHonoursProjPawn::OnLClickRelease() {
-	UE_LOG(LogTemp, Warning, TEXT("L Click Up"));
+	OnLClickPress();
 }
 void AHonoursProjPawn::OnRClickPress(){
-	UE_LOG(LogTemp, Warning, TEXT("R Click Down"));
 	// Valid Block and Component
 	if (CurrentBlockFocus && CurrentComponentFocus.IsValid()) {
 		// Dispatch Click
@@ -68,16 +66,21 @@ void AHonoursProjPawn::OnRClickPress(){
 	}
 }
 void AHonoursProjPawn::OnRClickRelease(){
-	UE_LOG(LogTemp, Warning, TEXT("R Click Up"));
-
 }
 
 void AHonoursProjPawn::OnScroll(float axis) {
 	if (-0.01 < axis && axis < 0.01) { return; }
 	UE_LOG(LogTemp, Warning, TEXT("Scroll %f"), axis);
 
-	AActor* camera = GetWorld()->GetFirstPlayerController()->PlayerCameraManager;
+	//SetActorLocation(GetActorLocation() + FVector(axis * 100, 0, 0));
+
+	//APlayerCameraManager* camera = GetWorld()->GetFirstPlayerController()->PlayerCameraManager;
+
+	AActor* camera = GetWorld()->GetFirstPlayerController()->GetViewTarget();
+
 	camera->SetActorLocation(camera->GetActorLocation() + FVector(axis * 100, 0, 0));
+
+	
 
 }
 

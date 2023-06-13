@@ -12,3 +12,7 @@ void ABlockDuplicate::HandleClick(UPrimitiveComponent* ClickedComponent) {
 	// Dispatch its Click Event
 	newBlock->HandleClick(NULL);
 }
+
+void ABlockDuplicate::HandleRClick(UPrimitiveComponent* ClickedComponent) {
+	Super::HandleClick(ClickedComponent);
+}

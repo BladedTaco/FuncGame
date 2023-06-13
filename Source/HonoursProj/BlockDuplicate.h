@@ -20,4 +20,5 @@ public:
 	TSubclassOf<AHonoursProjBlock> BlockClass;
 
 	virtual void HandleClick(UPrimitiveComponent* ClickedComponent) override;
+	virtual void HandleRClick(UPrimitiveComponent* ClickedComponent) override;
 };
