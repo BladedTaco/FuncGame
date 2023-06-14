@@ -17,10 +17,12 @@ AFunctionConnector::AFunctionConnector() {
 	// Structure to hold one-time initialization
 	struct FConstructorStatics {
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> PlaneMesh;
-		ConstructorHelpers::FObjectFinderOptional<UMaterial> BaseMaterial;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> CylinderMesh;
+		ConstructorHelpers::FObjectFinderOptional<UMaterial> LitMaterial;
 		FConstructorStatics()
 			: PlaneMesh(TEXT("/Game/Puzzle/Meshes/PuzzleCube.PuzzleCube"))
-			, BaseMaterial(TEXT("/Game/Puzzle/Meshes/BaseMaterial.BaseMaterial")) {}
+			, CylinderMesh(TEXT("/Game/MyContent/Meshes/Cylinder.Cylinder"))
+			, LitMaterial(TEXT("/Game/Puzzle/Meshes/BaseMaterial.BaseMaterial")) {}
 	};
 	static FConstructorStatics ConstructorStatics;
 
@@ -30,21 +32,58 @@ AFunctionConnector::AFunctionConnector() {
 	BlockMesh->SetStaticMesh(ConstructorStatics.PlaneMesh.Get());
 	BlockMesh->SetRelativeScale3D(FVector(0.2f, 0.2f, 0.1f));
 	BlockMesh->SetRelativeLocation(FVector(0.f, 0.f, 25.f));
-	BlockMesh->SetMaterial(0, ConstructorStatics.BaseMaterial.Get());
+	BlockMesh->SetMaterial(0, ConstructorStatics.LitMaterial.Get());
 
 	//RootComponent = BlockMesh;
 
+	// Create Connector
+	ConnectMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ConnectorMesh0"));
+	ConnectMesh->SetStaticMesh(ConstructorStatics.CylinderMesh.Get());
+	ConnectMesh->SetRelativeScale3D(FVector(0.2f, 0.2f, 0.1f));
+	ConnectMesh->SetRelativeLocation(FVector(0.f, 0.f, 25.f));
+	ConnectMesh->SetMaterial(0, UnlitMaterial);
+	ConnectMesh->SetVisibility(false);
+	ConnectMesh->AttachTo(RootComponent);
 }
+
+
+FTransform AFunctionConnector::Connect(FVector a, FVector b) {
+	return FTransform(
+		// rotated from Start towards End
+		FQuat((b - a).GetSafeNormal().RotateAngleAxis(90, FVector::UpVector), PI / 2),
+		// At the midway point
+		FVector(a + b) / 2 + FVector(0, 0, -a.Z),
+		// Scaled to reach both
+		FVector(0.1f, 0.1f, (b - a).Size() / 100.0f)
+	);
+}
+
+void AFunctionConnector::Tick(float DeltaSeconds) {
+	if (bIsActive) {
+		FVector me = GetActorLocation();
+		FVector mouse = MousePos();
+		me.Z = 0;
+		mouse.Z = 0;
+		ConnectMesh->SetRelativeTransform(Connect(FVector::ZeroVector, mouse - me));
+	} else if (connectedTo) {
+		FVector me = GetActorLocation();
+		FVector target = connectedTo->GetActorLocation();
+		me.Z = 0;
+		target.Z = 0;
+		ConnectMesh->SetRelativeTransform(Connect(me, target));
+	}
+}
+
 
 void AFunctionConnector::HandleClick(UPrimitiveComponent* ClickedComponent) {
 	bIsActive = !bIsActive;
 	if (bIsActive) {
+		ConnectMesh->SetVisibility(true);
 		clickOffset = MousePos() - GetActorLocation();
-		// Change material
-		GetBlockMesh()->SetMaterial(0, OrangeMaterial);
 	} else {
 		// Create Connections
 		TArray<AActor*> overlaps;
+		
 		GetOverlappingActors(overlaps, AFunctionConnector::StaticClass());
 
 		// Sort Candidate Connections so that closest is first
@@ -54,11 +93,13 @@ void AFunctionConnector::HandleClick(UPrimitiveComponent* ClickedComponent) {
 
 		// Give Connection
 		if (overlaps.IsValidIndex(0)) {
+			UE_LOG(LogTemp, Warning, TEXT("OVERLAP"));
 			connectedTo = Cast<AFunctionConnector>(overlaps[0]);
+		} else {
+			UE_LOG(LogTemp, Warning, TEXT("NO OVERLAP"));
+			ConnectMesh->SetVisibility(false);
 		}
 
-		// Change material
-		GetBlockMesh()->SetMaterial(0, BaseMaterial);
 	}
 }
 

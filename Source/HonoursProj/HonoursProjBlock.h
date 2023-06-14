@@ -28,15 +28,15 @@ public:
 
 	/** Pointer to white material used on the focused block */
 	UPROPERTY()
-	class UMaterial* BaseMaterial;
+	class UMaterial* LitMaterial;
 
 	/** Pointer to blue material used on inactive blocks */
 	UPROPERTY()
-	class UMaterialInstance* BlueMaterial;
+	class UMaterialInstance* UnlitMaterial;
 
 	/** Pointer to orange material used on active blocks */
 	UPROPERTY()
-	class UMaterialInstance* OrangeMaterial;
+	class UMaterialInstance* ActiveMaterial;
 
 	/** Grid that owns us */
 	UPROPERTY()

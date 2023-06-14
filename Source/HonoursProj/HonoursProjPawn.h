@@ -35,4 +35,7 @@ protected:
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite)
 	TWeakObjectPtr<UPrimitiveComponent> CurrentComponentFocus;
+
+	UPROPERTY(VisibleAnywhere)
+	TArray<AHonoursProjBlock*> SelectedBlocks;
 };

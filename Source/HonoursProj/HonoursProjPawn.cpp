@@ -52,12 +52,28 @@ void AHonoursProjPawn::OnLClickPress() {
 	// Valid Block and Component
 	if (CurrentBlockFocus && CurrentComponentFocus.IsValid()) {
 		// Dispatch Click
+		if (!SelectedBlocks.Contains(CurrentBlockFocus)) {
+			SelectedBlocks.Add(CurrentBlockFocus);
+		}
 		CurrentBlockFocus->HandleClick(CurrentComponentFocus.Get());
 	}
 }
+
 void AHonoursProjPawn::OnLClickRelease() {
-	OnLClickPress();
+	if (!CurrentComponentFocus.IsValid()) {
+		CurrentComponentFocus = NULL;
+	}
+
+	for (auto block : SelectedBlocks) {
+		// Dispatch Click
+		CurrentBlockFocus->HandleClick(CurrentComponentFocus.Get());
+	}
+	// Remove Inactive Blocks
+	SelectedBlocks.RemoveAll([](AHonoursProjBlock* block) {
+		return !block->bIsActive;
+	});
 }
+
 void AHonoursProjPawn::OnRClickPress(){
 	// Valid Block and Component
 	if (CurrentBlockFocus && CurrentComponentFocus.IsValid()) {
@@ -65,22 +81,15 @@ void AHonoursProjPawn::OnRClickPress(){
 		CurrentBlockFocus->HandleRClick(CurrentComponentFocus.Get());
 	}
 }
+
 void AHonoursProjPawn::OnRClickRelease(){
 }
 
 void AHonoursProjPawn::OnScroll(float axis) {
 	if (-0.01 < axis && axis < 0.01) { return; }
-	UE_LOG(LogTemp, Warning, TEXT("Scroll %f"), axis);
-
-	//SetActorLocation(GetActorLocation() + FVector(axis * 100, 0, 0));
-
-	//APlayerCameraManager* camera = GetWorld()->GetFirstPlayerController()->PlayerCameraManager;
 
 	AActor* camera = GetWorld()->GetFirstPlayerController()->GetViewTarget();
-
 	camera->SetActorLocation(camera->GetActorLocation() + FVector(axis * 100, 0, 0));
-
-	
 
 }
 

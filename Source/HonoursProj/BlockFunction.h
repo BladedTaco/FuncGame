@@ -5,8 +5,7 @@
 #include "CoreMinimal.h"
 #include "HonoursProjBlock.h"
 
-#include "FunctionInput.h"
-#include "FunctionOutput.h"
+#include "FunctionConnector.h"
 
 #include "BlockFunction.generated.h"
 

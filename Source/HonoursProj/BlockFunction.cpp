@@ -5,6 +5,9 @@
 #include "Engine/World.h"
 #include "Components/PrimitiveComponent.h"
 
+#include "FunctionInput.h"
+#include "FunctionOutput.h"
+
 // Called when the game starts or when spawned
 void ABlockFunction::BeginPlay() {
 	Super::BeginPlay();
@@ -22,7 +25,7 @@ void ABlockFunction::BeginPlay() {
 	FString name;
 	FActorSpawnParameters params;
 	for (FFuncConnector input : FunctionInputs) {
-		name = FString::Format(TEXT("Function_Input_{0}"), { input.Name });
+		name = FString::Format(TEXT("{0}_Input_{1}"), { GetFName().ToString(), input.Name });
 		params.Name = FName(*name);
 		AFunctionInput* actor = GetWorld()->SpawnActor<AFunctionInput>(params);
 		actor->AttachToActor(this, attachRules);
@@ -30,7 +33,7 @@ void ABlockFunction::BeginPlay() {
 	}
 
 	for (FFuncConnector output : FunctionOutputs) {
-		name = FString::Format(TEXT("Function_Input_{0}"), { output.Name });
+		name = FString::Format(TEXT("{0}_Output_{1}"), { GetFName().ToString(), output.Name });
 		params.Name = FName(*name);
 		AFunctionOutput* actor = GetWorld()->SpawnActor<AFunctionOutput>(params);
 		actor->AttachToActor(this, attachRules);

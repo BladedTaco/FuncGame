@@ -14,14 +14,14 @@ AHonoursProjBlock::AHonoursProjBlock() {
 	// Structure to hold one-time initialization
 	struct FConstructorStatics {
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> PlaneMesh;
-		ConstructorHelpers::FObjectFinderOptional<UMaterial> BaseMaterial;
-		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> BlueMaterial;
-		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> OrangeMaterial;
+		ConstructorHelpers::FObjectFinderOptional<UMaterial> LitMaterial;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> UnlitMaterial;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> ActiveMaterial;
 		FConstructorStatics()
 			: PlaneMesh(TEXT("/Game/Puzzle/Meshes/PuzzleCube.PuzzleCube"))
-			, BaseMaterial(TEXT("/Game/Puzzle/Meshes/BaseMaterial.BaseMaterial"))
-			, BlueMaterial(TEXT("/Game/Puzzle/Meshes/BlueMaterial.BlueMaterial"))
-			, OrangeMaterial(TEXT("/Game/Puzzle/Meshes/OrangeMaterial.OrangeMaterial")) {}
+			, LitMaterial(TEXT("/Game/Puzzle/Meshes/BaseMaterial.BaseMaterial"))
+			, UnlitMaterial(TEXT("/Game/Puzzle/Meshes/BlueMaterial.BlueMaterial"))
+			, ActiveMaterial(TEXT("/Game/Puzzle/Meshes/OrangeMaterial.OrangeMaterial")) {}
 	};
 	static FConstructorStatics ConstructorStatics;
 
@@ -34,13 +34,13 @@ AHonoursProjBlock::AHonoursProjBlock() {
 	BlockMesh->SetStaticMesh(ConstructorStatics.PlaneMesh.Get());
 	BlockMesh->SetRelativeScale3D(FVector(1.f, 1.f, 0.25f));
 	BlockMesh->SetRelativeLocation(FVector(0.f, 0.f, 25.f));
-	BlockMesh->SetMaterial(0, ConstructorStatics.BlueMaterial.Get());
+	BlockMesh->SetMaterial(0, ConstructorStatics.UnlitMaterial.Get());
 	BlockMesh->SetupAttachment(DummyRoot);
 
 	// Save a pointer to the orange material
-	BaseMaterial = ConstructorStatics.BaseMaterial.Get();
-	BlueMaterial = ConstructorStatics.BlueMaterial.Get();
-	OrangeMaterial = ConstructorStatics.OrangeMaterial.Get();
+	LitMaterial = ConstructorStatics.LitMaterial.Get();
+	UnlitMaterial = ConstructorStatics.UnlitMaterial.Get();
+	ActiveMaterial = ConstructorStatics.ActiveMaterial.Get();
 
 	PrimaryActorTick.bCanEverTick = true;
 	SetActorTickEnabled(true);
@@ -66,10 +66,10 @@ void AHonoursProjBlock::HandleClick(UPrimitiveComponent* ClickedComponent) {
 	if (bIsActive) {
 		clickOffset = MousePos() - GetActorLocation();
 		// Change material
-		BlockMesh->SetMaterial(0, OrangeMaterial);
+		BlockMesh->SetMaterial(0, ActiveMaterial);
 	} else {
 		// Change material
-		BlockMesh->SetMaterial(0, BlueMaterial);
+		BlockMesh->SetMaterial(0, UnlitMaterial);
 	}
 }
 
@@ -87,8 +87,8 @@ void AHonoursProjBlock::Highlight(bool bOn) {
 	}
 
 	if (bOn) {
-		BlockMesh->SetMaterial(0, BaseMaterial);
+		BlockMesh->SetMaterial(0, LitMaterial);
 	} else {
-		BlockMesh->SetMaterial(0, BlueMaterial);
+		BlockMesh->SetMaterial(0, UnlitMaterial);
 	}
 }

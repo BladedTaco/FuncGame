@@ -33,4 +33,11 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	AFunctionConnector* connectedTo;
+
+	UPROPERTY(Category = Connector, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* ConnectMesh;
+
+	FTransform Connect(FVector a, FVector b);
+
+	void Tick(float DeltaSeconds);
 };
