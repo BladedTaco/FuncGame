@@ -52,8 +52,8 @@ public:
 
 	FVector MousePos();
 	void Tick(float DeltaSeconds);
-	virtual void HandleClick(UPrimitiveComponent* ClickedComponent);
-	virtual void HandleRClick(UPrimitiveComponent* ClickedComponent);
+	virtual AHonoursProjBlock* HandleClick(UPrimitiveComponent* ClickedComponent);
+	virtual AHonoursProjBlock* HandleRClick(UPrimitiveComponent* ClickedComponent);
 
 	FVector clickOffset = FVector::ZeroVector;
 };

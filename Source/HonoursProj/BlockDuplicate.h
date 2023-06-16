@@ -19,6 +19,6 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AHonoursProjBlock> BlockClass;
 
-	virtual void HandleClick(UPrimitiveComponent* ClickedComponent) override;
-	virtual void HandleRClick(UPrimitiveComponent* ClickedComponent) override;
+	virtual AHonoursProjBlock* HandleClick(UPrimitiveComponent* ClickedComponent) override;
+	virtual AHonoursProjBlock* HandleRClick(UPrimitiveComponent* ClickedComponent) override;
 };

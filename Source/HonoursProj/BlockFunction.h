@@ -29,5 +29,5 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	virtual void HandleRClick(UPrimitiveComponent* ClickedComponent) override;
+	virtual AHonoursProjBlock* HandleRClick(UPrimitiveComponent* ClickedComponent) override;
 };

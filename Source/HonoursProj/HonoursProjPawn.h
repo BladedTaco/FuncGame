@@ -19,6 +19,8 @@ public:
 
 	virtual void CalcCamera(float DeltaTime, struct FMinimalViewInfo& OutResult) override;
 
+	void RemoveInactive();
+
 protected:
 	void TraceForBlock(const FVector& Start, const FVector& End, bool bDrawDebugHelpers);
 

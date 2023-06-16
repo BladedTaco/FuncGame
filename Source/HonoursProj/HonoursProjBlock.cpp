@@ -61,7 +61,7 @@ void AHonoursProjBlock::Tick(float DeltaSeconds) {
 }
 
 
-void AHonoursProjBlock::HandleClick(UPrimitiveComponent* ClickedComponent) {
+AHonoursProjBlock* AHonoursProjBlock::HandleClick(UPrimitiveComponent* ClickedComponent) {
 	bIsActive = !bIsActive;
 	if (bIsActive) {
 		clickOffset = MousePos() - GetActorLocation();
@@ -71,12 +71,15 @@ void AHonoursProjBlock::HandleClick(UPrimitiveComponent* ClickedComponent) {
 		// Change material
 		BlockMesh->SetMaterial(0, UnlitMaterial);
 	}
+	return this;
 }
 
-void AHonoursProjBlock::HandleRClick(UPrimitiveComponent* ClickedComponent) {
+AHonoursProjBlock* AHonoursProjBlock::HandleRClick(UPrimitiveComponent* ClickedComponent) {
 	if (ClickedComponent == BlockMesh) {
 		Destroy();
+		return NULL;
 	}
+	return this;
 }
 
 

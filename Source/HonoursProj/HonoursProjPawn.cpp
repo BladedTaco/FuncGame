@@ -47,42 +47,53 @@ void AHonoursProjPawn::CalcCamera(float DeltaTime, struct FMinimalViewInfo& OutR
 	OutResult.Rotation = FRotator(-90.0f, -90.0f, 0.0f);
 }
 
+void AHonoursProjPawn::RemoveInactive() {
+	// Remove Inactive Blocks
+	SelectedBlocks.RemoveAll([](AHonoursProjBlock* block) {
+		return !(block && IsValid(block) && block->bIsActive);
+	});
+}
 
 void AHonoursProjPawn::OnLClickPress() {
 	// Valid Block and Component
 	if (CurrentBlockFocus && CurrentComponentFocus.IsValid()) {
 		// Dispatch Click
-		if (!SelectedBlocks.Contains(CurrentBlockFocus)) {
-			SelectedBlocks.Add(CurrentBlockFocus);
+		auto addBlock = CurrentBlockFocus->HandleClick(CurrentComponentFocus.Get());
+		// Add the affected block
+		if (!SelectedBlocks.Contains(addBlock)) {
+			SelectedBlocks.Add(addBlock);
 		}
-		CurrentBlockFocus->HandleClick(CurrentComponentFocus.Get());
 	}
 }
 
 void AHonoursProjPawn::OnLClickRelease() {
-	if (!CurrentComponentFocus.IsValid()) {
-		CurrentComponentFocus = NULL;
-	}
-
+	RemoveInactive();
 	for (auto block : SelectedBlocks) {
 		// Dispatch Click
-		CurrentBlockFocus->HandleClick(CurrentComponentFocus.Get());
+		block->HandleClick(CurrentComponentFocus.Get());
 	}
-	// Remove Inactive Blocks
-	SelectedBlocks.RemoveAll([](AHonoursProjBlock* block) {
-		return !block->bIsActive;
-	});
+	RemoveInactive();
 }
 
 void AHonoursProjPawn::OnRClickPress(){
 	// Valid Block and Component
 	if (CurrentBlockFocus && CurrentComponentFocus.IsValid()) {
 		// Dispatch Click
-		CurrentBlockFocus->HandleRClick(CurrentComponentFocus.Get());
+		auto addBlock = CurrentBlockFocus->HandleRClick(CurrentComponentFocus.Get());
+		// Add the affected block
+		if (!SelectedBlocks.Contains(addBlock)) {
+			SelectedBlocks.Add(addBlock);
+		}
 	}
 }
 
 void AHonoursProjPawn::OnRClickRelease(){
+	RemoveInactive();
+	for (auto block : SelectedBlocks) {
+		// Dispatch Click
+		block->HandleRClick(CurrentComponentFocus.Get());
+	}
+	RemoveInactive();
 }
 
 void AHonoursProjPawn::OnScroll(float axis) {

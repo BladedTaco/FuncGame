@@ -30,8 +30,7 @@ AFunctionConnector::AFunctionConnector() {
 	// Create static mesh component
 	auto BlockMesh = GetBlockMesh();
 	BlockMesh->SetStaticMesh(ConstructorStatics.PlaneMesh.Get());
-	BlockMesh->SetRelativeScale3D(FVector(0.2f, 0.2f, 0.1f));
-	BlockMesh->SetRelativeLocation(FVector(0.f, 0.f, 25.f));
+	BlockMesh->SetRelativeScale3D(FVector(0.2f, 0.2f, 0.2f));
 	BlockMesh->SetMaterial(0, ConstructorStatics.LitMaterial.Get());
 
 	//RootComponent = BlockMesh;
@@ -39,8 +38,8 @@ AFunctionConnector::AFunctionConnector() {
 	// Create Connector
 	ConnectMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ConnectorMesh0"));
 	ConnectMesh->SetStaticMesh(ConstructorStatics.CylinderMesh.Get());
-	ConnectMesh->SetRelativeScale3D(FVector(0.2f, 0.2f, 0.1f));
-	ConnectMesh->SetRelativeLocation(FVector(0.f, 0.f, 25.f));
+	ConnectMesh->SetRelativeScale3D(FVector(0.2f, 0.2f, 0.2f));
+	ConnectMesh->SetRelativeLocation(FVector(0, 0, 32.0f));
 	ConnectMesh->SetMaterial(0, UnlitMaterial);
 	ConnectMesh->SetVisibility(false);
 	ConnectMesh->AttachTo(RootComponent);
@@ -52,30 +51,27 @@ FTransform AFunctionConnector::Connect(FVector a, FVector b) {
 		// rotated from Start towards End
 		FQuat((b - a).GetSafeNormal().RotateAngleAxis(90, FVector::UpVector), PI / 2),
 		// At the midway point
-		FVector(a + b) / 2 + FVector(0, 0, -a.Z),
+		FVector(a + b) / 2,
 		// Scaled to reach both
 		FVector(0.1f, 0.1f, (b - a).Size() / 100.0f)
 	);
 }
 
 void AFunctionConnector::Tick(float DeltaSeconds) {
+	FVector me = GetBlockMesh()->GetComponentLocation();
 	if (bIsActive) {
-		FVector me = GetActorLocation();
 		FVector mouse = MousePos();
-		me.Z = 0;
-		mouse.Z = 0;
-		ConnectMesh->SetRelativeTransform(Connect(FVector::ZeroVector, mouse - me));
+		mouse.Z = me.Z = ConnectMesh->GetComponentLocation().Z;
+		ConnectMesh->SetWorldTransform(Connect(me, mouse));
 	} else if (connectedTo) {
-		FVector me = GetActorLocation();
 		FVector target = connectedTo->GetActorLocation();
-		me.Z = 0;
-		target.Z = 0;
+		me.Z = target.Z = ConnectMesh->GetComponentLocation().Z;
 		ConnectMesh->SetRelativeTransform(Connect(me, target));
 	}
 }
 
 
-void AFunctionConnector::HandleClick(UPrimitiveComponent* ClickedComponent) {
+AHonoursProjBlock* AFunctionConnector::HandleClick(UPrimitiveComponent* ClickedComponent) {
 	bIsActive = !bIsActive;
 	if (bIsActive) {
 		ConnectMesh->SetVisibility(true);
@@ -83,8 +79,7 @@ void AFunctionConnector::HandleClick(UPrimitiveComponent* ClickedComponent) {
 	} else {
 		// Create Connections
 		TArray<AActor*> overlaps;
-		
-		GetOverlappingActors(overlaps, AFunctionConnector::StaticClass());
+		ConnectMesh->GetOverlappingActors(overlaps, AFunctionConnector::StaticClass());
 
 		// Sort Candidate Connections so that closest is first
 		overlaps.Sort([this](const AActor& a, const AActor& b) {
@@ -101,8 +96,10 @@ void AFunctionConnector::HandleClick(UPrimitiveComponent* ClickedComponent) {
 		}
 
 	}
+	return this;
 }
 
-void AFunctionConnector::HandleRClick(UPrimitiveComponent* ClickedComponent) {
+AHonoursProjBlock* AFunctionConnector::HandleRClick(UPrimitiveComponent* ClickedComponent) {
 	connectedTo = NULL;
+	return this;
 }

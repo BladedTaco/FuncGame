@@ -4,6 +4,7 @@
 #include "BlockFunction.h"
 #include "Engine/World.h"
 #include "Components/PrimitiveComponent.h"
+#include "Components/StaticMeshComponent.h"
 
 #include "FunctionInput.h"
 #include "FunctionOutput.h"
@@ -19,8 +20,9 @@ void ABlockFunction::BeginPlay() {
 		false
 	);
 
-	FVector origin, extent;
-	GetActorBounds(true, origin, extent);
+	FVector lower, upper, extent;
+	GetBlockMesh()->GetLocalBounds(lower, upper);
+	extent = (upper - lower) * GetBlockMesh()->GetComponentScale();
 
 	FString name;
 	FActorSpawnParameters params;
@@ -29,7 +31,7 @@ void ABlockFunction::BeginPlay() {
 		params.Name = FName(*name);
 		AFunctionInput* actor = GetWorld()->SpawnActor<AFunctionInput>(params);
 		actor->AttachToActor(this, attachRules);
-		actor->SetActorRelativeLocation(FVector(0, -100, 2*extent.Z));
+		actor->SetActorRelativeLocation(FVector(0, -100, 0.5 * extent.Z));
 	}
 
 	for (FFuncConnector output : FunctionOutputs) {
@@ -37,12 +39,12 @@ void ABlockFunction::BeginPlay() {
 		params.Name = FName(*name);
 		AFunctionOutput* actor = GetWorld()->SpawnActor<AFunctionOutput>(params);
 		actor->AttachToActor(this, attachRules);
-		actor->SetActorRelativeLocation(FVector(0, 100, 2*extent.Z));
+		actor->SetActorRelativeLocation(FVector(0, 100, 0.5 * extent.Z));
 	}
 }
 
 
-void ABlockFunction::HandleRClick(UPrimitiveComponent* ClickedComponent) {
+AHonoursProjBlock* ABlockFunction::HandleRClick(UPrimitiveComponent* ClickedComponent) {
 	UE_LOG(LogTemp, Warning, TEXT("Clicked %s"), *ClickedComponent->GetFName().ToString());
 
 	TArray<AActor*> attached;
@@ -51,4 +53,5 @@ void ABlockFunction::HandleRClick(UPrimitiveComponent* ClickedComponent) {
 		actor->Destroy();
 	}
 	Destroy();
+	return NULL;
 }
