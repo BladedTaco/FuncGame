@@ -28,7 +28,7 @@ public:
 
 	/** Pointer to white material used on the focused block */
 	UPROPERTY()
-	class UMaterial* LitMaterial;
+	class UMaterialInstance* LitMaterial;
 
 	/** Pointer to blue material used on inactive blocks */
 	UPROPERTY()

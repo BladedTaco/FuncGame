@@ -13,4 +13,12 @@ UCLASS()
 class HONOURSPROJ_API AFunctionOutput : public AFunctionConnector
 {
 	GENERATED_BODY()
+public:
+	UPROPERTY(VisibleAnywhere)
+	TArray<class AFunctionInput*> connectedTo;
+
+	virtual AHonoursProjBlock* HandleClick(UPrimitiveComponent* ClickedComponent) override;
+	virtual AHonoursProjBlock* HandleRClick(UPrimitiveComponent* ClickedComponent) override;
+
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 };

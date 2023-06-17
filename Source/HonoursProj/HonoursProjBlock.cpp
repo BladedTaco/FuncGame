@@ -14,15 +14,15 @@ AHonoursProjBlock::AHonoursProjBlock() {
 	// Structure to hold one-time initialization
 	struct FConstructorStatics {
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> PlaneMesh;
-		ConstructorHelpers::FObjectFinderOptional<UMaterial> LitMaterial;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> LitMaterial;
 		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> UnlitMaterial;
 		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> ActiveMaterial;
 		FConstructorStatics()
 			: PlaneMesh(TEXT("/Game/Puzzle/Meshes/PuzzleCube.PuzzleCube"))
-			, LitMaterial(TEXT("/Game/Puzzle/Meshes/BaseMaterial.BaseMaterial"))
+			, LitMaterial(TEXT("/Game/Puzzle/Meshes/WhiteMaterial.WhiteMaterial"))
 			, UnlitMaterial(TEXT("/Game/Puzzle/Meshes/BlueMaterial.BlueMaterial"))
 			, ActiveMaterial(TEXT("/Game/Puzzle/Meshes/OrangeMaterial.OrangeMaterial")) {}
-	};
+	}; 
 	static FConstructorStatics ConstructorStatics;
 
 	// Create dummy root scene component

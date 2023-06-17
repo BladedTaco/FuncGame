@@ -29,10 +29,7 @@ public:
 	AFunctionConnector();
 
 	virtual AHonoursProjBlock* HandleClick(UPrimitiveComponent* ClickedComponent) override;
-	virtual AHonoursProjBlock* HandleRClick(UPrimitiveComponent* ClickedComponent) override;
 
-	UPROPERTY(VisibleAnywhere)
-	AFunctionConnector* connectedTo;
 
 	UPROPERTY(Category = Connector, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* ConnectMesh;
