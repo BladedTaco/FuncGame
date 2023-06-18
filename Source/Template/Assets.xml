@@ -1,0 +1,15 @@
+<root>
+    <ResourceType Name='Material'>
+        <Asset Name="White" Type="UMaterialInstance" Location="/Game/Puzzle/Meshes/WhiteMaterial.WhiteMaterial"/>
+        <Asset Name="Blue" Type="UMaterialInstance" Location="/Game/Puzzle/Meshes/BlueMaterial.BlueMaterial"/>
+        <Asset Name="Orange" Type="UMaterialInstance" Location="/Game/Puzzle/Meshes/OrangeMaterial.OrangeMaterial"/>
+        <Asset Name="Grey" Type="UMaterialInstance" Location="/Game/Puzzle/Meshes/GreyMaterial.GreyMaterial"/>
+    </ResourceType>
+    <ResourceType Name='Mesh'>    
+        <Asset Name="PuzzleCube" Type="UStaticMesh" Location="/Game/Puzzle/Meshes/PuzzleCube.PuzzleCube"/>
+        <Asset Name="Cylinder" Type="UStaticMesh" Location="/Game/MyContent/Meshes/Cylinder.Cylinder"/>
+	</ResourceType>
+	<ResourceType Name='Data'>
+        <Asset Name="TypesTable" Type="UDataTable" Location="DataTable'/Game/MyContent/Data/Tbl_Types.Tbl_Types'"/>
+    </ResourceType>
+</root>

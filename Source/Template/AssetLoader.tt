@@ -1,0 +1,76 @@
+<#@ assembly name="System.Xml.dll" #>
+<#@ import namespace="System.Xml" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".h" #>
+
+<# List<ResourceDefinition> resources = this.GetResources(); #>
+<# foreach (ResourceDefinition resourceDef in resources) { #>
+	struct FResource_<#=resourceDef.name #> {
+		<# foreach (AssetDefinition asset in resourceDef.privateMembers) { #>
+			ConstructorHelpers::FObjectFinderOptional<<#=asset.type #>> <#=asset.name#>;
+		<# } #>
+		FResource_<#=resourceDef.name #>()
+		<# bool comma = false; foreach (AssetDefinition asset in resourceDef.privateMembers) { #>
+			<# if (comma) { #> , <# } else {  #> : <# comma = true; } #>    <#=asset.name#>(TEXT(<#=asset.location#>))
+		<# } #>
+		{}
+	};
+	static FResource_<#=resourceDef.name #> ResourceInst_<#=resourceDef.name #>;
+<# } #>
+
+
+struct FAssets {
+	<# foreach (ResourceDefinition resourceDef in resources) { #>
+		FResource_<#=resourceDef.name #> <#=resourceDef.name #>;
+	<# } #>
+	FAssets()
+	<# bool comma = false; foreach (ResourceDefinition resourceDef in resources) { #>
+		<# if (comma) { #> , <# } else {  #> : <# comma = true; } #>    <#=resourceDef.name#>(ResourceInst_<#=resourceDef.name #>)
+	<# } #>
+	{}
+};
+static FAssets Assets;
+
+
+
+
+<#+
+	public class ResourceDefinition {
+		public string name;
+		public List<AssetDefinition> privateMembers;
+
+		public ResourceDefinition() {
+			privateMembers = new List<AssetDefinition>();
+		}
+ 	}
+
+ 	public class AssetDefinition {
+		public string name;
+		public string type;
+		public string location;
+ 	}
+
+	public List<ResourceDefinition> GetResources() {
+		List<ResourceDefinition> resources = new List<ResourceDefinition>(); 
+		XmlDocument doc = new XmlDocument();
+		string absolutePath = Path.GetFullPath("Assets.xml");                
+		doc.Load(absolutePath);
+	
+		foreach (XmlNode node in doc.SelectNodes("/root/ResourceType")) {
+			ResourceDefinition newResource = new ResourceDefinition();
+			newResource.name = node.Attributes["Name"].InnerText;
+			foreach (XmlNode memberNode in node.SelectNodes("Asset")) {
+				AssetDefinition newAsset = new AssetDefinition();
+				newAsset.name = memberNode.Attributes["Name"].InnerText;
+				newAsset.type = memberNode.Attributes["Type"].InnerText;
+				newAsset.location = memberNode.Attributes["Location"].InnerText;
+				newResource.privateMembers.Add(newAsset);
+			}
+			resources.Add(newResource);
+		}
+	return resources;
+	}
+#>
+
