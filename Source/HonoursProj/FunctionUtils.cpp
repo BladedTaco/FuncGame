@@ -12,16 +12,10 @@
 //#include "Materials/Material.h"
 
 
+#include "AssetLoader.h"
 
 UTypeHandler::UTypeHandler() {
-	// Structure to hold one-time initialization
-	struct FConstructorStatics {
-		ConstructorHelpers::FObjectFinderOptional<UDataTable> TypeTable;
-		FConstructorStatics()
-			: TypeTable(TEXT("DataTable'/Game/MyContent/Data/Tbl_Types.Tbl_Types'"))
-		{}
-	};
-	static FConstructorStatics ConstructorStatics;
+	UDataTable* types = Assets.Data.TypesTable.Get();
 
 
 }

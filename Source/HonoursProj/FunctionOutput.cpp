@@ -25,19 +25,23 @@ AHonoursProjBlock* AFunctionOutput::HandleClick(UPrimitiveComponent* ClickedComp
 
 AHonoursProjBlock* AFunctionOutput::HandleRClick(UPrimitiveComponent* ClickedComponent) {
 	// Break all inputs connected to this output
-	for (auto inputBlock : connectedTo) {
+	auto others = connectedTo;
+	connectedTo = TArray<AFunctionInput*>();
+	for (auto inputBlock : others) {
 		inputBlock->HandleRClick(ClickedComponent);
 	}
-	connectedTo.Empty();
+	others.Empty();
 	return this;
 }
 
 void AFunctionOutput::EndPlay(const EEndPlayReason::Type EndPlayReason) {	
 	// Remove Connected to if it exists
-	for (auto inputBlock : connectedTo) {
+	auto others = connectedTo;
+	connectedTo = TArray<AFunctionInput*>();
+	for (auto inputBlock : others) {
 		if (IsValid(inputBlock)) {
 			inputBlock->HandleRClick(NULL);
 		}
 	}
-	connectedTo.Empty();
+	others.Empty();
 }

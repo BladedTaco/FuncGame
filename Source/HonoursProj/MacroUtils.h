@@ -94,25 +94,28 @@ public:
 // START OF NEW PROJECT MACROS
 
 // Looper macros for struct definition and struct constructor defaults
-#define _LOAD_ASSETS_DEF(TYPE, NAME, LOCATION) ConstructorHelpers::FObjectFinderOptional<TYPE> NAME;
-#define _LOAD_ASSETS_IMPL(TYPE, NAME, LOCATION) , NAME(TEXT(LOCATION))
+//#define _LOAD_ASSETS_IMPL(TYPE, NAME, LOCATION) , NAME(TEXT(LOCATION))
 
-// LOAD ASSETS ( (TYPE, NAME, LOCATION), ...) 
-#define LOAD_ASSETS(...)                                \
-struct FConstructorStatics {                            \
-    LOOP(_LOAD_ASSETS_DEF, __VA_ARGS__)                 \
-    FConstructorStatics() :                             \
-    STRIP_FIRST(LOOP(_LOAD_ASSETS_IMPL, __VA_ARGS__))   \
-    {}                                                  \
-};                                                      \
-static FConstructorStatics
+#define _LOAD_ASSETS_DEF(TYPE, NAME, LOCATION) TYPE* NAME;
+#define _LOAD_ASSETS_IMPL(TYPE, NAME, ASSET) , NAME(ASSET.Get())
 
-// LOAD ASSETS ( (TYPE, NAME, LOCATION), ...) 
-#define LOAD_ASSET(TYPE, NAME, LOCATION)                                 \
-struct FConstructorStatics {                            \
-    _LOAD_ASSETS_DEF(TYPE, NAME, LOCATION)                 \
-    FConstructorStatics() :                             \
-    _LOAD_ASSETS_IMPL(TYPE, NAME, LOCATION)   \
-    {}                                                  \
-};                                                      \
-static FConstructorStatics
+//// LOAD ASSETS ( (TYPE, NAME, LOCATION), ...) 
+//#define LOAD_ASSETS(...)                                \
+//struct FConstructorStatics {                            \
+//    LOOP(_LOAD_ASSETS_DEF, __VA_ARGS__)                 \
+//    FConstructorStatics() :                             \
+//    STRIP_FIRST(LOOP(_LOAD_ASSETS_IMPL, __VA_ARGS__))   \
+//    {}                                                  \
+//};                                                      \
+//static FConstructorStatics
+
+// LOAD ASSETS ( (TYPE, NAME, ASSET), ...) 
+//#define LOAD_ASSETS(...)                                \
+//struct FConstructorStatics {                            \
+//    LOOP(_LOAD_ASSETS_DEF, __VA_ARGS__)                 \
+//    FConstructorStatics() :                             \
+//    STRIP_FIRST(LOOP(_LOAD_ASSETS_IMPL, __VA_ARGS__))   \
+//    {}                                                  \
+//};                                                      \
+//static FConstructorStatics
+//

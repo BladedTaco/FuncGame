@@ -12,39 +12,26 @@
 #include "FunctionInput.h"
 #include "FunctionOutput.h"
 
+#include "AssetLoader.h"
 
 // Sets default values
 AFunctionConnector::AFunctionConnector() {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Structure to hold one-time initialization
-	struct FConstructorStatics {
-		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> PlaneMesh;
-		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> CylinderMesh;
-		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> UnlitMaterial;
-		FConstructorStatics()
-			: PlaneMesh(TEXT("/Game/Puzzle/Meshes/PuzzleCube.PuzzleCube"))
-			, CylinderMesh(TEXT("/Game/MyContent/Meshes/Cylinder.Cylinder"))
-			, UnlitMaterial(TEXT("/Game/Puzzle/Meshes/GreyMaterial.GreyMaterial")) {}
-	};
-	static FConstructorStatics ConstructorStatics;
-
 	// change materials
-	ActiveMaterial = LitMaterial;
-	UnlitMaterial = ConstructorStatics.UnlitMaterial.Get();
+	ActiveMaterial = LitMaterial = Assets.Material.White.Get();
+	UnlitMaterial = Assets.Material.Grey.Get();
 
 	// Create static mesh component
 	auto BlockMesh = GetBlockMesh();
-	BlockMesh->SetStaticMesh(ConstructorStatics.PlaneMesh.Get());
+	BlockMesh->SetStaticMesh(Assets.Mesh.PuzzleCube.Get());
 	BlockMesh->SetRelativeScale3D(FVector(0.2f, 0.2f, 0.2f));
 	BlockMesh->SetMaterial(0, UnlitMaterial);
 
-	//RootComponent = BlockMesh;
-
 	// Create Connector
 	ConnectMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ConnectorMesh0"));
-	ConnectMesh->SetStaticMesh(ConstructorStatics.CylinderMesh.Get());
+	ConnectMesh->SetStaticMesh(Assets.Mesh.Cylinder.Get());
 	ConnectMesh->SetRelativeScale3D(FVector(0.3f, 0.3f, 0.3f));
 	ConnectMesh->SetRelativeLocation(FVector(0, 0, 32.0f));
 	ConnectMesh->SetMaterial(0, UnlitMaterial);

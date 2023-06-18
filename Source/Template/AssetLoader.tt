@@ -2,32 +2,45 @@
 <#@ import namespace="System.Xml" #>
 <#@ import namespace="System.IO" #>
 <#@ import namespace="System.Collections.Generic" #>
-<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ template debug="false" hostspecific="true" language="C#" #>
 <#@ output extension=".h" #>
 
-<# List<ResourceDefinition> resources = this.GetResources(); #>
+<# 
+	List<ResourceDefinition> resources = this.GetResources(); 
+	bool isComma = false;
+#>
+
+#pragma once
+
+#include "UObject/ConstructorHelpers.h"
+#include "Engine/StaticMesh.h"
+#include "Materials/MaterialInstance.h"
+#include "Engine/DataTable.h"
+
+
 <# foreach (ResourceDefinition resourceDef in resources) { #>
-	struct FResource_<#=resourceDef.name #> {
-		<# foreach (AssetDefinition asset in resourceDef.privateMembers) { #>
-			ConstructorHelpers::FObjectFinderOptional<<#=asset.type #>> <#=asset.name#>;
-		<# } #>
-		FResource_<#=resourceDef.name #>()
-		<# bool comma = false; foreach (AssetDefinition asset in resourceDef.privateMembers) { #>
-			<# if (comma) { #> , <# } else {  #> : <# comma = true; } #>    <#=asset.name#>(TEXT(<#=asset.location#>))
-		<# } #>
-		{}
-	};
-	static FResource_<#=resourceDef.name #> ResourceInst_<#=resourceDef.name #>;
+struct FResource_<#=resourceDef.name #> {
+	<# foreach (AssetDefinition asset in resourceDef.privateMembers) { #>
+	ConstructorHelpers::FObjectFinderOptional<<#=asset.type #>> <#=asset.name#>;
+	<# } #>
+	FResource_<#=resourceDef.name #>()
+	<# isComma = false; foreach (AssetDefinition asset in resourceDef.privateMembers) { #>
+	<# if (isComma) { #>,<# } else {  #>:<# isComma = true; } #>	<#=asset.name#>(TEXT("<#=asset.location#>"))
+	<# } #>
+	{}
+};
+static FResource_<#=resourceDef.name #> ResourceInst_<#=resourceDef.name #>;
+
 <# } #>
 
 
 struct FAssets {
 	<# foreach (ResourceDefinition resourceDef in resources) { #>
-		FResource_<#=resourceDef.name #> <#=resourceDef.name #>;
+	FResource_<#=resourceDef.name #> <#=resourceDef.name #>;
 	<# } #>
 	FAssets()
-	<# bool comma = false; foreach (ResourceDefinition resourceDef in resources) { #>
-		<# if (comma) { #> , <# } else {  #> : <# comma = true; } #>    <#=resourceDef.name#>(ResourceInst_<#=resourceDef.name #>)
+	<# isComma = false; foreach (ResourceDefinition resourceDef in resources) { #>
+	<# if (isComma) { #>,<# } else {  #>:<# isComma = true; } #>	<#=resourceDef.name#>(ResourceInst_<#=resourceDef.name #>)
 	<# } #>
 	{}
 };
@@ -55,7 +68,7 @@ static FAssets Assets;
 	public List<ResourceDefinition> GetResources() {
 		List<ResourceDefinition> resources = new List<ResourceDefinition>(); 
 		XmlDocument doc = new XmlDocument();
-		string absolutePath = Path.GetFullPath("Assets.xml");                
+		string absolutePath = Path.GetFullPath(Host.ResolveParameterValue(null, null, "dir") + "/Source/Template/Assets.xml");                
 		doc.Load(absolutePath);
 	
 		foreach (XmlNode node in doc.SelectNodes("/root/ResourceType")) {
