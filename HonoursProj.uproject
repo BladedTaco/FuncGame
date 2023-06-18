@@ -12,5 +12,18 @@
 				"Engine"
 			]
 		}
-	]
+	],
+	"Plugins": [
+		{
+			"Name": "MeshEditor",
+			"Enabled": true
+		}
+	],
+"PreBuildSteps":
+{
+    "Win64": [
+			"\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\IDE\\TextTransform.exe\" $(ProjectDir)\\Source\\Template\\HonoursProjBlock.tt",
+			"echo T4 Executions Complete"
+    ]
+}
 }

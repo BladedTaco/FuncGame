@@ -10,7 +10,11 @@
 #include "HonoursProjPlayerController.h"
 #include "Kismet/GameplayStatics.h"
 
+#include "MacroUtils.h"
+
 AHonoursProjBlock::AHonoursProjBlock() {
+
+
 	// Structure to hold one-time initialization
 	struct FConstructorStatics {
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> PlaneMesh;
@@ -21,14 +25,21 @@ AHonoursProjBlock::AHonoursProjBlock() {
 			: PlaneMesh(TEXT("/Game/Puzzle/Meshes/PuzzleCube.PuzzleCube"))
 			, LitMaterial(TEXT("/Game/Puzzle/Meshes/WhiteMaterial.WhiteMaterial"))
 			, UnlitMaterial(TEXT("/Game/Puzzle/Meshes/BlueMaterial.BlueMaterial"))
-			, ActiveMaterial(TEXT("/Game/Puzzle/Meshes/OrangeMaterial.OrangeMaterial")) {}
+			, ActiveMaterial(TEXT("/Game/Puzzle/Meshes/OrangeMaterial.OrangeMaterial")) 
+		{};
 	}; 
 	static FConstructorStatics ConstructorStatics;
+
+	LOAD_ASSETS((UStaticMesh, PlaneMesh, "/Game/Puzzle/Meshes/PuzzleCube.PuzzleCube")
+		, (UMaterialInstance, LitMaterial, "/Game/Puzzle/Meshes/WhiteMaterial.WhiteMaterial")
+		, (UMaterialInstance, UnlitMaterial, "/Game/Puzzle/Meshes/BlueMaterial.BlueMaterial")
+		, (UMaterialInstance, ActiveMaterial, "/Game/Puzzle/Meshes/OrangeMaterial.OrangeMaterial")
+	) ConstructorStatics;
 
 	// Create dummy root scene component
 	DummyRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Dummy0"));
 	RootComponent = DummyRoot;
-
+	
 	// Create static mesh component
 	BlockMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BlockMesh0"));
 	BlockMesh->SetStaticMesh(ConstructorStatics.PlaneMesh.Get());
