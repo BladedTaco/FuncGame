@@ -12,4 +12,7 @@
 	<ResourceType Name='Data'>
         <Asset Name="TypesTable" Type="UDataTable" Location="DataTable'/Game/MyContent/Data/Tbl_Types.Tbl_Types'"/>
     </ResourceType>
+	<ResourceType Name='Icon'>
+        <Asset Name="Percentage" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/percent.percent'"/>
+    </ResourceType>
 </root>

@@ -10,7 +10,7 @@
 #include "HonoursProjPlayerController.h"
 #include "Kismet/GameplayStatics.h"
 
-#include "AssetLoader.h"
+#include "AssetLoader.gen.h"
 
 AHonoursProjBlock::AHonoursProjBlock() {
 	// Save a pointer to the materials

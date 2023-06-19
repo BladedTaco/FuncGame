@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 
+
 #include "FunctionUtils.generated.h"
 
 
@@ -65,5 +66,6 @@ class HONOURSPROJ_API UTypeHandler : public UObject {
 	GENERATED_BODY()
 public:
 	UTypeHandler();
+
 
 };

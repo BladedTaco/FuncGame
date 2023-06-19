@@ -2,11 +2,3 @@
 
 
 #include "LoopMacros.h"
-
-LoopMacros::LoopMacros()
-{
-}
-
-LoopMacros::~LoopMacros()
-{
-}

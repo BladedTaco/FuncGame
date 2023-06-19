@@ -1,0 +1,33 @@
+<root>
+    <Type name="Number" short_name="num" icon="Percentage" colour="(B=0,G=255,R=255,A=0)">
+        <Function signature="float GetValue()" pure_virtual="true">
+    </Type>
+    <Type name="Boolean" short_name="bool" icon="Percentage" colour="(B=0,G=255,R=0,A=0)">
+        <Function signature="bool GetValue()" pure_virtual="true">
+    </Type>
+    <Type name="Character" short_name="char" icon="Percentage" colour="(B=255,G=0,R=0,A=0)">
+        <Function signature="char GetValue()" pure_virtual="true">
+    </Type>
+</root>
+
+
+    public class XMLDefinition {
+        public List<TypeDefinition> types;
+    }
+
+    public class TypeDefinition {
+        public string name;
+        public string short_name;
+        public string icon;
+        public string colour;
+        public List<FunctionDefintiion> functions;
+    }
+
+    public class FunctionDefintiion {
+        public string signature;
+        public bool pure_virtual;
+    }
+
+Num,"Number","/Game/MyContent/Meshes/percent.percent","(B=0,G=255,R=255,A=0)"
+Bool,"Boolean","/Game/MyContent/Meshes/percent.percent","(B=0,G=255,R=0,A=0)"
+NewRow,"Character","/Game/MyContent/Meshes/percent.percent","(B=255,G=0,R=0,A=0)"

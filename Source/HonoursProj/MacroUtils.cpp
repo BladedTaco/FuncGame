@@ -3,10 +3,3 @@
 
 #include "MacroUtils.h"
 
-MacroUtils::MacroUtils()
-{
-}
-
-MacroUtils::~MacroUtils()
-{
-}

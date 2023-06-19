@@ -6,17 +6,6 @@
 
 #include "LoopMacros.h"
 
-/**
- * 
- */
-class HONOURSPROJ_API MacroUtils
-{
-public:
-	MacroUtils();
-	~MacroUtils();
-};
-
-
 
 #define EXPAND(x) x
 #define UNBRACKET(...) __VA_ARGS__

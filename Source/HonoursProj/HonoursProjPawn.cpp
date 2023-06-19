@@ -8,6 +8,9 @@
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
 
+
+#include "Types/Functor.h"
+
 AHonoursProjPawn::AHonoursProjPawn(const FObjectInitializer& ObjectInitializer) 
 	: Super(ObjectInitializer)
 {
@@ -73,6 +76,25 @@ void AHonoursProjPawn::OnLClickRelease() {
 		block->HandleClick(CurrentComponentFocus.Get());
 	}
 	RemoveInactive();
+
+
+	
+	
+	 //Usage Example
+	Maybe<int> a = Maybe<int>::Just(4);
+	a = Functor<Maybe<int>>::fmap<int>([](int a) { return a * a; }, a);
+	a = Functor<Maybe<int>>::map_replace_by<int>(2, a);
+	int q = Maybe<int>::fromMaybe(0, a);
+	UE_LOG(LogTemp, Warning, TEXT("maybe %d"), q);
+	
+	
+
+	
+	a = Maybe<int>::Nothing();
+	a = Functor<Maybe<int>>::fmap<int>([](int a) { return a * a; }, a);
+	q = Maybe<int>::fromMaybe(0, a);
+	UE_LOG(LogTemp, Warning, TEXT("maybe %d"), q);
+
 }
 
 void AHonoursProjPawn::OnRClickPress(){

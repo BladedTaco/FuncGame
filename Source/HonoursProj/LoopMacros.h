@@ -4,16 +4,6 @@
 
 #include "CoreMinimal.h"
 
-/**
- * 
- */
-class HONOURSPROJ_API LoopMacros
-{
-public:
-	LoopMacros();
-	~LoopMacros();
-};
-
 // defines loop macros up to 64 iterations
 #define LOOP_64(BASE, DO, VARS, ...) LOOP_1(BASE, DO, VARS) EXPAND(LOOP_63(BASE, DO, __VA_ARGS__))
 #define LOOP_63(BASE, DO, VARS, ...) LOOP_1(BASE, DO, VARS) EXPAND(LOOP_62(BASE, DO, __VA_ARGS__))

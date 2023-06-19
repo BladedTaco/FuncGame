@@ -1,0 +1,4 @@
+---,Name,Icon,Colour
+Num,"Number","/Game/MyContent/Meshes/percent.percent","(B=0,G=255,R=255,A=0)"
+Bool,"Boolean","/Game/MyContent/Meshes/percent.percent","(B=0,G=255,R=0,A=0)"
+NewRow,"Character","/Game/MyContent/Meshes/percent.percent","(B=255,G=0,R=0,A=0)"
