@@ -26,3 +26,5 @@
 		]
 	}
 }
+
+//cl /std:c++17 /Zc:preprocessor /TP /MT /P /Fi"Test.hpp" /I "Source/HonoursProj" "Source/HonoursProj/Types/Functor.h"

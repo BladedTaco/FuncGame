@@ -7,9 +7,8 @@ public class HonoursProj : ModuleRules
 	public HonoursProj(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-
+		//PCHUsage = PCHUsageMode.NoSharedPCHs;
 		CppStandard = CppStandardVersion.Cpp17;
-
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay" });
 	}
 }

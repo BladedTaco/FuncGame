@@ -1,15 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-
-#include "CoreMinimal.h"
-
 #include "LoopMacros.h"
 
 
 #define EXPAND(x) x
 #define UNBRACKET(...) __VA_ARGS__
-#define BRACKET(x) (x)
+#define BRACKET(x) LBRACKET x RBRACKET
 #define DEFER(FUNC, ...) FUNC(__VA_ARGS__)
 
 
@@ -17,10 +14,13 @@
 #define PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
 
 
-#define NUM_ARGS(...)  NUM_ARGS_(__VA_ARGS__,__NATURAL_64_INTS())
+#define NUM_ARGS(...)  NUM_ARGS_ ( IGNORE_FIRST ( , ##__VA_ARGS__ , __NATURAL_64_INTS() ) ) 
 #define NUM_ARGS_(...) EXPAND(__NATURAL_64_ARGS(__VA_ARGS__))
 
-#define NO_ARGS(...)  NUM_ARGS_(__VA_ARGS__, __NATURAL_64_GT0())
+//#define NO_ARGS(...) NUM_ARGS_(__VA_ARGS__ ## __NATURAL_64_INTS() )
+//#define NO_ARGS(...) NUM_ARGS_(__VA_ARGS__ , __NATURAL_64_GTO())
+
+#define NO_ARGS(...)  NUM_ARGS_ ( IGNORE_FIRST ( , ##__VA_ARGS__ , __NATURAL_64_GT0() ) ) 
 
 
 #define __NATURAL_64_ARGS( \
@@ -69,16 +69,35 @@
 
 #define LOOP_I(BASE, DO, ...) LOOP_N2(BASE, NUM_ARGS(__VA_ARGS__), DO, __VA_ARGS__)
 #define LOOP(DO, ...) LOOP_I(APPLY, DO, __VA_ARGS__)
-#define ZIP(DO, ...) APPLY(IGNORE_FIRST, (LOOP_(ZIP_BASE, DO, __VA_ARGS__)))
-#define BZIP(DO, ...) APPLY(IGNORE_FIRST, (LOOP_(BZIP_BASE, DO, __VA_ARGS__)))
+#define ZIP(DO, ...) APPLY(IGNORE_FIRST, (LOOP_I(ZIP_BASE, DO, __VA_ARGS__)))
+#define BZIP(DO, ...) APPLY(IGNORE_FIRST, (LOOP_I(BZIP_BASE, DO, __VA_ARGS__)))
 
 #define TAKE_BASE(_, VAR, ...) , LBRACKET VAR RBRACKET
 #define TAKE_N(N, ...) APPLY(IGNORE_FIRST, (LOOP_##N(TAKE_BASE, BRACKET, __VA_ARGS__)))
 
-#define BRACKET_LIST(...) APPLY(IGNORE_FIRST, (LOOP_(TAKE_BASE, BRACKET, __VA_ARGS__)))
+#define APP(DO, VAR) DO(VAR)
+
+#define BRACKET_LIST(...) APPLY(IGNORE_FIRST, (LOOP_I(TAKE_BASE, BRACKET, __VA_ARGS__)))
 
 #define SEMICOLON(X) X;
 #define LIST_TO_LINES(...) LOOP(SEMICOLON, BRACKET_LIST(__VA_ARGS__))
+
+
+#define MAP_LIST(LOOPER, ...) STRIP_FIRST(LOOP(LOOPER, BRACKET_LIST(__VA_ARGS__)))
+
+#define _NULLARY_0(ARGSFUL, ARGLESS) ARGLESS
+#define _NULLARY_1(ARGSFUL, ARGLESS) ARGSFUL
+
+#define NULLARY(ARGSFUL, ARGLESS, ...) APPLY(UNBRACKET,  SELECT(_NULLARY, NO_ARGS(__VA_ARGS__) )(ARGSFUL, ARGLESS))
+
+#define _OPTIONAL_0(ARGSFUL)
+#define _OPTIONAL_1(ARGSFUL) ARGSFUL
+#define OPTIONAL(ARGSFUL, ...) SELECT(_OPTIONAL, NUM_ARGS_ ( IGNORE_FIRST ( , ##__VA_ARGS__ , __NATURAL_64_GT0() ) ) )(ARGSFUL)
+
+
+
+
+
 
 // START OF NEW PROJECT MACROS
 

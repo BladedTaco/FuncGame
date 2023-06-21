@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
-
 // defines loop macros up to 64 iterations
 #define LOOP_64(BASE, DO, VARS, ...) LOOP_1(BASE, DO, VARS) EXPAND(LOOP_63(BASE, DO, __VA_ARGS__))
 #define LOOP_63(BASE, DO, VARS, ...) LOOP_1(BASE, DO, VARS) EXPAND(LOOP_62(BASE, DO, __VA_ARGS__))
@@ -70,3 +68,4 @@
 #define LOOP_3( BASE, DO, VARS, ...) LOOP_1(BASE, DO, VARS) EXPAND(LOOP_2( BASE, DO, __VA_ARGS__))
 #define LOOP_2( BASE, DO, VARS, ...) LOOP_1(BASE, DO, VARS) LOOP_1( BASE, DO, __VA_ARGS__)
 #define LOOP_1( BASE, DO, VARS, ...) BASE(DO, VARS)
+#define LOOP_0(BASE, DO, VARS, ...)
