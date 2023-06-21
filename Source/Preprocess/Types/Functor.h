@@ -4,6 +4,10 @@
 
 // test
 
+#if __INTELLISENSE__
+#include <functional>
+#endif
+
 #ifndef __PREPROCESSING
 #include <functional>
 #else
@@ -20,6 +24,7 @@ needs_unapply : std::true_type {};
 
 template< class T > struct
 needs_unapply<T, std::void_t<decltype(std::declval<T>()())>> : std::false_type {};
+
 
 template <typename F> 
 auto curry(F&& f) {

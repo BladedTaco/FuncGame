@@ -21,10 +21,9 @@
 	],
 	"PreBuildSteps": {
 		"Win64": [
+			"\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\IDE\\TextTransform.exe\" -out \"$(ProjectDir)\\Source\\Generated\\temp.gen.h\" -a \"!!dir!$(ProjectDir)\" \"$(ProjectDir)\\Source\\Template\\Preprocess.tt\"",
 			"\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\IDE\\TextTransform.exe\" -out \"$(ProjectDir)\\Source\\HonoursProj\\AssetLoader.gen.h\" -a \"!!dir!$(ProjectDir)\" \"$(ProjectDir)\\Source\\Template\\AssetLoader.tt\"",
 			"echo T4 Executions Complete"
 		]
 	}
 }
-
-//cl /std:c++17 /Zc:preprocessor /TP /MT /P /Fi"Test.hpp" /I "Source/HonoursProj" "Source/HonoursProj/Types/Functor.h"

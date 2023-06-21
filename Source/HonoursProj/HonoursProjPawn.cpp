@@ -9,7 +9,7 @@
 #include "DrawDebugHelpers.h"
 
 
-#include "Types/Functor.h"
+//#include "Types/Functor.h"
 
 AHonoursProjPawn::AHonoursProjPawn(const FObjectInitializer& ObjectInitializer) 
 	: Super(ObjectInitializer)
