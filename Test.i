@@ -1,7 +1,8 @@
+#line 1 "Test.hpp"
 #line 1 "Source/Preprocess/Types/Functor.h"
 #pragma once
 
-#line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj\\Source\\HonoursProj\\MacroUtils.h"
+#line 1 "Source/HonoursProj\\MacroUtils.h"
 
 
 #pragma once
@@ -77,7 +78,7 @@
 
 
 
-#line 5 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj\\Source\\HonoursProj\\MacroUtils.h"
+#line 5 "Source/HonoursProj\\MacroUtils.h"
 
 
 
@@ -200,7 +201,6 @@
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\functional"
 
 
@@ -210,7 +210,6 @@
 #pragma once
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\yvals_core.h"
 
 
@@ -676,7 +675,6 @@
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\vcruntime.h"
 
 
@@ -734,7 +732,6 @@
     #line 55 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\vcruntime.h"
 #line 56 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\vcruntime.h"
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\sal.h"
 
 
@@ -3709,7 +3706,6 @@ extern "C" {
 }
 #line 2973 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\sal.h"
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\concurrencysal.h"
 
 
@@ -4105,11 +4101,8 @@ extern "C" {
 #line 393 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\concurrencysal.h"
 
 #line 395 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\concurrencysal.h"
-#pragma external_header(pop)
 #line 2975 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\sal.h"
-#pragma external_header(pop)
 #line 58 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\vcruntime.h"
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\vadefs.h"
 
 
@@ -4319,7 +4312,6 @@ extern "C" {
 
 #pragma warning(pop) 
 #pragma pack(pop)
-#pragma external_header(pop)
 #line 59 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\vcruntime.h"
 
 #pragma warning(push)
@@ -4666,9 +4658,7 @@ extern uintptr_t __security_cookie;
 #pragma warning(pop) 
 
 #line 404 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\vcruntime.h"
-#pragma external_header(pop)
 #line 466 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\yvals_core.h"
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xkeycheck.h"
 
 
@@ -5260,7 +5250,6 @@ extern uintptr_t __security_cookie;
 
 #line 590 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xkeycheck.h"
 #line 591 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xkeycheck.h"
-#pragma external_header(pop)
 #line 467 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\yvals_core.h"
 
 
@@ -6646,10 +6635,8 @@ extern uintptr_t __security_cookie;
 
 #line 1876 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\yvals_core.h"
 #line 1877 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\yvals_core.h"
-#pragma external_header(pop)
 #line 10 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\functional"
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\exception"
 
 
@@ -6659,7 +6646,6 @@ extern uintptr_t __security_cookie;
 #pragma once
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\yvals.h"
 
 
@@ -6677,7 +6663,6 @@ extern uintptr_t __security_cookie;
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\crtdbg.h"
 
 
@@ -6690,7 +6675,6 @@ extern uintptr_t __security_cookie;
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt.h"
 
 
@@ -8752,9 +8736,7 @@ typedef _Mbstatet mbstate_t;
 
 
 #pragma warning(pop) 
-#pragma external_header(pop)
 #line 13 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\crtdbg.h"
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\vcruntime_new_debug.h"
 
 
@@ -8765,7 +8747,6 @@ typedef _Mbstatet mbstate_t;
 
 #pragma once
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\vcruntime_new.h"
 
 
@@ -8969,7 +8950,6 @@ void __cdecl operator delete[](
 #line 201 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\vcruntime_new.h"
 
 #pragma warning(pop) 
-#pragma external_header(pop)
 #line 11 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\vcruntime_new_debug.h"
 
 #pragma warning(push)
@@ -9025,7 +9005,6 @@ extern "C++" {
 #line 63 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\vcruntime_new_debug.h"
 
 #pragma warning(pop) 
-#pragma external_header(pop)
 #line 14 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\crtdbg.h"
 
 #pragma warning(push)
@@ -9830,9 +9809,7 @@ typedef struct _CrtMemState
 
 #pragma warning(pop) 
 #line 817 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\crtdbg.h"
-#pragma external_header(pop)
 #line 18 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\yvals.h"
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\crtdefs.h"
 
 
@@ -9916,7 +9893,6 @@ typedef struct _CrtMemState
         
     #line 82 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\crtdefs.h"
 #line 83 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\crtdefs.h"
-#pragma external_header(pop)
 #line 19 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\yvals.h"
 
 #pragma pack(push, 8 )
@@ -10135,7 +10111,6 @@ typedef struct _CrtMemState
 #line 234 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\yvals.h"
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\use_ansi.h"
 
 
@@ -10197,7 +10172,6 @@ typedef struct _CrtMemState
 #line 59 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\use_ansi.h"
 
 #line 61 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\use_ansi.h"
-#pragma external_header(pop)
 #line 237 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\yvals.h"
 
 
@@ -10475,11 +10449,9 @@ private:
 #pragma pack(pop)
 #line 512 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\yvals.h"
 #line 513 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\yvals.h"
-#pragma external_header(pop)
 #line 10 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\exception"
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\type_traits"
 
 
@@ -10491,7 +10463,6 @@ private:
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cstdint"
 
 
@@ -10504,7 +10475,6 @@ private:
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\stdint.h"
 
 
@@ -10644,7 +10614,6 @@ typedef unsigned long long uintmax_t;
 #pragma warning(pop) 
 
 #line 139 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\stdint.h"
-#pragma external_header(pop)
 #line 13 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cstdint"
 
 #pragma pack(push, 8 )
@@ -10731,9 +10700,7 @@ namespace std {
 
 #line 97 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cstdint"
 #line 98 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cstdint"
-#pragma external_header(pop)
 #line 12 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\type_traits"
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xstddef"
 
 
@@ -10745,7 +10712,6 @@ namespace std {
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cstddef"
 
 
@@ -10758,7 +10724,6 @@ namespace std {
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\stddef.h"
 
 
@@ -10824,9 +10789,7 @@ __pragma(pack(push, 8)) extern "C" {
 
 #pragma warning(pop) 
 #line 65 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\stddef.h"
-#pragma external_header(pop)
 #line 13 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cstddef"
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xtr1common"
 
 
@@ -11073,7 +11036,6 @@ using _Remove_cvref_t [[msvc::known_semantics]] = remove_cv_t<remove_reference_t
 #pragma pack(pop)
 #line 245 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xtr1common"
 #line 246 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xtr1common"
-#pragma external_header(pop)
 #line 14 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cstddef"
 
 #pragma pack(push, 8 )
@@ -11166,9 +11128,7 @@ using ::std:: max_align_t;
 
 #line 104 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cstddef"
 #line 105 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cstddef"
-#pragma external_header(pop)
 #line 12 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xstddef"
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cstdlib"
 
 
@@ -11181,7 +11141,6 @@ using ::std:: max_align_t;
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\math.h"
 
 
@@ -11193,7 +11152,6 @@ using ::std:: max_align_t;
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt_math.h"
 
 
@@ -12187,15 +12145,12 @@ extern "C++"
 
 #pragma warning(pop) 
 #line 993 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt_math.h"
-#pragma external_header(pop)
 #line 12 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\math.h"
 
 
 
 
-#pragma external_header(pop)
 #line 13 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cstdlib"
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\stdlib.h"
 
 
@@ -12209,7 +12164,6 @@ extern "C++"
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt_malloc.h"
 
 
@@ -12445,9 +12399,7 @@ void* __cdecl _aligned_recalloc(
 } __pragma(pack(pop))
 
 #pragma warning(pop) 
-#pragma external_header(pop)
 #line 14 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\stdlib.h"
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt_search.h"
 
 
@@ -12667,9 +12619,7 @@ __pragma(pack(push, 8)) extern "C" {
 } __pragma(pack(pop))
 
 #pragma warning(pop) 
-#pragma external_header(pop)
 #line 15 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\stdlib.h"
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt_wstdlib.h"
 
 
@@ -13152,9 +13102,7 @@ __declspec(deprecated("This function or variable may be unsafe. Consider using "
 } __pragma(pack(pop))
 
 #pragma warning(pop) 
-#pragma external_header(pop)
 #line 16 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\stdlib.h"
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\limits.h"
 
 
@@ -13234,7 +13182,6 @@ __pragma(pack(push, 8)) extern "C" {
 } __pragma(pack(pop))
 
 #pragma warning(pop) 
-#pragma external_header(pop)
 #line 17 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\stdlib.h"
 
 #pragma warning(push)
@@ -14582,7 +14529,6 @@ extern "C++" { template <size_t _DriveSize, size_t _DirSize, size_t _NameSize, s
 
 #pragma warning(pop) 
 #line 1363 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\stdlib.h"
-#pragma external_header(pop)
 #line 14 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cstdlib"
 
 #pragma pack(push, 8 )
@@ -14661,9 +14607,7 @@ namespace std {
 
 #line 90 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cstdlib"
 #line 91 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cstdlib"
-#pragma external_header(pop)
 #line 13 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xstddef"
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\initializer_list"
 
 
@@ -14734,7 +14678,6 @@ private:
 #pragma pack(pop)
 #line 69 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\initializer_list"
 #line 70 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\initializer_list"
-#pragma external_header(pop)
 #line 14 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xstddef"
 
 
@@ -15153,7 +15096,6 @@ template <class _Ty>
 #pragma pack(pop)
 #line 430 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xstddef"
 #line 431 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xstddef"
-#pragma external_header(pop)
 #line 13 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\type_traits"
 
 #pragma pack(push, 8 )
@@ -17519,7 +17461,6 @@ struct _Floating_type_traits<long double> : _Floating_type_traits<double> {};
 
 #line 2376 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\type_traits"
 #line 2377 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\type_traits"
-#pragma external_header(pop)
 #line 13 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\exception"
 
 #pragma pack(push, 8 )
@@ -17541,7 +17482,6 @@ namespace std {
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\malloc.h"
 
 
@@ -17727,9 +17667,7 @@ void* __cdecl _alloca( size_t _Size);
 
 #pragma warning(pop) 
 #line 185 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\malloc.h"
-#pragma external_header(pop)
 #line 34 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\exception"
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\vcruntime_exception.h"
 
 
@@ -17740,7 +17678,6 @@ void* __cdecl _alloca( size_t _Size);
 
 #pragma once
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\eh.h"
 
 
@@ -17753,7 +17690,6 @@ void* __cdecl _alloca( size_t _Size);
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt_terminate.h"
 
 
@@ -17806,7 +17742,6 @@ typedef void (__cdecl * terminate_function)(void);
 #line 50 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt_terminate.h"
 
 #pragma warning(pop) 
-#pragma external_header(pop)
 #line 13 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\eh.h"
 
 
@@ -17868,7 +17803,6 @@ struct _EXCEPTION_POINTERS;
 #pragma warning(pop) 
 
 #line 73 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\eh.h"
-#pragma external_header(pop)
 #line 11 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\vcruntime_exception.h"
 
 
@@ -18012,7 +17946,6 @@ public:
 
 #pragma warning(pop) 
 #line 153 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\vcruntime_exception.h"
-#pragma external_header(pop)
 #line 35 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\exception"
 
 namespace std {
@@ -18406,9 +18339,7 @@ public:
 
 #line 426 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\exception"
 #line 427 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\exception"
-#pragma external_header(pop)
 #line 12 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\functional"
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\tuple"
 
 
@@ -18423,7 +18354,6 @@ public:
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\__msvc_iter_core.hpp"
 
 
@@ -18435,7 +18365,6 @@ public:
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\utility"
 
 
@@ -19401,7 +19330,6 @@ inline constexpr in_place_index_t<_Idx> in_place_index{};
 #pragma pack(pop)
 #line 964 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\utility"
 #line 965 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\utility"
-#pragma external_header(pop)
 #line 12 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\__msvc_iter_core.hpp"
 
 #pragma pack(push, 8 )
@@ -19890,7 +19818,6 @@ struct iterator_traits<_Ty*> : _Iterator_traits_pointer_base<_Ty> {};
 #pragma pack(pop)
 #line 498 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\__msvc_iter_core.hpp"
 #line 499 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\__msvc_iter_core.hpp"
-#pragma external_header(pop)
 #line 15 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\tuple"
 
 
@@ -20804,9 +20731,7 @@ struct uses_allocator<tuple<_Types...>, _Alloc> : true_type {};
 #pragma pack(pop)
 #line 926 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\tuple"
 #line 927 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\tuple"
-#pragma external_header(pop)
 #line 13 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\functional"
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\typeinfo"
 
 
@@ -20830,7 +20755,6 @@ struct uses_allocator<tuple<_Types...>, _Alloc> : true_type {};
 
 #pragma warning(disable : 4275) 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\vcruntime_typeinfo.h"
 
 
@@ -21050,7 +20974,6 @@ private:
 #pragma pack(pop)
 #pragma warning(pop) 
 #line 219 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\vcruntime_typeinfo.h"
-#pragma external_header(pop)
 #line 24 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\typeinfo"
 
 namespace std {
@@ -21106,9 +21029,7 @@ inline constexpr int _Small_object_num_ptrs = 6 + 16 / sizeof(void*);
 #pragma warning(pop)
 #line 77 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\typeinfo"
 #line 78 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\typeinfo"
-#pragma external_header(pop)
 #line 14 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\functional"
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xmemory"
 
 
@@ -21122,7 +21043,6 @@ inline constexpr int _Small_object_num_ptrs = 6 + 16 / sizeof(void*);
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\limits"
 
 
@@ -21134,7 +21054,6 @@ inline constexpr int _Small_object_num_ptrs = 6 + 16 / sizeof(void*);
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cfloat"
 
 
@@ -21146,7 +21065,6 @@ inline constexpr int _Small_object_num_ptrs = 6 + 16 / sizeof(void*);
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\float.h"
 
 
@@ -21557,12 +21475,9 @@ __pragma(pack(push, 8)) extern "C" {
 
 #pragma warning(pop) 
 #line 410 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\float.h"
-#pragma external_header(pop)
 #line 12 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cfloat"
 #line 13 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cfloat"
-#pragma external_header(pop)
 #line 12 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\limits"
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\climits"
 
 
@@ -21579,9 +21494,7 @@ __pragma(pack(push, 8)) extern "C" {
 
 #line 15 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\climits"
 #line 16 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\climits"
-#pragma external_header(pop)
 #line 13 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\limits"
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cwchar"
 
 
@@ -21594,7 +21507,6 @@ __pragma(pack(push, 8)) extern "C" {
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cstdio"
 
 
@@ -21607,7 +21519,6 @@ __pragma(pack(push, 8)) extern "C" {
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\stdio.h"
 
 
@@ -21621,7 +21532,6 @@ __pragma(pack(push, 8)) extern "C" {
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt_wstdio.h"
 
 
@@ -21635,7 +21545,6 @@ __pragma(pack(push, 8)) extern "C" {
 #pragma once
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt_stdio_config.h"
 
 
@@ -21768,7 +21677,6 @@ __pragma(pack(push, 8)) extern "C" {
 } __pragma(pack(pop))
 
 #pragma warning(pop) 
-#pragma external_header(pop)
 #line 14 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt_wstdio.h"
 
 #pragma warning(push)
@@ -23928,7 +23836,6 @@ __pragma(pack(push, 8)) extern "C" {
 } __pragma(pack(pop))
 
 #pragma warning(pop) 
-#pragma external_header(pop)
 #line 14 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\stdio.h"
 
 #pragma warning(push)
@@ -26365,7 +26272,6 @@ __declspec(deprecated("This function or variable may be unsafe. Consider using "
 
 #pragma warning(pop) 
 #line 2449 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\stdio.h"
-#pragma external_header(pop)
 #line 13 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cstdio"
 
 #pragma pack(push, 8 )
@@ -26453,9 +26359,7 @@ using :: _Mbstatet;
 
 #line 98 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cstdio"
 #line 99 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cstdio"
-#pragma external_header(pop)
 #line 13 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cwchar"
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\wchar.h"
 
 
@@ -26471,7 +26375,6 @@ using :: _Mbstatet;
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt_memcpy_s.h"
 
 
@@ -26483,7 +26386,6 @@ using :: _Mbstatet;
 #pragma once
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\errno.h"
 
 
@@ -26622,9 +26524,7 @@ __pragma(pack(push, 8)) extern "C" {
 
 #pragma warning(pop) 
 #line 138 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\errno.h"
-#pragma external_header(pop)
 #line 12 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt_memcpy_s.h"
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\vcruntime_string.h"
 
 
@@ -26739,7 +26639,6 @@ void* __cdecl memset(
 #line 112 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\vcruntime_string.h"
 
 #pragma warning(pop) 
-#pragma external_header(pop)
 #line 13 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt_memcpy_s.h"
 
 #pragma warning(push)
@@ -26822,9 +26721,7 @@ __pragma(pack(push, 8)) extern "C" {
 
 #pragma warning(pop) 
 } __pragma(pack(pop))
-#pragma external_header(pop)
 #line 16 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\wchar.h"
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt_wconio.h"
 
 
@@ -27250,9 +27147,7 @@ __pragma(pack(push, 8)) extern "C" {
 } __pragma(pack(pop))
 
 #pragma warning(pop) 
-#pragma external_header(pop)
 #line 17 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\wchar.h"
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt_wctype.h"
 
 
@@ -27459,9 +27354,7 @@ __pragma(pack(push, 8)) extern "C" {
 } __pragma(pack(pop))
 
 #pragma warning(pop) 
-#pragma external_header(pop)
 #line 18 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\wchar.h"
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt_wdirect.h"
 
 
@@ -27526,9 +27419,7 @@ __pragma(pack(push, 8)) extern "C" {
 } __pragma(pack(pop))
 
 #pragma warning(pop) 
-#pragma external_header(pop)
 #line 19 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\wchar.h"
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt_wio.h"
 
 
@@ -27541,7 +27432,6 @@ __pragma(pack(push, 8)) extern "C" {
 #pragma once
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt_share.h"
 
 
@@ -27576,7 +27466,6 @@ __pragma(pack(push, 8)) extern "C" {
 
 
 #pragma warning(pop) 
-#pragma external_header(pop)
 #line 13 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt_wio.h"
 
 #pragma warning(push)
@@ -27836,9 +27725,7 @@ __declspec(deprecated("This function or variable may be unsafe. Consider using "
 } __pragma(pack(pop))
 
 #pragma warning(pop) 
-#pragma external_header(pop)
 #line 20 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\wchar.h"
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt_wprocess.h"
 
 
@@ -27967,11 +27854,9 @@ __pragma(pack(push, 8)) extern "C" {
 } __pragma(pack(pop))
 
 #pragma warning(pop) 
-#pragma external_header(pop)
 #line 21 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\wchar.h"
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt_wstring.h"
 
 
@@ -28614,9 +28499,7 @@ extern "C++" {
 #line 640 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt_wstring.h"
 
 #pragma warning(pop) 
-#pragma external_header(pop)
 #line 24 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\wchar.h"
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt_wtime.h"
 
 
@@ -28825,9 +28708,7 @@ __declspec(deprecated("This function or variable may be unsafe. Consider using "
 } __pragma(pack(pop))
 
 #pragma warning(pop) 
-#pragma external_header(pop)
 #line 25 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\wchar.h"
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\sys/stat.h"
 
 
@@ -28839,7 +28720,6 @@ __declspec(deprecated("This function or variable may be unsafe. Consider using "
 #pragma once
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\sys/types.h"
 
 
@@ -28892,7 +28772,6 @@ __declspec(deprecated("This function or variable may be unsafe. Consider using "
 
 
 #pragma warning(pop) 
-#pragma external_header(pop)
 #line 12 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\sys/stat.h"
 
 #pragma warning(push)
@@ -29132,7 +29011,6 @@ struct _stat64
 } __pragma(pack(pop))
 
 #pragma warning(pop) 
-#pragma external_header(pop)
 #line 26 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\wchar.h"
 
 
@@ -29395,7 +29273,6 @@ typedef wchar_t _Wint_t;
 
 #pragma warning(pop) 
 #line 287 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\wchar.h"
-#pragma external_header(pop)
 #line 14 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cwchar"
 
 #pragma pack(push, 8 )
@@ -29489,9 +29366,7 @@ using :: _Mbstatet;
 
 #line 105 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cwchar"
 #line 106 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cwchar"
-#pragma external_header(pop)
 #line 14 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\limits"
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\intrin0.h"
 
 
@@ -29511,7 +29386,6 @@ using :: _Mbstatet;
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\intrin0.inl.h"
 
 
@@ -29847,12 +29721,9 @@ constexpr void * __cdecl __builtin_assume_aligned(const void *, size_t, ...) noe
 #line 333 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\intrin0.inl.h"
 #pragma warning(pop) 
 #line 335 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\intrin0.inl.h"
-#pragma external_header(pop)
 #line 20 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\intrin0.h"
 #line 21 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\intrin0.h"
-#pragma external_header(pop)
 #line 15 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\limits"
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\isa_availability.h"
 
 
@@ -29901,7 +29772,6 @@ enum ISA_AVAILABILITY
 #line 46 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\isa_availability.h"
 
 #line 48 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\isa_availability.h"
-#pragma external_header(pop)
 #line 16 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\limits"
 
 
@@ -31170,9 +31040,7 @@ inline decltype(auto) _Select_popcount_impl(_Fn _Callback) {
 #pragma pack(pop)
 #line 1285 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\limits"
 #line 1286 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\limits"
-#pragma external_header(pop)
 #line 14 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xmemory"
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\new"
 
 
@@ -31296,9 +31164,7 @@ namespace std {
 
 #line 122 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\new"
 #line 123 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\new"
-#pragma external_header(pop)
 #line 15 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xmemory"
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xatomic.h"
 
 
@@ -31426,9 +31292,7 @@ template <class _Integral, class _Ty>
 #pragma pack(pop)
 #line 126 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xatomic.h"
 #line 127 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xatomic.h"
-#pragma external_header(pop)
 #line 16 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xmemory"
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xutility"
 
 
@@ -31444,7 +31308,6 @@ template <class _Integral, class _Ty>
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cstring"
 
 
@@ -31457,7 +31320,6 @@ template <class _Integral, class _Ty>
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\string.h"
 
 
@@ -31471,7 +31333,6 @@ template <class _Integral, class _Ty>
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt_memory.h"
 
 
@@ -31595,7 +31456,6 @@ __pragma(pack(push, 8)) extern "C" {
 #line 121 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\corecrt_memory.h"
 
 #pragma warning(pop) 
-#pragma external_header(pop)
 #line 14 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\string.h"
 
 
@@ -32176,7 +32036,6 @@ extern "C++"
 #pragma warning(pop) 
 #line 592 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\string.h"
 #line 593 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.19041.0\\ucrt\\string.h"
-#pragma external_header(pop)
 #line 13 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cstring"
 
 #pragma pack(push, 8 )
@@ -32224,7 +32083,6 @@ namespace std {
 
 #line 58 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cstring"
 #line 59 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cstring"
-#pragma external_header(pop)
 #line 16 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xutility"
 
 #pragma pack(push, 8 )
@@ -39307,7 +39165,6 @@ template <class _Ty, enable_if_t<is_floating_point_v<_Ty>, int> = 0>
 #pragma pack(pop)
 #line 7096 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xutility"
 #line 7097 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xutility"
-#pragma external_header(pop)
 #line 17 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xmemory"
 
 
@@ -41829,14 +41686,12 @@ protected:
 #pragma pack(pop)
 #line 2536 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xmemory"
 #line 2537 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xmemory"
-#pragma external_header(pop)
 #line 15 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\functional"
 
 
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\unordered_map"
 
 
@@ -41848,7 +41703,6 @@ protected:
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xhash"
 
 
@@ -41860,7 +41714,6 @@ protected:
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cmath"
 
 
@@ -43354,9 +43207,7 @@ template <class _Ty, enable_if_t<is_arithmetic_v<_Ty>, int> = 0> [[nodiscard]] a
 
 #line 1493 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cmath"
 #line 1494 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\cmath"
-#pragma external_header(pop)
 #line 12 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xhash"
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\list"
 
 
@@ -43371,7 +43222,6 @@ template <class _Ty, enable_if_t<is_arithmetic_v<_Ty>, int> = 0> [[nodiscard]] a
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xpolymorphic_allocator.h"
 
 
@@ -43708,7 +43558,6 @@ struct _Has_no_alloc_destroy<pmr::polymorphic_allocator<_Ty>, _Ptr, void> : true
 #pragma pack(pop)
 #line 335 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xpolymorphic_allocator.h"
 #line 336 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xpolymorphic_allocator.h"
-#pragma external_header(pop)
 #line 15 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\list"
 #line 16 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\list"
 
@@ -45634,10 +45483,8 @@ namespace pmr {
 #pragma pack(pop)
 #line 1938 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\list"
 #line 1939 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\list"
-#pragma external_header(pop)
 #line 13 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xhash"
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\vector"
 
 
@@ -45655,7 +45502,6 @@ namespace pmr {
 
 #line 16 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\vector"
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\__msvc_sanitizer_annotate_container.hpp"
 
 
@@ -45792,7 +45638,6 @@ extern "C" {
 
 #line 135 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\__msvc_sanitizer_annotate_container.hpp"
 #line 136 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\__msvc_sanitizer_annotate_container.hpp"
-#pragma external_header(pop)
 #line 18 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\vector"
 
 #pragma pack(push, 8 )
@@ -49515,9 +49360,7 @@ template <class _VbIt>
 #pragma pack(pop)
 #line 3738 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\vector"
 #line 3739 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\vector"
-#pragma external_header(pop)
 #line 15 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xhash"
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xbit_ops.h"
 
 
@@ -49615,7 +49458,6 @@ namespace std {
 #pragma pack(pop)
 #line 96 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xbit_ops.h"
 #line 97 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xbit_ops.h"
-#pragma external_header(pop)
 #line 16 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xhash"
 
 
@@ -49625,7 +49467,6 @@ namespace std {
 
 
 
-#pragma external_header(push)
 #line 1 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xnode_handle.h"
 
 
@@ -49842,7 +49683,6 @@ public:
 #pragma pack(pop)
 #line 215 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xnode_handle.h"
 #line 216 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xnode_handle.h"
-#pragma external_header(pop)
 #line 25 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xhash"
 #line 26 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xhash"
 
@@ -51855,7 +51695,6 @@ using _Is_hasher = negation<disjunction<is_integral<_Hasher>, _Is_allocator<_Has
 #pragma pack(pop)
 #line 2035 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xhash"
 #line 2036 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\xhash"
-#pragma external_header(pop)
 #line 12 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\unordered_map"
 
 
@@ -52790,7 +52629,6 @@ namespace pmr {
 #pragma pack(pop)
 #line 944 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\unordered_map"
 #line 945 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\unordered_map"
-#pragma external_header(pop)
 #line 21 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\functional"
 #line 22 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\functional"
 
@@ -55681,7 +55519,6 @@ private:
 #pragma pack(pop)
 #line 2909 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\functional"
 #line 2910 "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\include\\functional"
-#pragma external_header(pop)
 #line 8 "Source/Preprocess/Types/Functor.h"
 
 
@@ -55859,6 +55696,17 @@ template <typename A> class Functor<Maybe <A> > : public BaseFunctor<Maybe, A> {
 
 ;
 
+
+template <typename A> class Functor<Maybe <A> > : public BaseFunctor<Maybe, A> { private: template <typename B> inline static auto _fmap = [](Function<B, A> func, Maybe<A> f_a) -> Maybe<B> { if (f_a._isNothing) { return Maybe<B>::Nothing(); } else { return Maybe<B>::Just(func(f_a._value)); } }; public: template <typename B> inline static auto fmap = curry(_fmap <B>); private: template <typename B> inline static auto _map_replace_by = []() {}; public: template <typename B> inline static auto map_replace_by = curry(_map_replace_by <B>); };
+
+
+
+
+
+
+
+
+;
 
 
 

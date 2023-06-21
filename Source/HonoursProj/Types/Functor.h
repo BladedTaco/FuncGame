@@ -4,11 +4,7 @@
 
 // test
 
-#ifndef __PREPROCESSING
 #include <functional>
-#else
-include <functional>
-#endif
 
 
 template <typename Return, typename... Params>
