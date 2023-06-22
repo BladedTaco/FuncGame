@@ -23,23 +23,23 @@ enum class ORD : int {
 template <typename A>
 class Ordinal {
 protected:
-	template <class A>
+	template <class>
 	inline static Function<ORD, A, A> _ord;
-	template <class A>
+	template <class>
 	inline static Function<bool, A, A> _lt;
-	template <class A>
+	template <class>
 	inline static Function<bool, A, A> _lte;
-	template <class A>
+	template <class>
 	inline static Function<bool, A, A> _gt;
-	template <class A>
+	template <class>
 	inline static Function<bool, A, A> _gte;
-	template <class A>
+	template <class>
 	inline static Function<bool, A, A> _eq;
-	template <class A>
+	template <class>
 	inline static Function<bool, A, A> _neq;
-	template <class A>
+	template <class>
 	inline static Function<A, A, A> _min;
-	template <class A>
+	template <class>
 	inline static Function<A, A, A> _max;
 
 public:
@@ -67,40 +67,40 @@ public:
 template <class A>
 class BaseOrdinal {
 protected:
-	template <class A>
+	template <class>
 	inline static Function<ORD, A, A> _ord;
 
-	template <class A>
+	template <class>
 	inline static auto _lt = [](A a, A b) -> bool {
 		return Ordinal<A>::ord<A>(a)(b) == ORD::LT;
 	};
-	template <class A>
+	template <class>
 	inline static auto _lte = [](A a, A b) -> bool {
-		return Ordinal<A>::ord(a)(b) != ORD::GT;
+		return Ordinal<A>::ord<A>(a)(b) != ORD::GT;
 	};
-	template <class A>
+	template <class>
 	inline static auto _gt = [](A a, A b) -> bool {
-		return Ordinal<A>::ord(a)(b) == ORD::GT;
+		return Ordinal<A>::ord<A>(a)(b) == ORD::GT;
 	};
-	template <class A>
+	template <class>
 	inline static auto _gte = [](A a, A b) -> bool {
-		return Ordinal<A>::ord(a)(b) != ORD::LT;
+		return Ordinal<A>::ord<A>(a)(b) != ORD::LT;
 	};
-	template <class A>
+	template <class>
 	inline static auto _eq = [](A a, A b) -> bool {
-		return Ordinal<A>::ord(a)(b) == ORD::EQ;
+		return Ordinal<A>::ord<A>(a)(b) == ORD::EQ;
 	};
-	template <class A>
+	template <class>
 	inline static auto _neq = [](A a, A b) -> bool {
-		return Ordinal<A>::ord(a)(b) != ORD::EQ;
+		return Ordinal<A>::ord<A>(a)(b) != ORD::EQ;
 	};
-	template <class A>
+	template <class>
 	inline static auto _min = [](A a, A b) -> A {
-		return Ordinal<A>::ord(a)(b) == ORD::LT ? a : b;
+		return Ordinal<A>::ord<A>(a)(b) == ORD::LT ? a : b;
 	};
-	template <class A>
+	template <class>
 	inline static auto _max = [](A a, A b) -> A {
-		return Ordinal<A>::ord(a)(b) == ORD::GT ? a : b;
+		return Ordinal<A>::ord<A>(a)(b) == ORD::GT ? a : b;
 	};
 
 public:

@@ -98,10 +98,10 @@ void AHonoursProjPawn::OnLClickRelease() {
 	q = fromMaybe<int>(0)(a);
 	UE_LOG(LogTemp, Warning, TEXT("maybe %d"), q);
 
-	ORD n1 = Ordinal<Number<int>>::ord(5)(6);
-	ORD n2 = Ordinal<Number<int>>::ord(6)(6);
-	ORD n3 = Ordinal<Number<int>>::ord(7)(6);
-	bool n4 =  Ordinal<Number<int>>::lt<int>(5)(6);
+	ORD n1 = Ordinal<Number<int>>::ord<int>(5)(6);
+	ORD n2 = Ordinal<Number<int>>::ord<int>(6)(6);
+	ORD n3 = Ordinal<Number<int>>::ord<int>(7)(6);
+	bool n4 = Ordinal<Number<int>>::lt<int>(5)(6);
 
 	UE_LOG(LogTemp, Warning, TEXT("ORD %d %d %d %d"), n1, n2, n3, n4);
 
