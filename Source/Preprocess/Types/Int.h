@@ -23,7 +23,8 @@ private:
 	friend class BaseOrdinal<Number<A>>;
 	friend class Number<A>;
 public:
-	Number(A value) : _value(value) {}
+	Number(A value) { _value = value; }
+	A get() { return _value; }
 };
 
 
@@ -35,8 +36,8 @@ private:
 		return a._value == b._value ? ORD::EQ : a._value < b._value ? ORD::LT : ORD::GT;
 	};
 public:
-	template <class>
-	inline static auto ord = curry(_ord);
+	template <class = A>
+	inline static auto ord = curry(_ord<>);
 };
 
 //template <class A>

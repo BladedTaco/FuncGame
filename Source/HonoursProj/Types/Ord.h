@@ -23,103 +23,103 @@ enum class ORD : int {
 template <typename A>
 class Ordinal {
 protected:
-	template <class>
+	template <class _ = A>
 	inline static Function<ORD, A, A> _ord;
-	template <class>
+	template <class _ = A>
 	inline static Function<bool, A, A> _lt;
-	template <class>
+	template <class _ = A>
 	inline static Function<bool, A, A> _lte;
-	template <class>
+	template <class _ = A>
 	inline static Function<bool, A, A> _gt;
-	template <class>
+	template <class _ = A>
 	inline static Function<bool, A, A> _gte;
-	template <class>
+	template <class _ = A>
 	inline static Function<bool, A, A> _eq;
-	template <class>
+	template <class _ = A>
 	inline static Function<bool, A, A> _neq;
-	template <class>
+	template <class _ = A>
 	inline static Function<A, A, A> _min;
-	template <class>
+	template <class _ = A>
 	inline static Function<A, A, A> _max;
 
 public:
-	template <class A>
-	inline static auto ord = curry(Ordinal<A>::_ord<A>);
-	template <class A>
-	inline static auto lt = curry(Ordinal<A>::_lt<A>);
-	template <class A>
-	inline static auto lte = curry(Ordinal<A>::_lte<A>);
-	template <class A>
-	inline static auto gt = curry(Ordinal<A>::_gt<A>);
-	template <class A>
-	inline static auto gte = curry(Ordinal<A>::_gte<A>);
-	template <class A>
-	inline static auto eq = curry(Ordinal<A>::_eq<A>);
-	template <class A>
-	inline static auto neq = curry(Ordinal<A>::_neq<A>);
-	template <class A>
-	inline static auto min = curry(Ordinal<A>::_min<A>);
-	template <class A>
-	inline static auto max = curry(Ordinal<A>::_max<A>);
+	template <class _ = A>
+	inline static auto ord = curry(Ordinal<A>::_ord<_>);
+	template <class _ = A>
+	inline static auto lt = curry(Ordinal<A>::_lt<_>);
+	template <class _ = A>
+	inline static auto lte = curry(Ordinal<A>::_lte<_>);
+	template <class _ = A>
+	inline static auto gt = curry(Ordinal<A>::_gt<_>);
+	template <class _ = A>
+	inline static auto gte = curry(Ordinal<A>::_gte<_>);
+	template <class _ = A>
+	inline static auto eq = curry(Ordinal<A>::_eq<_>);
+	template <class _ = A>
+	inline static auto neq = curry(Ordinal<A>::_neq<_>);
+	template <class _ = A>
+	inline static auto min = curry(Ordinal<A>::_min<_>);
+	template <class _ = A>
+	inline static auto max = curry(Ordinal<A>::_max<_>);
 };
 
 // Ordinal Base Instance
 template <class A>
 class BaseOrdinal {
 protected:
-	template <class>
+	template <class _ = A>
 	inline static Function<ORD, A, A> _ord;
 
-	template <class>
+	template <class _ = A>
 	inline static auto _lt = [](A a, A b) -> bool {
-		return Ordinal<A>::ord<A>(a)(b) == ORD::LT;
+		return Ordinal<A>::ord<_>(a)(b) == ORD::LT;
 	};
-	template <class>
+	template <class _ = A>
 	inline static auto _lte = [](A a, A b) -> bool {
-		return Ordinal<A>::ord<A>(a)(b) != ORD::GT;
+		return Ordinal<A>::ord<_>(a)(b) != ORD::GT;
 	};
-	template <class>
+	template <class _ = A>
 	inline static auto _gt = [](A a, A b) -> bool {
-		return Ordinal<A>::ord<A>(a)(b) == ORD::GT;
+		return Ordinal<A>::ord<_>(a)(b) == ORD::GT;
 	};
-	template <class>
+	template <class _ = A>
 	inline static auto _gte = [](A a, A b) -> bool {
-		return Ordinal<A>::ord<A>(a)(b) != ORD::LT;
+		return Ordinal<A>::ord<_>(a)(b) != ORD::LT;
 	};
-	template <class>
+	template <class _ = A>
 	inline static auto _eq = [](A a, A b) -> bool {
-		return Ordinal<A>::ord<A>(a)(b) == ORD::EQ;
+		return Ordinal<A>::ord<_>(a)(b) == ORD::EQ;
 	};
-	template <class>
+	template <class _ = A>
 	inline static auto _neq = [](A a, A b) -> bool {
-		return Ordinal<A>::ord<A>(a)(b) != ORD::EQ;
+		return Ordinal<A>::ord<_>(a)(b) != ORD::EQ;
 	};
-	template <class>
+	template <class _ = A>
 	inline static auto _min = [](A a, A b) -> A {
-		return Ordinal<A>::ord<A>(a)(b) == ORD::LT ? a : b;
+		return Ordinal<A>::ord<_>(a)(b) == ORD::LT ? a : b;
 	};
-	template <class>
+	template <class _ = A>
 	inline static auto _max = [](A a, A b) -> A {
-		return Ordinal<A>::ord<A>(a)(b) == ORD::GT ? a : b;
+		return Ordinal<A>::ord<_>(a)(b) == ORD::GT ? a : b;
 	};
 
 public:
-	template <class A>
-	inline static auto ord = curry(_ord<A>);
-	template <class A>
-	inline static auto lt = curry(_lt<A>);
-	template <class A>
-	inline static auto lte = curry(_lte<A>);
-	template <class A>
-	inline static auto gt = curry(_gt<A>);
-	template <class A>
-	inline static auto gte = curry(_gte<A>);
-	template <class A>
-	inline static auto eq = curry(_eq<A>);
-	template <class A>
-	inline static auto neq = curry(_neq<A>);
-	template <class A>
-	inline static auto min = curry(_min<A>);
-	template <class A>
-	inline static auto max = curry(_max<A>);
+	template <class _ = A>
+	inline static auto ord = curry(_ord<_>);
+	template <class _ = A>
+	inline static auto lt = curry(_lt<_>);
+	template <class _ = A>
+	inline static auto lte = curry(_lte<_>);
+	template <class _ = A>
+	inline static auto gt = curry(_gt<_>);
+	template <class _ = A>
+	inline static auto gte = curry(_gte<_>);
+	template <class _ = A>
+	inline static auto eq = curry(_eq<_>);
+	template <class _ = A>
+	inline static auto neq = curry(_neq<_>);
+	template <class _ = A>
+	inline static auto min = curry(_min<_>);
+	template <class _ = A>
+	inline static auto max = curry(_max<_>);
 };
