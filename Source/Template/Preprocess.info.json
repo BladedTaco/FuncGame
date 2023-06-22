@@ -1,7 +1,13 @@
 {
   "FilesToGenerate": [
     {
-      "Filename": "Functor.gen.h",
+      "Filename": "Int.gen.h",
+      "Project": null,
+      "Path": "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj\\Source\\HonoursProj\\Types",
+      "Properties": {}
+    },
+    {
+      "Filename": "Maybe.gen.h",
       "Project": null,
       "Path": "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj\\Source\\HonoursProj\\Types",
       "Properties": {}

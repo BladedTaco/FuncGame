@@ -1,4 +1,7 @@
-#line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj\\Source\\Preprocess\\Types\\Functor.h"
+#line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj\\Source\\Preprocess\\Types\\Maybe.h"
+#pragma once
+
+#line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Types/Functor.h"
 #pragma once
 
 #line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\MacroUtils.h"
@@ -196,23 +199,24 @@
 
 
 
-#line 4 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj\\Source\\Preprocess\\Types\\Functor.h"
+#line 4 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Types/Functor.h"
+
+#line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Functional/Prelude.h"
 
 
+#pragma once
 
-
-
-#line 10 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj\\Source\\Preprocess\\Types\\Functor.h"
 
 
 
 
 include <functional>
-#line 16 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj\\Source\\Preprocess\\Types\\Functor.h"
+#line 11 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Functional/Prelude.h"
 
 
 template <typename Return, typename... Params>
 using Function = std::function<Return(Params...)>;
+
 
 
 template< class, class = std::void_t<> > struct
@@ -221,23 +225,22 @@ needs_unapply : std::true_type {};
 template< class T > struct
 needs_unapply<T, std::void_t<decltype(std::declval<T>()())>> : std::false_type {};
 
-
-template <typename F> 
+template <typename F>
 auto curry(F&& f) {
   
   
-    if constexpr (needs_unapply<decltype(f)>::value) {
-        return [=](auto&& x) {
-            return curry(
-                [=](auto&&...xs) -> decltype(f(x, xs...)) {
-                return f(x, xs...);
-            }
-            );
-        };
-    } else {
-      
-        return f();
-    }
+	if constexpr (needs_unapply<decltype(f)>::value) {
+		return [=](auto&& x) {
+			return curry(
+				[=](auto&&...xs) -> decltype(f(x, xs...)) {
+				return f(x, xs...);
+			}
+			);
+		};
+	} else {
+	  
+		return f();
+	}
 }
 
 
@@ -255,12 +258,57 @@ namespace Prelude {
 	auto compose = curry([](Function<C, B> f, Function<B, A> g, A x) -> C {
 		return f(g(x));
 	});
-	
-	
-	
-	
-	
+
 };
+#line 6 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Types/Functor.h"
+#line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Functional/Typeclass.h"
+#pragma once
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#line 7 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Types/Functor.h"
+
+
+
+
+
+
+
+
 
 
 
@@ -282,41 +330,6 @@ public:
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 template <template <class> class F, typename A>
 class BaseFunctor {
 protected:
@@ -336,7 +349,67 @@ public:
 	inline static auto map_replace_by = curry(_map_replace_by<B>);
 };
 
-auto a = Prelude::constant<int, float>(1);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#line 4 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj\\Source\\Preprocess\\Types\\Maybe.h"
+
 
 template <typename A>
 class Maybe {
@@ -375,7 +448,7 @@ auto fromMaybe = curry([](A a, Maybe<A> m_a) -> A {
 });
 
 
-template <typename A> class Functor<Maybe <A> > : public BaseFunctor<Maybe, A> { private: template <typename B> inline static auto _fmap = [](Function<B, A> func, Maybe<A> f_a) -> Maybe<B> { if (f_a._isNothing) { return Maybe<B>::Nothing(); } else { return Maybe<B>::Just(func(f_a._value)); } }; public: template <typename B> inline static auto fmap = curry(_fmap <B>); };
+template <class A> class Functor<Maybe <A> > : public BaseFunctor<Maybe, A> { private: template <class B> inline static auto _fmap = [](Function<B, A> func, Maybe<A> f_a) -> Maybe<B> { if (f_a._isNothing) { return Maybe<B>::Nothing(); } else { return Maybe<B>::Just(func(f_a._value)); } }; public: template <class B> inline static auto fmap = curry(_fmap <B>); };
 
 
 
@@ -385,62 +458,3 @@ template <typename A> class Functor<Maybe <A> > : public BaseFunctor<Maybe, A> {
 
 
 ;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

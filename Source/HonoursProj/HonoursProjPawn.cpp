@@ -9,7 +9,10 @@
 #include "DrawDebugHelpers.h"
 
 
-//#include "Types/Functor.h"
+#include "Types/Functor.h"
+#include "Types/Maybe.gen.h"
+#include "Types/Ord.h"
+#include "Types/Int.gen.h"
 
 AHonoursProjPawn::AHonoursProjPawn(const FObjectInitializer& ObjectInitializer) 
 	: Super(ObjectInitializer)
@@ -94,6 +97,19 @@ void AHonoursProjPawn::OnLClickRelease() {
 	a = Functor<Maybe<int>>::map_replace_by<int>(2)(a);
 	q = fromMaybe<int>(0)(a);
 	UE_LOG(LogTemp, Warning, TEXT("maybe %d"), q);
+
+	ORD n1 = Ordinal<Number<int>>::ord(5)(6);
+	ORD n2 = Ordinal<Number<int>>::ord(6)(6);
+	ORD n3 = Ordinal<Number<int>>::ord(7)(6);
+	bool n4 =  Ordinal<Number<int>>::lt<int>(5)(6);
+
+	UE_LOG(LogTemp, Warning, TEXT("ORD %d %d %d %d"), n1, n2, n3, n4);
+
+	//UE_LOG(LogTemp, Warning, TEXT("ORD %d %d"), 
+	//	Ordinal<Number<int>>::lt(5)(6),
+	//	Ordinal<Number<int>>::lt(6)(4)
+	//);
+
 
 }
 

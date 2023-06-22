@@ -76,7 +76,8 @@
             // Output lines when the last line directive was for the file
             if (thisFile.IsMatch(line)) {
                 validOutput = true;
-            } else if (srcFile.IsMatch(line)) {
+            } else if (srcFile.IsMatch(line) && validOutput) {
+                validOutput = false;
                 Match match = srcFile.Match(line);          
 #>
 #include <#=match.Groups["file"].Value#>
