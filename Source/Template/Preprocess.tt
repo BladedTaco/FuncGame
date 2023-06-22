@@ -55,8 +55,6 @@
         //p.StartInfo.RedirectStandardOutput = true;
         p.StartInfo.FileName = "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Auxiliary/Build/vcvarsall.bat";
         p.StartInfo.Arguments = $"x86 & cl /std:c++17 /Zc:preprocessor /TP /MT /P /D\"__PREPROCESSING\" /Fi\"{intermediate}\" /I \"{ProjectDir}/Source/HonoursProj\" \"{filepath}\"";
-        //cl /std:c++17 /Zc:preprocessor /TP /MT /E /I "Source/HonoursProj" "Source/Preprocess/Types/Functor.h"
-//cl /std:c++17 /Zc:preprocessor /TP /P /MT /Zl /D"__PREPROCESSING" /Fi"Test.hpp" /I "Source/HonoursProj" "Source/Preprocess/Types/Functor.h"
 
         p.Start();
         // Do not wait for the child process to exit before
