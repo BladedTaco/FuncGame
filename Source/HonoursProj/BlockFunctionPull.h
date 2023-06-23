@@ -28,4 +28,6 @@ public:
 	//Function<void*, void*> InnerFunction = [](auto& a) { return a; };
 
 	virtual void* GetValue() { return ( void* )0; };
+
+	//UFUNCTION(BlueprintCallable, meta = (DeterminesOutputType = ""))
 };

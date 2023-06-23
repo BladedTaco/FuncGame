@@ -28,7 +28,7 @@
 
 
     string inputPath = Path.Combine(ProjectDir, "Source", "Preprocess", "Types");
-    string intermediate = Path.Combine(ProjectDir, "Source", "Generated", "out.gen.h");
+    string intermediate = Path.Combine(ProjectDir, "Source", "Generated", "out_gen.h");
     string outputPath = Path.Combine(ProjectDir, "Source", "HonoursProj", "Types");
 
     string[] files = Directory.GetFiles(inputPath, "*.h", SearchOption.AllDirectories);
@@ -44,7 +44,7 @@
         string filename = Path.GetFileName(filepath);
         string filebase = Path.GetFileNameWithoutExtension(filepath);
 
-        string outName = filebase + ".gen.h";
+        string outName = filebase + "_gen.h";
         fileManager.StartNewFile(outName, null, outputPath);
 
         // Start the child process.
@@ -54,7 +54,7 @@
         p.StartInfo.UseShellExecute = false;
         //p.StartInfo.RedirectStandardOutput = true;
         p.StartInfo.FileName = "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Auxiliary/Build/vcvarsall.bat";
-        p.StartInfo.Arguments = $"x86 & cl /std:c++17 /Zc:preprocessor /TP /MT /P /D\"__PREPROCESSING\" /Fi\"{intermediate}\" /I \"{ProjectDir}/Source/HonoursProj\" \"{filepath}\"";
+        p.StartInfo.Arguments = $"x86 & cl /std:c++17 /Zc:preprocessor /TP /MT /P /permissive /D\"__PREPROCESSING\" /Fi\"{intermediate}\" /I\"{ProjectDir}/Source/HonoursProj\" \"{filepath}\"";
 
         p.Start();
         // Do not wait for the child process to exit before
@@ -85,9 +85,11 @@
 #>#<#
                 }
                 if (!string.IsNullOrWhiteSpace(line)) {
+                    foreach (string subline in line.Split(new [] {"__NEWLINE"}, StringSplitOptions.None)) {
 #>
-<#=line#>
+<#=subline#>
 <#
+                    }
                 }
             }
         }

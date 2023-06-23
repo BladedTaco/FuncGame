@@ -12,7 +12,7 @@
 #include "FunctionInput.h"
 #include "FunctionOutput.h"
 
-#include "AssetLoader.gen.h"
+#include "AssetLoader_gen.h"
 
 // Sets default values
 AFunctionConnector::AFunctionConnector() {

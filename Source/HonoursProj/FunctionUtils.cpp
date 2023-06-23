@@ -12,7 +12,7 @@
 //#include "Materials/Material.h"
 
 
-#include "AssetLoader.gen.h"
+#include "AssetLoader_gen.h"
 
 UTypeHandler::UTypeHandler() {
 	UDataTable* types = Assets.Data.TypesTable.Get();

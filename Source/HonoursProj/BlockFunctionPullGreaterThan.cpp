@@ -3,7 +3,7 @@
 
 #include "BlockFunctionPullGreaterThan.h"
 #include "Types/Ord.h"
-#include "Types/Int.gen.h"
+#include "Types/Int_gen.h"
 
 #include "FunctionInput.h"
 #include "FunctionOutput.h"

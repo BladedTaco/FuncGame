@@ -10,9 +10,10 @@
 
 
 #include "Types/Functor.h"
-#include "Types/Maybe.gen.h"
+#include "Types/Maybe_gen.h"
 #include "Types/Ord.h"
-#include "Types/Int.gen.h"
+#include "Types/Int_gen.h"
+#include "Types/Types_gen.h"
 
 AHonoursProjPawn::AHonoursProjPawn(const FObjectInitializer& ObjectInitializer) 
 	: Super(ObjectInitializer)

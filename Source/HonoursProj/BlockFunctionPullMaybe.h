@@ -5,8 +5,8 @@
 #include "CoreMinimal.h"
 #include "BlockFunctionPull.h"
 
-#include "Types/Maybe.gen.h"
-#include "Types/Int.gen.h"
+#include "Types/Maybe_gen.h"
+#include "Types/Int_gen.h"
 
 #include "BlockFunctionPullMaybe.generated.h"
 

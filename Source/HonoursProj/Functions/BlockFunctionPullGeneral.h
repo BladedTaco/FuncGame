@@ -4,16 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "BlockFunctionPull.h"
-#include "BlockFunctionPullFmap.generated.h"
+#include "BlockFunctionPullGeneral.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class HONOURSPROJ_API ABlockFunctionPullFmap : public ABlockFunctionPull
+class HONOURSPROJ_API ABlockFunctionPullGeneral : public ABlockFunctionPull
 {
 	GENERATED_BODY()
-
-public:
-	virtual void* GetValue() override;
+	
 };
