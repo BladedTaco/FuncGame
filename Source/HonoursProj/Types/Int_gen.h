@@ -10,20 +10,19 @@ class Number {
 private:
 	A _value;
 	friend class Ordinal<Number<A>>;
-	friend class BaseOrdinal<Number<A>>;
-	friend class Number<A>;
 public:
 	Number(A value) { _value = value; }
 	A get() { return _value; }
 };
-template <class A>
-class Ordinal<Number<A>> : public BaseOrdinal<Number<A>> {
-private:
-	template <class = A>
-	inline static auto _ord = [](Number<A> a, Number<A> b) -> ORD {
-		return a._value == b._value ? ORD::EQ : a._value < b._value ? ORD::LT : ORD::GT;
-	};
-public:
-	template <class = A>
-	inline static auto ord = curry(_ord<>);
-};
+template <class A> class Ordinal<Number<A> > : public BaseOrdinal<Number<A> > { 
+ private: 
+ template <class = auto> 
+ inline static auto _ord = [](Number<A> a, Number<A> b) -> ORD { 
+ return a._value == b._value ? ORD::EQ : a._value < b._value ? ORD::LT : ORD::GT; 
+ }; 
+ 
+ public: 
+ template <class = auto> 
+ inline static auto ord = curry(_ord<>); 
+ };
+;

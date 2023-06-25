@@ -3,7 +3,7 @@
 #pragma once
 
 // Ensure Preprocessed Files aren't 60k lines long
-#ifndef __PREPROCESSING
+#ifndef PP__PREPROCESSING
 #include <functional>
 #else
 include <functional>

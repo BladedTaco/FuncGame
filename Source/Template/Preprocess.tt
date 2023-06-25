@@ -12,6 +12,7 @@
 
 <#
     string ProjectDir = Host.ResolveParameterValue(null, null, "dir");
+    PP pp = new PP(ProjectDir);
 
     // Start Common File Header
     var fileManager = new T4FileManager(this);
@@ -26,26 +27,73 @@
     fileManager.FinishHeader();
     // End Common File Header
 
-
-    string inputPath = Path.Combine(ProjectDir, "Source", "Preprocess", "Types");
     string intermediate = Path.Combine(ProjectDir, "Source", "Generated", "out_gen.h");
-    string outputPath = Path.Combine(ProjectDir, "Source", "HonoursProj", "Types");
+    string preprocessPath = Path.Combine(ProjectDir, "Source", "Preprocess");
 
-    string[] files = Directory.GetFiles(inputPath, "*.h", SearchOption.AllDirectories);
+    string[] passes = Directory.GetDirectories(preprocessPath, "*", SearchOption.TopDirectoryOnly);
+    Array.Sort(passes, (a, b) => Int32.Parse(DirectoryInfo(a).Name).CompareTo(Int32.Parse(DirectoryInfo(b).Name)));
 
+    // for each pass in order 0..N
+    foreach (string pass in passes) {
+        string passPath = Path.Combine(preprocessPath, pass);
+        string[] files = Directory.GetFiles(passPath, "*.h", SearchOption.AllDirectories);
+
+        // For each file in the pass
+        foreach (string filepath in files) {
+            // Get New Files output path and name
+            string outputPath = Path.Combine(ProjectDir, "Source", "HonoursProj", Path.GetRelativePath(passPath, filepath));
+            string filebase = Path.GetFileNameWithoutExtension(filepath);
+            string outName = filebase + "_gen.h";
+
+            // Preprocess the file to output file
+            fileManager.StartNewFile(outName, null, outputPath);
+            pp.Preprocess(filepath);
+        }
+    }
+
+    // Finish any preprocessor directives leftovers
+    pp.Finish(fileManager, ProjectDir);
+
+    // Write all files
+    fileManager.Process();
+#>
+
+
+<#+
+// Preprocessor Directive
+public class PP {
+
+    protected string ProjectDir;
+
+    
     // New Include
-    Regex srcFile = new Regex($"^#line 1 (?<file>.+)$");
+    protected static Regex srcFile = new Regex("^#line 1 (?<file>.+)$");
     // Removed Import
-    Regex skippedImport = new Regex($"^include (<.+>|\".+\")$");
+    protected static Regex skippedImport = new Regex("^include (<.+>|\".+\")$");
 
-    // For Each Input File
-    foreach (string filepath in files) {
-        // Start New File 
-        string filename = Path.GetFileName(filepath);
-        string filebase = Path.GetFileNameWithoutExtension(filepath);
+    public PP(string ProjectDir) {
+        this.ProjectDir = ProjectDir;
+    }
 
-        string outName = filebase + "_gen.h";
-        fileManager.StartNewFile(outName, null, outputPath);
+    protected string RunPreDirectives(string filepath) {
+        // Write to output file
+        string outputFile = Path.Combine(this.ProjectDir, "Source", "Generated", "out_pre.h");
+        using (StreamWriter writer = new StreamWriter(outputFile)) {
+            // For each line in input file
+            foreach (string line in File.ReadLines(filepath)) {
+                // Copy across any lines that aren't directives
+                writer.WriteLine(this.RunDirective(line, true) ?? line);
+            }
+        }
+        return outputFile;
+    }
+
+    protected IEnumerable<string> RunPP(string filepath) {
+        // Run any predirectives
+        filepath = this.RunPreDirectives(filepath);
+
+        // Get intermediate file
+        string intermediate = Path.Combine(this.ProjectDir, "Source", "Generated", "out_gen.h");
 
         // Start the child process.
         System.Diagnostics.Process p = new System.Diagnostics.Process();
@@ -54,7 +102,7 @@
         p.StartInfo.UseShellExecute = false;
         //p.StartInfo.RedirectStandardOutput = true;
         p.StartInfo.FileName = "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Auxiliary/Build/vcvarsall.bat";
-        p.StartInfo.Arguments = $"x86 & cl /std:c++17 /Zc:preprocessor /TP /MT /P /permissive /D\"__PREPROCESSING\" /Fi\"{intermediate}\" /I\"{ProjectDir}/Source/HonoursProj\" \"{filepath}\"";
+        p.StartInfo.Arguments = $"x86 & cl /std:c++17 /Zc:preprocessor /TP /MT /P /permissive /D\"PP__PREPROCESSING\" /Fi\"{intermediate}\" /I\"{this.ProjectDir}/Source/HonoursProj\" \"{filepath}\"";
 
         p.Start();
         // Do not wait for the child process to exit before
@@ -64,36 +112,97 @@
         //string output = p.StandardOutput.ReadToEnd();
         p.WaitForExit();
 
+        return File.ReadLines(intermediate);
+    }
+
+    // Preprocess a File
+    public void Preprocess(string filepath) {
+        string filename = Path.GetFileName(filepath);
 
         // Define line regex
         Regex thisFile = new Regex($"^#line.+{filename}\"$");
         bool validOutput = false;
-
-        // For Each Line In File
-        foreach (string line in File.ReadLines(intermediate)) {
+    
+        // For each line in preprocessed file
+        foreach (string line in this.RunPP(filepath)) {
             // Output lines when the last line directive was for the file
             if (thisFile.IsMatch(line)) {
                 validOutput = true;
-            } else if (srcFile.IsMatch(line) && validOutput) {
+            // Include new file when moving from outermost file to line 1 of new file
+            } else if (PP.srcFile.IsMatch(line) && validOutput) {
                 validOutput = false;
-                Match match = srcFile.Match(line);          
+                Match match = PP.srcFile.Match(line);          
 #>
 #include <#=match.Groups["file"].Value#>
-<# 
+<#+ 
+            // Else Write line from original file
             } else if (validOutput) {
-                if (skippedImport.IsMatch(line)) {
-#>#<#
-                }
+                // Add in #'s before skipped imports
+                if (PP.skippedImport.IsMatch(line)) { #>#<#+ }
+                // If the line is not empty
                 if (!string.IsNullOrWhiteSpace(line)) {
-                    foreach (string subline in line.Split(new [] {"__NEWLINE"}, StringSplitOptions.None)) {
+                    // For each subline for line split by the newline directive
+                    foreach (string subline in line.Split(new [] {"PP__NEWLINE"}, StringSplitOptions.None)) {
+// Check for preprocessing directives, but otherwise print line
 #>
-<#=subline#>
-<#
+<#=this.RunDirective(subline, false) ?? subline#>
+<#+
                     }
                 }
             }
         }
-    }
+    };
 
-    fileManager.Process();
+    protected string[] Typeclasses = new List<string>();
+    protected string[] DataClasses = new List<string>();
+
+    public string RunDirective(string line, bool pre) {
+        // Check for preprocessing directives
+        if (pre) {
+            Match match = this.Directives.PreMacro.Match(line);
+        } else {
+            Match match = this.Directives.Macro.Match(line);
+        }
+        if (match.Success()) {
+            // Call directive handling function
+            string directive = match.Groups["directive"].Value;
+            return this.Directives.Dict[directive](match.Groups["data"].Value);
+        }
+        return null;
+    };
+
+    public void Finish(T4FileManager fileManager) {
+        // Nothing yet
+    };
+
+    // Directive Names and Logic
+    public readonly struct Directives {
+        public Regex Macro = new Regex(@"PP__DIRECTIVE\((?<directive>.+) (?<data>.+)\)");
+        public Regex PreMacro = new Regex(@"PP__PRE_DIRECTIVE\((?<directive>.+) (?<data>.+)\)");
+        Dictionary Dict = new Dictionary<string, Func<string, string>>(){
+            {"Typeclass", (string data) => {
+                string[] items = data.Split(new [] {", "}, StringSplitOptions.None);
+                string cls = items[0];
+                string inst = items[1];
+                if (!this.Typeclasses.Contains(cls)) {
+                    this.Typeclasses.Add(cls);
+                }
+                if (!this.DataClasses.Contains(inst)) {
+                    this.DataClasses.Add(inst);
+                }
+                return "";
+            }},
+            {"Print", (string data) => {
+                // Get all elements of specified list
+                string[] output = new List<string>();
+                foreach (string element in this[data]) {
+                    output.Add(element.ToUpper())
+                }
+                // return list capitalized
+                return String.Join(", ", output);
+            }}
+        };
+    };
+};
+
 #>

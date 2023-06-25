@@ -39,5 +39,24 @@ template <typename A>
 auto fromMaybe = curry([](A a, Maybe<A> m_a) -> A {
 	return m_a.fromMaybe(a);
 });
-template <class A> class Functor<Maybe <A> > : public BaseFunctor<Maybe, A> { private: template <class B> inline static auto _fmap = [](Function<B, A> func, Maybe<A> f_a) -> Maybe<B> { if (f_a._isNothing) { return Maybe<B>::Nothing(); } else { return Maybe<B>::Just(func(f_a._value)); } }; public: template <class B> inline static auto fmap = curry(_fmap <B>); };
+
+ template <class A> 
+ class Functor<Maybe <A> > : public BaseFunctor<Maybe, A> { 
+ 
+ private: 
+ template <class B> 
+ inline static auto _fmap = [](Function<B, A> func, Maybe<A> f_a) -> Maybe<B> { 
+ if (f_a._isNothing) { 
+ return Maybe<B>::Nothing(); 
+ } else { 
+ return Maybe<B>::Just(func(f_a._value)); 
+ } 
+ }; 
+ 
+ public: 
+ template <class B> 
+ inline static auto fmap = curry(_fmap<B>); 
+ 
+ 
+ };
 ;

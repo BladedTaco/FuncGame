@@ -41,12 +41,12 @@ auto fromMaybe = curry([](A a, Maybe<A> m_a) -> A {
 
 
 FUNCTOR((A), Maybe, (
-	[](Function<B, A> func, Maybe<A> f_a) -> Maybe<B> {
-		if (f_a._isNothing) {
-			return Maybe<B>::Nothing();
-		} else {
-			return Maybe<B>::Just(func(f_a._value));
-		}
+	[](Function<B, A> func, Maybe<A> f_a) -> Maybe<B> { PP__NEWLINE
+		if (f_a._isNothing) {						    PP__NEWLINE
+			return Maybe<B>::Nothing();				    PP__NEWLINE
+		} else {									    PP__NEWLINE
+			return Maybe<B>::Just(func(f_a._value));    PP__NEWLINE
+		}												PP__NEWLINE
 	}), 
 	()
 );
