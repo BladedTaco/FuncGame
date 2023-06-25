@@ -45,7 +45,7 @@ _CHILD_UENUMS(MZIP2((UENUM_SPECIFIERS, NAME), __VA_ARGS__))
 COMPOSITE_UENUM((BlueprintType), EType
 	, (EBaseType, NUMBER_INT, NUMBER_FLOAT, BOOL, CHAR)
 	, (ETemplateType, 
-		PP__PRE_DIRECTIVE(Print, TypeClasses)
+		PP__PRE_DIRECTIVE(Print, Typeclasses)
 	)
 )
 

@@ -8,7 +8,7 @@
 
 // Functor Instance Macro
 #define ORDINAL(TEMPLATES, INST, ORD)		\
-PP__DIRECTIVE(Typeclass Ordinal INST)		\
+PP__DIRECTIVE(Typeclass, Ordinal, INST)		\
 TEMPLATE(UNBRACKET TEMPLATES)				\
 TYPECLASS_DEFN(Ordinal, (), INST) {			\
 	TYPECLASS_FUNC((), ord, ORD)			\
