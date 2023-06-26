@@ -6,11 +6,12 @@
 #include "Functional/Typeclass.h"
 
 // Functor Instance Macro
-#define FUNCTOR(TEMPLATES, INST, FMAP, MAP_REPLACE_BY)		PP__NEWLINE \
-TEMPLATE(UNBRACKET TEMPLATES)								PP__NEWLINE \
-TYPECLASS_DEFN(Functor, TEMPLATES, INST) {					PP__NEWLINE \
-	TYPECLASS_FUNC((B), fmap, FMAP)							PP__NEWLINE \
-	TYPECLASS_OPT_FUNC((B), map_replace_by, MAP_REPLACE_BY)	PP__NEWLINE \
+#define FUNCTOR(TEMPLATES, INST, FMAP, MAP_REPLACE_BY)		 \
+PP__DIRECTIVE(Typeclass, Functor, INST)						 \
+TEMPLATE(UNBRACKET TEMPLATES)								 \
+TYPECLASS_DEFN(Functor, TEMPLATES, INST) {					 \
+	TYPECLASS_FUNC((B), fmap, FMAP)							 \
+	TYPECLASS_OPT_FUNC((B), map_replace_by, MAP_REPLACE_BY)	 \
 };
 
 // Functor Class Template

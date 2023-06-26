@@ -12,7 +12,7 @@ public:
 	A get() { return _value; }
 };
 
-ORDINAL((A), Number<A>, (
+ORDINAL((A), Number, (
 	[](Number<A> a, Number<A> b) -> ORD {													PP__NEWLINE
 		return a._value == b._value ? ORD::EQ : a._value < b._value ? ORD::LT : ORD::GT;	PP__NEWLINE
 	})

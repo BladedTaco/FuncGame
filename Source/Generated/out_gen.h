@@ -1,4 +1,4 @@
-#line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj\\Source\\Preprocess\\Types\\Types.h"
+#line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj\\Source\\Generated\\out_pre.h"
 
 
 #pragma once
@@ -383,10 +383,31 @@
 
 
 
-#line 6 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj\\Source\\Preprocess\\Types\\Types.h"
+#line 6 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj\\Source\\Generated\\out_pre.h"
+
+#line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Preprocess/Include.h"
+#pragma once
 
 
 
+
+
+
+
+
+
+
+
+
+
+#line 16 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Preprocess/Include.h"
+
+
+
+
+
+
+#line 8 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj\\Source\\Generated\\out_pre.h"
 
 
 
@@ -398,7 +419,7 @@
 include "CoreMinimal.h"
 include "Types_gen.generated.h"
 
-#line 21 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj\\Source\\Preprocess\\Types\\Types.h"
+#line 20 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj\\Source\\Generated\\out_pre.h"
 
 
 
@@ -425,7 +446,37 @@ include "Types_gen.generated.h"
 
 
 
-__NEWLINE UENUM(BlueprintType) __NEWLINE enum class EType : uint8 { __NEWLINE NUMBER_INT, NUMBER_FLOAT, BOOL, CHAR __NEWLINE , MAYBE, FUNCTOR, ORDINAL, ARROW __NEWLINE __NEWLINE }; __NEWLINE __NEWLINE UENUM(BlueprintType) __NEWLINE enum class EBaseType : uint8 { __NEWLINE NUMBER_INT = (uint8)EType::NUMBER_INT __NEWLINE , NUMBER_FLOAT = (uint8)EType::NUMBER_FLOAT __NEWLINE , BOOL = (uint8)EType::BOOL __NEWLINE , CHAR = (uint8)EType::CHAR __NEWLINE __NEWLINE }; __NEWLINE __NEWLINE UENUM(BlueprintType) __NEWLINE enum class ETemplateType : uint8 { __NEWLINE MAYBE = (uint8)EType::MAYBE __NEWLINE , FUNCTOR = (uint8)EType::FUNCTOR __NEWLINE , ORDINAL = (uint8)EType::ORDINAL __NEWLINE , ARROW = (uint8)EType::ARROW __NEWLINE __NEWLINE }; __NEWLINE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PP__NEWLINE UENUM(BlueprintType) PP__NEWLINE enum class EType : uint8 { PP__NEWLINE INT, FLOAT, BOOL, CHAR PP__NEWLINE , ORDINAL, FUNCTOR PP__NEWLINE , NUMBER, MAYBE PP__NEWLINE PP__NEWLINE }; PP__NEWLINE PP__NEWLINE UENUM(BlueprintType) PP__NEWLINE enum class ETypeBase : uint8 { PP__NEWLINE INT = (uint8)EType::INT PP__NEWLINE , FLOAT = (uint8)EType::FLOAT PP__NEWLINE , BOOL = (uint8)EType::BOOL PP__NEWLINE , CHAR = (uint8)EType::CHAR PP__NEWLINE PP__NEWLINE }; PP__NEWLINE PP__NEWLINE UENUM(BlueprintType) PP__NEWLINE enum class ETypeClass : uint8 { PP__NEWLINE ORDINAL = (uint8)EType::ORDINAL PP__NEWLINE , FUNCTOR = (uint8)EType::FUNCTOR PP__NEWLINE PP__NEWLINE }; PP__NEWLINE PP__NEWLINE UENUM(BlueprintType) PP__NEWLINE enum class ETypeData : uint8 { PP__NEWLINE NUMBER = (uint8)EType::NUMBER PP__NEWLINE , MAYBE = (uint8)EType::MAYBE PP__NEWLINE PP__NEWLINE }; PP__NEWLINE
+
+
+
+
+
+
+
+
+
+
+USTRUCT(BlueprintType) PP__NEWLINE struct FTypeInfo { PP__NEWLINE GENERATED_BODY() PP__NEWLINE public: PP__NEWLINE UPROPERTY(EditAnywhere, BlueprintReadWrite) PP__NEWLINE EType OuterType; PP__NEWLINE UPROPERTY(EditAnywhere, BlueprintReadWrite) PP__NEWLINE TArray<EType> Templates; PP__NEWLINE };
+
+
+
+
 
 
 

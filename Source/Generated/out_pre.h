@@ -61,10 +61,10 @@ public:							PP__NEWLINE \
 PP_COMPOSITE_UENUM((BlueprintType), EType
 	, (ETypeBase, INT, FLOAT, BOOL, CHAR)
 	, (ETypeClass, 
-		PP__PRE_DIRECTIVE(Print, List, TypeClasses, Case=Capitalize)
+ORDINAL, FUNCTOR
 	)
 	, (ETypeData,
-		PP__PRE_DIRECTIVE(Print, List, DataClasses, Case=Capitalize)
+NUMBER, MAYBE
 	)
 )
 

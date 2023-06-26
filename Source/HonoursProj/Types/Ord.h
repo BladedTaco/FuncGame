@@ -7,11 +7,11 @@
 
 
 // Functor Instance Macro
-#define ORDINAL(TEMPLATES, INST, ORD)		\
-PP__DIRECTIVE(Typeclass, Ordinal, INST)		\
-TEMPLATE(UNBRACKET TEMPLATES)				\
-TYPECLASS_DEFN(Ordinal, (), INST) {			\
-	TYPECLASS_FUNC((), ord, ORD)			\
+#define ORDINAL(TEMPLATES, INST, ORD)				\
+PP__DIRECTIVE(Typeclass, Ordinal, INST)				\
+TEMPLATE(UNBRACKET TEMPLATES)						\
+STATIC_TYPECLASS_DEFN(Ordinal, TEMPLATES, INST) {	\
+	TYPECLASS_FUNC((), ord, ORD)					\
 };
 
 enum class ORD : int {
