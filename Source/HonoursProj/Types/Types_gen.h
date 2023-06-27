@@ -11,8 +11,8 @@
 
  UENUM(BlueprintType) 
  enum class EType : uint8 { 
- INT, FLOAT, BOOL, CHAR 
- , ORDINAL, FUNCTOR 
+ INT, FLOAT, BOOL, CHAR, TEMPLATE 
+ , ARROW, ORDINAL, FUNCTOR 
  , NUMBER, MAYBE 
  
  }; 
@@ -23,12 +23,14 @@
  , FLOAT = (uint8)EType::FLOAT 
  , BOOL = (uint8)EType::BOOL 
  , CHAR = (uint8)EType::CHAR 
+ , TEMPLATE = (uint8)EType::TEMPLATE 
  
  }; 
  
  UENUM(BlueprintType) 
  enum class ETypeClass : uint8 { 
- ORDINAL = (uint8)EType::ORDINAL 
+ ARROW = (uint8)EType::ARROW 
+ , ORDINAL = (uint8)EType::ORDINAL 
  , FUNCTOR = (uint8)EType::FUNCTOR 
  
  }; 
@@ -40,12 +42,60 @@
  
  }; 
 
-USTRUCT(BlueprintType) 
- struct FTypeInfo { 
- GENERATED_BODY() 
- public: 
- UPROPERTY(EditAnywhere, BlueprintReadWrite) 
- EType OuterType; 
- UPROPERTY(EditAnywhere, BlueprintReadWrite) 
- TArray<EType> Templates; 
- };
+USTRUCT(BlueprintType)
+struct FTypeInfo {
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		EType Type;
+	FTypeInfo* DependsOn = NULL;
+	TArray<FTypeInfo> Templates;
+public:
+	FTypeInfo()
+		: Type(EType::TEMPLATE)
+		, Templates({})
+		, DependsOn(NULL) {};
+	FTypeInfo(ETypeBase type)
+		: Type(( EType )type)
+		, Templates({})
+		, DependsOn(NULL) {};
+	FTypeInfo(FTypeInfo* depends)
+		: Type(depends->Type)
+		, Templates(depends->Templates)
+		, DependsOn(depends) {};
+	FTypeInfo(EType type, TArray<FTypeInfo> templates)
+		: Type(type)
+		, Templates(templates)
+		, DependsOn(NULL) {};
+	FTypeInfo(FTypeInfo* depends, TArray<FTypeInfo> templates)
+		: Type(depends->Type)
+		, Templates(templates)
+		, DependsOn(depends) {};
+};
+USTRUCT(BlueprintType)
+struct FParameter {
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FString Name;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FTypeInfo Type;
+public:
+	FParameter()
+		: Type()
+		, Name("Unnamed") {};
+	FParameter(FString name, FTypeInfo type)
+		: Type(Type)
+		, Name(name) {};
+};
+USTRUCT(BlueprintType)
+struct FFunctionInfo {
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TArray<FParameter> Inputs;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TArray<FParameter> Outputs;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TArray<FTypeInfo> Templates;
+};

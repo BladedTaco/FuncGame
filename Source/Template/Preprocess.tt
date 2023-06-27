@@ -90,6 +90,17 @@ public class Directive {
 
         return (args, kwargs);
     }
+
+    // Replace Directive Text with Other Text
+    public static string ReplaceText(string directiveResult, string originalLine) {
+        // Handle non-replacing directives
+        if (directiveResult == null) {
+            return originalLine;
+        }
+        // Replace Directive
+        Regex directive = new Regex(@"PP__(PRE_)?DIRECTIVE\([^)]+\)");
+        return directive.Replace(originalLine, directiveResult);;
+    }
 }
 
 
@@ -179,7 +190,7 @@ public class PP {
                         // Add in #'s before skipped imports
                         string prepend = (PP.skippedImport.IsMatch(line) ? "#" : "");
                         // Check for preprocessing directives, but otherwise print line
-                        yield return this.RunDirective(subline, false) ?? prepend + subline;
+                        yield return this.RunDirective(prepend + subline, false);
                     }
                 }
             }
@@ -202,9 +213,9 @@ public class PP {
         if (match.Success) {
             // Call directive handling function
             string directive = match.Groups["directive"].Value;
-            return this.DirectiveDict[directive](this, match.Groups["data"].Value);
+            return Directive.ReplaceText(this.DirectiveDict[directive](this, match.Groups["data"].Value), line);
         }
-        return null;
+        return line;
     }
 
     public void Finish(T4FileManager fileManager) {
@@ -212,8 +223,8 @@ public class PP {
     }
 
     // Directive Names and Logic
-    public readonly Regex DirectiveMacro =        new Regex(@"^\s*PP__DIRECTIVE\((?<directive>[^, ]+)[, ]+(?<data>.+)?\)");
-    public readonly Regex PreDirectiveMacro = new Regex(@"^\s*PP__PRE_DIRECTIVE\((?<directive>[^, ]+)[, ]+(?<data>.+)?\)");
+    public readonly Regex DirectiveMacro =        new Regex(@"PP__DIRECTIVE\((?<directive>[^, ]+)[, ]+(?<data>[^)]+)?\)");
+    public readonly Regex PreDirectiveMacro = new Regex(@"PP__PRE_DIRECTIVE\((?<directive>[^, ]+)[, ]+(?<data>[^)]+)?\)");
     public readonly Dictionary<string, Func<PP, string, string>> DirectiveDict = new Dictionary<string, Func<PP, string, string>>(){
         {"Typeclass", (PP pp, string data) => {
             string[] items = data.Split(new [] {", "}, StringSplitOptions.None);

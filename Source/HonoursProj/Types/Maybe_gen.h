@@ -40,7 +40,7 @@ auto fromMaybe = curry([](A a, Maybe<A> m_a) -> A {
 	return m_a.fromMaybe(a);
 });
 
-/*Added Typeclass Functor Instance Maybe*/
+ /*Added Typeclass Functor Instance Maybe*/ 
  template <class A> 
  class Functor<Maybe <A> > : public BaseFunctor<Maybe,A> { 
  private: 

@@ -15,7 +15,7 @@ public:
 	A get() { return _value; }
 };
 
-/*Added Typeclass Ordinal Instance Number*/
+ /*Added Typeclass Ordinal Instance Number*/ 
  template <class A> 
  class Ordinal<Number <A> > : public BaseOrdinal<Number <A> > { 
  private: 

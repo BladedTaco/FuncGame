@@ -1,0 +1,222 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\Generated\out.gen.h">
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\Generated\out_gen.h">
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\Generated\out_pre.h">
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\Generated\temp.gen.h">
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\Generated\temp_gen.h">
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\Generated\Test.hpp">
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\AssetLoader_gen.h">
+      <Filter>Source\HonoursProj</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockDuplicate.h">
+      <Filter>Source\HonoursProj</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockFunction.h">
+      <Filter>Source\HonoursProj</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockFunctionPull.h">
+      <Filter>Source\HonoursProj</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockFunctionPullConstant.h">
+      <Filter>Source\HonoursProj</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockFunctionPullFmap.h">
+      <Filter>Source\HonoursProj</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockFunctionPullGreaterThan.h">
+      <Filter>Source\HonoursProj</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockFunctionPullMaybe.h">
+      <Filter>Source\HonoursProj</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\FunctionConnector.h">
+      <Filter>Source\HonoursProj</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\FunctionInput.h">
+      <Filter>Source\HonoursProj</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\FunctionOutput.h">
+      <Filter>Source\HonoursProj</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\FunctionUtils.h">
+      <Filter>Source\HonoursProj</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\HonoursProj.h">
+      <Filter>Source\HonoursProj</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\HonoursProjBlock.h">
+      <Filter>Source\HonoursProj</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\HonoursProjBlockGrid.h">
+      <Filter>Source\HonoursProj</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\HonoursProjGameMode.h">
+      <Filter>Source\HonoursProj</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\HonoursProjPawn.h">
+      <Filter>Source\HonoursProj</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\HonoursProjPlayerController.h">
+      <Filter>Source\HonoursProj</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\LoopMacros.h">
+      <Filter>Source\HonoursProj</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\MacroUtils.h">
+      <Filter>Source\HonoursProj</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Functional\Prelude.h">
+      <Filter>Source\HonoursProj\Functional</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Functional\Typeclass.h">
+      <Filter>Source\HonoursProj\Functional</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Functions\BlockFunctionFmap.h">
+      <Filter>Source\HonoursProj\Functions</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Functions\BlockFunctionPullGeneral.h">
+      <Filter>Source\HonoursProj\Functions</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Preprocess\Include.h">
+      <Filter>Source\HonoursProj\Preprocess</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Types\Arrow.h">
+      <Filter>Source\HonoursProj\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Types\Functor.h">
+      <Filter>Source\HonoursProj\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Types\Int_gen.h">
+      <Filter>Source\HonoursProj\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Types\Maybe_gen.h">
+      <Filter>Source\HonoursProj\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Types\Ord.h">
+      <Filter>Source\HonoursProj\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Types\Types_gen.h">
+      <Filter>Source\HonoursProj\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\Preprocess\0\Types\Int.h">
+      <Filter>Source\Preprocess\0\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\Preprocess\0\Types\Maybe.h">
+      <Filter>Source\Preprocess\0\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\Preprocess\1\Types\Types.h">
+      <Filter>Source\Preprocess\1\Types</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockDuplicate.cpp">
+      <Filter>Source\HonoursProj</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockFunction.cpp">
+      <Filter>Source\HonoursProj</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockFunctionPull.cpp">
+      <Filter>Source\HonoursProj</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockFunctionPullConstant.cpp">
+      <Filter>Source\HonoursProj</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockFunctionPullFmap.cpp">
+      <Filter>Source\HonoursProj</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockFunctionPullGreaterThan.cpp">
+      <Filter>Source\HonoursProj</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockFunctionPullMaybe.cpp">
+      <Filter>Source\HonoursProj</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\FunctionConnector.cpp">
+      <Filter>Source\HonoursProj</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\FunctionInput.cpp">
+      <Filter>Source\HonoursProj</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\FunctionOutput.cpp">
+      <Filter>Source\HonoursProj</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\FunctionUtils.cpp">
+      <Filter>Source\HonoursProj</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\HonoursProj.cpp">
+      <Filter>Source\HonoursProj</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\HonoursProjBlock.cpp">
+      <Filter>Source\HonoursProj</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\HonoursProjBlockGrid.cpp">
+      <Filter>Source\HonoursProj</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\HonoursProjGameMode.cpp">
+      <Filter>Source\HonoursProj</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\HonoursProjPawn.cpp">
+      <Filter>Source\HonoursProj</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\HonoursProjPlayerController.cpp">
+      <Filter>Source\HonoursProj</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Functions\BlockFunctionFmap.cpp">
+      <Filter>Source\HonoursProj\Functions</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Functions\BlockFunctionPullGeneral.cpp">
+      <Filter>Source\HonoursProj\Functions</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{3b23e62b-73b1-43c1-8c37-71961669220f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Generated">
+      <UniqueIdentifier>{f89b709f-c886-4774-b286-1f75cdc9220e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\HonoursProj">
+      <UniqueIdentifier>{709d7852-c995-4e44-8b41-57cafc285ae4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\HonoursProj\Functional">
+      <UniqueIdentifier>{2eceeb54-b589-4810-be0a-e435fa6c040a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\HonoursProj\Functions">
+      <UniqueIdentifier>{eb111d00-b36e-4caf-bd12-245922acb905}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\HonoursProj\Preprocess">
+      <UniqueIdentifier>{783bf14d-6909-400a-b2b0-5d6304a62a7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\HonoursProj\Types">
+      <UniqueIdentifier>{ae1ff751-ca51-427e-b990-3992244eafd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Preprocess">
+      <UniqueIdentifier>{2afcf6e7-1bd4-4374-b11f-3426b0af4018}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Preprocess\0">
+      <UniqueIdentifier>{41125ba4-ac00-4452-94d3-2a6d40e1321d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Preprocess\0\Types">
+      <UniqueIdentifier>{343be698-bba9-4251-9d8e-a218fdd5ddc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Preprocess\1">
+      <UniqueIdentifier>{c50d7295-1f00-4a37-ba22-ff9b8cc7c2be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Preprocess\1\Types">
+      <UniqueIdentifier>{b61dbcf8-7026-402c-8ce7-1aff7230f4de}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{afca829e-6f22-4251-bd91-11e9b97c79aa}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\Generated\out.gen.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\Generated\out_gen.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\Generated\out_pre.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\Generated\temp.gen.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\Generated\temp_gen.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\Generated\Test.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\AssetLoader_gen.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockDuplicate.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockFunction.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockFunctionPull.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockFunctionPullConstant.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockFunctionPullFmap.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockFunctionPullGreaterThan.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockFunctionPullMaybe.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Functional\Prelude.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Functional\Typeclass.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\FunctionConnector.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\FunctionInput.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\FunctionOutput.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Functions\BlockFunctionFmap.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Functions\BlockFunctionPullGeneral.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\FunctionUtils.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\HonoursProj.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\HonoursProjBlock.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\HonoursProjBlockGrid.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\HonoursProjGameMode.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\HonoursProjPawn.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\HonoursProjPlayerController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\LoopMacros.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\MacroUtils.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Preprocess\Include.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Types\Arrow.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Types\Functor.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Types\Int_gen.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Types\Maybe_gen.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Types\Ord.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Types\Types_gen.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\Preprocess\0\Types\Int.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\Preprocess\0\Types\Maybe.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\Preprocess\1\Types\Types.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockDuplicate.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockFunction.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockFunctionPull.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockFunctionPullConstant.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockFunctionPullFmap.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockFunctionPullGreaterThan.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockFunctionPullMaybe.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\FunctionConnector.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\FunctionInput.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\FunctionOutput.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Functions\BlockFunctionFmap.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Functions\BlockFunctionPullGeneral.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\FunctionUtils.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\HonoursProj.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\HonoursProjBlock.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\HonoursProjBlockGrid.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\HonoursProjGameMode.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\HonoursProjPawn.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\HonoursProjPlayerController.cpp" />
+  </ItemGroup>
+</Project>
