@@ -11,12 +11,12 @@
 #include "FunctionOutput.h"
 
 ABlockFunctionPull::ABlockFunctionPull() {
-	TextComponent = CreateDefaultSubobject<UTextRenderComponent>(TEXT("TextOutput"));
-	TextComponent->SetText(FString("test"));
-	TextComponent->SetRelativeLocation(FVector::UpVector * 200.0f);
-	TextComponent->SetWorldRotation(FRotator(90, 0, 180));
-	TextComponent->SetRelativeScale3D(FVector(10));
-	TextComponent->SetupAttachment(GetBlockMesh());
+	//TextComponent = CreateDefaultSubobject<UTextRenderComponent>(TEXT("TextOutput"));
+	//TextComponent->SetText(FString("test"));
+	//TextComponent->SetRelativeLocation(FVector::UpVector * 200.0f);
+	//TextComponent->SetWorldRotation(FRotator(90, 0, 180));
+	//TextComponent->SetRelativeScale3D(FVector(10));
+	//TextComponent->SetupAttachment(GetBlockMesh());
 }
 
 // Pull Otuput

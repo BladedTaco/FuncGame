@@ -65,3 +65,10 @@ void AFunctionInput::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 		connectedTo = NULL;
 	}
 }
+
+UType* AFunctionInput::ResolveType() {
+	if (connectedTo && IsValid(connectedTo)) {
+		return connectedTo->ResolveType();
+	}
+	return NULL;
+}

@@ -51,9 +51,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Types\Maybe_gen.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Types\Ord.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Types\Types_gen.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\Preprocess\0\Types\Int.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\Preprocess\0\Types\Maybe.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\Preprocess\1\Types\Types.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockDuplicate.cpp" />

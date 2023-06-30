@@ -18,8 +18,8 @@ class HONOURSPROJ_API ABlockFunctionPull : public ABlockFunction
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(VisibleAnywhere)
-	class UTextRenderComponent* TextComponent;
+	/*UPROPERTY(VisibleAnywhere)
+	class UTextRenderComponent* TextComponent;*/
 
 	ABlockFunctionPull();
 	virtual AHonoursProjBlock* HandleRClick(UPrimitiveComponent* ClickedComponent) override;

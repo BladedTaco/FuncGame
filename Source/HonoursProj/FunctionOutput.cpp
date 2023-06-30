@@ -3,6 +3,7 @@
 
 #include "FunctionOutput.h"
 #include "FunctionInput.h"
+#include "BlockFunction.h"
 #include "Components/StaticMeshComponent.h"
 
 AHonoursProjBlock* AFunctionOutput::HandleClick(UPrimitiveComponent* ClickedComponent) {
@@ -25,23 +26,36 @@ AHonoursProjBlock* AFunctionOutput::HandleClick(UPrimitiveComponent* ClickedComp
 
 AHonoursProjBlock* AFunctionOutput::HandleRClick(UPrimitiveComponent* ClickedComponent) {
 	// Break all inputs connected to this output
-	auto others = connectedTo;
-	connectedTo = TArray<AFunctionInput*>();
-	for (auto inputBlock : others) {
+	for (auto inputBlock : connectedTo) {
 		inputBlock->HandleRClick(ClickedComponent);
 	}
-	others.Empty();
+	connectedTo.Empty();
 	return this;
 }
 
 void AFunctionOutput::EndPlay(const EEndPlayReason::Type EndPlayReason) {	
 	// Remove Connected to if it exists
-	auto others = connectedTo;
-	connectedTo = TArray<AFunctionInput*>();
-	for (auto inputBlock : others) {
+	for (auto inputBlock : connectedTo) {
 		if (IsValid(inputBlock)) {
 			inputBlock->HandleRClick(NULL);
 		}
 	}
-	others.Empty();
+	connectedTo.Empty();
+}
+
+UType* AFunctionOutput::ResolveType() {
+	// Copy Owners OutputArrow
+	UType* arrow = Cast<ABlockFunction>(GetAttachParentActor())->ResolveType()->DeepCopy();
+	// Get a pointer to the arrow
+	UTypePtr* arrowPtr = UTypePtr::New(arrow);
+
+	// Move down the arrow until a TypeVar is found
+	while (arrowPtr && arrowPtr->Valid() && !arrowPtr->Get()->IsA<UTypeVar>()) {
+		arrowPtr = Cast<UTypePtr>(arrowPtr->GetTemplates()[1]);
+	}
+	// Apply the Outputs Type to the TypeVar
+	Cast<UTypeVar>(arrowPtr->Get())->ApplyEvidence(ParameterInfo.Type);
+
+	// Return the arrow with applied type
+	return arrow;
 }

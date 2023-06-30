@@ -7,95 +7,63 @@
 #include "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\MacroUtils.h"
 #include "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Preprocess/Include.h"
 #include "CoreMinimal.h"
+#include "Algo/Transform.h"
 #include "Types_gen.generated.h"
 
  UENUM(BlueprintType) 
  enum class EType : uint8 { 
- INT, FLOAT, BOOL, CHAR, TEMPLATE 
- , ARROW, ORDINAL, FUNCTOR 
- , NUMBER, MAYBE 
+ NONE, INT, FLOAT, BOOL, CHAR 
+ , ANY, FUNCTOR, ORDINAL 
+ , ARROW, NUMBER, MAYBE 
  
  }; 
  
  UENUM(BlueprintType) 
  enum class ETypeBase : uint8 { 
- INT = (uint8)EType::INT 
+ NONE = (uint8)EType::NONE 
+ , INT = (uint8)EType::INT 
  , FLOAT = (uint8)EType::FLOAT 
  , BOOL = (uint8)EType::BOOL 
  , CHAR = (uint8)EType::CHAR 
- , TEMPLATE = (uint8)EType::TEMPLATE 
  
  }; 
  
  UENUM(BlueprintType) 
  enum class ETypeClass : uint8 { 
- ARROW = (uint8)EType::ARROW 
- , ORDINAL = (uint8)EType::ORDINAL 
+ ANY = (uint8)EType::ANY 
  , FUNCTOR = (uint8)EType::FUNCTOR 
+ , ORDINAL = (uint8)EType::ORDINAL 
  
  }; 
  
  UENUM(BlueprintType) 
  enum class ETypeData : uint8 { 
- NUMBER = (uint8)EType::NUMBER 
+ ARROW = (uint8)EType::ARROW 
+ , NUMBER = (uint8)EType::NUMBER 
  , MAYBE = (uint8)EType::MAYBE 
  
  }; 
 
-USTRUCT(BlueprintType)
-struct FTypeInfo {
-	GENERATED_BODY()
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		EType Type;
-	FTypeInfo* DependsOn = NULL;
-	TArray<FTypeInfo> Templates;
-public:
-	FTypeInfo()
-		: Type(EType::TEMPLATE)
-		, Templates({})
-		, DependsOn(NULL) {};
-	FTypeInfo(ETypeBase type)
-		: Type(( EType )type)
-		, Templates({})
-		, DependsOn(NULL) {};
-	FTypeInfo(FTypeInfo* depends)
-		: Type(depends->Type)
-		, Templates(depends->Templates)
-		, DependsOn(depends) {};
-	FTypeInfo(EType type, TArray<FTypeInfo> templates)
-		: Type(type)
-		, Templates(templates)
-		, DependsOn(NULL) {};
-	FTypeInfo(FTypeInfo* depends, TArray<FTypeInfo> templates)
-		: Type(depends->Type)
-		, Templates(templates)
-		, DependsOn(depends) {};
-};
-USTRUCT(BlueprintType)
-struct FParameter {
-	GENERATED_BODY()
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString Name;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FTypeInfo Type;
-public:
-	FParameter()
-		: Type()
-		, Name("Unnamed") {};
-	FParameter(FString name, FTypeInfo type)
-		: Type(Type)
-		, Name(name) {};
-};
-USTRUCT(BlueprintType)
-struct FFunctionInfo {
-	GENERATED_BODY()
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<FParameter> Inputs;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<FParameter> Outputs;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<FTypeInfo> Templates;
-};
+inline bool operator< (const EType lhs, const EType rhs) {
+	if (rhs == EType::ANY) { return lhs != EType::ANY; }
+	switch (rhs) { 
+ case EType::FUNCTOR: 
+ switch (lhs) { 
+ case EType::ARROW: return true; 
+ case EType::MAYBE: return true; 
+ default: return false; 
+ } 
+ break; 
+ case EType::ORDINAL: 
+ switch (lhs) { 
+ case EType::NUMBER: return true; 
+ default: return false; 
+ } 
+ break; 
+ } ;
+	return false;
+}
+inline bool operator > (const EType lhs, const EType rhs) { return rhs < lhs; } 
+ inline bool operator <= (const EType lhs, const EType rhs) { return !(lhs > rhs); } 
+ inline bool operator >= (const EType lhs, const EType rhs) { return !(lhs < rhs); } 
+ ;

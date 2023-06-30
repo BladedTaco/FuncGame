@@ -3,35 +3,23 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BlockFunctionPull.h"
+#include "BlockFunction.h"
 
 #include "Types/Types_gen.h"
+#include "Types/Type.h"
 
 #include "BlockFunctionFmap.generated.h"
+
 
 /**
  * 
  */
 UCLASS()
-class HONOURSPROJ_API ABlockFunctionFmap : public ABlockFunctionPull
+class HONOURSPROJ_API ABlockFunctionFmap : public ABlockFunction
 {
 	GENERATED_BODY()
 public:
-
-	UPROPERTY(EditDefaultsOnly)
-	FFunctionInfo BaseType;
-
-	UPROPERTY(VisibleAnywhere)
-	FFunctionInfo CurrentType;
-
-
 	ABlockFunctionFmap();
 
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
 	virtual void* GetValue() override;
-
-	FFunctionInfo ResolveType();
-
 };

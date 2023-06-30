@@ -4,17 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "HonoursProjBlock.h"
-#include "FunctionConnector.generated.h"
 
-USTRUCT(BlueprintType)
-struct FFuncConnector {
-	GENERATED_BODY()
-public:
-	UPROPERTY(EditAnywhere)
-		FString Name;
-	UPROPERTY(EditAnywhere)
-		FString Type;
-};
+#include "Types/Types_gen.h"
+#include "Types/Type.h"
+#include "BlockFunction.h"
+
+#include "FunctionConnector.generated.h"
 
 
 /**
@@ -37,4 +32,9 @@ public:
 	FTransform Connect(FVector a, FVector b);
 
 	void Tick(float DeltaSeconds);
+
+	virtual UType* ResolveType() PURE_VIRTUAL(AFunctionConnector::ResolveType, return NULL;);
+
+public:
+	FParameter ParameterInfo;
 };

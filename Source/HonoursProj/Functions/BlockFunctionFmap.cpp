@@ -2,36 +2,41 @@
 
 
 #include "BlockFunctionFmap.h"
+#include "Engine/World.h"
+#include "Components/PrimitiveComponent.h"
+#include "Components/StaticMeshComponent.h"
+
+#include "FunctionInput.h"
+#include "FunctionOutput.h"
+
+
+#include "MyUtils.h"
+
+
+
+
 
 ABlockFunctionFmap::ABlockFunctionFmap() {
-	// Initialize Templates
-	FTypeInfo A = { ETypeBase::TEMPLATE };
-	FTypeInfo B = { ETypeBase::TEMPLATE };
-	FTypeInfo F = { EType::FUNCTOR, { {&A} }};
+	// Initialize Type Variables
+	UTypeVar* F = UTypeVar::New(ETypeClass::FUNCTOR);
+	UTypeVar* A = UTypeVar::New(ETypeClass::ANY);
+	UTypeVar* B = UTypeVar::New(ETypeClass::ANY);
+	TypeVars = { F, A, B };
 
-	BaseType.Templates = { F, A, B };
 
-	BaseType.Inputs = { 
-		{"Func", {EType::ARROW, {{&A}, {&B}} }},
-		{"Over", F}
+	// Set Inputs and Outputs
+	Inputs = { 
+		{"Func", UTypeConst::New(ETypeData::ARROW, { UTypePtr::New(A), UTypePtr::New(B) } )},
+		{"Over", UTypePtr::New(F, { UTypePtr::New(A) } )}
 	};
-	BaseType.Outputs = {
-		{"Out", {&F, {{&B}} }}
+	Outputs = {
+		{"Out",  UTypePtr::New(F, { UTypePtr::New(B) })}
 	};
-
-	// DeepCopy BaseType to CurrentType
-	CurrentType = { BaseType };
 
 }
 
-void ABlockFunctionFmap::BeginPlay() {
-
-}
 
 void* ABlockFunctionFmap::GetValue() {
 	return NULL;
 }
 
-FFunctionInfo ResolveType() {
-	return FFunctionInfo();
-}

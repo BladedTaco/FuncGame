@@ -67,8 +67,8 @@
 <#+
 
 public class Directive {
-    public static readonly Regex Args = new Regex(@"[, ]+");
-    public static readonly Regex Kwarg = new Regex(@"(?<key>[^=]+)=(?<val>[^=]+)");
+    public static readonly Regex Args = new Regex(@" *, *");
+    public static readonly Regex Kwarg = new Regex(@"(?<key>[^= ]+) *= *(?<val>[^= ]+)");
 
     public static (List<string>, Dictionary<string, string>) ParseArgs(string arguments) {
         // Initialize Return containers
@@ -223,13 +223,13 @@ public class PP {
     }
 
     // Directive Names and Logic
-    public readonly Regex DirectiveMacro =        new Regex(@"PP__DIRECTIVE\((?<directive>[^, ]+)[, ]+(?<data>[^)]+)?\)");
-    public readonly Regex PreDirectiveMacro = new Regex(@"PP__PRE_DIRECTIVE\((?<directive>[^, ]+)[, ]+(?<data>[^)]+)?\)");
+    public readonly Regex DirectiveMacro =        new Regex(@"PP__DIRECTIVE\((?<directive>[^, ]+) *, *(?<data>[^)]+)?\)");
+    public readonly Regex PreDirectiveMacro = new Regex(@"PP__PRE_DIRECTIVE\((?<directive>[^, ]+) *, *(?<data>[^)]+)?\)");
     public readonly Dictionary<string, Func<PP, string, string>> DirectiveDict = new Dictionary<string, Func<PP, string, string>>(){
         {"Typeclass", (PP pp, string data) => {
             string[] items = data.Split(new [] {", "}, StringSplitOptions.None);
             string cls = items[0];
-            string inst = items[1];
+            string inst = items[1].Split(new [] {"::"}, StringSplitOptions.None).Last();
             // Add Typeclass if not yet added
             if (!pp.TypeClasses.Contains(cls)) {
                 pp.TypeClasses.Add(cls);

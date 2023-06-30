@@ -112,15 +112,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\Types\Types_gen.h">
       <Filter>Source\HonoursProj\Types</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\Preprocess\0\Types\Int.h">
-      <Filter>Source\Preprocess\0\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\Preprocess\0\Types\Maybe.h">
-      <Filter>Source\Preprocess\0\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Source\Preprocess\1\Types\Types.h">
-      <Filter>Source\Preprocess\1\Types</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Source\HonoursProj\BlockDuplicate.cpp">

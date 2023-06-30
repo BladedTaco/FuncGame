@@ -8,8 +8,8 @@
 
 #ifndef PP__PREPROCESSING
 
+#include "Types/Type.h"
 #include "CoreMinimal.h"
-#include "Algo/Transform.h"
 #include "Types_gen.generated.h"
 
 #else
@@ -61,111 +61,175 @@ public:									PP__NEWLINE \
 
 // Define the Type UENUMS
 PP_COMPOSITE_UENUM((BlueprintType), EType
-	, (ETypeBase, INT, FLOAT, BOOL, CHAR, TEMPLATE)
-	, (ETypeClass, ARROW, PP__PRE_DIRECTIVE(Print, List, TypeClasses, Case=Capitalize))
-	, (ETypeData, PP__PRE_DIRECTIVE(Print, List, DataClasses, Case=Capitalize))
+	, (ETypeBase, NONE, INT, FLOAT, BOOL, CHAR)
+	, (ETypeClass, ANY, PP__PRE_DIRECTIVE(Print, List, TypeClasses, Case = Capitalize))
+	, (ETypeData, PP__PRE_DIRECTIVE(Print, List, DataClasses, Case = Capitalize))
 )
 
-USTRUCT(BlueprintType)
-struct FTypeInfo {
-	GENERATED_BODY()
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		EType Type;
-	FTypeInfo* DependsOn = NULL;
-	TArray<FTypeInfo> Templates;
-public:
-	// Base Constructor
-	FTypeInfo()
-		: Type(EType::TEMPLATE)
-		, Templates({})
-		, DependsOn(NULL) {};
-	// Copy Constructor
-	FTypeInfo(const FTypeInfo& copy)
-		: Type(copy.Type)
-		, Templates({})
-		, DependsOn(copy.DependsOn) {
-		// Recursive copy
-		for (FTypeInfo i : copy.Templates) {
-			Templates.Add({ i });
-		}
-	};
-	// Ohter Constructors
-	FTypeInfo(ETypeBase type)
-		: Type(( EType )type)
-		, Templates({})
-		, DependsOn(NULL) {};
-	FTypeInfo(FTypeInfo* depends)
-		: Type(depends->Type)
-		, Templates(depends->Templates)
-		, DependsOn(depends) {};
-	FTypeInfo(EType type, TArray<FTypeInfo> templates)
-		: Type(type)
-		, Templates(templates)
-		, DependsOn(NULL) {};
-	FTypeInfo(FTypeInfo* depends, TArray<FTypeInfo> templates)
-		: Type(depends->Type)
-		, Templates(templates)
-		, DependsOn(depends) {};
-};
+
+// PP_TYPECLASS_MEMBERSHIP(TYPECLS, INSTS...)
+#define PP_TRUE_CASE(INST) case EType::INST: return true; PP__NEWLINE
 
 
-_USTRUCT(BlueprintType)
-struct FParameter {
-	_GENERATED_BODY()
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString Name;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FTypeInfo Type;
-public:
-	// Base Constructor
-	FParameter()
-		: Type()
-		, Name("Unnamed") {};
-	// Copy Constructor
-	FParameter(FParameter& copy)
-		: Type({ copy.Type })
-		, Name(copy.Name) {};
-	// Other Constructors
-	FParameter(FString name, FTypeInfo type)
-		: Type(Type)
-		, Name(name) {};
-};
+// PP_TYPECLASS_MEMBERSHIP(TYPECLS, INSTS...)
+#define PP_TYPECLASS_MEMBERSHIP(TYPECLS, ...)						\
+case EType::TYPECLS:									PP__NEWLINE \
+	switch (lhs) {										PP__NEWLINE \
+		LOOP2(PP_TRUE_CASE, BRACKET_LIST(__VA_ARGS__))				\
+	default: return false;								PP__NEWLINE \
+	}													PP__NEWLINE \
+	break;												PP__NEWLINE
 
-_USTRUCT(BlueprintType)
-struct FFunctionInfo {
-	_GENERATED_BODY()
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<FParameter> Inputs;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<FParameter> Outputs;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<FTypeInfo> Templates;
-public:
-	// Base Constructor
-	FFunctionInfo()
-		: Inputs({})
-		, Outputs({})
-		, Templates({}) {};
-	// Copy Constructor
-	FFunctionInfo(FFunctionInfo& copy)
-		: Inputs({})
-		, Outputs({})
-		, Templates({}) {
-		for (FParameter i : copy.Inputs) {
-			Inputs.Add({ i });
-		}
-		for (FParameter i : copy.Outputs) {
-			Outputs.Add({ i });
-		}
-		for (FTypeInfo i : copy.Templates) {
-			Templates.Add({ i });
-		}
-	};
-};
+//PP_TYPECLASS_TESTS((TYPECLS, INSTS)...)
+#define PP_TYPECLASS_TESTS(...)					\
+switch (rhs) { PP__NEWLINE						\
+	LOOP3(PP_TYPECLASS_MEMBERSHIP, __VA_ARGS__)	\
+}
 
+#define OPERATOR_IMPL(CLS, OP, IMPL) inline bool operator ## OP (const CLS lhs, const CLS rhs) { UNBRACKET IMPL } PP__NEWLINE
+
+#define ALL_ORDINALS(CLS) \
+OPERATOR_IMPL(CLS, > , (return   rhs < lhs; )) \
+OPERATOR_IMPL(CLS, <=, (return !(lhs > rhs);)) \
+OPERATOR_IMPL(CLS, >=, (return !(lhs < rhs);))
+
+// Define Category like less than
+inline bool operator< (const EType lhs, const EType rhs) {
+	// Everything is less than any except any
+	if (rhs == EType::ANY) { return lhs != EType::ANY; }
+	// Loop through each Typeclass
+	PP_TYPECLASS_TESTS(PP__PRE_DIRECTIVE(Print, Dict, Implementations, Case = Capitalize));
+	// RHS is DataClass or Base, it cannot be greater
+	return false;
+}
+ALL_ORDINALS(EType);
+
+
+
+//PP__PRE_DIRECTIVE(Print, Dict, Implementations)
+//PP__PRE_DIRECTIVE(Print, Dict, Implementations, Key=Functor)
+//PP__PRE_DIRECTIVE(Print, Dict, Implementations, Key=Ordinal)
+
+//
+//
+//
+//
+//
+//_USTRUCT(BlueprintType)
+//struct FTypeInfo {
+//	_GENERATED_BODY()
+//public:
+//	virtual EType GetType() { return EType::ANY; };
+//	virtual TArray<FTypeInfo> GetTemplates() { return {}; };
+//};
+//
+//
+//
+//_USTRUCT(BlueprintType)
+//struct FTypeConst : FTypeInfo {
+//	_GENERATED_BODY()
+//
+//private:
+//	UPROPERTY(VisibleAnywhere)
+//		EType Type;
+//	UPROPERTY(VisibleAnywhere)
+//		TArray<FTypeInfo> Templates;
+//
+//public:
+//	virtual EType GetType() override {
+//		return Type;
+//	};
+//	virtual TArray<FTypeInfo> GetTemplates() override {
+//		return Templates;
+//	};
+//};
+//
+//
+//_USTRUCT(BlueprintType)
+//struct FTypePtr : FTypeInfo {
+//_GENERATED_BODY()
+//
+//private:
+//	UPROPERTY(VisibleAnywhere)
+//		TWeakPtr<FTypeInfo> Type;
+//
+//public:
+//	virtual EType GetType() override {
+//		return ( EType )Type.Pin().Get()->Templates[Index];
+//	};
+//	virtual TArray<FTypeInfo> GetTemplates() override {
+//		return {};
+//	};
+//};
+//
+//
+//
+//USTRUCT(BlueprintType)
+//struct FTypeInfo {
+//	GENERATED_BODY()
+//public:
+//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+//		EType Type;
+//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+//		bool Dependant;
+//	FTypeInfo* DependsOn = NULL;
+//	TArray<FTypeInfo> Templates;
+//public:
+//	// Base Constructor is Template Variable Constructor
+//	FTypeInfo() : FTypeInfo(ETypeClass::ANY) {};
+//	// Copy Constructor
+//	FTypeInfo(const FTypeInfo& copy)
+//		: Type(copy.Type)
+//		, Templates({})
+//		, Dependant(copy.Dependant)
+//		, DependsOn(copy.DependsOn) {
+//		// Dependant Types do not have copied templates
+//		if (!Dependant) {
+//			// Recursive copy
+//			for (FTypeInfo i : copy.Templates) {
+//				Templates.Add({ i });
+//			}
+//		}
+//	};
+//
+//	// Base Type Constructor
+//	FTypeInfo(ETypeBase type)
+//		: Type(( EType )type)
+//		, Templates({})
+//		, Dependant(false)
+//		, DependsOn(NULL) {};
+//	// Data Type Constructor
+//	FTypeInfo(ETypeData type, TArray<FTypeInfo> templates)
+//		: Type(( EType )type)
+//		, Templates(templates)
+//		, Dependant(false)
+//		, DependsOn(NULL) {};
+//	// Class Type Constructor / Template Variable Constructor
+//	FTypeInfo(ETypeClass type)
+//		: Type(( EType )type)
+//		, Templates({})
+//		, Dependant(true)
+//		, DependsOn(NULL) {};
+//
+//	// Template Variable Accessor Constructor
+//	FTypeInfo(FTypeInfo* depends)
+//		: Type(depends->Type)
+//		, Templates(depends->Templates)
+//		, Dependant(true)
+//		, DependsOn(depends) {};
+//};
+
+//
+//
+//_USTRUCT(BlueprintType)
+//struct FTypeVar {
+//	_GENERATED_BODY()
+//public:
+//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+//		ETypeClass Type;
+//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+//		TWeakPtr<FTypeInfo> Instance;
+//};
 
 
 //// Define the Type USTRUCT
@@ -187,7 +251,3 @@ public:
 //,	((EditAnywhere, BlueprintReadWrite), (TArray<FTypeInfo> Outputs))
 //)
 
-
-//PP__PRE_DIRECTIVE(Print, Dict, Implementations)
-//PP__PRE_DIRECTIVE(Print, Dict, Implementations, Key=Functor)
-//PP__PRE_DIRECTIVE(Print, Dict, Implementations, Key=Ordinal)

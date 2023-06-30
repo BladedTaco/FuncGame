@@ -24,4 +24,6 @@ public:
 	virtual AHonoursProjBlock* HandleRClick(UPrimitiveComponent* ClickedComponent) override;
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+	virtual UType* ResolveType() override;
 };

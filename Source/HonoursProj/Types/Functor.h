@@ -33,16 +33,16 @@ public:
 };
 
 // Functor Base Instance
-template <template <class> class F, typename A>
+template <template <class, class...> class F, typename A, typename... Rest>
 class BaseFunctor {
 protected:
 	template <class B>
-	inline static Function<F<B>, Function<B, A>, F<A>> _fmap;
+	inline static Function<F<B, Rest...>, Function<B, A>, F<A, Rest...>> _fmap;
 	
 	template <class B>
-	inline static auto _map_replace_by = [](A a, F<B> f_b) -> F<A> {
+	inline static auto _map_replace_by = [](A a, F<B, Rest...> f_b) -> F<A, Rest...> {
 		Function<A, B> f = Prelude::constant<A, B>(a);
-		return Functor<F<B>>::fmap<A>(f)(f_b);
+		return Functor<F<B, Rest...>>::fmap<A>(f)(f_b);
 	};
 public:
 	template <class B>

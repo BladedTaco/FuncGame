@@ -24,10 +24,10 @@ AFunctionConnector::AFunctionConnector() {
 	UnlitMaterial = Assets.Material.Grey.Get();
 
 	// Create static mesh component
-	auto BlockMesh = GetBlockMesh();
-	BlockMesh->SetStaticMesh(Assets.Mesh.PuzzleCube.Get());
-	BlockMesh->SetRelativeScale3D(FVector(0.2f, 0.2f, 0.2f));
-	BlockMesh->SetMaterial(0, UnlitMaterial);
+	auto blockMesh = GetBlockMesh();
+	blockMesh->SetStaticMesh(Assets.Mesh.PuzzleCube.Get());
+	blockMesh->SetRelativeScale3D(FVector(0.2f, 0.2f, 0.2f));
+	blockMesh->SetMaterial(0, UnlitMaterial);
 
 	// Create Connector
 	ConnectMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ConnectorMesh0"));
@@ -37,7 +37,7 @@ AFunctionConnector::AFunctionConnector() {
 	ConnectMesh->SetMaterial(0, UnlitMaterial);
 	ConnectMesh->SetVisibility(false);
 	ConnectMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	ConnectMesh->AttachTo(RootComponent);
+	ConnectMesh->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepWorldTransform);
 
 }
 

@@ -14,6 +14,7 @@
 #include "Types/Ord.h"
 #include "Types/Int_gen.h"
 #include "Types/Types_gen.h"
+#include "Types/Arrow_gen.h"
 
 AHonoursProjPawn::AHonoursProjPawn(const FObjectInitializer& ObjectInitializer) 
 	: Super(ObjectInitializer)
@@ -103,6 +104,19 @@ void AHonoursProjPawn::OnLClickRelease() {
 	bool n2 = Ordinal<Number<int>>::gt<>(6)(6);
 	bool n3 = Ordinal<Number<int>>::eq<>(7)(6);
 	Number<int> n4 = Ordinal<Number<int>>::min<>(5)(6);
+
+	auto f = [](int a) { return ( float )a*a; };
+	auto f_a = Arr<float, int>([](float a) { return (int)a*a; });
+
+	auto x = Functor<Arr<float, int>>::fmap<int>(f)(f_a);
+
+	auto f_r = f(2);
+	auto fa_r = f_a(2);
+	auto x_r = x(2);
+
+
+	UE_LOG(LogTemp, Warning, TEXT("ARROW %f %d %d"), f_r, fa_r, x_r);
+
 
 	UE_LOG(LogTemp, Warning, TEXT("ORD %d %d %d %d"), n1, n2, n3, n4.get());
 
