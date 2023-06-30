@@ -18,12 +18,8 @@ public:
 	}
 };
 
-// More readable template switch
-template <typename From, typename To>
-using Arr = Func<To, From>;
-
 FUNCTOR((A, From), Func, 
-	([](Function<B, A> func, Arr<From, A> f_a) -> Arr<From, B> {	PP__NEWLINE
+	([](Arr<A, B> func, Arr<From, A> f_a) -> Arr<From, B> {	PP__NEWLINE
 		return Arr<From, B>([=](const From& a) {					PP__NEWLINE
 			return func(f_a(a)); 									PP__NEWLINE
 		});

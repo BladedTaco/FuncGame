@@ -5,6 +5,7 @@
 #include "Functional/Prelude.h"
 #include "Functional/Typeclass.h"
 
+
 // Functor Instance Macro
 #define FUNCTOR(TEMPLATES, INST, FMAP, MAP_REPLACE_BY)		 \
 PP__DIRECTIVE(Typeclass, Functor, INST)						 \
@@ -19,9 +20,9 @@ template <typename A>
 class Functor {
 protected:
 	template <typename B>
-	inline static Function<Functor<B>, Function<B, A>, Functor<A>> _fmap;
+	inline static Function<Functor<B>, Arr<A, B>, Functor<A>> _fmap;
 	template <typename B>
-	inline static Function<Functor<B>, Function<B, A>, Functor<A>> _map_replace_by;
+	inline static Function<Functor<B>, Arr<A, B>, Functor<A>> _map_replace_by;
 
 public:
 	template <typename B>
@@ -37,16 +38,15 @@ template <template <class, class...> class F, typename A, typename... Rest>
 class BaseFunctor {
 protected:
 	template <class B>
-	inline static Function<F<B, Rest...>, Function<B, A>, F<A, Rest...>> _fmap;
+	inline static Function<F<B, Rest...>, Arr<A, B>, F<A, Rest...>> _fmap;
 	
 	template <class B>
 	inline static auto _map_replace_by = [](A a, F<B, Rest...> f_b) -> F<A, Rest...> {
-		Function<A, B> f = Prelude::constant<A, B>(a);
+		Arr<B, A> f = Prelude::constant<A, B>(a);
 		return Functor<F<B, Rest...>>::fmap<A>(f)(f_b);
 	};
 public:
 	template <class B>
-	//inline static Function<Function<F<B>, F<A>>, Function<B, A>> fmap = curry(_fmap<B>);
 	inline static auto fmap = curry(_fmap<B>);
 	template <class B>
 	inline static auto map_replace_by = curry(_map_replace_by<B>);

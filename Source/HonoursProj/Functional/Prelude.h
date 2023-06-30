@@ -13,6 +13,15 @@ include <functional>
 template <typename Return, typename... Params>
 using Function = std::function<Return(Params...)>;
 
+// Curried Function Shorthand
+template <typename To, typename From>
+class Func;
+
+// Curried Function Shorthand as Arrow From -> To
+template <typename From, typename To>
+using Arr = Func<To, From>;
+
+
 
 // Function Currying (https://stackoverflow.com/a/26768388)
 template< class, class = std::void_t<> > struct
@@ -55,4 +64,11 @@ namespace Prelude {
 		return f(g(x));
 	});
 
+	template <typename A>
+	auto id = curry([](A a) -> A { return a; });
+
+	template <typename A, typename B>
+	auto swap = curry([](TTuple<A, B> tup) -> TTuple<B, A> {
+		return MakeTuple(tup.Get<1>(), tup.Get<0>());
+	});
 };
