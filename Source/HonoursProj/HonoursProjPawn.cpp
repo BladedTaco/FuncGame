@@ -105,8 +105,8 @@ void AHonoursProjPawn::OnLClickRelease() {
 	bool n3 = Ordinal<Number<int>>::eq<>(7)(6);
 	Number<int> n4 = Ordinal<Number<int>>::min<>(5)(6);
 
-	Arr<int, float> f = { [](int a) { return ( float )a * a; } };
-	Arr<float, int> f_a = { [](float a) { return ( int )a * a; } };
+	Arr<int, float> f = { [](int a) -> float { return 0.99 * a * a; } };
+	Arr<float, int> f_a = { [](float a) -> int { return a * a; } };
 
 	Arr<float, float> x = Functor<Arr<float, int>>::fmap<float>(f)(f_a);
 
