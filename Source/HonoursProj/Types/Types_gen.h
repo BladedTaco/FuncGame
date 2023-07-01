@@ -14,7 +14,7 @@
  enum class EType : uint8 { 
  NONE, INT, FLOAT, BOOL, CHAR 
  , ANY, FUNCTOR, ORDINAL 
- , ARROW, NUMBER, MAYBE 
+ , FUNC, NUMBER, MAYBE 
  
  }; 
  
@@ -38,7 +38,7 @@
  
  UENUM(BlueprintType) 
  enum class ETypeData : uint8 { 
- ARROW = (uint8)EType::ARROW 
+ FUNC = (uint8)EType::FUNC 
  , NUMBER = (uint8)EType::NUMBER 
  , MAYBE = (uint8)EType::MAYBE 
  
@@ -49,7 +49,7 @@ inline bool operator< (const EType lhs, const EType rhs) {
 	switch (rhs) { 
  case EType::FUNCTOR: 
  switch (lhs) { 
- case EType::ARROW: return true; 
+ case EType::FUNC: return true; 
  case EType::MAYBE: return true; 
  default: return false; 
  } 

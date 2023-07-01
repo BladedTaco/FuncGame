@@ -92,7 +92,7 @@ UType* ABlockFunction::ResolveType() {
 		// Try to Resolve precursors when a Connected Type
 		if (!input->ResolveType()) {
 			// On Resolution fail, Unconnected Type, Add Arrow Layer
-			outArrow = UTypeConst::New(ETypeData::ARROW, { input->ParameterInfo.Type, UTypePtr::New(outArrow) });
+			outArrow = UTypeConst::New(ETypeData::FUNC, { input->ParameterInfo.Type, UTypePtr::New(outArrow) });
 		}
 	}
 

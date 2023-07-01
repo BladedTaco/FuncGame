@@ -23,6 +23,17 @@ using Arr = Func<To, From>;
 
 
 
+//template <typename From, typename To, typename... Rest>
+//
+//
+//using Arrs = Arr<From, Arrs<To, Rest...>>;
+//template <typename From, typename To>
+//using Arrs = Arr<From, To>;
+//
+
+
+
+
 // Function Currying (https://stackoverflow.com/a/26768388)
 template< class, class = std::void_t<> > struct
 needs_unapply : std::true_type {};
@@ -35,11 +46,13 @@ auto curry(F&& f) {
   /// Check if f() is a valid function call. If not we need 
   /// to curry at least one argument:
 	if constexpr (needs_unapply<decltype(f)>::value) {
+		// take an argument
 		return [=](auto&& x) {
+			// return curried rest of function with first arugment applied
 			return curry(
 				[=](auto&&...xs) -> decltype(f(x, xs...)) {
-				return f(x, xs...);
-			}
+					return f(x, xs...);
+				}
 			);
 		};
 	} else {
@@ -47,6 +60,56 @@ auto curry(F&& f) {
 		return f();
 	}
 }
+
+
+
+//
+////template <typename F>
+//template <typename To, typename First, typename... Rest>
+//auto curry(Function<To, First, Rest...>&& f) {
+//  /// Check if f() is a valid function call. If not we need 
+//  /// to curry at least one argument:
+//	if constexpr (needs_unapply<decltype(f)>::value) {
+//		// take an argument
+//		auto ret = [=](First&& x) {
+//			// return curried rest of function with first arugment applied
+//			return curry(
+//				[=](auto&&...xs) -> decltype(f(x, xs...)) {
+//					return f(x, xs...);
+//				}
+//			);
+//		};
+//		return Arr<First, decltype(ret((First)0))>(ret);
+//	} else {
+//	  /// If 'f()' is a valid call, just call it, we are done.
+//		return f();
+//	}
+//}
+
+//template <typename F>
+//auto curry(Function<To, First, Rest...>&& f) {
+//  /// Check if f() is a valid function call. If not we need 
+//  /// to curry at least one argument:
+//	if constexpr (needs_unapply<decltype(f)>::value) {
+//		// take an argument
+//		auto ret = [=](First&& x) {
+//			// return curried rest of function with first arugment applied
+//			return curry(
+//				[=](auto&&...xs) -> decltype(f(x, xs...)) {
+//				return f(x, xs...);
+//			}
+//			);
+//		};
+//		return Arr<First, decltype(ret(( First )0))>(ret);
+//	} else {
+//	  /// If 'f()' is a valid call, just call it, we are done.
+//		return f();
+//	}
+//}
+
+
+
+
 
 
 
@@ -60,7 +123,7 @@ namespace Prelude {
 
 	// compose f g = \ x -> f (g x)
 	template <typename A, typename B, typename C>
-	auto compose = curry([](Function<C, B> f, Function<B, A> g, A x) -> C {
+	auto compose = curry([](Arr<B, C> f, Arr<A, B> g, A x) -> C {
 		return f(g(x));
 	});
 

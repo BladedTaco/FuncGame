@@ -54,7 +54,9 @@ protected:
 	// Required
 	inline static Function<Arrow<From, To>, Function<To, From>> _arr;
 	template <typename B>
-	inline static Function<Arrow<TTuple<From, B>, TTuple<To, B>>, Arrow<From, To>> _first;
+	inline static auto _first = [](Arrow<From, To> f) -> Arrow<TTuple<From, B>, TTuple<To, B>> {
+		return Arrow<B, B>::bimap<From, To>(f)(Prelude::id<B>);
+	}
 
 	// optional
 	template <typename From_2, typename To_2>

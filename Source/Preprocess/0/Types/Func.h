@@ -20,9 +20,9 @@ public:
 
 FUNCTOR((A, From), Func, 
 	([](Arr<A, B> func, Arr<From, A> f_a) -> Arr<From, B> {	PP__NEWLINE
-		return Arr<From, B>([=](const From& a) {					PP__NEWLINE
+		return { [=](const From& a) {					PP__NEWLINE
 			return func(f_a(a)); 									PP__NEWLINE
-		});
+		} };
 	}),
 	()
 );

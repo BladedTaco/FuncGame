@@ -63,7 +63,7 @@ public:									PP__NEWLINE \
 PP_COMPOSITE_UENUM((BlueprintType), EType
 	, (ETypeBase, NONE, INT, FLOAT, BOOL, CHAR)
 	, (ETypeClass, ANY, FUNCTOR, ORDINAL)
-	, (ETypeData, ARROW, NUMBER, MAYBE)
+	, (ETypeData, FUNC, NUMBER, MAYBE)
 )
 
 
@@ -98,7 +98,7 @@ inline bool operator< (const EType lhs, const EType rhs) {
 	// Everything is less than any except any
 	if (rhs == EType::ANY) { return lhs != EType::ANY; }
 	// Loop through each Typeclass
-	PP_TYPECLASS_TESTS((FUNCTOR, ARROW, MAYBE), (ORDINAL, NUMBER));
+	PP_TYPECLASS_TESTS((FUNCTOR, FUNC, MAYBE), (ORDINAL, NUMBER));
 	// RHS is DataClass or Base, it cannot be greater
 	return false;
 }
@@ -106,8 +106,8 @@ ALL_ORDINALS(EType);
 
 
 
-//(Functor, Arrow, Maybe), (Ordinal, Number)
-//Arrow, Maybe
+//(Functor, Func, Maybe), (Ordinal, Number)
+//Func, Maybe
 //Number
 
 //

@@ -42,7 +42,7 @@ protected:
 	
 	template <class B>
 	inline static auto _map_replace_by = [](A a, F<B, Rest...> f_b) -> F<A, Rest...> {
-		Arr<B, A> f = Prelude::constant<A, B>(a);
+		Arr<B, A> f = { Prelude::constant<A, B>(a) };
 		return Functor<F<B, Rest...>>::fmap<A>(f)(f_b);
 	};
 public:

@@ -45,7 +45,7 @@ auto fromMaybe = curry([](A a, Maybe<A> m_a) -> A {
  class Functor<Maybe <A> > : public BaseFunctor<Maybe,A> { 
  private: 
  template <class B> 
- inline static auto _fmap = [](Function<B, A> func, Maybe<A> f_a) -> Maybe<B> { 
+ inline static auto _fmap = [](Arr<A, B> func, Maybe<A> f_a) -> Maybe<B> { 
  if (f_a._isNothing) { 
  return Maybe<B>::Nothing(); 
  } else { 

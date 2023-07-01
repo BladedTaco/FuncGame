@@ -26,7 +26,7 @@ ABlockFunctionFmap::ABlockFunctionFmap() {
 
 	// Set Inputs and Outputs
 	Inputs = { 
-		{"Func", UTypeConst::New(ETypeData::ARROW, { UTypePtr::New(A), UTypePtr::New(B) } )},
+		{"Func", UTypeConst::New(ETypeData::FUNC, { UTypePtr::New(A), UTypePtr::New(B) } )},
 		{"Over", UTypePtr::New(F, { UTypePtr::New(A) } )}
 	};
 	Outputs = {
