@@ -59,3 +59,7 @@ UType* AFunctionOutput::ResolveType() {
 	// Return the arrow with applied type
 	return arrow;
 }
+
+ValType AFunctionOutput::GetValue() {
+	return Cast<ABlockFunction>(GetAttachParentActor())->GetValue()[Index];
+}

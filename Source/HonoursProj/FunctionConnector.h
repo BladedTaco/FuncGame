@@ -34,7 +34,11 @@ public:
 	void Tick(float DeltaSeconds);
 
 	virtual UType* ResolveType() PURE_VIRTUAL(AFunctionConnector::ResolveType, return NULL;);
+	virtual ValType GetValue() PURE_VIRTUAL(AFunctionConnector::GetValue, return MakeTuple((UType*)NULL, (void*)NULL););
 
 public:
-	FParameter ParameterInfo;
+	UPROPERTY(VisibleAnywhere)
+		FParameter ParameterInfo;
+	UPROPERTY(VisibleAnywhere)
+		int Index;
 };

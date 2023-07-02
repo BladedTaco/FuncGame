@@ -9,6 +9,10 @@
 #include "FunctionInput.h"
 #include "FunctionOutput.h"
 
+#include "Types/Types_gen.h"
+#include "Types/Type.h"
+
+
 
 #include "MyUtils.h"
 
@@ -34,9 +38,3 @@ ABlockFunctionFmap::ABlockFunctionFmap() {
 	};
 
 }
-
-
-void* ABlockFunctionFmap::GetValue() {
-	return NULL;
-}
-

@@ -72,3 +72,12 @@ UType* AFunctionInput::ResolveType() {
 	}
 	return NULL;
 }
+
+ValType AFunctionInput::GetValue() {	
+	UType* type = ResolveType();
+	// Handle no connection
+	if (!connectedTo) { return MakeTuple(type, ( void* )NULL);  }
+
+	// Return value from connection
+	return connectedTo->GetValue();
+}

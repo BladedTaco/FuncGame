@@ -146,12 +146,16 @@ UType* UTypePtr::Get() {
 
 // Return TypeVars Type
 EType UTypePtr::GetType() {
-	return Type->GetType();
+	if (Type) {
+		return Type->GetType();
+	} else {
+		return EType::NONE;
+	}
 }
 
 // Return TypeVars Templates
 TArray<UType*> UTypePtr::GetTemplates() {
-	if (CopyTemplates) {
+	if (Type && CopyTemplates) {
 		return Type->GetTemplates();
 	}
 	return Templates;

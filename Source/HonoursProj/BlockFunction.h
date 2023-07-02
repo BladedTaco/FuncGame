@@ -8,8 +8,19 @@
 #include "Types/Types_gen.h"
 #include "Types/Type.h"
 
+#include "Types/Func_gen.h"
+#include "Containers/StaticArray.h"
+
 #include "BlockFunction.generated.h"
 
+
+template <typename First, typename... Rest>
+class TVariant;
+
+
+using ValType = TTuple<UType*, void*>;
+using ValArray = TArray<ValType>;
+using ValPartial = Arr<ValType, void*>;
 
 USTRUCT(BlueprintType)
 struct FParameter {
@@ -35,10 +46,9 @@ public:
  * 
  */
 UCLASS()
-class HONOURSPROJ_API ABlockFunction : public AHonoursProjBlock
-{
+class HONOURSPROJ_API ABlockFunction : public AHonoursProjBlock {
 	GENERATED_BODY()
-	
+
 public:
 	// Type Resolution
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -49,6 +59,9 @@ public:
 		UType* OutputArrow;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TArray<UTypeVar*> TypeVars;
+
+	TArray<void*> OutputValues;
+	TArray<ValPartial> OutputPartials;
 
 
 	// Parameter Actors
@@ -66,13 +79,24 @@ public:
 
 	ABlockFunction();
 
+	// Partially/Fully Apply Inputs on InnerFunc
+	ValArray GetValue();
+	// Helpers
+	ValPartial ApplyInput(int output, ValArray& vals, int idx, Arr<ValArray&, TArray<void*>> f);
+	TVariant<void*, ValPartial> ApplyInputs(int output, ValArray& vals, int idx, Arr<ValArray&, TArray<void*>> f);
+
+	// Interaction Handlers
 	virtual AHonoursProjBlock* HandleRClick(UPrimitiveComponent* ClickedComponent) override;
 	virtual AHonoursProjBlock* HandleClick(UPrimitiveComponent* ClickedComponent) override;
 
 
 	UFUNCTION()
 		UType* ResolveType();
+	ValArray CollectInputs();
 
-	virtual void* GetValue() PURE_VIRTUAL(ABlockFunction::GetValue, return NULL;);
+	// The Implementation of a Function
+	virtual Arr<ValArray&, TArray<void*>> GetInnerFunc() PURE_VIRTUAL(ABlockFunction::GetInnerFunc,
+		return { [](ValArray& x) -> TArray<void*> { return {}; } };
+	);
 
 };
