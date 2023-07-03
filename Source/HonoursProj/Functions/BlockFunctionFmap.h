@@ -16,5 +16,7 @@ class HONOURSPROJ_API ABlockFunctionFmap : public ABlockFunction
 {
 	GENERATED_BODY()
 public:
-	ABlockFunctionFmap();
+	virtual void SetFunctionTypes() override;
+
+	virtual Arr<ValArray&, TArray<void*>> GetInnerFunc() override;
 };

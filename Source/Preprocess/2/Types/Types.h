@@ -106,9 +106,6 @@ ALL_ORDINALS(EType);
 
 
 
-//PP__PRE_DIRECTIVE(Print, Dict, Implementations)
-//PP__PRE_DIRECTIVE(Print, Dict, Implementations, Key=Functor)
-//PP__PRE_DIRECTIVE(Print, Dict, Implementations, Key=Ordinal)
 
 //
 //

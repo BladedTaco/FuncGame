@@ -70,7 +70,7 @@ UType* AFunctionInput::ResolveType() {
 	if (connectedTo && IsValid(connectedTo)) {
 		return connectedTo->ResolveType();
 	}
-	return NULL;
+	return ParameterInfo.Type;
 }
 
 ValType AFunctionInput::GetValue() {	

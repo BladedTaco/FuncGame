@@ -22,24 +22,6 @@
 #include "MyUtils.h"
 
 
-
-ABlockFunctionGreaterThan::ABlockFunctionGreaterThan() {
-	// Initialize Type Variables
-	UTypeVar* F = UTypeVar::New(ETypeClass::ANY);
-	TypeVars = { F };
-
-
-	// Set Inputs and Outputs
-	Inputs = {
-		{"A", UTypeConst::New(ETypeData::NUMBER, { UTypePtr::New(F) })},
-		{"B", UTypeConst::New(ETypeData::NUMBER, { UTypePtr::New(F) })},
-	};
-	Outputs = {
-		{"A < B", UTypeConst::New(ETypeBase::BOOL)}
-	};
-
-}
-
 Arr<ValArray&, TArray<void*>> ABlockFunctionGreaterThan::GetInnerFunc() {
 	return Arr<ValArray&, TArray<void*>>([this](ValArray& values) -> TArray<void*> {
 
@@ -65,7 +47,6 @@ Arr<ValArray&, TArray<void*>> ABlockFunctionGreaterThan::GetInnerFunc() {
 			break;
 		}
 
-
 		this->TextComponent->SetText(FText::Format(FText::FromString(FString("GT {0}")), result));
 
 
@@ -74,6 +55,22 @@ Arr<ValArray&, TArray<void*>> ABlockFunctionGreaterThan::GetInnerFunc() {
 		this->OutputValues = { ( void* )&this->ConcreteOutputs };
 		return this->OutputValues;
 	} );
+}
+
+void ABlockFunctionGreaterThan::SetFunctionTypes() {
+	// Initialize Type Variables
+	UTypeVar* F = UTypeVar::New(ETypeClass::ANY);
+	TypeVars = { F };
+
+
+	// Set Inputs and Outputs
+	Inputs = {
+		{"A", UTypeConst::New(ETypeData::NUMBER, { UTypePtr::New(F) })},
+		{"B", UTypeConst::New(ETypeData::NUMBER, { UTypePtr::New(F) })},
+	};
+	Outputs = {
+		{"A < B", UTypeConst::New(ETypeBase::BOOL)}
+	};
 }
 
 

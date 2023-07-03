@@ -106,9 +106,6 @@ ALL_ORDINALS(EType);
 
 
 
-//(Functor, Func, Maybe), (Ordinal, Number)
-//Func, Maybe
-//Number
 
 //
 //

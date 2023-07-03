@@ -37,6 +37,49 @@ public:												PP__NEWLINE \
 #define TYPECLASS_DEFN(CLS, TEMPLATES, INSTANCE) NULLARY((TYPECLASS_WRAP_DEFN),(TYPECLASS_STATIC_DEFN), UNBRACKET TEMPLATES)(CLS, TEMPLATES, INSTANCE)
 #define STATIC_TYPECLASS_DEFN(CLS, TEMPLATES, INSTANCE) TYPECLASS_STATIC_DEFN(CLS, (), INSTANCE TEMPLATE_INST(UNBRACKET TEMPLATES))
 
+#define TYPECLASS_FUNC_VPTR_LOOP(TYPE, NAME) (*(UNBRACKET TYPE*)NAME)
+
+#define AS_VOIDSTAR(A, B) , void* B
+
+
+// TYPECLASS_FUNC_VPTR((TEMPLATES...), NAME, (PARAM_TYPE, PARAM_NAME)...)
+#define TYPECLASS_FUNC_VPTR(TEMPLATES, NAME, ...)									\
+FUNC_DEFN(TEMPLATES, v_##NAME, (													\
+	curry([](MAP_BLIST(AS_VOIDSTAR, __VA_ARGS__)) -> decltype(auto) {				\
+	return NAME<UNBRACKET TEMPLATES>LOOP(TYPECLASS_FUNC_VPTR_LOOP, __VA_ARGS__);	\
+	})																				\
+))
+//
+//TYPECLASS_FUNC_VPTR((B), fmap, ((Arr<A, B>), f), ((F<A, Rest...>), fa))
+//
+//template <class B> 
+//inline static auto v_fmap = curry([](Arr<A, B> f, F<A, Rest...> fa) -> decltype(auto) {
+//	return fmap<B>(*(Arr<A, B>*)f) (*(F<A, Rest...>*)fa); 
+//});
+//
+//// Functor Base Instance
+//template <template <class, class...> class F, typename A, typename... Rest>
+//class BaseFunctor {
+//protected:
+//	template <class B>
+//	inline static Function<F<B, Rest...>, Arr<A, B>, F<A, Rest...>> _fmap;
+//
+//	template <class B>
+//	inline static auto _map_replace_by = [](A a, F<B, Rest...> f_b) -> F<A, Rest...> {
+//		Arr<B, A> f = { Prelude::constant<A, B>(a) };
+//		return Functor<F<B, Rest...>>::fmap<A>(f)(f_b);
+//	};
+//public:
+//	template <class B>
+//	inline static auto fmap = curry(_fmap<B>);
+//	template <class B>
+//	inline static auto map_replace_by = curry(_map_replace_by<B>);
+//
+//
+//	template <class B>
+//	inline static auto v_fmap = curry([](void* func, void* f_a) -> F<B, Rest...> {
+//		return fmap<B>(*(Arr<A, B>*)func)(*(F<A, Rest...>*)f_a);
+//	});
 
 // Defining a Typeclass Template Signature
 //#define TYPECLASS_DEFN_FUNC(TEMPLATES, SIGNATURE, NAME)

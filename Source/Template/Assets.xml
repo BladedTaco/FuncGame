@@ -4,6 +4,7 @@
         <Asset Name="Blue" Type="UMaterialInstance" Location="/Game/Puzzle/Meshes/BlueMaterial.BlueMaterial"/>
         <Asset Name="Orange" Type="UMaterialInstance" Location="/Game/Puzzle/Meshes/OrangeMaterial.OrangeMaterial"/>
         <Asset Name="Grey" Type="UMaterialInstance" Location="/Game/Puzzle/Meshes/GreyMaterial.GreyMaterial"/>
+        <Asset Name="Pink" Type="UMaterialInstance" Location="/Game/Puzzle/Meshes/PinkMaterial.PinkMaterial"/>
     </ResourceType>
     <ResourceType Name='Mesh'>    
         <Asset Name="PuzzleCube" Type="UStaticMesh" Location="/Game/Puzzle/Meshes/PuzzleCube.PuzzleCube"/>

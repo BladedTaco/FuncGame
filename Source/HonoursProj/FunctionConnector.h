@@ -41,4 +41,11 @@ public:
 		FParameter ParameterInfo;
 	UPROPERTY(VisibleAnywhere)
 		int Index;
+
+	/** Pointer to Yellow material used on Connectable Connectors */
+	UPROPERTY()
+
+		class UMaterialInstance* ConnectMaterial;
+	UPROPERTY()
+		TArray<AFunctionConnector*> ValidConnections;
 };

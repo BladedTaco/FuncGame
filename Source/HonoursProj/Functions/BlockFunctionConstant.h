@@ -20,11 +20,10 @@ private:
 	Number<int> ConcreteOutputs = { 0 };
 
 public:
-	ABlockFunctionConstant();
-
 	UPROPERTY(EditAnywhere)
 		int Value = 0;
 
 
 	virtual Arr<ValArray&, TArray<void*>> GetInnerFunc() override;
+	virtual void SetFunctionTypes() override;
 };

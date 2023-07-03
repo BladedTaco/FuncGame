@@ -22,7 +22,7 @@
 
 
 
-ABlockFunctionConstant::ABlockFunctionConstant() {
+void ABlockFunctionConstant::SetFunctionTypes() {
 
 	// Set Inputs and Outputs
 	Inputs = {};

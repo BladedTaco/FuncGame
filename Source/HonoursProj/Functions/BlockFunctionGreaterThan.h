@@ -18,7 +18,6 @@ private:
 		bool ConcreteOutputs;
 
 public:
-	ABlockFunctionGreaterThan();
-
 	virtual Arr<ValArray&, TArray<void*>> GetInnerFunc() override;
+	virtual void SetFunctionTypes() override;
 };

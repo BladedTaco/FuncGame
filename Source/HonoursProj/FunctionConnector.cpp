@@ -12,6 +12,8 @@
 #include "FunctionInput.h"
 #include "FunctionOutput.h"
 
+#include "Kismet/GameplayStatics.h"
+
 #include "AssetLoader_gen.h"
 
 // Sets default values
@@ -22,6 +24,7 @@ AFunctionConnector::AFunctionConnector() {
 	// change materials
 	ActiveMaterial = LitMaterial = Assets.Material.White.Get();
 	UnlitMaterial = Assets.Material.Grey.Get();
+	ConnectMaterial = Assets.Material.Pink.Get();
 
 	// Create static mesh component
 	auto blockMesh = GetBlockMesh();
@@ -68,6 +71,51 @@ AHonoursProjBlock* AFunctionConnector::HandleClick(UPrimitiveComponent* ClickedC
 	if (bIsActive) {
 		ConnectMesh->SetVisibility(true);
 		clickOffset = MousePos() - GetActorLocation();
+
+		// Get All connectable actors
+		TArray<AActor*> actors;
+		TSubclassOf<AActor> cls = IsA<AFunctionInput>() ? AFunctionOutput::StaticClass() : AFunctionInput::StaticClass();
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), cls, actors);
+
+		UType* myType = ResolveType();
+		for (AActor* act : actors) {
+			// Skip Leftwards Actors
+			if ((act->GetActorLocation() - GetActorLocation()).Y < 10) {
+				continue;
+			}
+
+			// Get other and its type
+			auto other = Cast<AFunctionConnector>(act);
+			UType* otherType = other->ResolveType();
+			
+			// Get Applicability
+			bool applicable;
+			if (IsA<AFunctionInput>()) {
+				applicable = myType->Supercedes(otherType);
+			} else {
+				applicable = otherType->Supercedes(myType);
+			}
+
+			UE_LOG(LogTemp, Warning, TEXT("SUPERCEDES? %d"), applicable);
+
+			// Highlight Applicable
+			if (applicable) {
+				UE_LOG(LogTemp, Warning, TEXT("Applicable"));
+				ValidConnections.Add(other);
+				other->GetBlockMesh()->SetMaterial(0, other->ConnectMaterial);
+			}
+		}
+
+		GetBlockMesh()->SetMaterial(0, UnlitMaterial);
+	} else {
+		// Clear Connections
+		for (auto other : ValidConnections) {
+			other->GetBlockMesh()->SetMaterial(0, other->UnlitMaterial);
+		}
+		ValidConnections = {};
+
 	}
+
+
 	return this;
 }

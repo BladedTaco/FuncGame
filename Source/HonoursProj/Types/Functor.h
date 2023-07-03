@@ -50,6 +50,9 @@ public:
 	inline static auto fmap = curry(_fmap<B>);
 	template <class B>
 	inline static auto map_replace_by = curry(_map_replace_by<B>);
+
+	//TYPECLASS_FUNC_VPTR((B), fmap, ((Arr<A, B>), f), ((F<A, Rest...>), fa))
+	template <class B> inline static auto v_fmap = curry([](void* f, void* fa) -> decltype(auto) { return fmap<B>(*(Arr<A, B>*)f) (*(F<A, Rest...>*)fa); });
 };
 
 

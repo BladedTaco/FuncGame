@@ -244,6 +244,14 @@ public class PP {
             // Paste out comment in place of directive
             return $"/*Added Typeclass {cls} Instance {inst}*/";
         }},
+        {"Define", (PP pp, string data) => {
+            // Parse Arguments
+            (List<string> args, Dictionary<string, string> kwargs) = Directive.ParseArgs(data);
+            string macroName = args[0];
+            string macroDefn = args[1];
+
+            return $"#define {macroName}(...) {macroDefn.Replace("PP__VA_ARGS__", "__VA_ARGS__")}";
+        }},
         {"Print", (PP pp, string data) => {
             // Parse Arguments
             (List<string> args, Dictionary<string, string> kwargs) = Directive.ParseArgs(data);

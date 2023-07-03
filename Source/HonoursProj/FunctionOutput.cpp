@@ -35,7 +35,8 @@ AHonoursProjBlock* AFunctionOutput::HandleRClick(UPrimitiveComponent* ClickedCom
 
 void AFunctionOutput::EndPlay(const EEndPlayReason::Type EndPlayReason) {	
 	// Remove Connected to if it exists
-	for (auto inputBlock : connectedTo) {
+	auto copy = connectedTo ;
+	for (auto inputBlock : copy) {
 		if (IsValid(inputBlock)) {
 			inputBlock->HandleRClick(NULL);
 		}

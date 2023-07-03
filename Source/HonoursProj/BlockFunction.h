@@ -28,7 +28,7 @@ struct FParameter {
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FString Name;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced)
 		UType* Type;
 public:
 	// Base Constructor
@@ -55,9 +55,9 @@ public:
 		TArray<FParameter> Inputs;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TArray<FParameter> Outputs;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced)
 		UType* OutputArrow;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced)
 		TArray<UTypeVar*> TypeVars;
 
 	TArray<void*> OutputValues;
@@ -98,5 +98,6 @@ public:
 	virtual Arr<ValArray&, TArray<void*>> GetInnerFunc() PURE_VIRTUAL(ABlockFunction::GetInnerFunc,
 		return { [](ValArray& x) -> TArray<void*> { return {}; } };
 	);
-
+	// The Type Declaration of a Function
+	virtual void SetFunctionTypes() PURE_VIRTUAL(ABlockFunction::SetFunctionTypes, return;);
 };

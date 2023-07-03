@@ -8,10 +8,18 @@
 
 // Test Compatibility
 bool UType::Supercedes(UType* other) {
+	EType myType = GetType();
+	EType otherType = other->GetType();
+
+	UE_LOG(LogTemp, Warning, TEXT("%s ? %s"), *UEnum::GetValueAsString(myType), *UEnum::GetValueAsString(otherType));
+
 	// ANY is guaranteed match
-	if (GetType() == EType::ANY) { return true; }
-	// No Match on differing Types
-	if (GetType() < other->GetType()) { return false; }
+	if (myType == EType::ANY) { return true; }
+	// No Match on other strictly superceding this
+	if (myType < otherType) { return false; }
+
+	UE_LOG(LogTemp, Warning, TEXT("%s >= %s"), *UEnum::GetValueAsString(myType), *UEnum::GetValueAsString(otherType));
+
 	// Check Satisfies on all Template Pairs
 	return Algo::CompareByPredicate(GetTemplates(), other->GetTemplates(), [](UType* a, UType* b) {
 		return a->Supercedes(b);

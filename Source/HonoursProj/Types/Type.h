@@ -22,8 +22,16 @@ public:
 	UFUNCTION(BlueprintCallable)
 		virtual UType* DeepCopy() PURE_VIRTUAL(UType::DeepCopy, return NULL; );
 
-	UFUNCTION(BlueprintCallable)
+public:
+	UFUNCTION()
 		bool Supercedes(UType* other);
+
+	//~UType() {
+	//	UE_LOG(LogTemp, Warning, TEXT("Type Destroyed"));
+	//}
+	//UType() {
+	//	UE_LOG(LogTemp, Warning, TEXT("Type Created"));
+	//}
 };
 
 
@@ -35,7 +43,7 @@ class HONOURSPROJ_API UTypeConst : public UType {
 private:
 	UPROPERTY(VisibleAnywhere)
 		EType Type;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Instanced)
 		TArray<UType*> Templates;
 
 public:
@@ -61,9 +69,9 @@ class HONOURSPROJ_API UTypePtr : public UType {
 	GENERATED_BODY()
 
 private:
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Instanced)
 		UType* Type;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Instanced)
 		TArray<UType*> Templates;
 	UPROPERTY(VisibleAnywhere)
 		bool CopyTemplates;
@@ -89,11 +97,11 @@ class HONOURSPROJ_API UTypeVar : public UType {
 	GENERATED_BODY()
 
 private:
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Instanced)
 		TArray<UType*> Evidence;
 	UPROPERTY(EditAnywhere)
 		ETypeClass Type;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Instanced)
 		UTypeConst* Instance;
 
 public:

@@ -33,6 +33,8 @@ ABlockFunction::ABlockFunction() {
 void ABlockFunction::BeginPlay() {
 	Super::BeginPlay();
 
+	SetFunctionTypes();
+
 	// Initialize Output Partials
 	for (auto output : Outputs) {
 		for (auto input : Inputs) {
@@ -102,7 +104,7 @@ UType* ABlockFunction::ResolveType() {
 	// For Each Input
 	for (AFunctionInput* input : InputBlocks) {
 		// Try to Resolve precursors when a Connected Type
-		if (!input->ResolveType()) {
+		if (!input->connectedTo) {
 			// On Resolution fail, Unconnected Type, Add Arrow Layer
 			outArrow = UTypeConst::New(ETypeData::FUNC, { input->ParameterInfo.Type, UTypePtr::New(outArrow) });
 		}

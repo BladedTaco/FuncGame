@@ -9,18 +9,20 @@
 include <functional>
 #endif
 
-// Function Shorthand
-template <typename Return, typename... Params>
-using Function = std::function<Return(Params...)>;
+#include "Functional/curry_gen.h"
 
-// Curried Function Shorthand
-template <typename To, typename From>
-class Func;
-
-// Curried Function Shorthand as Arrow From -> To
-template <typename From, typename To>
-using Arr = Func<To, From>;
-
+//
+//// Function Shorthand
+//template <typename Return, typename... Params>
+//using Function = std::function<Return(Params...)>;
+//
+//// Curried Function Shorthand
+//template <typename To, typename From>
+//class Func;
+//
+//// Curried Function Shorthand as Arrow From -> To
+//template <typename From, typename To>
+//using Arr = Func<To, From>;
 
 
 //template <typename From, typename To, typename... Rest>
@@ -33,33 +35,33 @@ using Arr = Func<To, From>;
 
 
 
-
-// Function Currying (https://stackoverflow.com/a/26768388)
-template< class, class = std::void_t<> > struct
-needs_unapply : std::true_type {};
-
-template< class T > struct
-needs_unapply<T, std::void_t<decltype(std::declval<T>()())>> : std::false_type {};
-
-template <typename F>
-auto curry(F&& f) {
-  /// Check if f() is a valid function call. If not we need 
-  /// to curry at least one argument:
-	if constexpr (needs_unapply<decltype(f)>::value) {
-		// take an argument
-		return [=](auto&& x) {
-			// return curried rest of function with first arugment applied
-			return curry(
-				[=](auto&&...xs) -> decltype(f(x, xs...)) {
-					return f(x, xs...);
-				}
-			);
-		};
-	} else {
-	  /// If 'f()' is a valid call, just call it, we are done.
-		return f();
-	}
-}
+//
+//// Function Currying (https://stackoverflow.com/a/26768388)
+//template< class, class = std::void_t<> > struct
+//needs_unapply : std::true_type {};
+//
+//template< class T > struct
+//needs_unapply<T, std::void_t<decltype(std::declval<T>()())>> : std::false_type {};
+//
+//template <typename F>
+//auto curry(F&& f) {
+//  /// Check if f() is a valid function call. If not we need 
+//  /// to curry at least one argument:
+//	if constexpr (needs_unapply<decltype(f)>::value) {
+//		// take an argument
+//		return [=](auto&& x) {
+//			// return curried rest of function with first arugment applied
+//			return curry(
+//				[=](auto&&...xs) -> decltype(f(x, xs...)) {
+//					return f(x, xs...);
+//				}
+//			);
+//		};
+//	} else {
+//	  /// If 'f()' is a valid call, just call it, we are done.
+//		return f();
+//	}
+//}
 
 
 
@@ -109,6 +111,19 @@ auto curry(F&& f) {
 
 
 
+
+
+
+
+
+
+
+//#include <algorithm>
+//#include <functional>
+//#include <iostream>
+//#include <typeinfo>
+// 
+// 
 
 
 

@@ -16,11 +16,13 @@ struct FResource_Material {
 		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Blue;
 		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Orange;
 		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Grey;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Pink;
 		FResource_Material()
 		:	White(TEXT("/Game/Puzzle/Meshes/WhiteMaterial.WhiteMaterial"))
 		,	Blue(TEXT("/Game/Puzzle/Meshes/BlueMaterial.BlueMaterial"))
 		,	Orange(TEXT("/Game/Puzzle/Meshes/OrangeMaterial.OrangeMaterial"))
 		,	Grey(TEXT("/Game/Puzzle/Meshes/GreyMaterial.GreyMaterial"))
+		,	Pink(TEXT("/Game/Puzzle/Meshes/PinkMaterial.PinkMaterial"))
 		{}
 };
 static FResource_Material ResourceInst_Material;
