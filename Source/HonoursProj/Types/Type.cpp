@@ -7,7 +7,7 @@
 
 
 // Test Compatibility
-bool UType::Supercedes(UType* other) {
+bool UType::Supercedes(UType* other) const {
 	EType myType = GetType();
 	EType otherType = other->GetType();
 
@@ -26,6 +26,23 @@ bool UType::Supercedes(UType* other) {
 	});
 }
 
+
+FString UType::ToString() const {
+	// Get Base Type
+	EType t = GetType();
+	FString type = UEnum::GetValueAsString(t);
+	type = type.Append("<");
+	// Get Templates
+	for (const UType* temp : GetTemplates()) {
+		type = type.Append(temp->ToString());
+		type = type.Append(", ");
+	}
+	// Close Templates
+	type = type.Append(">");
+	return type;
+}
+
+
 ////// TYPE CONSTANT
 
 
@@ -43,15 +60,15 @@ UTypeConst* UTypeConst::New(ETypeBase InType) {
 }
 
 // Recursive Deep Copying
-UType* UTypeConst::DeepCopy() {
+UType* UTypeConst::DeepCopy(const TMap<UType*, UType*>& ptrMap) const {
 	// Simply copy Type when terminal
 	if (Terminal()) { return New(( ETypeBase )Type); }
 
 	// Create Copy and pass InType
 	UTypeConst* out = New(( ETypeData )Type, {});
 	// Recursively Copy InTemplates
-	Algo::Transform(Templates, out->Templates, [](UType* t) { 
-		return t->DeepCopy(); 
+	Algo::Transform(Templates, out->Templates, [&ptrMap](UType* t) { 
+		return t->DeepCopy(ptrMap);
 	});
 	// Return copy
 	return out;
@@ -100,17 +117,17 @@ void UTypeConst::RestrictTo(UType* other) {
 
 
 // If there are no InTemplates
-bool UTypeConst::Terminal() {
+bool UTypeConst::Terminal() const {
 	return Templates.Num() == 0;
 }
 
 // Return Type Directly
-EType UTypeConst::GetType() {
+EType UTypeConst::GetType() const {
 	return Type;
 }
 
 // Return Templates Directly
-TArray<UType*> UTypeConst::GetTemplates() {
+TArray<UType*> UTypeConst::GetTemplates() const {
 	return Templates;
 }
 
@@ -132,17 +149,28 @@ UTypePtr* UTypePtr::New(UType* TypeVar) {
 }
 
 // Recursive Deep Copy
-UType* UTypePtr::DeepCopy() {
+UType* UTypePtr::DeepCopy(const TMap<UType*, UType*>& ptrMap) const {
 	// Strip any Invalid ptrs 
 	if (!Valid()) { return New(NULL); }
 
+	// Get Pointed To UType
+	UType* inner;
+
+	// Check Typemap
+	if (ptrMap.Contains(Type)) {
+		inner = ptrMap[Type];
+	// Else Deep Copy Type
+	} else {
+		inner = Type->DeepCopy(ptrMap);
+	}
+
 	// Create InType, Deep Copying pointer
-	UTypePtr* out = New(Type->DeepCopy());
+	UTypePtr* out = New(inner);
 	out->CopyTemplates = CopyTemplates;
 	if (!CopyTemplates) {
 		// Recursively Copy InTemplates
-		Algo::Transform(Templates, out->Templates, [](UType* t) {
-			return t->DeepCopy();
+		Algo::Transform(Templates, out->Templates, [&ptrMap](UType* t) {
+			return t->DeepCopy(ptrMap);
 		});
 	}
 	return out;
@@ -153,7 +181,7 @@ UType* UTypePtr::Get() {
 }
 
 // Return TypeVars Type
-EType UTypePtr::GetType() {
+EType UTypePtr::GetType() const {
 	if (Type) {
 		return Type->GetType();
 	} else {
@@ -162,7 +190,7 @@ EType UTypePtr::GetType() {
 }
 
 // Return TypeVars Templates
-TArray<UType*> UTypePtr::GetTemplates() {
+TArray<UType*> UTypePtr::GetTemplates() const {
 	if (Type && CopyTemplates) {
 		return Type->GetTemplates();
 	}
@@ -170,7 +198,7 @@ TArray<UType*> UTypePtr::GetTemplates() {
 }
 
 // Return Type Pointer has Valid Pointer
-bool UTypePtr::Valid() {
+bool UTypePtr::Valid() const {
 	return Type && IsValid(Type);
 }
 
@@ -187,20 +215,20 @@ UTypeVar* UTypeVar::New(ETypeClass InType) {
 }
 
 // Base Case of Deep Copy Recursion
-UType* UTypeVar::DeepCopy() {
+UType* UTypeVar::DeepCopy(const TMap<UType*, UType*>& ptrMap) const {
 	//// Simply copy InType, Evidence is not copied
 	//return New(Type);
 	UTypeVar* out = New(Type);
 	// Apply all evidence as copy
 	for (const auto &t : Evidence) {
-		out->ApplyEvidence(t->DeepCopy());
+		out->ApplyEvidence(t->DeepCopy(ptrMap));
 	}
 	return out;
 }
 
 
 // Try to return Instances Type, Else return own Type
-EType UTypeVar::GetType() {
+EType UTypeVar::GetType() const {
 	if (Instance && IsValid(Instance)) {
 		return Instance->GetType();
 	}
@@ -208,7 +236,7 @@ EType UTypeVar::GetType() {
 }
 
 // Try to return Instances Templates, Else return nothing
-TArray<UType*> UTypeVar::GetTemplates() {
+TArray<UType*> UTypeVar::GetTemplates() const {
 	if (Instance && IsValid(Instance)) {
 		return Instance->GetTemplates();
 	}
@@ -248,3 +276,28 @@ bool UTypeVar::RemoveEvidence(UType* InType) {
 	// Return Success
 	return true;
 }
+
+
+bool UType::EqualTo(const UType* other) const {
+	// Ensure Type Equality
+	if (GetType() != other->GetType()) return false;
+
+	// Get Templates
+	TArray<UType*> lhsT = GetTemplates();
+	TArray<UType*> rhsT = other->GetTemplates();
+
+	// Ensure Same Template Number
+	if (lhsT.Num() != rhsT.Num()) { return false; }
+
+	// Check All Templates
+	for (int idx = lhsT.Num(); idx --> 0;) {
+		if (!lhsT[idx]->EqualTo(rhsT[idx])) {
+			// On mismatch, return unequal
+			return false;
+		}
+	}
+
+	// return equal
+	return true;
+}
+

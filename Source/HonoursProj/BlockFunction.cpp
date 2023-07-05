@@ -6,7 +6,6 @@
 #include "Components/PrimitiveComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "Components/StaticMeshComponent.h"
-#include "Misc/TVariant.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -33,14 +32,8 @@ ABlockFunction::ABlockFunction() {
 void ABlockFunction::BeginPlay() {
 	Super::BeginPlay();
 
+	// Set Function Signature
 	SetFunctionTypes();
-
-	// Initialize Output Partials
-	for (auto output : Outputs) {
-		for (auto input : Inputs) {
-			OutputPartials.Add(ValPartial([](ValType x) { return ( void* )NULL; }));
-		}
-	}
 
 	// Ensure Attachment is entirely KeepRelative
 	FAttachmentTransformRules attachRules = FAttachmentTransformRules(
@@ -96,13 +89,41 @@ AHonoursProjBlock* ABlockFunction::HandleRClick(UPrimitiveComponent* ClickedComp
 	return AHonoursProjBlock::HandleClick(ClickedComponent);
 }
 
+
+// Resolves the Type of a Function with Partially Applied Inputs
+UType* ABlockFunction::ResolveTypesWithPartial(int output, const TArray<VStar>& partialInputs) {
+
+
+	// DeepCopy TypeVars and use in ptrMap
+	TMap<UType*, UType*> ptrMap;
+	for (UTypeVar* var : TypeVars) {
+		ptrMap.Add(var, var->DeepCopy());
+	}
+
+	// Get Original Output Type
+	UType* outArrow = Outputs[output].Type->DeepCopy(ptrMap);
+
+	// Resolve Partial Applications (reversed)
+	for (int idx = partialInputs.Num(); idx --> 0;) {
+		const VStar* input = &partialInputs[idx];
+		// Try to Resolve precursors when a Connected Type
+		if (!input->Valid()) {
+			// On Resolution fail, Unconnected Type, Add Arrow Layer
+			outArrow = UTypeConst::New(ETypeData::FUNC, { Inputs[idx].Type->DeepCopy(ptrMap), UTypePtr::New(outArrow)});
+		}
+	}
+
+	return outArrow;
+}
+
 // Resolve Type Signature
 UType* ABlockFunction::ResolveType() {
 	// Intiialize Output Arrow Terminal TypeVar
 	UType* outArrow = UTypeVar::New(ETypeClass::ANY);
 
-	// For Each Input
-	for (AFunctionInput* input : InputBlocks) {
+	// For Each Input (reversed)
+	for (int idx = InputBlocks.Num(); idx --> 0;) {
+		 AFunctionInput* input = InputBlocks[idx];
 		// Try to Resolve precursors when a Connected Type
 		if (!input->connectedTo) {
 			// On Resolution fail, Unconnected Type, Add Arrow Layer
@@ -115,8 +136,8 @@ UType* ABlockFunction::ResolveType() {
 	return OutputArrow;
 }
 
-ValArray ABlockFunction::CollectInputs() {
-	ValArray out = {};
+VStarArrayReturn ABlockFunction::CollectInputs() {
+	VStarArray out = {};
 
 	// For Each Input
 	for (AFunctionInput* input : InputBlocks) {
@@ -124,92 +145,52 @@ ValArray ABlockFunction::CollectInputs() {
 		out.Add(input->GetValue());
 	}
 
-	return out;
+	return std::move(out);
 }
 
 
 // Requests a single input, and recurses
-ValPartial ABlockFunction::ApplyInput(int output, ValArray& vals, int idx, Arr<ValArray&, TArray<void*>> f) {
-	return ValPartial([&](ValType val) -> void* {
+Arr<VStar, VStar> ABlockFunction::ApplyInput(int output, VStarArray vals, int idx, Arr<VStarArray, VStarArrayReturn> f) {
+	return Arr<VStar, VStar>([&] (VStar&& val) -> VStar {
+		// Copy Vals
+		TArray<VStar> m_vals = vals;
 		// Set Value
-		vals[idx] = val;
+		m_vals[idx].Replace(val);
 		// Recurse further
-		auto res = ApplyInputs(output, vals, idx + 1, f);
-
-		// More to Apply
-		if (res.IsType<ValPartial>()) {
-			// Store Partial
-			int out_idx = output * vals.Num() + idx;
-			OutputPartials[out_idx] = res.Get<ValPartial>();
-			// Return partial reference
-			return ( void* )&OutputPartials[out_idx];
-
-		// Final Application, passthrough value
-		} else {
-			return res.Get<void*>();
-		}
+		return ApplyInputs(output, std::move(m_vals), idx + 1, f);
 	});
 };
 
 // Partially Applies function appropriately
-TVariant<void*, ValPartial> ABlockFunction::ApplyInputs(int output, ValArray& vals, int idx, Arr<ValArray&, TArray<void*>> f) {
-	TVariant<void*, ValPartial> outputVariant;
-
+VStar ABlockFunction::ApplyInputs(int output, VStarArray vals, int idx, Arr<VStarArray, VStarArrayReturn> f) {
 	// Fully Applied Base Case
 	if (vals.Num() <= idx) {
-		outputVariant.Set<void*>(f(vals)[output]);
-		return outputVariant;
+		return std::move(f(std::move(vals))[output]);
 	}
 
 	// Extract type and value
-	const auto& [tn, vn] = vals[idx];
+	VStar* val = &vals[idx];
 
 	// If no type for current Variable
-	if (!tn) {
+	if (!val->Valid()) {
 		// Request Type
-		outputVariant.Set<ValPartial>(ApplyInput(output, vals, idx, f));
-		return outputVariant;
-
+		UType* retType = ResolveTypesWithPartial(output, vals);
+		return VStar(retType, ApplyInput(output, std::move(vals), idx, f));
 	// typed
 	} else {
-		return ApplyInputs(output, vals, idx + 1, f);
+		return ApplyInputs(output, std::move(vals), idx + 1, f);
 	}
-};
+}
 
 // Gets the Value of a function
-ValArray ABlockFunction::GetValue() {
-	// Collect Inputs
-	ValArray inputs = CollectInputs();
-
+VStarArrayReturn ABlockFunction::GetValue() {
 	// Collect Output Types and Values
-	ValArray outputs = {};
+	VStarArray outputs = {};
 	for (const auto& output : OutputBlocks) {
 		// Either Collect Further Inputs, or Output Value
-		TVariant<void*, ValPartial> res = ApplyInputs(output->Index, { inputs }, 0, GetInnerFunc());
-
-		// Add Resolved Output Type
-		if (res.IsType<void*>()) {
-			outputs.Add(ValType{
-				output->ResolveType(),
-				res.Get<void*>()
-			});
-
-		// Add Partially Applied Output Type
-		} else if (res.IsType<ValPartial>()) {
-			// Store Output Partial
-			int out_idx = output->Index * inputs.Num();
-			OutputPartials[out_idx] = res.Get<ValPartial>();
-
-			// Add void* of partial with type to outputs
-			outputs.Add(ValType {
-				output->ResolveType(), 
-				&OutputPartials[out_idx]
-			});
-		} else {
-			UE_LOG(LogTemp, Warning, TEXT("BAD PARTIAL"));
-		}
+		outputs.Add(ApplyInputs(output->Index, CollectInputs(), 0, GetInnerFunc()));
 	}
 
 	// Return collected outputs
-	return outputs;
+	return std::move(outputs);
 }

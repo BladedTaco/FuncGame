@@ -8,7 +8,6 @@
 #include "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Preprocess/Include.h"
 #include "CoreMinimal.h"
 #include "Algo/Transform.h"
-#include "Types_gen.generated.h"
 
  UENUM(BlueprintType) 
  enum class EType : uint8 { 

@@ -61,6 +61,6 @@ UType* AFunctionOutput::ResolveType() {
 	return arrow;
 }
 
-ValType AFunctionOutput::GetValue() {
-	return Cast<ABlockFunction>(GetAttachParentActor())->GetValue()[Index];
+VStar AFunctionOutput::GetValue() {
+	return std::move(Cast<ABlockFunction>(GetAttachParentActor())->GetValue()[Index]);
 }

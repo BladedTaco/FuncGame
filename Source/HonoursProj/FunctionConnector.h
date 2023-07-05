@@ -34,7 +34,7 @@ public:
 	void Tick(float DeltaSeconds);
 
 	virtual UType* ResolveType() PURE_VIRTUAL(AFunctionConnector::ResolveType, return NULL;);
-	virtual ValType GetValue() PURE_VIRTUAL(AFunctionConnector::GetValue, return MakeTuple((UType*)NULL, (void*)NULL););
+	virtual VStar GetValue() PURE_VIRTUAL(AFunctionConnector::GetValue, return VStar(););
 
 public:
 	UPROPERTY(VisibleAnywhere)

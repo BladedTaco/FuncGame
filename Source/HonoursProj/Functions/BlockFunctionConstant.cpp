@@ -31,13 +31,19 @@ void ABlockFunctionConstant::SetFunctionTypes() {
 	};
 }
 
-Arr<ValArray&, TArray<void*>> ABlockFunctionConstant::GetInnerFunc() {
-	return Arr<ValArray&, TArray<void*>>([this](ValArray& values) -> TArray<void*> {
+Arr<VStarArray, VStarArrayReturn> ABlockFunctionConstant::GetInnerFunc() {
+	return Arr<VStarArray, VStarArrayReturn>([this](VStarArray values) -> VStarArrayReturn {
 
-		this->TextComponent->SetText(FText::Format(FText::FromString(FString("Val {0}")), this->Value));
+		return {};
 
-		this->ConcreteOutputs = { this->Value };
-		this->OutputValues = { ( void* )&this->ConcreteOutputs };
-		return this->OutputValues;
+		//Number<int> n(Value);
+
+		//this->TextComponent->SetText(FText::Format(FText::FromString(FString("Val {0}")), this->Value));
+
+		//VStar res(Outputs[0].Type, n);
+
+		//VStarArray out = {std::move(res)};
+
+		//return std::move(out);
 	});
 }

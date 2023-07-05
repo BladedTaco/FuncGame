@@ -21,42 +21,6 @@
 
 #include "MyUtils.h"
 
-
-Arr<ValArray&, TArray<void*>> ABlockFunctionGreaterThan::GetInnerFunc() {
-	return Arr<ValArray&, TArray<void*>>([this](ValArray& values) -> TArray<void*> {
-
-		// TODO: Make this reflect actual types
-		//EType numType = this->TypeVars[0]->GetType();
-
-		// Destruct Values
-		const auto& [t0, t1] = Destruct<2, TArray, ValType>(values);
-		const auto& [u0, v0] = t0;
-		const auto& [u1, v1] = t1;
-
-		// Get Number Type
-		EType numType = u0->GetTemplates()[0]->GetType();
-
-		// Do GT Calculation
-		bool result;
-		switch (numType) {
-		case EType::INT:
-			result = Ordinal<Number<int>>::gt<>(*(Number<int>*)v0)(*(Number<int>*)v1);
-			break;
-		case EType::FLOAT:
-			result = Ordinal<Number<float>>::gt<>(*(Number<float>*)v0)(*(Number<float>*)v1);
-			break;
-		}
-
-		this->TextComponent->SetText(FText::Format(FText::FromString(FString("GT {0}")), result));
-
-
-		// Save Result and Return
-		this->ConcreteOutputs = result;
-		this->OutputValues = { ( void* )&this->ConcreteOutputs };
-		return this->OutputValues;
-	} );
-}
-
 void ABlockFunctionGreaterThan::SetFunctionTypes() {
 	// Initialize Type Variables
 	UTypeVar* F = UTypeVar::New(ETypeClass::ANY);
@@ -73,6 +37,39 @@ void ABlockFunctionGreaterThan::SetFunctionTypes() {
 	};
 }
 
+
+
+Arr<VStarArray, VStarArrayReturn> ABlockFunctionGreaterThan::GetInnerFunc() {
+	return Arr<VStarArray, VStarArrayReturn>([this](VStarArray values) -> VStarArrayReturn {
+
+		return {};
+
+		//// TODO: Make this reflect actual types
+		////EType numType = this->TypeVars[0]->GetType();
+
+		//// Destruct Values
+		//auto [t0, t1] = DestructPtr<2, TArray, VStar>(values);
+
+		//// Get Number Type
+		//EType numType = t0->Type()->GetTemplates()[0]->GetType();
+
+		//// Do GT Calculation
+		//bool result;
+		//switch (numType) {
+		//case EType::INT:
+		//	result = Ordinal<Number<int>>::gt<>(t0->Get<Number<int>>())(t1->Get<Number<int>>());
+		//	break;
+		//case EType::FLOAT:
+		//	result = Ordinal<Number<float>>::gt<>(t0->Get<Number<float>>())(t1->Get<Number<float>>());
+		//	break;
+		//}
+
+		//this->TextComponent->SetText(FText::Format(FText::FromString(FString("GT {0}")), result));
+
+		//// Return result
+		//return { std::move(VStar(Outputs[0].Type, result)) };
+	} );
+}
 
 
 

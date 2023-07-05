@@ -34,6 +34,42 @@ public:
 	}
 };
 
+//
+//class IMaybe {
+//private:
+//	bool _isNothing;
+//	VStar _value;
+//	IMaybe() {
+//		_isNothing = true;
+//	}
+//	template <typename A>
+//	IMaybe(A a) {
+//		_isNothing = false;
+//		_value = a;
+//	}
+//	friend class Functor<Maybe<VStar>>;
+//public:
+//	static Maybe<A> Just(A a) {
+//		return Maybe<A>(a);
+//	}
+//	static Maybe<A> Nothing() {
+//		return Maybe<A>();
+//	}
+//public:
+//	A fromMaybe(A fallback) {
+//		if (_isNothing) {
+//			return fallback;
+//		} else {
+//			return _value;
+//		}
+//	}
+//
+//	Maybe<class VStar> Void() {
+//
+//	}
+//};
+
+
 template <typename A>
 auto fromMaybe = curry([](A a, Maybe<A> m_a) -> A {
 	return m_a.fromMaybe(a);
@@ -41,7 +77,7 @@ auto fromMaybe = curry([](A a, Maybe<A> m_a) -> A {
 
 
 FUNCTOR((A), Maybe, (
-	[](Arr<A, B> func, Maybe<A> f_a) -> Maybe<B> { PP__NEWLINE
+	[](Arr<A, B> func, Maybe<A> f_a) -> Maybe<B> {		PP__NEWLINE
 		if (f_a._isNothing) {						    PP__NEWLINE
 			return Maybe<B>::Nothing();				    PP__NEWLINE
 		} else {									    PP__NEWLINE

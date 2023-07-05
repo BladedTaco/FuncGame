@@ -18,6 +18,6 @@ private:
 		bool ConcreteOutputs;
 
 public:
-	virtual Arr<ValArray&, TArray<void*>> GetInnerFunc() override;
+	virtual Arr<VStarArray, VStarArrayReturn> GetInnerFunc() override;
 	virtual void SetFunctionTypes() override;
 };

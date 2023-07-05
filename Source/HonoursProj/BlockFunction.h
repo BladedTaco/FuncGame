@@ -9,18 +9,13 @@
 #include "Types/Type.h"
 
 #include "Types/Func_gen.h"
-#include "Containers/StaticArray.h"
+
+
+#include "Types/VStar.h"
 
 #include "BlockFunction.generated.h"
 
 
-template <typename First, typename... Rest>
-class TVariant;
-
-
-using ValType = TTuple<UType*, void*>;
-using ValArray = TArray<ValType>;
-using ValPartial = Arr<ValType, void*>;
 
 USTRUCT(BlueprintType)
 struct FParameter {
@@ -60,9 +55,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced)
 		TArray<UTypeVar*> TypeVars;
 
-	TArray<void*> OutputValues;
-	TArray<ValPartial> OutputPartials;
-
 
 	// Parameter Actors
 	UPROPERTY(VisibleAnywhere)
@@ -80,10 +72,12 @@ public:
 	ABlockFunction();
 
 	// Partially/Fully Apply Inputs on InnerFunc
-	ValArray GetValue();
+	VStarArrayReturn GetValue();
 	// Helpers
-	ValPartial ApplyInput(int output, ValArray& vals, int idx, Arr<ValArray&, TArray<void*>> f);
-	TVariant<void*, ValPartial> ApplyInputs(int output, ValArray& vals, int idx, Arr<ValArray&, TArray<void*>> f);
+	Arr<VStar, VStar> ApplyInput(int output, VStarArray vals, int idx, Arr<VStarArray, VStarArrayReturn> f);
+	VStar ApplyInputs(int output, VStarArray vals, int idx, Arr<VStarArray, VStarArrayReturn> f);
+
+	UType* ResolveTypesWithPartial(int output, const TArray<VStar>& partialInputs);
 
 	// Interaction Handlers
 	virtual AHonoursProjBlock* HandleRClick(UPrimitiveComponent* ClickedComponent) override;
@@ -92,11 +86,11 @@ public:
 
 	UFUNCTION()
 		UType* ResolveType();
-	ValArray CollectInputs();
+	VStarArrayReturn CollectInputs();
 
 	// The Implementation of a Function
-	virtual Arr<ValArray&, TArray<void*>> GetInnerFunc() PURE_VIRTUAL(ABlockFunction::GetInnerFunc,
-		return { [](ValArray& x) -> TArray<void*> { return {}; } };
+	virtual Arr<VStarArray, VStarArrayReturn> GetInnerFunc() PURE_VIRTUAL(ABlockFunction::GetInnerFunc,
+		return { [](VStarArray x) -> VStarArrayReturn { return {}; } };
 	);
 	// The Type Declaration of a Function
 	virtual void SetFunctionTypes() PURE_VIRTUAL(ABlockFunction::SetFunctionTypes, return;);

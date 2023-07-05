@@ -16,6 +16,8 @@
 #include "Types/Types_gen.h"
 #include "Types/Func_gen.h"
 
+#include "Types/Unpack.h"
+
 AHonoursProjPawn::AHonoursProjPawn(const FObjectInitializer& ObjectInitializer) 
 	: Super(ObjectInitializer)
 {
@@ -91,7 +93,20 @@ void AHonoursProjPawn::OnLClickRelease() {
 	a = Functor<Maybe<int>>::map_replace_by<int>(2)(a);
 	int q = fromMaybe<int>(0)(a);
 	UE_LOG(LogTemp, Warning, TEXT("maybe %d"), q);
-	
+
+
+	UTypeConst* n = UTypeConst::New(ETypeData::MAYBE, { UTypeConst::New(ETypeData::NUMBER, {UTypeConst::New(ETypeBase::INT)}) });
+
+	UTypeConst* g = FromType<Maybe<Number<int>>>();
+	UTypeConst* g2 = FromType<int>();
+	UTypeConst* g3 = FromType<float>();
+	UTypeConst* g4 = FromType< Number<int>>();
+	UTypeConst* g5 = FromType< Maybe<int>>();
+
+	FString n_str = n->ToString();
+	FString g_str = g->ToString();
+
+	UE_LOG(LogTemp, Warning, TEXT("FromType Result %d %d %s, %s"), g->EqualTo(n), g5->EqualTo(n), *g_str, *n_str);
 
 	
 	a = Maybe<int>::Nothing();

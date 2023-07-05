@@ -3,11 +3,12 @@
 #include "MacroUtils.h"
 #include "Preprocess/Include.h"
 
-
 #ifndef PP__PREPROCESSING
 #include <functional>
+#include "Types/VStar.h"
 #else
 include <functional>
+include "Types/VStar.h"
 #endif
 
 // Lambda to Function Casting
@@ -47,13 +48,39 @@ private:
 	Function<To, From> _func;
 	friend class Functor<Func<To, From>>;
 public:
+	// Copyable Lambdas
 	Func(Function<To, From> f) {
 		_func = f;
+	}
+	//// Copyable Lambdas
+	//Func(Func<To, From>& other) {
+	//	_func = other._func;
+	//}
+	To operator()(VStarArray a) const {
+		return _func(std::move(a));
+	}
+	To operator()(VStar& a) const {
+		return _func(a.GetUnsafe<From>());
 	}
 	To operator()(const From& a) const {
 		return _func(a);
 	}
 };
+
+//// A Func is an arrow ((->) From) To
+//template <typename To>
+//class Func<To, VStarArray> {
+//private:
+//	Function<To, VStarArray> _func;
+//	friend class Functor<Func<To, VStarArray>>;
+//public:
+//	Func(Function<To, VStarArray> f) {
+//		_func = f;
+//	}
+//	To operator()(VStarArray a) const {
+//		return _func(std::move(a));
+//	}
+//};
 
 // Curried Function Shorthand as Arrow From -> To
 template <typename From, typename To>
@@ -75,7 +102,7 @@ template <MAP_BLIST(DEFN_CURRY_TEMPS, __VA_ARGS__), typename To>					PP__NEWLINE
 inline LOOP(DEFN_CURRY_RETURN, __VA_ARGS__) To LOOP(CLOSE_TEMPLATE, __VA_ARGS__)	PP__NEWLINE \
 _curry(Function<To LOOP(DEFN_CURRY_T_, __VA_ARGS__)> f) {							PP__NEWLINE \
 	return LOOP(DEFN_CURRY_RETURN, __VA_ARGS__) To LOOP(CLOSE_TEMPLATE, __VA_ARGS__)			\
-		([=]( STRIP_FIRST(DEFN_CURRY_PARAM(63)) ) {									PP__NEWLINE \
+		([=]( STRIP_FIRST(DEFN_CURRY_PARAM(0)) ) {									PP__NEWLINE \
 		return _curry<MAP_BLIST(DEFN_CURRY_T_, IGNORE_FIRST(__VA_ARGS__)), To>(		PP__NEWLINE \
 			[=](MAP_BLIST(DEFN_CURRY_PARAM, IGNORE_FIRST(__VA_ARGS__))) -> To {		PP__NEWLINE \
 				return f(MAP_BLIST(DEFN_CURRY_V_, __VA_ARGS__));					PP__NEWLINE \
@@ -84,7 +111,7 @@ _curry(Function<To LOOP(DEFN_CURRY_T_, __VA_ARGS__)> f) {							PP__NEWLINE \
 	});																				PP__NEWLINE \
 }																		PP__NEWLINE PP__NEWLINE
 
-#define DEFINE_CURRY(N) DEFINE_CURRY_N(TAKE_N(N, __NATURAL_64_INTS()))
+#define DEFINE_CURRY(N) DEFINE_CURRY_N(TAKE_N(N, __NATURAL_64_INTS_ASC()))
 
 #define DEFINE_CURRYS(N) LOOP2(DEFINE_CURRY, STRIP_FIRST(STRIP_FIRST(TAKE_N(N, __NATURAL_64_INTS_ASC()))))
 

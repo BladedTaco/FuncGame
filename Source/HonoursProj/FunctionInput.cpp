@@ -73,10 +73,10 @@ UType* AFunctionInput::ResolveType() {
 	return ParameterInfo.Type;
 }
 
-ValType AFunctionInput::GetValue() {	
+VStar AFunctionInput::GetValue() {	
 	UType* type = ResolveType();
 	// Handle no connection
-	if (!connectedTo) { return MakeTuple(type, ( void* )NULL);  }
+	if (!connectedTo) { return VStar(ResolveType());  }
 
 	// Return value from connection
 	return connectedTo->GetValue();

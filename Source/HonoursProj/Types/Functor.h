@@ -18,7 +18,7 @@ TYPECLASS_DEFN(Functor, TEMPLATES, INST) {					 \
 // Functor Class Template
 template <typename A>
 class Functor {
-protected:
+public:
 	template <typename B>
 	inline static Function<Functor<B>, Arr<A, B>, Functor<A>> _fmap;
 	template <typename B>
@@ -31,7 +31,17 @@ public:
 	template <typename B>
 	inline static auto map_replace_by = curry(Functor<A>::_map_replace_by<B>);
 
+
+	
 };
+
+//
+//namespace _Functor {
+//	template <typename To, template <typename, typename...> class F, typename A, typename... Rest>
+//	F<To, Rest...> a_fmap(Arr<A, To> f, F<A, Rest...> a) {
+//		return Functor<F<A, Rest...>>::fmap<Arr<A, To>::to>(f)(a);
+//	}
+//};
 
 // Functor Base Instance
 template <template <class, class...> class F, typename A, typename... Rest>
@@ -52,9 +62,18 @@ public:
 	inline static auto map_replace_by = curry(_map_replace_by<B>);
 
 	//TYPECLASS_FUNC_VPTR((B), fmap, ((Arr<A, B>), f), ((F<A, Rest...>), fa))
-	template <class B> inline static auto v_fmap = curry([](void* f, void* fa) -> decltype(auto) { return fmap<B>(*(Arr<A, B>*)f) (*(F<A, Rest...>*)fa); });
+	template <class B> inline static auto v_fmap = curry([](void* f, void* fa) -> decltype(auto) { 
+		return fmap<B>(*(Arr<A, B>*)f) (*(F<A, Rest...>*)fa);
+	});
 };
-
+//
+//
+//class IFunctor {
+//	inline static auto v_fmap = curry([](VStar f, VStar fa) -> VStar {
+//
+//		return fmap<B>(*(Arr<A, B>*)f) (*(F<A, Rest...>*)fa);
+//	});
+//};
 
 
 

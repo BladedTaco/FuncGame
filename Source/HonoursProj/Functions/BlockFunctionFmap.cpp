@@ -54,26 +54,76 @@ SPECIALIZE TYPE
 
 
 
-template <typename T>
-Arr<void*, Arr<void*, T>> h[2] = {
-	Functor<Maybe<Number<int>>>::v_fmap<T>,
-	Functor<Maybe<Number<float>>>::v_fmap<T>
-};
+//
+//template <typename T>
+//Arr<VStar, Arr<VStar, T>>* _h[2] = {
+//	&Functor<Maybe<Number<int>>>::fmap<T>,
+//	&Functor<Maybe<Number<float>>>::fmap<T>
+//};
+//
+//
+//
+//
+//template <typename T>
+//Arr<void*, Arr<void*, T>> h[2] = {
+//	Functor<Maybe<Number<int>>>::v_fmap<T>,
+//	Functor<Maybe<Number<float>>>::v_fmap<T>
+//};
+//
+//
+//template <typename T>
+//Arr<void*, Arr<void*, T>> g[10] = {
+//	Functor<Maybe<Number<int>>>::v_fmap<T>,
+//	Functor<Maybe<Number<float>>>::v_fmap<T>,
+//	Functor< Maybe<Maybe<Number<int>>>>::v_fmap<T>,
+//	Functor< Maybe<Maybe<Number<float>>>>::v_fmap<T>
+//};
+//
+//
+//template <typename T>
+//Arr<void*, Arr<void*, T>> g[10] = {
+//	Functor<Maybe<VStar>>::v_fmap<T>,
+//	Functor<Arr<VStar, VStar>>::v_fmap<T>,
+//
+//	Functor<Maybe<Number<VStar>>>::v_fmap<T>,
+//	Functor<Maybe<int>>::v_fmap<T>,
+//	Functor<Maybe<Maybe<VStar>>>::v_fmap<T>,
+//	Functor<Maybe<Arr<Maybe<VStar>, VStar>>>::v_fmap<T>,
+//	Functor<Arr<Maybe<VStar>, VStar>>::v_fmap<T>,
+//	Functor<Arr<Arr<VStar, VStar>, VStar>>::v_fmap<T>,
+//};
+
+//
+//template <typename Return, template <typename...> class Typeclass, typename... Args>
+//Return GetFunction(UType* type) {
+//
+//	auto x = Functor::_fmap(Arr<int, float>([](int x) {return 1.0f}), Maybe::Just(1));
+//
+//	switch (type->GetType()) {
+//	case EType::MAYBE:
+//		break;
+//	case EType::INT:
+//		return Typeclass<Maybe<Number<int>>>::Get("v_fmap")
+//	}
+//}
 
 
-template <typename T>
-Arr<void*, Arr<void*, T>> g[10] = {
-	Functor<Maybe<Number<int>>>::v_fmap<T>,
-	Functor<Maybe<Number<float>>>::v_fmap<T>,
-	Functor< Maybe<Maybe<Number<int>>>>::v_fmap<T>,
-	Functor< Maybe<Maybe<Number<float>>>>::v_fmap<T>
-}
+
+Arr<VStarArray, VStarArrayReturn> ABlockFunctionFmap::GetInnerFunc() {
+	return Arr<VStarArray, VStarArrayReturn>([this](VStarArray values) -> VStarArrayReturn {
+		return {};
+
+		//auto& [t0, t1] = Destruct<2, TArray, VStar>(values);
 
 
+		//auto x = Functor<Maybe<VStar>>::fmap<VStar>(t0)(t1);
 
 
-Arr<ValArray&, TArray<void*>> ABlockFunctionFmap::GetInnerFunc() {
-	return Arr<ValArray&, TArray<void*>>([this](ValArray& values) -> TArray<void*> {
+		//Maybe<Number<int>> a = decltype(a)::Just({ 1 });
+		//Arr<Number<int>, Number<int>> f = curry([](Number<int> a) { return a; });
+
+		//auto x = Functor<decltype(a)>::fmap<decltype(f)::to>(f)(a);
+
 
 		// TODO: Make this reflect actual types
 		//EType numType = this->TypeVars[0]->GetType();

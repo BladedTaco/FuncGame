@@ -7,6 +7,7 @@
 #include "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\MacroUtils.h"
 #include "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Preprocess/Include.h"
 #include <functional>
+#include "Types/VStar.h"
 namespace detail {
 	template <typename F>
 	struct function_traits : public function_traits<decltype(&F::operator())> {};
@@ -34,6 +35,12 @@ public:
 	Func(Function<To, From> f) {
 		_func = f;
 	}
+	To operator()(VStarArray a) const {
+		return _func(std::move(a));
+	}
+	To operator()(VStar& a) const {
+		return _func(a.GetUnsafe<From>());
+	}
 	To operator()(const From& a) const {
 		return _func(a);
 	}
@@ -44,169 +51,169 @@ template <typename First, typename To>
 inline Arr<First, To> _curry(Function<To, First> f) {
 	return Arr<First, To>(f);
 }
-template <typename T_63 , typename T_62, typename To> 
- inline Arr<T_63, Arr<T_62, To > > 
- _curry(Function<To , T_63 , T_62> f) { 
- return Arr<T_63, Arr<T_62, To > > ([=]( T_63 V_63 ) { 
- return _curry<T_62, To>( 
- [=](T_62 V_62) -> To { 
- return f(V_63 , V_62); 
+template <typename T_0 , typename T_1, typename To> 
+ inline Arr<T_0, Arr<T_1, To > > 
+ _curry(Function<To , T_0 , T_1> f) { 
+ return Arr<T_0, Arr<T_1, To > > ([=]( T_0 V_0 ) { 
+ return _curry<T_1, To>( 
+ [=](T_1 V_1) -> To { 
+ return f(V_0 , V_1); 
  } 
  ); 
  }); 
  } 
  
- template <typename T_63 , typename T_62 , typename T_61, typename To> 
- inline Arr<T_63, Arr<T_62, Arr<T_61, To > > > 
- _curry(Function<To , T_63 , T_62 , T_61> f) { 
- return Arr<T_63, Arr<T_62, Arr<T_61, To > > > ([=]( T_63 V_63 ) { 
- return _curry<T_62 , T_61, To>( 
- [=](T_62 V_62 , T_61 V_61) -> To { 
- return f(V_63 , V_62 , V_61); 
+ template <typename T_0 , typename T_1 , typename T_2, typename To> 
+ inline Arr<T_0, Arr<T_1, Arr<T_2, To > > > 
+ _curry(Function<To , T_0 , T_1 , T_2> f) { 
+ return Arr<T_0, Arr<T_1, Arr<T_2, To > > > ([=]( T_0 V_0 ) { 
+ return _curry<T_1 , T_2, To>( 
+ [=](T_1 V_1 , T_2 V_2) -> To { 
+ return f(V_0 , V_1 , V_2); 
  } 
  ); 
  }); 
  } 
  
- template <typename T_63 , typename T_62 , typename T_61 , typename T_60, typename To> 
- inline Arr<T_63, Arr<T_62, Arr<T_61, Arr<T_60, To > > > > 
- _curry(Function<To , T_63 , T_62 , T_61 , T_60> f) { 
- return Arr<T_63, Arr<T_62, Arr<T_61, Arr<T_60, To > > > > ([=]( T_63 V_63 ) { 
- return _curry<T_62 , T_61 , T_60, To>( 
- [=](T_62 V_62 , T_61 V_61 , T_60 V_60) -> To { 
- return f(V_63 , V_62 , V_61 , V_60); 
+ template <typename T_0 , typename T_1 , typename T_2 , typename T_3, typename To> 
+ inline Arr<T_0, Arr<T_1, Arr<T_2, Arr<T_3, To > > > > 
+ _curry(Function<To , T_0 , T_1 , T_2 , T_3> f) { 
+ return Arr<T_0, Arr<T_1, Arr<T_2, Arr<T_3, To > > > > ([=]( T_0 V_0 ) { 
+ return _curry<T_1 , T_2 , T_3, To>( 
+ [=](T_1 V_1 , T_2 V_2 , T_3 V_3) -> To { 
+ return f(V_0 , V_1 , V_2 , V_3); 
  } 
  ); 
  }); 
  } 
  
- template <typename T_63 , typename T_62 , typename T_61 , typename T_60 , typename T_59, typename To> 
- inline Arr<T_63, Arr<T_62, Arr<T_61, Arr<T_60, Arr<T_59, To > > > > > 
- _curry(Function<To , T_63 , T_62 , T_61 , T_60 , T_59> f) { 
- return Arr<T_63, Arr<T_62, Arr<T_61, Arr<T_60, Arr<T_59, To > > > > > ([=]( T_63 V_63 ) { 
- return _curry<T_62 , T_61 , T_60 , T_59, To>( 
- [=](T_62 V_62 , T_61 V_61 , T_60 V_60 , T_59 V_59) -> To { 
- return f(V_63 , V_62 , V_61 , V_60 , V_59); 
+ template <typename T_0 , typename T_1 , typename T_2 , typename T_3 , typename T_4, typename To> 
+ inline Arr<T_0, Arr<T_1, Arr<T_2, Arr<T_3, Arr<T_4, To > > > > > 
+ _curry(Function<To , T_0 , T_1 , T_2 , T_3 , T_4> f) { 
+ return Arr<T_0, Arr<T_1, Arr<T_2, Arr<T_3, Arr<T_4, To > > > > > ([=]( T_0 V_0 ) { 
+ return _curry<T_1 , T_2 , T_3 , T_4, To>( 
+ [=](T_1 V_1 , T_2 V_2 , T_3 V_3 , T_4 V_4) -> To { 
+ return f(V_0 , V_1 , V_2 , V_3 , V_4); 
  } 
  ); 
  }); 
  } 
  
- template <typename T_63 , typename T_62 , typename T_61 , typename T_60 , typename T_59 , typename T_58, typename To> 
- inline Arr<T_63, Arr<T_62, Arr<T_61, Arr<T_60, Arr<T_59, Arr<T_58, To > > > > > > 
- _curry(Function<To , T_63 , T_62 , T_61 , T_60 , T_59 , T_58> f) { 
- return Arr<T_63, Arr<T_62, Arr<T_61, Arr<T_60, Arr<T_59, Arr<T_58, To > > > > > > ([=]( T_63 V_63 ) { 
- return _curry<T_62 , T_61 , T_60 , T_59 , T_58, To>( 
- [=](T_62 V_62 , T_61 V_61 , T_60 V_60 , T_59 V_59 , T_58 V_58) -> To { 
- return f(V_63 , V_62 , V_61 , V_60 , V_59 , V_58); 
+ template <typename T_0 , typename T_1 , typename T_2 , typename T_3 , typename T_4 , typename T_5, typename To> 
+ inline Arr<T_0, Arr<T_1, Arr<T_2, Arr<T_3, Arr<T_4, Arr<T_5, To > > > > > > 
+ _curry(Function<To , T_0 , T_1 , T_2 , T_3 , T_4 , T_5> f) { 
+ return Arr<T_0, Arr<T_1, Arr<T_2, Arr<T_3, Arr<T_4, Arr<T_5, To > > > > > > ([=]( T_0 V_0 ) { 
+ return _curry<T_1 , T_2 , T_3 , T_4 , T_5, To>( 
+ [=](T_1 V_1 , T_2 V_2 , T_3 V_3 , T_4 V_4 , T_5 V_5) -> To { 
+ return f(V_0 , V_1 , V_2 , V_3 , V_4 , V_5); 
  } 
  ); 
  }); 
  } 
  
- template <typename T_63 , typename T_62 , typename T_61 , typename T_60 , typename T_59 , typename T_58 , typename T_57, typename To> 
- inline Arr<T_63, Arr<T_62, Arr<T_61, Arr<T_60, Arr<T_59, Arr<T_58, Arr<T_57, To > > > > > > > 
- _curry(Function<To , T_63 , T_62 , T_61 , T_60 , T_59 , T_58 , T_57> f) { 
- return Arr<T_63, Arr<T_62, Arr<T_61, Arr<T_60, Arr<T_59, Arr<T_58, Arr<T_57, To > > > > > > > ([=]( T_63 V_63 ) { 
- return _curry<T_62 , T_61 , T_60 , T_59 , T_58 , T_57, To>( 
- [=](T_62 V_62 , T_61 V_61 , T_60 V_60 , T_59 V_59 , T_58 V_58 , T_57 V_57) -> To { 
- return f(V_63 , V_62 , V_61 , V_60 , V_59 , V_58 , V_57); 
+ template <typename T_0 , typename T_1 , typename T_2 , typename T_3 , typename T_4 , typename T_5 , typename T_6, typename To> 
+ inline Arr<T_0, Arr<T_1, Arr<T_2, Arr<T_3, Arr<T_4, Arr<T_5, Arr<T_6, To > > > > > > > 
+ _curry(Function<To , T_0 , T_1 , T_2 , T_3 , T_4 , T_5 , T_6> f) { 
+ return Arr<T_0, Arr<T_1, Arr<T_2, Arr<T_3, Arr<T_4, Arr<T_5, Arr<T_6, To > > > > > > > ([=]( T_0 V_0 ) { 
+ return _curry<T_1 , T_2 , T_3 , T_4 , T_5 , T_6, To>( 
+ [=](T_1 V_1 , T_2 V_2 , T_3 V_3 , T_4 V_4 , T_5 V_5 , T_6 V_6) -> To { 
+ return f(V_0 , V_1 , V_2 , V_3 , V_4 , V_5 , V_6); 
  } 
  ); 
  }); 
  } 
  
- template <typename T_63 , typename T_62 , typename T_61 , typename T_60 , typename T_59 , typename T_58 , typename T_57 , typename T_56, typename To> 
- inline Arr<T_63, Arr<T_62, Arr<T_61, Arr<T_60, Arr<T_59, Arr<T_58, Arr<T_57, Arr<T_56, To > > > > > > > > 
- _curry(Function<To , T_63 , T_62 , T_61 , T_60 , T_59 , T_58 , T_57 , T_56> f) { 
- return Arr<T_63, Arr<T_62, Arr<T_61, Arr<T_60, Arr<T_59, Arr<T_58, Arr<T_57, Arr<T_56, To > > > > > > > > ([=]( T_63 V_63 ) { 
- return _curry<T_62 , T_61 , T_60 , T_59 , T_58 , T_57 , T_56, To>( 
- [=](T_62 V_62 , T_61 V_61 , T_60 V_60 , T_59 V_59 , T_58 V_58 , T_57 V_57 , T_56 V_56) -> To { 
- return f(V_63 , V_62 , V_61 , V_60 , V_59 , V_58 , V_57 , V_56); 
+ template <typename T_0 , typename T_1 , typename T_2 , typename T_3 , typename T_4 , typename T_5 , typename T_6 , typename T_7, typename To> 
+ inline Arr<T_0, Arr<T_1, Arr<T_2, Arr<T_3, Arr<T_4, Arr<T_5, Arr<T_6, Arr<T_7, To > > > > > > > > 
+ _curry(Function<To , T_0 , T_1 , T_2 , T_3 , T_4 , T_5 , T_6 , T_7> f) { 
+ return Arr<T_0, Arr<T_1, Arr<T_2, Arr<T_3, Arr<T_4, Arr<T_5, Arr<T_6, Arr<T_7, To > > > > > > > > ([=]( T_0 V_0 ) { 
+ return _curry<T_1 , T_2 , T_3 , T_4 , T_5 , T_6 , T_7, To>( 
+ [=](T_1 V_1 , T_2 V_2 , T_3 V_3 , T_4 V_4 , T_5 V_5 , T_6 V_6 , T_7 V_7) -> To { 
+ return f(V_0 , V_1 , V_2 , V_3 , V_4 , V_5 , V_6 , V_7); 
  } 
  ); 
  }); 
  } 
  
- template <typename T_63 , typename T_62 , typename T_61 , typename T_60 , typename T_59 , typename T_58 , typename T_57 , typename T_56 , typename T_55, typename To> 
- inline Arr<T_63, Arr<T_62, Arr<T_61, Arr<T_60, Arr<T_59, Arr<T_58, Arr<T_57, Arr<T_56, Arr<T_55, To > > > > > > > > > 
- _curry(Function<To , T_63 , T_62 , T_61 , T_60 , T_59 , T_58 , T_57 , T_56 , T_55> f) { 
- return Arr<T_63, Arr<T_62, Arr<T_61, Arr<T_60, Arr<T_59, Arr<T_58, Arr<T_57, Arr<T_56, Arr<T_55, To > > > > > > > > > ([=]( T_63 V_63 ) { 
- return _curry<T_62 , T_61 , T_60 , T_59 , T_58 , T_57 , T_56 , T_55, To>( 
- [=](T_62 V_62 , T_61 V_61 , T_60 V_60 , T_59 V_59 , T_58 V_58 , T_57 V_57 , T_56 V_56 , T_55 V_55) -> To { 
- return f(V_63 , V_62 , V_61 , V_60 , V_59 , V_58 , V_57 , V_56 , V_55); 
+ template <typename T_0 , typename T_1 , typename T_2 , typename T_3 , typename T_4 , typename T_5 , typename T_6 , typename T_7 , typename T_8, typename To> 
+ inline Arr<T_0, Arr<T_1, Arr<T_2, Arr<T_3, Arr<T_4, Arr<T_5, Arr<T_6, Arr<T_7, Arr<T_8, To > > > > > > > > > 
+ _curry(Function<To , T_0 , T_1 , T_2 , T_3 , T_4 , T_5 , T_6 , T_7 , T_8> f) { 
+ return Arr<T_0, Arr<T_1, Arr<T_2, Arr<T_3, Arr<T_4, Arr<T_5, Arr<T_6, Arr<T_7, Arr<T_8, To > > > > > > > > > ([=]( T_0 V_0 ) { 
+ return _curry<T_1 , T_2 , T_3 , T_4 , T_5 , T_6 , T_7 , T_8, To>( 
+ [=](T_1 V_1 , T_2 V_2 , T_3 V_3 , T_4 V_4 , T_5 V_5 , T_6 V_6 , T_7 V_7 , T_8 V_8) -> To { 
+ return f(V_0 , V_1 , V_2 , V_3 , V_4 , V_5 , V_6 , V_7 , V_8); 
  } 
  ); 
  }); 
  } 
  
- template <typename T_63 , typename T_62 , typename T_61 , typename T_60 , typename T_59 , typename T_58 , typename T_57 , typename T_56 , typename T_55 , typename T_54, typename To> 
- inline Arr<T_63, Arr<T_62, Arr<T_61, Arr<T_60, Arr<T_59, Arr<T_58, Arr<T_57, Arr<T_56, Arr<T_55, Arr<T_54, To > > > > > > > > > > 
- _curry(Function<To , T_63 , T_62 , T_61 , T_60 , T_59 , T_58 , T_57 , T_56 , T_55 , T_54> f) { 
- return Arr<T_63, Arr<T_62, Arr<T_61, Arr<T_60, Arr<T_59, Arr<T_58, Arr<T_57, Arr<T_56, Arr<T_55, Arr<T_54, To > > > > > > > > > > ([=]( T_63 V_63 ) { 
- return _curry<T_62 , T_61 , T_60 , T_59 , T_58 , T_57 , T_56 , T_55 , T_54, To>( 
- [=](T_62 V_62 , T_61 V_61 , T_60 V_60 , T_59 V_59 , T_58 V_58 , T_57 V_57 , T_56 V_56 , T_55 V_55 , T_54 V_54) -> To { 
- return f(V_63 , V_62 , V_61 , V_60 , V_59 , V_58 , V_57 , V_56 , V_55 , V_54); 
+ template <typename T_0 , typename T_1 , typename T_2 , typename T_3 , typename T_4 , typename T_5 , typename T_6 , typename T_7 , typename T_8 , typename T_9, typename To> 
+ inline Arr<T_0, Arr<T_1, Arr<T_2, Arr<T_3, Arr<T_4, Arr<T_5, Arr<T_6, Arr<T_7, Arr<T_8, Arr<T_9, To > > > > > > > > > > 
+ _curry(Function<To , T_0 , T_1 , T_2 , T_3 , T_4 , T_5 , T_6 , T_7 , T_8 , T_9> f) { 
+ return Arr<T_0, Arr<T_1, Arr<T_2, Arr<T_3, Arr<T_4, Arr<T_5, Arr<T_6, Arr<T_7, Arr<T_8, Arr<T_9, To > > > > > > > > > > ([=]( T_0 V_0 ) { 
+ return _curry<T_1 , T_2 , T_3 , T_4 , T_5 , T_6 , T_7 , T_8 , T_9, To>( 
+ [=](T_1 V_1 , T_2 V_2 , T_3 V_3 , T_4 V_4 , T_5 V_5 , T_6 V_6 , T_7 V_7 , T_8 V_8 , T_9 V_9) -> To { 
+ return f(V_0 , V_1 , V_2 , V_3 , V_4 , V_5 , V_6 , V_7 , V_8 , V_9); 
  } 
  ); 
  }); 
  } 
  
- template <typename T_63 , typename T_62 , typename T_61 , typename T_60 , typename T_59 , typename T_58 , typename T_57 , typename T_56 , typename T_55 , typename T_54 , typename T_53, typename To> 
- inline Arr<T_63, Arr<T_62, Arr<T_61, Arr<T_60, Arr<T_59, Arr<T_58, Arr<T_57, Arr<T_56, Arr<T_55, Arr<T_54, Arr<T_53, To > > > > > > > > > > > 
- _curry(Function<To , T_63 , T_62 , T_61 , T_60 , T_59 , T_58 , T_57 , T_56 , T_55 , T_54 , T_53> f) { 
- return Arr<T_63, Arr<T_62, Arr<T_61, Arr<T_60, Arr<T_59, Arr<T_58, Arr<T_57, Arr<T_56, Arr<T_55, Arr<T_54, Arr<T_53, To > > > > > > > > > > > ([=]( T_63 V_63 ) { 
- return _curry<T_62 , T_61 , T_60 , T_59 , T_58 , T_57 , T_56 , T_55 , T_54 , T_53, To>( 
- [=](T_62 V_62 , T_61 V_61 , T_60 V_60 , T_59 V_59 , T_58 V_58 , T_57 V_57 , T_56 V_56 , T_55 V_55 , T_54 V_54 , T_53 V_53) -> To { 
- return f(V_63 , V_62 , V_61 , V_60 , V_59 , V_58 , V_57 , V_56 , V_55 , V_54 , V_53); 
+ template <typename T_0 , typename T_1 , typename T_2 , typename T_3 , typename T_4 , typename T_5 , typename T_6 , typename T_7 , typename T_8 , typename T_9 , typename T_10, typename To> 
+ inline Arr<T_0, Arr<T_1, Arr<T_2, Arr<T_3, Arr<T_4, Arr<T_5, Arr<T_6, Arr<T_7, Arr<T_8, Arr<T_9, Arr<T_10, To > > > > > > > > > > > 
+ _curry(Function<To , T_0 , T_1 , T_2 , T_3 , T_4 , T_5 , T_6 , T_7 , T_8 , T_9 , T_10> f) { 
+ return Arr<T_0, Arr<T_1, Arr<T_2, Arr<T_3, Arr<T_4, Arr<T_5, Arr<T_6, Arr<T_7, Arr<T_8, Arr<T_9, Arr<T_10, To > > > > > > > > > > > ([=]( T_0 V_0 ) { 
+ return _curry<T_1 , T_2 , T_3 , T_4 , T_5 , T_6 , T_7 , T_8 , T_9 , T_10, To>( 
+ [=](T_1 V_1 , T_2 V_2 , T_3 V_3 , T_4 V_4 , T_5 V_5 , T_6 V_6 , T_7 V_7 , T_8 V_8 , T_9 V_9 , T_10 V_10) -> To { 
+ return f(V_0 , V_1 , V_2 , V_3 , V_4 , V_5 , V_6 , V_7 , V_8 , V_9 , V_10); 
  } 
  ); 
  }); 
  } 
  
- template <typename T_63 , typename T_62 , typename T_61 , typename T_60 , typename T_59 , typename T_58 , typename T_57 , typename T_56 , typename T_55 , typename T_54 , typename T_53 , typename T_52, typename To> 
- inline Arr<T_63, Arr<T_62, Arr<T_61, Arr<T_60, Arr<T_59, Arr<T_58, Arr<T_57, Arr<T_56, Arr<T_55, Arr<T_54, Arr<T_53, Arr<T_52, To > > > > > > > > > > > > 
- _curry(Function<To , T_63 , T_62 , T_61 , T_60 , T_59 , T_58 , T_57 , T_56 , T_55 , T_54 , T_53 , T_52> f) { 
- return Arr<T_63, Arr<T_62, Arr<T_61, Arr<T_60, Arr<T_59, Arr<T_58, Arr<T_57, Arr<T_56, Arr<T_55, Arr<T_54, Arr<T_53, Arr<T_52, To > > > > > > > > > > > > ([=]( T_63 V_63 ) { 
- return _curry<T_62 , T_61 , T_60 , T_59 , T_58 , T_57 , T_56 , T_55 , T_54 , T_53 , T_52, To>( 
- [=](T_62 V_62 , T_61 V_61 , T_60 V_60 , T_59 V_59 , T_58 V_58 , T_57 V_57 , T_56 V_56 , T_55 V_55 , T_54 V_54 , T_53 V_53 , T_52 V_52) -> To { 
- return f(V_63 , V_62 , V_61 , V_60 , V_59 , V_58 , V_57 , V_56 , V_55 , V_54 , V_53 , V_52); 
+ template <typename T_0 , typename T_1 , typename T_2 , typename T_3 , typename T_4 , typename T_5 , typename T_6 , typename T_7 , typename T_8 , typename T_9 , typename T_10 , typename T_11, typename To> 
+ inline Arr<T_0, Arr<T_1, Arr<T_2, Arr<T_3, Arr<T_4, Arr<T_5, Arr<T_6, Arr<T_7, Arr<T_8, Arr<T_9, Arr<T_10, Arr<T_11, To > > > > > > > > > > > > 
+ _curry(Function<To , T_0 , T_1 , T_2 , T_3 , T_4 , T_5 , T_6 , T_7 , T_8 , T_9 , T_10 , T_11> f) { 
+ return Arr<T_0, Arr<T_1, Arr<T_2, Arr<T_3, Arr<T_4, Arr<T_5, Arr<T_6, Arr<T_7, Arr<T_8, Arr<T_9, Arr<T_10, Arr<T_11, To > > > > > > > > > > > > ([=]( T_0 V_0 ) { 
+ return _curry<T_1 , T_2 , T_3 , T_4 , T_5 , T_6 , T_7 , T_8 , T_9 , T_10 , T_11, To>( 
+ [=](T_1 V_1 , T_2 V_2 , T_3 V_3 , T_4 V_4 , T_5 V_5 , T_6 V_6 , T_7 V_7 , T_8 V_8 , T_9 V_9 , T_10 V_10 , T_11 V_11) -> To { 
+ return f(V_0 , V_1 , V_2 , V_3 , V_4 , V_5 , V_6 , V_7 , V_8 , V_9 , V_10 , V_11); 
  } 
  ); 
  }); 
  } 
  
- template <typename T_63 , typename T_62 , typename T_61 , typename T_60 , typename T_59 , typename T_58 , typename T_57 , typename T_56 , typename T_55 , typename T_54 , typename T_53 , typename T_52 , typename T_51, typename To> 
- inline Arr<T_63, Arr<T_62, Arr<T_61, Arr<T_60, Arr<T_59, Arr<T_58, Arr<T_57, Arr<T_56, Arr<T_55, Arr<T_54, Arr<T_53, Arr<T_52, Arr<T_51, To > > > > > > > > > > > > > 
- _curry(Function<To , T_63 , T_62 , T_61 , T_60 , T_59 , T_58 , T_57 , T_56 , T_55 , T_54 , T_53 , T_52 , T_51> f) { 
- return Arr<T_63, Arr<T_62, Arr<T_61, Arr<T_60, Arr<T_59, Arr<T_58, Arr<T_57, Arr<T_56, Arr<T_55, Arr<T_54, Arr<T_53, Arr<T_52, Arr<T_51, To > > > > > > > > > > > > > ([=]( T_63 V_63 ) { 
- return _curry<T_62 , T_61 , T_60 , T_59 , T_58 , T_57 , T_56 , T_55 , T_54 , T_53 , T_52 , T_51, To>( 
- [=](T_62 V_62 , T_61 V_61 , T_60 V_60 , T_59 V_59 , T_58 V_58 , T_57 V_57 , T_56 V_56 , T_55 V_55 , T_54 V_54 , T_53 V_53 , T_52 V_52 , T_51 V_51) -> To { 
- return f(V_63 , V_62 , V_61 , V_60 , V_59 , V_58 , V_57 , V_56 , V_55 , V_54 , V_53 , V_52 , V_51); 
+ template <typename T_0 , typename T_1 , typename T_2 , typename T_3 , typename T_4 , typename T_5 , typename T_6 , typename T_7 , typename T_8 , typename T_9 , typename T_10 , typename T_11 , typename T_12, typename To> 
+ inline Arr<T_0, Arr<T_1, Arr<T_2, Arr<T_3, Arr<T_4, Arr<T_5, Arr<T_6, Arr<T_7, Arr<T_8, Arr<T_9, Arr<T_10, Arr<T_11, Arr<T_12, To > > > > > > > > > > > > > 
+ _curry(Function<To , T_0 , T_1 , T_2 , T_3 , T_4 , T_5 , T_6 , T_7 , T_8 , T_9 , T_10 , T_11 , T_12> f) { 
+ return Arr<T_0, Arr<T_1, Arr<T_2, Arr<T_3, Arr<T_4, Arr<T_5, Arr<T_6, Arr<T_7, Arr<T_8, Arr<T_9, Arr<T_10, Arr<T_11, Arr<T_12, To > > > > > > > > > > > > > ([=]( T_0 V_0 ) { 
+ return _curry<T_1 , T_2 , T_3 , T_4 , T_5 , T_6 , T_7 , T_8 , T_9 , T_10 , T_11 , T_12, To>( 
+ [=](T_1 V_1 , T_2 V_2 , T_3 V_3 , T_4 V_4 , T_5 V_5 , T_6 V_6 , T_7 V_7 , T_8 V_8 , T_9 V_9 , T_10 V_10 , T_11 V_11 , T_12 V_12) -> To { 
+ return f(V_0 , V_1 , V_2 , V_3 , V_4 , V_5 , V_6 , V_7 , V_8 , V_9 , V_10 , V_11 , V_12); 
  } 
  ); 
  }); 
  } 
  
- template <typename T_63 , typename T_62 , typename T_61 , typename T_60 , typename T_59 , typename T_58 , typename T_57 , typename T_56 , typename T_55 , typename T_54 , typename T_53 , typename T_52 , typename T_51 , typename T_50, typename To> 
- inline Arr<T_63, Arr<T_62, Arr<T_61, Arr<T_60, Arr<T_59, Arr<T_58, Arr<T_57, Arr<T_56, Arr<T_55, Arr<T_54, Arr<T_53, Arr<T_52, Arr<T_51, Arr<T_50, To > > > > > > > > > > > > > > 
- _curry(Function<To , T_63 , T_62 , T_61 , T_60 , T_59 , T_58 , T_57 , T_56 , T_55 , T_54 , T_53 , T_52 , T_51 , T_50> f) { 
- return Arr<T_63, Arr<T_62, Arr<T_61, Arr<T_60, Arr<T_59, Arr<T_58, Arr<T_57, Arr<T_56, Arr<T_55, Arr<T_54, Arr<T_53, Arr<T_52, Arr<T_51, Arr<T_50, To > > > > > > > > > > > > > > ([=]( T_63 V_63 ) { 
- return _curry<T_62 , T_61 , T_60 , T_59 , T_58 , T_57 , T_56 , T_55 , T_54 , T_53 , T_52 , T_51 , T_50, To>( 
- [=](T_62 V_62 , T_61 V_61 , T_60 V_60 , T_59 V_59 , T_58 V_58 , T_57 V_57 , T_56 V_56 , T_55 V_55 , T_54 V_54 , T_53 V_53 , T_52 V_52 , T_51 V_51 , T_50 V_50) -> To { 
- return f(V_63 , V_62 , V_61 , V_60 , V_59 , V_58 , V_57 , V_56 , V_55 , V_54 , V_53 , V_52 , V_51 , V_50); 
+ template <typename T_0 , typename T_1 , typename T_2 , typename T_3 , typename T_4 , typename T_5 , typename T_6 , typename T_7 , typename T_8 , typename T_9 , typename T_10 , typename T_11 , typename T_12 , typename T_13, typename To> 
+ inline Arr<T_0, Arr<T_1, Arr<T_2, Arr<T_3, Arr<T_4, Arr<T_5, Arr<T_6, Arr<T_7, Arr<T_8, Arr<T_9, Arr<T_10, Arr<T_11, Arr<T_12, Arr<T_13, To > > > > > > > > > > > > > > 
+ _curry(Function<To , T_0 , T_1 , T_2 , T_3 , T_4 , T_5 , T_6 , T_7 , T_8 , T_9 , T_10 , T_11 , T_12 , T_13> f) { 
+ return Arr<T_0, Arr<T_1, Arr<T_2, Arr<T_3, Arr<T_4, Arr<T_5, Arr<T_6, Arr<T_7, Arr<T_8, Arr<T_9, Arr<T_10, Arr<T_11, Arr<T_12, Arr<T_13, To > > > > > > > > > > > > > > ([=]( T_0 V_0 ) { 
+ return _curry<T_1 , T_2 , T_3 , T_4 , T_5 , T_6 , T_7 , T_8 , T_9 , T_10 , T_11 , T_12 , T_13, To>( 
+ [=](T_1 V_1 , T_2 V_2 , T_3 V_3 , T_4 V_4 , T_5 V_5 , T_6 V_6 , T_7 V_7 , T_8 V_8 , T_9 V_9 , T_10 V_10 , T_11 V_11 , T_12 V_12 , T_13 V_13) -> To { 
+ return f(V_0 , V_1 , V_2 , V_3 , V_4 , V_5 , V_6 , V_7 , V_8 , V_9 , V_10 , V_11 , V_12 , V_13); 
  } 
  ); 
  }); 
  } 
  
- template <typename T_63 , typename T_62 , typename T_61 , typename T_60 , typename T_59 , typename T_58 , typename T_57 , typename T_56 , typename T_55 , typename T_54 , typename T_53 , typename T_52 , typename T_51 , typename T_50 , typename T_49, typename To> 
- inline Arr<T_63, Arr<T_62, Arr<T_61, Arr<T_60, Arr<T_59, Arr<T_58, Arr<T_57, Arr<T_56, Arr<T_55, Arr<T_54, Arr<T_53, Arr<T_52, Arr<T_51, Arr<T_50, Arr<T_49, To > > > > > > > > > > > > > > > 
- _curry(Function<To , T_63 , T_62 , T_61 , T_60 , T_59 , T_58 , T_57 , T_56 , T_55 , T_54 , T_53 , T_52 , T_51 , T_50 , T_49> f) { 
- return Arr<T_63, Arr<T_62, Arr<T_61, Arr<T_60, Arr<T_59, Arr<T_58, Arr<T_57, Arr<T_56, Arr<T_55, Arr<T_54, Arr<T_53, Arr<T_52, Arr<T_51, Arr<T_50, Arr<T_49, To > > > > > > > > > > > > > > > ([=]( T_63 V_63 ) { 
- return _curry<T_62 , T_61 , T_60 , T_59 , T_58 , T_57 , T_56 , T_55 , T_54 , T_53 , T_52 , T_51 , T_50 , T_49, To>( 
- [=](T_62 V_62 , T_61 V_61 , T_60 V_60 , T_59 V_59 , T_58 V_58 , T_57 V_57 , T_56 V_56 , T_55 V_55 , T_54 V_54 , T_53 V_53 , T_52 V_52 , T_51 V_51 , T_50 V_50 , T_49 V_49) -> To { 
- return f(V_63 , V_62 , V_61 , V_60 , V_59 , V_58 , V_57 , V_56 , V_55 , V_54 , V_53 , V_52 , V_51 , V_50 , V_49); 
+ template <typename T_0 , typename T_1 , typename T_2 , typename T_3 , typename T_4 , typename T_5 , typename T_6 , typename T_7 , typename T_8 , typename T_9 , typename T_10 , typename T_11 , typename T_12 , typename T_13 , typename T_14, typename To> 
+ inline Arr<T_0, Arr<T_1, Arr<T_2, Arr<T_3, Arr<T_4, Arr<T_5, Arr<T_6, Arr<T_7, Arr<T_8, Arr<T_9, Arr<T_10, Arr<T_11, Arr<T_12, Arr<T_13, Arr<T_14, To > > > > > > > > > > > > > > > 
+ _curry(Function<To , T_0 , T_1 , T_2 , T_3 , T_4 , T_5 , T_6 , T_7 , T_8 , T_9 , T_10 , T_11 , T_12 , T_13 , T_14> f) { 
+ return Arr<T_0, Arr<T_1, Arr<T_2, Arr<T_3, Arr<T_4, Arr<T_5, Arr<T_6, Arr<T_7, Arr<T_8, Arr<T_9, Arr<T_10, Arr<T_11, Arr<T_12, Arr<T_13, Arr<T_14, To > > > > > > > > > > > > > > > ([=]( T_0 V_0 ) { 
+ return _curry<T_1 , T_2 , T_3 , T_4 , T_5 , T_6 , T_7 , T_8 , T_9 , T_10 , T_11 , T_12 , T_13 , T_14, To>( 
+ [=](T_1 V_1 , T_2 V_2 , T_3 V_3 , T_4 V_4 , T_5 V_5 , T_6 V_6 , T_7 V_7 , T_8 V_8 , T_9 V_9 , T_10 V_10 , T_11 V_11 , T_12 V_12 , T_13 V_13 , T_14 V_14) -> To { 
+ return f(V_0 , V_1 , V_2 , V_3 , V_4 , V_5 , V_6 , V_7 , V_8 , V_9 , V_10 , V_11 , V_12 , V_13 , V_14); 
  } 
  ); 
  }); 

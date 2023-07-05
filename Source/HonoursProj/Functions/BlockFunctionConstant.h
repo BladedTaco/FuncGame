@@ -16,14 +16,11 @@ UCLASS()
 class HONOURSPROJ_API ABlockFunctionConstant : public ABlockFunction
 {
 	GENERATED_BODY()
-private:
-	Number<int> ConcreteOutputs = { 0 };
-
 public:
 	UPROPERTY(EditAnywhere)
 		int Value = 0;
 
 
-	virtual Arr<ValArray&, TArray<void*>> GetInnerFunc() override;
+	virtual Arr<VStarArray, VStarArrayReturn> GetInnerFunc() override;
 	virtual void SetFunctionTypes() override;
 };

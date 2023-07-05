@@ -5,11 +5,12 @@
 // Ensure Preprocessed Files aren't 60k lines long
 #ifndef PP__PREPROCESSING
 #include <functional>
+#include "Functional/curry_gen.h"
 #else
 include <functional>
+include "Functional/curry_gen.h"
 #endif
 
-#include "Functional/curry_gen.h"
 
 //
 //// Function Shorthand

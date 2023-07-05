@@ -8,7 +8,6 @@
 
 #ifndef PP__PREPROCESSING
 
-#include "Types/Type.h"
 #include "CoreMinimal.h"
 #include "Types_gen.generated.h"
 
@@ -16,7 +15,6 @@
 
 include "CoreMinimal.h"
 include "Algo/Transform.h"
-include "Types_gen.generated.h"
 
 #endif
 
