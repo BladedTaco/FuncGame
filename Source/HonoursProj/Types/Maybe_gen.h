@@ -6,7 +6,7 @@
 #pragma once
 #include "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Types/Functor.h"
 template <typename A>
-class Maybe {
+class Maybe : public Functor<Maybe<A>> {
 private:
 	bool _isNothing;
 	A _value;

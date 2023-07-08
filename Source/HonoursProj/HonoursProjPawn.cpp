@@ -85,6 +85,29 @@ void AHonoursProjPawn::OnLClickRelease() {
 	RemoveInactive();
 
 
+
+
+
+	Number<int> k = { 1 };
+
+	const IOrdinal* const io1 = k.Instances.Ordinal;
+
+	const IOrdinal* io2 = k.Instances.Ordinal;
+
+	const IOrdinal* io3 = Number<int>::Instances.Ordinal;
+	const IOrdinal* io4 = decltype(k)::Instances.Ordinal;
+	ORD or1 = io1->ord()(k)(k);
+	ORD or2 = io2->ord()(k)(k);
+	ORD or3 = io3->ord()(k)(k);
+	ORD or4 = io3->ord()(k)(k);
+
+	UE_LOG(LogTemp, Warning, TEXT("ORD TESTS %d %d %d %d"), or1, or2, or3, or4);
+
+
+
+
+
+
 	Arr<int, int> square = { [](int a) { return a * a; } };
 	
 	 //Usage Example
@@ -94,6 +117,9 @@ void AHonoursProjPawn::OnLClickRelease() {
 	int q = fromMaybe<int>(0)(a);
 	UE_LOG(LogTemp, Warning, TEXT("maybe %d"), q);
 
+	Maybe<int> l = a.fmap<int>(square)(a);
+
+	UE_LOG(LogTemp, Warning, TEXT("L %d"), l.fromMaybe(-1));
 
 	UTypeConst* n = UTypeConst::New(ETypeData::MAYBE, { UTypeConst::New(ETypeData::NUMBER, {UTypeConst::New(ETypeBase::INT)}) });
 
@@ -107,6 +133,53 @@ void AHonoursProjPawn::OnLClickRelease() {
 	FString g_str = g->ToString();
 
 	UE_LOG(LogTemp, Warning, TEXT("FromType Result %d %d %s, %s"), g->EqualTo(n), g5->EqualTo(n), *g_str, *n_str);
+
+
+
+
+
+	Number<int> n_i = { 1 };
+	Number<Number<int>> n_i_i = { Number<int>(2) };
+
+	NumberV l1 = { 1 };
+	NumberV l2 = { Number<int>(3) };
+	NumberV l3 = { n_i };
+	NumberV l4 = { n_i_i };
+
+
+
+	UE_LOG(LogTemp, Warning, TEXT("NumberVs")  );
+	UE_LOG(LogTemp, Warning, TEXT("n_i %d  ") ,n_i.get() );
+	UE_LOG(LogTemp, Warning, TEXT("n_i_i %d "),n_i_i.get().get());
+	UE_LOG(LogTemp, Warning, TEXT("n1 %d")    ,*l1.get<int>() );
+	UE_LOG(LogTemp, Warning, TEXT("n2 %d")    ,l2.get<Number<int>>()->get() );
+	UE_LOG(LogTemp, Warning, TEXT("n3 %d")    ,*l3.get<int>() );
+	UE_LOG(LogTemp, Warning, TEXT("n4 %d")    ,l4.get<Number<int>>()->get());
+
+
+	NumberV l5 = { l1 };
+	NumberV l6 = { l2 };
+
+	UE_LOG(LogTemp, Warning, TEXT("n5 %d"), *l5.get<int>());
+	UE_LOG(LogTemp, Warning, TEXT("n6 %d"), l6.get<Number<int>>()->get());
+
+	NumberV l7 = { std::move(l5) };
+
+	UE_LOG(LogTemp, Warning, TEXT("n6 %d"), *l7.get<NumberV>()->get<int>());
+		
+		
+
+	/*UE_LOG(LogTemp, Warning, TEXT("NumberVs n_i %d  n_i_i %d n1 %d n2 %d n3 %d n4 %d"),
+		n_i.get(),
+		n_i_i.get().get(),
+		l1.get<int>(),
+		l2.get<Number<int>>().get(),
+		l3.get<int>(),
+		l4.get<Number<int>>().get()
+	);
+*/
+
+
 
 	
 	a = Maybe<int>::Nothing();

@@ -116,6 +116,8 @@ Arr<VStarArray, VStarArrayReturn> ABlockFunctionFmap::GetInnerFunc() {
 		//auto& [t0, t1] = Destruct<2, TArray, VStar>(values);
 
 
+
+
 		//auto x = Functor<Maybe<VStar>>::fmap<VStar>(t0)(t1);
 
 

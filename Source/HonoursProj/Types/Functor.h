@@ -5,6 +5,8 @@
 #include "Functional/Prelude.h"
 #include "Functional/Typeclass.h"
 
+#include "Types/Unpack.h"
+
 
 // Functor Instance Macro
 #define FUNCTOR(TEMPLATES, INST, FMAP, MAP_REPLACE_BY)		 \
@@ -19,6 +21,10 @@ TYPECLASS_DEFN(Functor, TEMPLATES, INST) {					 \
 template <typename A>
 class Functor {
 public:
+
+	inline static bool Valid = false;
+	static_assert(sizeof(A) == 0, "Only specializations of Functor can be used");
+
 	template <typename B>
 	inline static Function<Functor<B>, Arr<A, B>, Functor<A>> _fmap;
 	template <typename B>
@@ -56,6 +62,7 @@ protected:
 		return Functor<F<B, Rest...>>::fmap<A>(f)(f_b);
 	};
 public:
+	inline static bool Valid = true;
 	template <class B>
 	inline static auto fmap = curry(_fmap<B>);
 	template <class B>
@@ -65,16 +72,15 @@ public:
 	template <class B> inline static auto v_fmap = curry([](void* f, void* fa) -> decltype(auto) { 
 		return fmap<B>(*(Arr<A, B>*)f) (*(F<A, Rest...>*)fa);
 	});
-};
-//
-//
-//class IFunctor {
-//	inline static auto v_fmap = curry([](VStar f, VStar fa) -> VStar {
-//
-//		return fmap<B>(*(Arr<A, B>*)f) (*(F<A, Rest...>*)fa);
-//	});
-//};
 
+	template <class B> 
+	inline static auto vs_fmap = curry([](VStar f, VStar fa) -> VStar {
+		return VStar(
+			FromType<F<B, Rest...>>(), 
+			fmap<B>( f.GetUnsafe<Arr<A, B>>() )( fa.GetUnsafe<F<A, Rest...>>() )
+		);
+	});
+};
 
 
 //

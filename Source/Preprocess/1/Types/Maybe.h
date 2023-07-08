@@ -2,9 +2,12 @@
 
 #include "Types/Functor.h"
 
+#include "Types/FDecl.h"
+
+
 // Functor Maybe
 template <typename A>
-class Maybe {
+class Maybe : public Functor<Maybe<A>> {
 private:
 	bool _isNothing;
 	A _value;
@@ -33,6 +36,52 @@ public:
 		}
 	}
 };
+
+//
+//template <>
+//class Maybe<VStar> {
+//private:
+//	bool _isNothing;
+//	VStar _value;
+//	Maybe() {
+//		_isNothing = true;
+//	}
+//	template <typename A>
+//	Maybe(A a) {
+//		_isNothing = false;
+//		_value = VStar(a);
+//	}
+//	friend class Functor<Maybe<VStar>>;
+//public:
+//	template <typename A>
+//	static Maybe<VStar> Just(A a) {
+//		return Maybe(a);
+//	}
+//	static Maybe<VStar> Nothing() {
+//		return Maybe();
+//	}
+//
+//	template <typename OtherInner>
+//	Maybe(Maybe<OtherInner>& other) {
+//		_isNothing = other._isNothing;
+//		_value = VStar(other._value);
+//	}
+//
+//	template <>
+//	Maybe(Maybe<VStar>& other) 
+//		: _value(other._value)
+//		, _isNothing(other._isNothing) {};
+//public:
+//	template <typename A>
+//	A fromMaybe(A fallback) {
+//		if (_isNothing) {
+//			return fallback;
+//		} else {
+//			return _value.Get<A>();
+//		}
+//	}
+//};
+
 
 //
 //class IMaybe {

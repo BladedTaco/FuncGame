@@ -2,11 +2,34 @@
 
 #include "CoreMinimal.h"
 
-#include "Templates/UniquePtr.h"
 #include "Types/Type.h"
+#include "Types/Unpack.h"
+
+#ifndef PP__PREPROCESSING
 
 #include <memory>
 #include <type_traits>
+
+#else
+
+include <memory>
+include <type_traits>
+
+#endif
+
+#include "Types/FDecl.h"
+
+
+
+template <typename T, typename = int>
+struct IsDataclass : std::false_type {};
+
+template <typename T>
+struct IsDataclass <T, decltype(( void )T::Instances, 0)> : std::true_type {};
+
+
+
+
 
 class UniqueVStar {
 // Helpers
@@ -116,11 +139,25 @@ public:
 		return *(( T* )storedValue.get());
 	}
 };
-
-
-
-
-
+//
+//template <typename = void*>
+//struct IFunctor {
+//	Arr<VStar, Arr<VStar, VStar>>* fmap = NULL;
+//	Arr<VStar, Arr<VStar, VStar>>* map_replace_by = NULL;
+//
+//	Arr<VStar, Arr<VStar, VStar>>(*bfmap)(VStar) = NULL;
+//
+//
+//	template <class B>
+//	Arr<VStar, Arr<VStar, B>>(*bffmap)(B) = NULL;
+//
+//	template <class B>
+//	Function<Arr<VStar, Arr<VStar, B>>, B> bbfmap;
+//};
+//
+//struct Instances {
+//	IFunctor<> Functor;
+//};
 
 
 
@@ -143,6 +180,8 @@ private:
 private:
 	shared_void_ptr storedValue;
 	UType* storedType;
+	const Typeclass* storedInstances;
+	//Instances insts;
 
 public:
 	// Default Constructor
@@ -162,12 +201,24 @@ public:
 		Replace(other);
 	}
 
+	// Equality op
+	constexpr VStar& operator=(const VStar& other) {
+		if (this == &other) return *this;
+
+		storedType = other.storedType;
+		//storedValue.reset();
+		storedValue = other.storedValue;
+
+		return *this;
+	}
+
 	VStar(UType* type) {
 		// Release any held values
 		storedValue.reset();
 		// Todo, decide if this should be make const or deepcopy
 		storedType = UTypeConst::MakeConst(type);
 	}
+
 	// Todo: Check UType against T
 	template <typename T>
 	VStar(UType* type, T value) {
@@ -175,6 +226,18 @@ public:
 		storedValue = shared_void(new T(value));
 		// Todo, decide if this should be make const or deepcopy
 		storedType = UTypeConst::MakeConst(type);
+		// Get Instances Pointer
+		if constexpr (IsDataclass<T>::value) {
+			storedInstances = &value.Instances;
+		}
+	}
+	// Todo: Check UType against T
+	template <typename T>
+	VStar(T value) {
+		// Copy the value onto the heap
+		storedValue = shared_void(new T(value));
+		// Todo, decide if this should be make const or deepcopy
+		storedType = FromType<T>();
 	}
 
 	// Checks if both type and value are valid
@@ -197,6 +260,10 @@ public:
 		return storedType;
 	}
 
+	const Typeclass* const getTypeclass() {
+		return storedInstances;
+	}
+
 	template <typename T>
 	bool ValidCast() {
 		switch (storedType->GetType()) {
@@ -204,6 +271,8 @@ public:
 			return std::is_same_v<int, T>;
 		case EType::FLOAT:
 			return std::is_same_v<float, T>;
+		case EType::NUMBER:
+			return std::is_same_v<NumberV, T>;
 		default:
 			return false;
 		}
@@ -219,6 +288,12 @@ public:
 
 	// Unsafe, Unchecked, Get
 	template <typename T>
+	const T* GetUnsafePtr() const {
+		return ( T* )storedValue.get();
+	}
+
+	// Unsafe, Unchecked, Get
+	template <typename T>
 	T GetUnsafe() {
 		return *(( T* )storedValue.get());
 	}
@@ -229,7 +304,7 @@ public:
 		if (!ValidCast<T>()) {
 			UE_LOG(LogTemp, Fatal, TEXT("Invalid Cast from %s to %s"),
 				*UEnum::GetValueAsString(storedType->GetType()),
-				typeid(T).name()
+				*FString(typeid(T).name())
 			);
 		}
 		return *(( T* )storedValue.get());

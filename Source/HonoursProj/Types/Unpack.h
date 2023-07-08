@@ -1,12 +1,26 @@
 #pragma once
 
+
+#ifndef PP__PREPROCESSING
+
 #include <memory>
 #include <type_traits>
 
 #include "Types/Type.h"
 #include "Types/Types_gen.h"
 
-#include "Types/Int_gen.h"
+#else 
+
+include <memory>
+include <type_traits>
+
+include "Types/Type.h"
+include "Types/Types_gen.h"
+
+#endif
+
+#include "Types/FDecl.h"
+
 
 // Type Tuple Accessing
 template <typename... Ts>
@@ -77,7 +91,14 @@ struct is_instance<U<Ts...>, U> : public std::true_type {};
 //	return UTypeConst::New(ETypeBase::FLOAT);
 //}
 
+class VStar;
 
+// TODOODODODOOD;
+template <class T>
+typename std::enable_if_t< std::is_same_v<T, VStar>, UTypeConst*>
+FromType() {
+	return UTypeConst::New(ETypeBase::NONE);
+}
 
 template <class T>
 typename std::enable_if_t< std::is_integral<T>::value, UTypeConst*>

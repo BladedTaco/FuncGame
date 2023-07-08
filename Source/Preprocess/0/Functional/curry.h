@@ -131,6 +131,26 @@ inline auto curry(F const& f) {
 }
 
 
+// Curry a Function
+template <typename F>
+inline auto fcurry(F const& f) {
+	return _curry(f);
+}
+
+//
+//// Curry a Function
+//template <typename Cls, typename To, typename... From>
+//inline auto lcurry(To(Cls::*)(From...)& f) {
+//	return curry([](From... args) {return f(args...); });
+//}
+//
+
+//// Curry a Function
+//template <typename F>
+//inline auto lcurry(F const& f) {
+//	return curry([&](auto&& ...args) {return f(args...); });
+//}
+
 //
 //#define curry(...) _curry(to_function(PP__VA_ARGS__)))
 //PP__DIRECTIVE(Define, curry, _curry(to_function(PP__VA_ARGS__)))
