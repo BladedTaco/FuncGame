@@ -17,9 +17,6 @@ include "Types/VStar.h"
 #include "Types/FDecl.h"
 
 
-
-
-
 #define InlineStaticConstStruct(T, NAME, ...) \
 static const inline T NAME = []{ T ${}; __VA_ARGS__; return $; }()
 
@@ -27,7 +24,7 @@ class INumber {
 public:
 	class Ordinal : public virtual IOrdinal {
 	private:
-		virtual ORD _ord(VStar me, VStar other) const override { return ORD::LT; }
+		virtual ORD _ord(const VStar& me, const VStar& other) const override;
 	public:
 		Ordinal() = default;
 	};
@@ -46,10 +43,6 @@ public:
 
 
 
-
-
-
-
 template <typename A>
 class Number : public virtual INumber {
 private:
@@ -57,12 +50,14 @@ private:
 	friend class ::Ordinal<Number<A>>;
 public:
 	Number(A value) : _value(value) {}
-	A get() const { return _value; }
+	virtual A get() const { return _value; }
 };
+
 
 template <>
 class Number<VStar> : public virtual INumber {
 private:
+	friend class VStar;
 	VStar _value;
 	friend class ::Ordinal<NumberV>;
 public:
@@ -96,6 +91,7 @@ public:
 
 
 
+
 //
 //class INumber {
 //public:
@@ -120,51 +116,41 @@ ORDINAL((A), Number, (
 );
 
 
-
-//ORDINAL((), NumberV, (
-//	[](Number<A> a, Number<A> b) -> ORD {													PP__NEWLINE
-//	return a._value == b._value ? ORD::EQ : a._value < b._value ? ORD::LT : ORD::GT;	PP__NEWLINE
-//})
-//);
-
-//template <>
-//class Ordinal<int> : public BaseOrdinal<int> {
-//private:
-//	template <class A>
-//	inline static auto _ord = [](int a, int b) -> ORD {
-//		return *a.get<A>() == *b.get<A>()
-//			? ORD::EQ
-//			: *a.get<A>() < *b.get<A>()
-//			? ORD::LT
-//			: ORD::GT;
+//template <> class Ordinal<IOrdinal> : public BaseOrdinal<IOrdinal> {
+//private: 
+//	inline static auto _ord = [](IOrdinal& a, IOrdinal& b) -> ORD {
+//		return a.ord()(a)(b);
 //	};
-//public:
-//	template <class A>
-//	inline static auto ord = curry(_ord<A>);
+//public: 
+//	inline static auto ord = curry(_ord);
 //};
+
+
+
+
+
 //
-
-template <>
-class Ordinal<NumberV> : public BaseOrdinal<NumberV> {
-private: 
-	template <class A> 
-	inline static auto _ord = [](NumberV* a, NumberV* b) -> ORD {
-		float v0, v1;
-		if (a->_value.ValidCast<int>()) {
-			v0 = *a->get<int>();
-			v1 = *b->get<int>();
-		} else if (a->_value.ValidCast<float>()) {
-			v0 = *a->get<float>();
-			v1 = *b->get<float>();
-		} else { return ORD::EQ; }
-
-		return v0 == v1
-			? ORD::EQ 
-			: v0 < v1
-				? ORD::LT 
-				: ORD::GT;
-	}; 
-public:
-	template <class A> 
-	inline static auto ord = curry(_ord<A>);
-};
+//template <>
+//class Ordinal<NumberV> : public BaseOrdinal<NumberV> {
+//private:
+//	template <class _ = void*>
+//	inline static auto _ord = [](NumberV* a, NumberV* b) -> ORD {
+//		float v0, v1;
+//		if (a->_value.ValidCast<int>()) {
+//			v0 = *a->get<int>();
+//			v1 = *b->get<int>();
+//		} else if (a->_value.ValidCast<float>()) {
+//			v0 = *a->get<float>();
+//			v1 = *b->get<float>();
+//		} else { return ORD::EQ; }
+//
+//		return v0 == v1
+//			? ORD::EQ 
+//			: v0 < v1
+//				? ORD::LT 
+//				: ORD::GT;
+//	}; 
+//public:
+//	template <class _ = void*> 
+//	inline static auto ord = curry(_ord<>);
+//};

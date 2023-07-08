@@ -256,30 +256,86 @@ public:
 	}
 
 	// Query the Type
-	UType* Type() {
+	const UType* const Type() const {
 		return storedType;
 	}
 
-	const Typeclass* const getTypeclass() {
+	const Typeclass* const getTypeclass() const {
 		return storedInstances;
 	}
 
+
 	template <typename T>
-	bool ValidCast() {
-		switch (storedType->GetType()) {
-		case EType::INT:
-			return std::is_same_v<int, T>;
-		case EType::FLOAT:
-			return std::is_same_v<float, T>;
-		case EType::NUMBER:
-			return std::is_same_v<NumberV, T>;
-		default:
-			return false;
-		}
+	bool ValidCast() const {
+		 return ValidCast<T>(storedType);
 	}
 
 	template <typename T>
+	typename std::enable_if_t< std::is_same_v<T, VStar>, bool>
+	ValidCast(const UType* type) const {
+		return true;
+	}
+
+
+	template <typename T>
+	typename std::enable_if_t< std::is_same_v<T, int> , bool>
+	ValidCast(const UType* type) const {
+		return type->GetType() == EType::INT;
+	}
+
+	template <typename T>
+	typename std::enable_if_t< std::is_same_v<T, float>, bool>
+	ValidCast(const UType* type) const {
+		return type->GetType() == EType::FLOAT;
+	}
+
+	template <typename T>
+	typename std::enable_if_t< std::is_same_v<T, Number<VStar>>, bool>
+	ValidCast(const UType* type) const {
+		return type->GetType() == EType::NUMBER;
+	}
+
+	//template <typename T>
+	//typename std::enable_if_t<
+	//	is_instance<T, Number>()
+	//	&& !std::is_same_v<T, Number<VStar>>
+	//, bool>
+	//ValidCast(const UType* type) const {
+	//	// handle not a number
+	//	if (type->GetType() != EType::NUMBER) {
+	//		return false;
+	//	}
+	//	// Handle is a Number<VStar>
+	//	else if (type->GetTemplates()[0]->GetType() == EType::NONE) {
+	//		return GetUnsafePtr<NumberV>()->_value.ValidCast<unwrap<T>>();
+	//	}
+	//	// Handle is a Number<T>
+	//	else {
+	//		return ValidCast<unwrap<T>>(type->GetTemplates()[0]);
+	//	}
+	//	// Unreachable
+	//	return false;
+	//}
+
+
+	template <typename T>
+	T* ResolveTo() {
+
+	}
+
+
+
+	template <typename T>
 	T* TryGet() {
+		if (ValidCast<T>()) {
+			return ( T* )storedValue.get();
+		}
+		return ( T* )NULL;
+	}
+
+
+	template <typename T>
+	const T* const TryGet() const {
 		if (ValidCast<T>()) {
 			return ( T* )storedValue.get();
 		}

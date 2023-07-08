@@ -41,42 +41,43 @@ void ABlockFunctionGreaterThan::SetFunctionTypes() {
 
 Arr<VStarArray, VStarArrayReturn> ABlockFunctionGreaterThan::GetInnerFunc() {
 	return Arr<VStarArray, VStarArrayReturn>([this](VStarArray values) -> VStarArrayReturn {
-		// TODO: Make this reflect actual types
-		//EType numType = this->TypeVars[0]->GetType();
+		return {};
+		//// TODO: Make this reflect actual types
+		////EType numType = this->TypeVars[0]->GetType();
 
-		// Destruct Values
-		auto [t0, t1] = DestructPtr<2, TArray, VStar>(values);
+		//// Destruct Values
+		//auto [t0, t1] = DestructPtr<2, TArray, VStar>(values);
 
-		// Get Number Type
-		EType numType = t0->Type()->GetTemplates()[0]->GetType();
+		//// Get Number Type
+		//EType numType = t0->Type()->GetTemplates()[0]->GetType();
 
-		// Do GT Calculation
-		bool result;
-		//switch (numType) {
-		//case EType::INT:
-		//	result = Ordinal<Number<int>>::gt<>(t0->Get<Number<int>>())(t1->Get<Number<int>>());
-		//	break;
-		//case EType::FLOAT:
-		//	result = Ordinal<Number<float>>::gt<>(t0->Get<Number<float>>())(t1->Get<Number<float>>());
-		//	break;
-		//}
+		//// Do GT Calculation
+		//bool result;
+		////switch (numType) {
+		////case EType::INT:
+		////	result = Ordinal<Number<int>>::gt<>(t0->Get<Number<int>>())(t1->Get<Number<int>>());
+		////	break;
+		////case EType::FLOAT:
+		////	result = Ordinal<Number<float>>::gt<>(t0->Get<Number<float>>())(t1->Get<Number<float>>());
+		////	break;
+		////}
 
-		auto t_0 = t0->GetUnsafePtr<NumberV>();
-		auto t_1 = t1->GetUnsafePtr<NumberV>();
+		//auto t_0 = t0->GetUnsafePtr<NumberV>();
+		//auto t_1 = t1->GetUnsafePtr<NumberV>();
 
-		Number<int> v_0 = Number(*t_0->get<int>());
-		Number<int> v_1 = Number(*t_1->get<int>());
+		//Number<int> v_0 = Number(*t_0->get<int>());
+		//Number<int> v_1 = Number(*t_1->get<int>());
 
-		result = Ordinal<Number<int>>::gt<>(v_0)(v_1);
+		//result = Ordinal<Number<int>>::gt<>(v_0)(v_1);
 
-		//result = false;
+		////result = false;
 
-		//result = Ordinal<Number<VStar>>::gt<>(t0)(t1);
+		////result = Ordinal<Number<VStar>>::gt<>(t0)(t1);
 
-		this->TextComponent->SetText(FText::Format(FText::FromString(FString("GT {0}")), result));
+		//this->TextComponent->SetText(FText::Format(FText::FromString(FString("GT {0}")), result));
 
-		// Return result
-		return { std::move(VStar(Outputs[0].Type, result)) };
+		//// Return result
+		//return { std::move(VStar(Outputs[0].Type, result)) };
 	} );
 }
 

@@ -33,18 +33,18 @@ void ABlockFunctionConstant::SetFunctionTypes() {
 
 Arr<VStarArray, VStarArrayReturn> ABlockFunctionConstant::GetInnerFunc() {
 	return Arr<VStarArray, VStarArrayReturn>([this](VStarArray values) -> VStarArrayReturn {
+		return {};
+		////Number<int> n(Value);
 
-		//Number<int> n(Value);
 
+		//this->TextComponent->SetText(FText::Format(FText::FromString(FString("Val {0}")), this->Value));
 
-		this->TextComponent->SetText(FText::Format(FText::FromString(FString("Val {0}")), this->Value));
+		//VStar val(Value); // Int
+		//NumberV n(val);		// Number<VStar>
+		//VStar res(Outputs[0].Type, n); // VStar
 
-		VStar val(Value); // Int
-		NumberV n(val);		// Number<VStar>
-		VStar res(Outputs[0].Type, n); // VStar
+		//VStarArray out = {std::move(res)};
 
-		VStarArray out = {std::move(res)};
-
-		return std::move(out);
+		//return std::move(out);
 	});
 }

@@ -11,7 +11,7 @@ class INumber {
 public:
 	class Ordinal : public virtual IOrdinal {
 	private:
-		virtual ORD _ord(VStar me, VStar other) const override { return ORD::EQ; }
+		virtual ORD _ord(const VStar& me, const VStar& other) const override;
 	public:
 		Ordinal() = default;
 	};
@@ -27,11 +27,12 @@ private:
 	friend class ::Ordinal<Number<A>>;
 public:
 	Number(A value) : _value(value) {}
-	A get() const { return _value; }
+	virtual A get() const { return _value; }
 };
 template <>
 class Number<VStar> : public virtual INumber {
 private:
+	friend class VStar;
 	VStar _value;
 	friend class ::Ordinal<NumberV>;
 public:
@@ -67,26 +68,3 @@ public:
  inline static auto ord = curry(_ord<>); 
  };
 ;
-template <>
-class Ordinal<NumberV> : public BaseOrdinal<NumberV> {
-private: 
-	template <class A> 
-	inline static auto _ord = [](NumberV* a, NumberV* b) -> ORD {
-		float v0, v1;
-		if (a->_value.ValidCast<int>()) {
-			v0 = *a->get<int>();
-			v1 = *b->get<int>();
-		} else if (a->_value.ValidCast<float>()) {
-			v0 = *a->get<float>();
-			v1 = *b->get<float>();
-		} else { return ORD::EQ; }
-		return v0 == v1
-			? ORD::EQ 
-			: v0 < v1
-				? ORD::LT 
-				: ORD::GT;
-	}; 
-public:
-	template <class A> 
-	inline static auto ord = curry(_ord<A>);
-};

@@ -83,3 +83,22 @@ FUNC_DEFN(TEMPLATES, v_##NAME, (													\
 
 // Defining a Typeclass Template Signature
 //#define TYPECLASS_DEFN_FUNC(TEMPLATES, SIGNATURE, NAME)
+
+
+
+////// TYPECLASS INTERFACING
+
+// Turns Argument Name into VStar Parameter
+#define AS_VSTAR(A) , const VStar& A
+
+
+// TypeclassVirtual_Inner(Return Type, Name, ((VStar ArgName)...), (Argname...) ) { implementation }
+#define TypeclassVirtual_Inner(RETURN, NAME, PARAMS, ARGS)	\
+public:		\
+const auto NAME() const { return curry([this]PARAMS{ return this->_##NAME ARGS; }); };	\
+private:	\
+virtual RETURN _##NAME PARAMS const
+
+// TypeclassVirtual(Return Type, Name, (Type, ArgName)...) { implementation }
+#define TypeclassVirtual(RETURN, NAME, ...) \
+TypeclassVirtual_Inner(RETURN, NAME, ( MAP_LIST(AS_VSTAR, __VA_ARGS__) ), (  __VA_ARGS__ ))

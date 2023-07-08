@@ -52,28 +52,28 @@ inline Arr<First, To> _curry(Function<To, First> f) {
 	return Arr<First, To>(f);
 }
 template <typename T_0 , typename T_1, typename To> 
-inline Arr<T_0, Arr<T_1, To > >
-_curry(Function<To, T_0, T_1> f) {
-	return Arr<T_0, Arr<T_1, To > >([=](T_0 V_0) {
-		return _curry<T_1, To>(
-			[=](T_1 V_1) -> To {
-			return f(V_0, V_1);
-		}
-		);
-	});
-}
+ inline Arr<T_0, Arr<T_1, To > > 
+ _curry(Function<To , T_0 , T_1> f) { 
+ return Arr<T_0, Arr<T_1, To > > ([=]( T_0 V_0 ) { 
+ return _curry<T_1, To>( 
+ [=](T_1 V_1) -> To { 
+ return f(V_0 , V_1); 
+ } 
+ ); 
+ }); 
+ } 
  
  template <typename T_0 , typename T_1 , typename T_2, typename To> 
- inline Arr<T_0, Arr<T_1, Arr<T_2, To > > >
-	 _curry(Function<To, T_0, T_1, T_2> f) {
-	 return Arr<T_0, Arr<T_1, Arr<T_2, To > > >([=](T_0 V_0) {
-		 return _curry<T_1, T_2, To>(
-			 [=](T_1 V_1, T_2 V_2) -> To {
-			 return f(V_0, V_1, V_2);
-		 }
-		 );
-	 });
- }
+ inline Arr<T_0, Arr<T_1, Arr<T_2, To > > > 
+ _curry(Function<To , T_0 , T_1 , T_2> f) { 
+ return Arr<T_0, Arr<T_1, Arr<T_2, To > > > ([=]( T_0 V_0 ) { 
+ return _curry<T_1 , T_2, To>( 
+ [=](T_1 V_1 , T_2 V_2) -> To { 
+ return f(V_0 , V_1 , V_2); 
+ } 
+ ); 
+ }); 
+ } 
  
  template <typename T_0 , typename T_1 , typename T_2 , typename T_3, typename To> 
  inline Arr<T_0, Arr<T_1, Arr<T_2, Arr<T_3, To > > > > 
