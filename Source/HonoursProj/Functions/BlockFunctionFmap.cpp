@@ -85,7 +85,7 @@ SPECIALIZE TYPE
 //	Functor<Maybe<VStar>>::v_fmap<T>,
 //	Functor<Arr<VStar, VStar>>::v_fmap<T>,
 //
-//	Functor<Maybe<Number<VStar>>>::v_fmap<T>,
+//	Functor<Maybe<NumberV>>::v_fmap<T>,
 //	Functor<Maybe<int>>::v_fmap<T>,
 //	Functor<Maybe<Maybe<VStar>>>::v_fmap<T>,
 //	Functor<Maybe<Arr<Maybe<VStar>, VStar>>>::v_fmap<T>,

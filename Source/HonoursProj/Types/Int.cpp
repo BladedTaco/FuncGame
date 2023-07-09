@@ -17,3 +17,8 @@ ORD INumber::Ordinal::_ord(const VStar& me, const VStar& other) const {
 	}
 	return ORD::LT;
 }
+
+template <typename A>
+Number<A>::Number(const NumberV* other) {
+	_value = other->_value.ResolveTo<A>();
+}

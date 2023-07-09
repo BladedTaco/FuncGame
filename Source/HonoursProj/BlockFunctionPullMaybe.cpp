@@ -30,7 +30,7 @@ void* ABlockFunctionPullMaybe::GetValue() {
 
 	if (values.Num() == 0) {
 		value = Maybe<int>::Nothing();
-		TextComponent->SetText(FString(TEXT("Nothing")));
+		TextComponent->SetText(FText::FromString(FString(TEXT("Nothing"))));
 		return ( void* )&value;
 	}
 
@@ -38,7 +38,6 @@ void* ABlockFunctionPullMaybe::GetValue() {
 
 	value = Maybe<int>::Just(i1.get());
 
-	TextComponent->SetText(FString::Format(TEXT("Just {0}"), { i1.get()}));
-
+	TextComponent->SetText(FText::FromString(FString::Format(TEXT("Just {0}"), { i1.get()})));
 	return ( void* )&value;
 }

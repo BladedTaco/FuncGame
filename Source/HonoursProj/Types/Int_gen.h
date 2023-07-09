@@ -26,8 +26,10 @@ private:
 	A _value;
 	friend class ::Ordinal<Number<A>>;
 public:
+	virtual ~Number() = default;
 	Number(A value) : _value(value) {}
 	virtual A get() const { return _value; }
+	Number(const NumberV* other);
 };
 template <>
 class Number<VStar> : public virtual INumber {
@@ -36,6 +38,7 @@ private:
 	VStar _value;
 	friend class ::Ordinal<NumberV>;
 public:
+	virtual ~Number() = default;
 	template <typename A>
 	Number(A value)
 		: _value(value) {};

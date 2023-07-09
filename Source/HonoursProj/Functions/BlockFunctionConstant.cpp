@@ -40,7 +40,7 @@ Arr<VStarArray, VStarArrayReturn> ABlockFunctionConstant::GetInnerFunc() {
 		//this->TextComponent->SetText(FText::Format(FText::FromString(FString("Val {0}")), this->Value));
 
 		//VStar val(Value); // Int
-		//NumberV n(val);		// Number<VStar>
+		//NumberV n(val);		// NumberV
 		//VStar res(Outputs[0].Type, n); // VStar
 
 		//VStarArray out = {std::move(res)};

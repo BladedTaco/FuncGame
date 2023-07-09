@@ -289,16 +289,18 @@ public:
 		return type->GetType() == EType::FLOAT;
 	}
 
+	// NumberV
 	template <typename T>
-	typename std::enable_if_t< std::is_same_v<T, Number<VStar>>, bool>
+	typename std::enable_if_t< std::is_same_v<T, NumberV>, bool>
 	ValidCast(const UType* type) const {
 		return type->GetType() == EType::NUMBER;
 	}
 
+	// Number<T>
 	template <typename T>
 	typename std::enable_if_t<
 		is_instance<T, Number>
-		&& !std::is_same_v<T, Number<VStar>>
+		&& !std::is_same_v<T, NumberV>
 	, bool>
 	ValidCast(const UType* type) const {
 		using T_0 = extract<T, 0>;
@@ -306,7 +308,7 @@ public:
 		if (type->GetType() != EType::NUMBER) {
 			return false;
 		}
-		// Handle is a Number<VStar>
+		// Handle is a NumberV
 		else if (type->GetTemplates()[0]->GetType() == EType::NONE) {
 			return GetUnsafePtr<NumberV>()->_value.ValidCast<T_0>();
 		}
@@ -318,13 +320,49 @@ public:
 		return false;
 	}
 
-
+public:
 	template <typename T>
-	T* ResolveTo() {
-
+	T ResolveToSafe() const {
+		if (!ValidCast<T>()) return NULL;
+		return ResolveTo<T>();
+	}
+	template <typename T>
+	T ResolveToUnsafe() const {
+		return ResolveTo<T>();
 	}
 
 
+private:
+	// Any Atomic
+	template <typename T>
+	typename std::enable_if_t<
+		not_template_t<T>::value, 
+		T
+	>
+	ResolveTo() const {
+		return T(*GetUnsafePtr<T>());
+	}
+
+	// Any<VStar...>
+	template <typename T>
+	typename std::enable_if_t<
+		contains_only<T, VStar>::value, 
+		T
+	>
+	ResolveTo() const {
+		return *GetUnsafePtr<T>();
+	}
+
+	// Any<Not VStar>
+	template <typename T>
+	typename std::enable_if_t< 
+		is_template_t<T>::value && !contains_only<T, VStar>::value, 
+		T
+	>
+	ResolveTo() const {
+		return T(GetUnsafePtr<repack_fill<T, VStar>>());
+	}
+public:
 
 	template <typename T>
 	T* TryGet() {

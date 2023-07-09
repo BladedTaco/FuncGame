@@ -49,8 +49,24 @@ private:
 	A _value;
 	friend class ::Ordinal<Number<A>>;
 public:
+	virtual ~Number() = default;
 	Number(A value) : _value(value) {}
 	virtual A get() const { return _value; }
+
+	// Cast Construction
+	Number(const NumberV* other);
+	//// Cast Construction
+	//Number(const NumberV* other) {
+	//	_value = other->_value.ResolveTo<A>();
+	//}
+
+	//VStar ToVStar() const {
+	//	if constexpr (not_template_t<A>) {
+	//		return VStar(NumberV(_value));
+	//	} else {
+	//		return VStar(NumberV(_value.ToVStar()));
+	//	}
+	//}
 };
 
 
@@ -61,6 +77,7 @@ private:
 	VStar _value;
 	friend class ::Ordinal<NumberV>;
 public:
+	virtual ~Number() = default;
 	template <typename A>
 	Number(A value)
 		: _value(value) {};

@@ -20,7 +20,7 @@
 
 ABlockFunction::ABlockFunction() {
 	TextComponent = CreateDefaultSubobject<UTextRenderComponent>(TEXT("TextOutput"));
-	TextComponent->SetText(FString("test"));
+	TextComponent->SetText(FText::FromString(FString("test")));
 	TextComponent->SetRelativeLocation(FVector::UpVector * 200.0f);
 	TextComponent->SetWorldRotation(FRotator(90, 0, 180));
 	TextComponent->SetRelativeScale3D(FVector(10));

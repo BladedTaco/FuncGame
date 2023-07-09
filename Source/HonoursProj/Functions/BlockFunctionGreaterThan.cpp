@@ -72,7 +72,7 @@ Arr<VStarArray, VStarArrayReturn> ABlockFunctionGreaterThan::GetInnerFunc() {
 
 		////result = false;
 
-		////result = Ordinal<Number<VStar>>::gt<>(t0)(t1);
+		////result = Ordinal<NumberV>::gt<>(t0)(t1);
 
 		//this->TextComponent->SetText(FText::Format(FText::FromString(FString("GT {0}")), result));
 

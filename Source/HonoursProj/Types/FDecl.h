@@ -6,13 +6,18 @@
 class VStar;
 
 // Dataclass Instances
-
 template <class T> class Number;
 template <class T> class Maybe;
 
-// Dataclass Aliases
-using NumberV = Number<VStar>;
-using MaybeV = Number<VStar>;
+template <> class Number<VStar>;
+template <> class Maybe<VStar>;
+
+
+// Dataclass Shorthands
+typedef  Number<VStar>  NumberV;
+typedef  Maybe<VStar>  MaybeV;
+
+
 
 // Typeclass Interfaces
 class IOrdinal;
