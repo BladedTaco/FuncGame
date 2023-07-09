@@ -37,10 +37,10 @@ struct TyTuple {
 template <>
 struct TyTuple<std::false_type> {
 	template <int idx>
-	using get = typename std::tuple_element<idx, std::tuple<std::false_type>>::type;
+	using get = std::false_type;
 
 	template <template <typename...> typename T>
-	using rewrap = T<std::false_type>;
+	using rewrap = std::false_type;
 };
 
 
@@ -72,6 +72,9 @@ struct unwrap_impl<E<T>> : std::true_type {
 template<typename T>
 using unwrap = typename unwrap_impl<T>::types;
 
+template<typename T, int idx>
+using extract = typename unwrap_impl<T>::types::template get<idx>;
+
 template<typename T, template <typename...> typename Wrapper>
 using rewrap = typename unwrap_impl<T>::types::template rewrap<Wrapper>;
 
@@ -83,13 +86,18 @@ struct is_template_t : std::is_base_of< std::true_type, unwrap_impl<T> > {};
 
 template <typename T>
 struct not_template_t : std::is_base_of< std::false_type, unwrap_impl<T> > {};
+//
+//template<typename T>
+//inline constexpr bool is_template = is_template_t<T>::value;
 
 template<typename T>
-inline constexpr bool is_template = is_template_t<T>::value;
+using is_template = typename is_template_t<T>::value;
 
 template<typename T>
-inline constexpr bool not_template = not_template_t<T>::value;
-
+using not_template = typename not_template_t<T>::value;
+//
+//template<typename T>
+//inline constexpr bool not_template = not_template_t<T>::value;
 
 
 
@@ -140,18 +148,30 @@ static_assert(std::is_same_v< repack<X<int, float>, int, float>, unwrap<X<int, f
 
 
 template <class T, template <class, class...> class U>
-struct is_instance {
-	using result = std::is_same_v<T, unwrap<T>::rewrap<U> >;
-}
+using is_instance_t = typename std::is_same<T, rewrap<T, U> >;
+//
+//template <class T, template <class, class...> class U>
+//inline constexpr bool is_instance = is_instance_t<T, U>::value;
 
+
+template <class T, template <class, class...> class U>
+inline constexpr bool is_instance = std::is_same_v<T, rewrap<T, U> >;
+
+
+//template <class T, template <class, class...> class U>
+//using is_instance = is_instance_t<T, U>::value;
+//
 //
 //template <class T, template <class, class...> class U>
 //inline constexpr bool is_instance = typename is_instance_t<is_template_t<T>, T, U>::value;
 
 
-static_assert(!is_instance<int, Number>::result, "");
-static_assert(is_instance<Number<int>, Number>::result, "");
-static_assert(is_instance<Number<X<int>>, Number>::result, "");
+static_assert(!is_instance<int, Number>, "");
+static_assert(is_instance<Number<int>, Number>, "");
+static_assert(is_instance<Number<X<int>>, Number>, "");
+
+
+static_assert(is_instance<Number<int>, Number>, "");
 
 static_assert(is_template_t<X<int, float>>::value, "");
 
@@ -200,11 +220,13 @@ FromType() {
 template <class T>
 typename std::enable_if_t< is_instance<T, Number>, UTypeConst*>
 FromType() {
-	return UTypeConst::New(ETypeData::NUMBER, { FromType<unwrap<T>>() });
+	using T_0 = extract<T, 0>;
+	return UTypeConst::New(ETypeData::NUMBER, { FromType<T_0>() });
 };
 
 template <class T>
 typename std::enable_if_t< is_instance<T, Maybe>, UTypeConst*>
 FromType() {
-	return UTypeConst::New(ETypeData::MAYBE, { FromType<unwrap<T>>() });
+	using T_0 = extract<T, 0>;
+	return UTypeConst::New(ETypeData::MAYBE, { FromType<T_0>() });
 };

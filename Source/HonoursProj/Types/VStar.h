@@ -295,27 +295,28 @@ public:
 		return type->GetType() == EType::NUMBER;
 	}
 
-	//template <typename T>
-	//typename std::enable_if_t<
-	//	is_instance<T, Number>()
-	//	&& !std::is_same_v<T, Number<VStar>>
-	//, bool>
-	//ValidCast(const UType* type) const {
-	//	// handle not a number
-	//	if (type->GetType() != EType::NUMBER) {
-	//		return false;
-	//	}
-	//	// Handle is a Number<VStar>
-	//	else if (type->GetTemplates()[0]->GetType() == EType::NONE) {
-	//		return GetUnsafePtr<NumberV>()->_value.ValidCast<unwrap<T>>();
-	//	}
-	//	// Handle is a Number<T>
-	//	else {
-	//		return ValidCast<unwrap<T>>(type->GetTemplates()[0]);
-	//	}
-	//	// Unreachable
-	//	return false;
-	//}
+	template <typename T>
+	typename std::enable_if_t<
+		is_instance<T, Number>
+		&& !std::is_same_v<T, Number<VStar>>
+	, bool>
+	ValidCast(const UType* type) const {
+		using T_0 = extract<T, 0>;
+		// handle not a number
+		if (type->GetType() != EType::NUMBER) {
+			return false;
+		}
+		// Handle is a Number<VStar>
+		else if (type->GetTemplates()[0]->GetType() == EType::NONE) {
+			return GetUnsafePtr<NumberV>()->_value.ValidCast<T_0>();
+		}
+		// Handle is a Number<T>
+		else {
+			return ValidCast<T_0>(type->GetTemplates()[0]);
+		}
+		// Unreachable
+		return false;
+	}
 
 
 	template <typename T>
