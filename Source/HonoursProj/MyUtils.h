@@ -25,6 +25,10 @@ public:
 	}
 };
 
+template <int N, typename... Types>
+struct DestructTs : std::tuple<Types...> {};
+
+
 namespace std {
 	template <typename... Types> 
 	struct tuple_size<TTuple<Types...>> : integral_constant<size_t, sizeof...(Types)> {};
@@ -72,6 +76,20 @@ namespace std {
 	Type* get(const DestructPtr<N, Cls, Type>& t) {
 		return &(*t._inst)[Idx];
 	}
+
+
+	// Destruct Types
+	template <int N, typename... Types>
+	struct tuple_size<DestructTs<N, Types...>> : integral_constant<size_t, N> {};
+
+	template <size_t Idx, int N, typename... Types>
+	struct tuple_element<Idx, DestructTs<N, Types...>> : std::tuple_element<Idx, std::tuple<Types...>> {};
+
+	template <size_t Idx, int N, typename... Types>
+	auto get(const DestructTs<N, Types...>& t) -> tuple_element_t < Idx, decltype(t) >* {
+		return (tuple_element_t < Idx, decltype(t) >*) & NULL;
+	}
+
 };
 
 #endif

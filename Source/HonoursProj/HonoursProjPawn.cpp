@@ -88,29 +88,82 @@ void AHonoursProjPawn::OnLClickRelease() {
 
 
 
-	Number<int> k = { 1 };
+	//Number<int> k = { 1 };
 
-	Number<int> k1 = { 2 };
+	//Number<int> k1 = { 2 };
 
-	const IOrdinal* const io1 = k.Instances.Ordinal;
+	//const IOrdinal* const io1 = k.Instances.Ordinal;
 
-	const IOrdinal* io2 = k.Instances.Ordinal;
+	//const IOrdinal* io2 = k.Instances.Ordinal;
 
-	const IOrdinal* io3 = Number<int>::Instances.Ordinal;
-	const IOrdinal* io4 = decltype(k)::Instances.Ordinal;
-	ORD or1 = io1->ord()(k)(k1);
-	ORD or2 = io2->ord()(k)(k1);
-	ORD or3 = io3->ord()(k)(k1);
-	ORD or4 = io3->ord()(k)(k1);
+	//const IOrdinal* io3 = Number<int>::Instances.Ordinal;
+	//const IOrdinal* io4 = decltype(k)::Instances.Ordinal;
+	//ORD or1 = io1->ord()(k)(k1);
+	//ORD or2 = io2->ord()(k)(k1);
+	//ORD or3 = io3->ord()(k)(k1);
+	//ORD or4 = io3->ord()(k)(k1);
 
-	UE_LOG(LogTemp, Warning, TEXT("ORD TESTS %d %d %d %d"), or1, or2, or3, or4);
-
-
+	//UE_LOG(LogTemp, Warning, TEXT("ORD TESTS %d %d %d %d"), or1, or2, or3, or4);
 
 
+
+
+	VStar q1 = VStar(NumberV(1.5f));
+	VStar q2 = VStar(NumberV(2.2f));
+	VStar q3 = VStar(NumberV(3.3f));
+
+
+	const IOrdinal* const qo1 = q1.getTypeclass()->Ordinal;
+
+	Number<float> q5 = *q1.ResolveToSafe<Number<float>>();
+
+	float q6 = q5.get();
+
+	UE_LOG(LogTemp, Warning, TEXT("ORD VSTAR TESTS %f"), q6);
+
+	ORD qor1 = qo1->ord()(q1)(q2);
+	ORD qor2 = qo1->ord()(q2)(q3);
+	ORD qor3 = qo1->ord()(q1)(q1);
+	ORD qor4 = qo1->ord()(q3)(q1);
+
+	UE_LOG(LogTemp, Warning, TEXT("ORD VSTAR TESTS %d %d %d %d"), qor1, qor2, qor3, qor4);
 
 
 	Arr<int, int> square = { [](int a) { return a * a; } };
+
+	ArrV Vsquare = { [=](VStar a) { return VStar(square(a.ResolveToUnsafe<int>())); } };
+
+	 //Usage Example
+	VStar ma1 = VStar(MaybeV::Just(4));
+	VStar ma2 = VStar(MaybeV::Nothing<int>());
+	const IFunctor* const fo1 = ma1.getTypeclass()->Functor;
+	const IFunctor* const fo2 = ma2.getTypeclass()->Functor;
+
+
+	int a10 = ma1.ResolveToSafe<Maybe<int>>()->fromMaybe(-1);
+
+
+	auto ma3 = ma2.ResolveToSafe<Maybe<int>>();
+
+	int a11 = ma3->fromMaybe(-1);
+
+	VStar a2 = fo1->fmap()(Vsquare)(ma1);
+	VStar a3 = fo1->map_replace_by()(VStar(2))(ma1);
+	
+	int a4 = a2.ResolveToSafe<MaybeV>()->fromMaybe(-1);
+	int a5 = a3.ResolveToSafe<MaybeV>()->fromMaybe(-1);
+
+	VStar a6 = fo1->fmap()(Vsquare)(ma2);
+	VStar a7 = fo1->map_replace_by()(VStar(2))(ma2);
+
+	int a8 = a6.ResolveToSafe<MaybeV>()->fromMaybe(-1);
+	int a9 = a7.ResolveToSafe<MaybeV>()->fromMaybe(-1);
+
+	UE_LOG(LogTemp, Warning, TEXT("MAYBE VSTAR %d %d %d %d %d %d"), a4, a5, a8, a9, a10, a11);
+
+
+
+
 	
 	 //Usage Example
 	Maybe<int> a = Maybe<int>::Just(4);
@@ -119,9 +172,9 @@ void AHonoursProjPawn::OnLClickRelease() {
 	int q = fromMaybe<int>(0)(a);
 	UE_LOG(LogTemp, Warning, TEXT("maybe %d"), q);
 
-	Maybe<int> l = a.fmap<int>(square)(a);
+	//Maybe<int> l = a.fmap<int>(square)(a);
 
-	UE_LOG(LogTemp, Warning, TEXT("L %d"), l.fromMaybe(-1));
+	//UE_LOG(LogTemp, Warning, TEXT("L %d"), l.fromMaybe(-1));
 
 	UTypeConst* n = UTypeConst::New(ETypeData::MAYBE, { UTypeConst::New(ETypeData::NUMBER, {UTypeConst::New(ETypeBase::INT)}) });
 

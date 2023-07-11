@@ -25,9 +25,12 @@ enum class ORD : int {
 
 // Ordinal Interface
 class IOrdinal {
-public: const auto ord() const {
+public: 
+	const auto ord() const {
 	return curry([this](const VStar& a, const VStar& b) { return this->_ord(a, b); });
-}; private: virtual ORD _ord(const VStar& a, const VStar& b) const = 0;
+}; 
+private: 
+	virtual ORD _ord(const VStar& a, const VStar& b) const = 0;
 public: const auto lt() const {
 	return curry([this](const VStar& a, const VStar& b) { return this->_lt(a, b); });
 }; private: virtual bool _lt(const VStar& a, const VStar& b) const { return _ord(a, b) == ORD::LT; };

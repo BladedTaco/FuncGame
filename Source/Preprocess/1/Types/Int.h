@@ -20,11 +20,42 @@ include "Types/VStar.h"
 #define InlineStaticConstStruct(T, NAME, ...) \
 static const inline T NAME = []{ T ${}; __VA_ARGS__; return $; }()
 
-class INumber {
+//class INumber {
+//public:
+//	class Ordinal : public virtual IOrdinal {
+//	private:
+//		virtual ORD _ord(const VStar& me, const VStar& other) const override;
+//	public:
+//		Ordinal() = default;
+//	};
+//
+//	inline static const Ordinal POrdinal = {};
+//
+//public:
+//	InlineStaticConstStruct(Typeclass, Instances,
+//		$.Ordinal = &INumber::POrdinal
+//	);
+//};
+
+
+
+template <typename A>
+class INumber : public virtual ITypeclass {
+private:
+	virtual const Typeclass* _GetTypeclass() const override {
+		return &INumber<A>::Instances;
+	}
 public:
 	class Ordinal : public virtual IOrdinal {
 	private:
-		virtual ORD _ord(const VStar& me, const VStar& other) const override;
+		virtual ORD _ord(const VStar& me, const VStar& other) const override {
+			// Resolve
+			A a = me.ResolveToUnsafe<Number<A>>().get();
+			A b = other.ResolveToUnsafe<Number<A>>().get();
+
+			// Calculate
+			return a == b ? ORD::EQ : a < b ? ORD::LT : ORD::GT;
+		}
 	public:
 		Ordinal() = default;
 	};
@@ -33,7 +64,7 @@ public:
 
 public:
 	InlineStaticConstStruct(Typeclass, Instances,
-		$.Ordinal = &INumber::POrdinal
+		$.Ordinal = &INumber<A>::POrdinal
 	);
 };
 
@@ -41,12 +72,11 @@ public:
 
 
 
-
-
 template <typename A>
-class Number : public virtual INumber {
+class Number : public virtual INumber<A> {
 private:
 	A _value;
+	friend NumberV;
 	friend class ::Ordinal<Number<A>>;
 public:
 	virtual ~Number() = default;
@@ -71,16 +101,36 @@ public:
 
 
 template <>
-class Number<VStar> : public virtual INumber {
+class Number<VStar> : public virtual ITypeclass {
 private:
-	friend class VStar;
+	friend VStar;
+
+	friend Number;
+
+	template <typename A>
+	friend Number<A>::Number(const NumberV* other);
+
 	VStar _value;
 	friend class ::Ordinal<NumberV>;
+
+	const Typeclass* Instances;
+
+	virtual const Typeclass* _GetTypeclass() const override {
+		return Instances;
+	}
+
 public:
+	template <typename T>
+	void SetTypeclass() {
+		Instances = &INumber<T>::Instances;
+	}
+
 	virtual ~Number() = default;
 	template <typename A>
 	Number(A value)
-		: _value(value) {};
+		: _value(value) {
+		SetTypeclass<A>();
+	};
 
 	template <typename A>
 	const A* get() const { return _value.GetUnsafePtr<A>(); }
@@ -88,25 +138,34 @@ public:
 	// Copy Construction
 	template <typename A>
 	Number(const Number<A>& other) 
-		: _value(other.get()) {}
+		: _value(other.get()) {
+		SetTypeclass<A>();
+	}
 
 	// Copy Constructor for NumberVs
 	template <>
 	Number(const NumberV& other)
-		: _value(other._value) {};
+		: _value(other._value) 
+		, Instances(other.GetTypeclass()) {};
 
 	Number(const NumberV& other) {
 		_value = other._value;
+		Instances = other.GetTypeclass();
 	};
 
 
 	// Move Constructor is move into container
 	Number(NumberV&& other) {
 		_value = VStar(other);
+		Instances = other.GetTypeclass();
 	}
 };
 
 
+template <typename A>
+Number<A>::Number(const NumberV* other) {
+	_value = other->_value.ResolveToUnsafe<A>();
+}
 
 
 //

@@ -151,7 +151,7 @@ VStarArrayReturn ABlockFunction::CollectInputs() {
 
 // Requests a single input, and recurses
 Arr<VStar, VStar> ABlockFunction::ApplyInput(int output, VStarArray vals, int idx, Arr<VStarArray, VStarArrayReturn> f) {
-	return Arr<VStar, VStar>([&] (VStar&& val) -> VStar {
+	return Arr<VStar, VStar>([&] (VStar val) -> VStar {
 		// Copy Vals
 		TArray<VStar> m_vals = vals;
 		// Set Value

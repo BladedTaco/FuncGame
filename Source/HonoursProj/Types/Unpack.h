@@ -30,17 +30,17 @@ struct X;
 template <typename A, typename>
 using to_first = A;
 
-
 // Type Tuple Accessing
 template <typename... Ts>
 struct TyTuple {
 	template <int idx>
-	using get = typename std::tuple_element<idx, std::tuple<Ts...>>::type;
+	using get = typename std::tuple_element<idx, std::tuple<Ts..., std::false_type, std::false_type, std::false_type>>::type;
 
 	template <template <typename...> typename T>
 	using rewrap = T<Ts...>;
-};
 
+	inline static constexpr int size = sizeof...(Ts);
+};
 
 // Type Tuple Accessing
 template <>
@@ -51,11 +51,52 @@ struct TyTuple<std::false_type> {
 	template <template <typename...> typename T>
 	using rewrap = std::false_type;
 
-	using size = std::index_sequence_for<>;
+	inline static constexpr int size = 0;
 };
 
 template <typename With, typename... Replace>
 using replace = TyTuple<to_first<With, Replace>...>;
+
+
+
+// Recursive Tuple Operations
+template <int Num, template <int> typename F>
+struct Recurse {
+	template <typename... Rest>
+	using R = TyTuple<F<Num>, Rest...>;
+
+	using result = typename Recurse<Num - 1, F>::result::template rewrap<R>;
+};
+
+template <template <int> typename F>
+struct Recurse<0, F> {
+	using result = TyTuple<F<0>>;
+};
+
+template <template <int> typename F>
+struct Recurse<-1, F> {
+	using result = TyTuple<>;
+};
+
+
+template <typename T>
+struct FlipTuple_t {
+	using type = typename Recurse<T::size - 1, typename T::template get>::result;
+};
+
+template <>
+struct FlipTuple_t<std::false_type> {
+	using type = TyTuple<>;
+};
+
+// Flip A TyTuple
+template <typename T>
+using FlipTuple = typename FlipTuple_t<T>::type;
+//using FlipTuple = typename Recurse<T::size - 1, typename T::template get>::result;
+
+// Take n elements from a TyTuple
+template <int N, typename T>
+using take_n = FlipTuple<typename Recurse<N - 1, typename T::template get>::result>;
 
 
 // Type Unwrapping for unwrappable type
@@ -107,8 +148,12 @@ using extract = typename unwrap_impl<T>::types::template get<idx>;
 template<typename T, template <typename...> typename Wrapper>
 using rewrap = typename unwrap_impl<T>::types::template rewrap<Wrapper>;
 
+template<int N, typename T, template <typename...> typename Wrapper>
+using rewrap_cut = typename take_n<N, typename unwrap_impl<T>::types>::template rewrap<Wrapper>;
+
 template<typename T, typename... NewInner>
 using repack = typename unwrap_impl<T>::template wrapper<NewInner...>;
+
 
 
 template<typename T, typename NewInner>
@@ -195,7 +240,18 @@ using is_instance_t = typename std::is_same<T, rewrap<T, U> >;
 
 template <class T, template <class, class...> class U>
 inline constexpr bool is_instance = std::is_same_v<T, rewrap<T, U> >;
+//
+//template <int N, class T, template <class, class...> class U>
+//inline constexpr bool is_instance_n = std::is_same_v<T, rewrap_cut<N, T, U> >;
 
+
+template <int N, class T, template <class, class...> class U>
+inline constexpr bool is_instance_n = []() {
+	if constexpr (unwrap<T>::size == N) {
+		return std::is_same_v<T, rewrap_cut<N, T, U> >;
+	}
+	return false;
+}();
 
 //template <class T, template <class, class...> class U>
 //using is_instance = is_instance_t<T, U>::value;
@@ -204,6 +260,9 @@ inline constexpr bool is_instance = std::is_same_v<T, rewrap<T, U> >;
 //template <class T, template <class, class...> class U>
 //inline constexpr bool is_instance = typename is_instance_t<is_template_t<T>, T, U>::value;
 
+static_assert(!is_instance_n<2, X<int>, X>, "");
+static_assert(is_instance_n<2, X<int, int>, X>, "");
+static_assert(!is_instance_n<2, X<int, int, int>, X>, "");
 
 static_assert(!is_instance<int, Number>, "");
 static_assert(is_instance<Number<int>, Number>, "");
@@ -257,15 +316,24 @@ FromType() {
 
 
 template <class T>
-typename std::enable_if_t< is_instance<T, Number>, UTypeConst*>
+typename std::enable_if_t< is_instance_n<1, T, Number>, UTypeConst*>
 FromType() {
 	using T_0 = extract<T, 0>;
 	return UTypeConst::New(ETypeData::NUMBER, { FromType<T_0>() });
 };
 
 template <class T>
-typename std::enable_if_t< is_instance<T, Maybe>, UTypeConst*>
+typename std::enable_if_t< is_instance_n<1, T, Maybe>, UTypeConst*>
 FromType() {
 	using T_0 = extract<T, 0>;
 	return UTypeConst::New(ETypeData::MAYBE, { FromType<T_0>() });
 };
+
+template <class T>
+typename std::enable_if_t< is_instance_n<2, T, Func>, UTypeConst*>
+FromType() {
+	using From = extract<T, 1>;
+	using To = extract<T, 0>;
+	return UTypeConst::New(ETypeData::FUNC, { FromType<From>(), FromType<To>() });
+};
+

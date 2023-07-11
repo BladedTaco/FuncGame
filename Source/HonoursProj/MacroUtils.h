@@ -187,3 +187,7 @@
 
    // https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c-c?lq=1
 #define FOR_REVERSE(IDX_START) for (int idx = IDX_START; idx --> 0;)
+
+
+#define InlineStaticConstStruct(T, NAME, ...) \
+static const inline T NAME = []{ T ${}; __VA_ARGS__; return $; }()

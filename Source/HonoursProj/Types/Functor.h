@@ -17,6 +17,39 @@ TYPECLASS_DEFN(Functor, TEMPLATES, INST) {					 \
 	TYPECLASS_OPT_FUNC((B), map_replace_by, MAP_REPLACE_BY)	 \
 };
 
+
+// Functor Interface
+class IFunctor {
+public: const auto fmap() const {
+	return curry([this](const VStar& f, const VStar& f_a) { return this->_fmap(f, f_a); });
+}; private: virtual VStar _fmap(const VStar& f, const VStar& f_a) const = 0;
+public: const auto map_replace_by() const {
+	return curry([this](const VStar& a, const VStar& f_b) { return this->_map_replace_by(a, f_b); });
+}; private: virtual VStar _map_replace_by(const VStar& a, const VStar& f_b) const {
+		Arr<VStar, VStar> f = { Prelude::constant<VStar, VStar>(a) };
+		return _fmap(f, f_b);
+	};
+};
+
+//
+//
+//// Functor Interface
+//class IFunctor {
+//	TypeclassVirtual(VStar,	fmap, f, f_a) = 0;
+//	TypeclassVirtual(VStar, map_replace_by, a, f_b) { 
+//		Arr<VStar, VStar> f = { Prelude::constant<VStar, VStar>(a) };
+//		return _fmap(f, f_b);
+//	};
+//};
+//
+//
+//
+
+
+
+
+
+
 // Functor Class Template
 template <typename A>
 class Functor {

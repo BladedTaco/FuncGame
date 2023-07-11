@@ -7,23 +7,33 @@
 #include "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Types/Ord.h"
 #include "Types/VStar.h"
 #include "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Types/FDecl.h"
-class INumber {
+template <typename A>
+class INumber : public virtual ITypeclass {
+private:
+	virtual const Typeclass* _GetTypeclass() const override {
+		return &INumber<A>::Instances;
+	}
 public:
 	class Ordinal : public virtual IOrdinal {
 	private:
-		virtual ORD _ord(const VStar& me, const VStar& other) const override;
+		virtual ORD _ord(const VStar& me, const VStar& other) const override {
+			A a = me.ResolveToUnsafe<Number<A>>().get();
+			A b = other.ResolveToUnsafe<Number<A>>().get();
+			return a == b ? ORD::EQ : a < b ? ORD::LT : ORD::GT;
+		}
 	public:
 		Ordinal() = default;
 	};
 	inline static const Ordinal POrdinal = {};
 public:
-	static const inline Typeclass Instances = []{ Typeclass ${}; $.Ordinal = &INumber::POrdinal; return $; }()
+	static const inline Typeclass Instances = []{ Typeclass ${}; $.Ordinal = &INumber<A>::POrdinal; return $; }()
 ;
 };
 template <typename A>
-class Number : public virtual INumber {
+class Number : public virtual INumber<A> {
 private:
 	A _value;
+	friend NumberV;
 	friend class ::Ordinal<Number<A>>;
 public:
 	virtual ~Number() = default;
@@ -32,31 +42,53 @@ public:
 	Number(const NumberV* other);
 };
 template <>
-class Number<VStar> : public virtual INumber {
+class Number<VStar> : public virtual ITypeclass {
 private:
-	friend class VStar;
+	friend VStar;
+	friend Number;
+	template <typename A>
+	friend Number<A>::Number(const NumberV* other);
 	VStar _value;
 	friend class ::Ordinal<NumberV>;
+	const Typeclass* Instances;
+	virtual const Typeclass* _GetTypeclass() const override {
+		return Instances;
+	}
 public:
+	template <typename T>
+	void SetTypeclass() {
+		Instances = &INumber<T>::Instances;
+	}
 	virtual ~Number() = default;
 	template <typename A>
 	Number(A value)
-		: _value(value) {};
+		: _value(value) {
+		SetTypeclass<A>();
+	};
 	template <typename A>
 	const A* get() const { return _value.GetUnsafePtr<A>(); }
 	template <typename A>
 	Number(const Number<A>& other) 
-		: _value(other.get()) {}
+		: _value(other.get()) {
+		SetTypeclass<A>();
+	}
 	template <>
 	Number(const NumberV& other)
-		: _value(other._value) {};
+		: _value(other._value) 
+		, Instances(other.GetTypeclass()) {};
 	Number(const NumberV& other) {
 		_value = other._value;
+		Instances = other.GetTypeclass();
 	};
 	Number(NumberV&& other) {
 		_value = VStar(other);
+		Instances = other.GetTypeclass();
 	}
 };
+template <typename A>
+Number<A>::Number(const NumberV* other) {
+	_value = other->_value.ResolveToUnsafe<A>();
+}
 
  /*Added Typeclass Ordinal Instance Number*/ 
  template <class A> 

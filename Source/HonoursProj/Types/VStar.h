@@ -18,16 +18,20 @@ include <type_traits>
 #endif
 
 #include "Types/FDecl.h"
+#include "MyUtils.h"
 
-
-
-template <typename T, typename = int>
-struct IsDataclass : std::false_type {};
+//
+//template <typename T, typename = int>
+//struct IsDataclass : std::false_type {};
+//
+//template <typename T>
+//struct IsDataclass <T, decltype(( void )T::Instances, 0)> : std::true_type {};
+//
+//template <typename T>
+//struct IsDataclass <T, decltype(( void )std::declval<T>().Instances, 0)> : std::true_type {};
 
 template <typename T>
-struct IsDataclass <T, decltype(( void )T::Instances, 0)> : std::true_type {};
-
-
+struct IsDataclass : std::is_base_of<ITypeclass, T> {};
 
 
 
@@ -190,6 +194,14 @@ public:
 		storedValue.reset();
 	}
 
+	template <typename T>
+	static VStar New() {
+		VStar inst = VStar();
+		inst.storedValue.reset();
+		inst.storedType = FromType<T>();
+		return inst;
+	}
+
 	// Copy Constructor, Should be used sparingly
 	VStar(const VStar& other) {
 		storedType = other.storedType;
@@ -212,12 +224,6 @@ public:
 		return *this;
 	}
 
-	VStar(UType* type) {
-		// Release any held values
-		storedValue.reset();
-		// Todo, decide if this should be make const or deepcopy
-		storedType = UTypeConst::MakeConst(type);
-	}
 
 	// Todo: Check UType against T
 	template <typename T>
@@ -228,7 +234,7 @@ public:
 		storedType = UTypeConst::MakeConst(type);
 		// Get Instances Pointer
 		if constexpr (IsDataclass<T>::value) {
-			storedInstances = &value.Instances;
+			storedInstances = value.GetTypeclass();
 		}
 	}
 	// Todo: Check UType against T
@@ -238,7 +244,20 @@ public:
 		storedValue = shared_void(new T(value));
 		// Todo, decide if this should be make const or deepcopy
 		storedType = FromType<T>();
+		// Get Instances Pointer
+		if constexpr (IsDataclass<T>::value) {
+			storedInstances = value.GetTypeclass();
+		}
 	}
+
+	template <>
+	VStar(UType* type) {
+		// Release any held values
+		storedValue.reset();
+		// Todo, decide if this should be make const or deepcopy
+		storedType = UTypeConst::MakeConst(type);
+	}
+
 
 	// Checks if both type and value are valid
 	bool Valid() const {
@@ -296,10 +315,10 @@ public:
 		return type->GetType() == EType::NUMBER;
 	}
 
-	// Number<T>
+	// Number<...>
 	template <typename T>
 	typename std::enable_if_t<
-		is_instance<T, Number>
+		is_instance_n<1, T, Number>
 		&& !std::is_same_v<T, NumberV>
 	, bool>
 	ValidCast(const UType* type) const {
@@ -320,11 +339,85 @@ public:
 		return false;
 	}
 
+	// MaybeV
+	template <typename T>
+	typename std::enable_if_t< std::is_same_v<T, MaybeV>, bool>
+		ValidCast(const UType* type) const {
+		return type->GetType() == EType::MAYBE;
+	}
+
+	// Maybe<...>
+	template <typename T>
+	typename std::enable_if_t<
+		is_instance_n<1, T, Maybe>
+		&& !std::is_same_v<T, MaybeV>
+	, bool>
+	ValidCast(const UType* type) const {
+		using T_0 = extract<T, 0>;
+		// handle not a maybe
+		if (type->GetType() != EType::MAYBE) {
+			return false;
+		}
+		// Handle is a MaybeV
+		else if (type->GetTemplates()[0]->GetType() == EType::NONE) {
+			return GetUnsafePtr<MaybeV>()->_value.ValidCast<T_0>();
+		}
+		// Handle is a Number<T>
+		else {
+			return ValidCast<T_0>(type->GetTemplates()[0]);
+		}
+		// Unreachable
+		return false;
+	}
+
+	// ArrV
+	template <typename T>
+	typename std::enable_if_t< std::is_same_v<T, ArrV>, bool>
+	ValidCast(const UType* type) const {
+		return type->GetType() == EType::FUNC;
+	}
+
+	// Arr<...>
+	template <typename T>
+	typename std::enable_if_t<
+		is_instance_n<2, T, Arr>
+		&& !std::is_same_v<T, ArrV>
+	, bool>
+	ValidCast(const UType* type) const {
+		using From = extract<T, 0>;
+		using To = extract<T, 1>;
+
+		// handle not an arrow
+		if (type->GetType() != EType::FUNC) {
+			return false;
+		}
+		
+		UE_LOG(LogTemp, Error, TEXT("Arrow casting not yet supported"));
+
+		// Destructure Templates
+		auto [from, to] = Destruct<2, TArray, UType*>(type->GetTemplates());
+
+		// Handle is a ArrV
+		if (from->GetType() == EType::NONE) {
+			UE_LOG(LogTemp, Error, TEXT("Arrow casting not yet supported"));
+			return false;
+			//return GetUnsafePtr<MaybeV>()->_value.ValidCast<T_0>();
+		}
+		// Handle is a Arr<...>
+		else {
+			return ValidCast<From>(from) && ValidCast<To>(to);
+		}
+		// Unreachable
+		return false;
+	}
+
 public:
 	template <typename T>
-	T ResolveToSafe() const {
-		if (!ValidCast<T>()) return NULL;
-		return ResolveTo<T>();
+	std::unique_ptr<T> ResolveToSafe() const {
+		if (!ValidCast<T>()) {
+			return std::unique_ptr<T>(nullptr);
+		}
+		return std::make_unique<T>(ResolveTo<T>());
 	}
 	template <typename T>
 	T ResolveToUnsafe() const {
@@ -340,6 +433,7 @@ private:
 		T
 	>
 	ResolveTo() const {
+		// copy constructor of atomic
 		return T(*GetUnsafePtr<T>());
 	}
 
@@ -350,6 +444,7 @@ private:
 		T
 	>
 	ResolveTo() const {
+		// Return Copy of Any<VStar...>
 		return *GetUnsafePtr<T>();
 	}
 
@@ -360,6 +455,7 @@ private:
 		T
 	>
 	ResolveTo() const {
+		// Rely on VStar Resolver Constructor
 		return T(GetUnsafePtr<repack_fill<T, VStar>>());
 	}
 public:
@@ -410,10 +506,14 @@ public:
 
 
 
+/* TODO
+Give Arr/Func needed constructors for typeclassing
 
+HonoursProjPawn.cpp comment out Functor stuff, replace with new system
 
+Check all Maybe stuff
 
-
+*/
 
 
 

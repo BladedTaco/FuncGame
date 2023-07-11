@@ -8,6 +8,7 @@
 #include "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Preprocess/Include.h"
 #include <functional>
 #include "Types/VStar.h"
+#include "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Types/FDecl.h"
 namespace detail {
 	template <typename F>
 	struct function_traits : public function_traits<decltype(&F::operator())> {};
@@ -45,8 +46,34 @@ public:
 		return _func(a);
 	}
 };
-template <typename From, typename To>
-using Arr = Func<To, From>;
+template <typename To>
+class Func<To, VStar> {
+	using From = const VStar&;
+private:
+	Function<To, From> _func;
+	friend class Functor<Func<To, From>>;
+public:
+	Func(Function<To, From> f) {
+		_func = f;
+	}
+	To operator()(From a) const {
+		return _func(a);
+	}
+};
+template <typename To>
+class Func<To, const VStar&> {
+	using From = const VStar&;
+private:
+	Function<To, From> _func;
+	friend class Functor<Func<To, From>>;
+public:
+	Func(Function<To, From> f) {
+		_func = f;
+	}
+	To operator()(From a) const {
+		return _func(a);
+	}
+};
 template <typename First, typename To>
 inline Arr<First, To> _curry(Function<To, First> f) {
 	return Arr<First, To>(f);

@@ -30,15 +30,22 @@ bool UType::Supercedes(UType* other) const {
 FString UType::ToString() const {
 	// Get Base Type
 	EType t = GetType();
-	FString type = UEnum::GetValueAsString(t);
-	type = type.Append("<");
+	FString type = UEnum::GetValueAsString(t).Replace(TEXT("EType::"), TEXT("")).ToLower();
+
+
 	// Get Templates
+	TArray<FString> templates;
 	for (const UType* temp : GetTemplates()) {
-		type = type.Append(temp->ToString());
-		type = type.Append(", ");
+		templates.Add(temp->ToString());
 	}
-	// Close Templates
-	type = type.Append(">");
+	
+	// Add Templates
+	if (templates.Num() > 0) {
+		type = type.Append("<");
+		type = type.Append(FString::Join(templates, TEXT(", ")));
+		type = type.Append(">");
+	}
+
 	return type;
 }
 

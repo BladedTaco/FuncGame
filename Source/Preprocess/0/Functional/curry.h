@@ -11,6 +11,8 @@ include <functional>
 include "Types/VStar.h"
 #endif
 
+#include "Types/FDecl.h"
+
 // Lambda to Function Casting
 
 //https://gist.github.com/khvorov/cd626ea3685fd5e8bf14
@@ -67,6 +69,38 @@ public:
 	}
 };
 
+template <typename To>
+class Func<To, VStar> {
+	using From = const VStar&;
+private:
+	Function<To, From> _func;
+	friend class Functor<Func<To, From>>;
+public:
+	// Copyable Lambdas
+	Func(Function<To, From> f) {
+		_func = f;
+	}
+	To operator()(From a) const {
+		return _func(a);
+	}
+};
+
+template <typename To>
+class Func<To, const VStar&> {
+	using From = const VStar&;
+private:
+	Function<To, From> _func;
+	friend class Functor<Func<To, From>>;
+public:
+	// Copyable Lambdas
+	Func(Function<To, From> f) {
+		_func = f;
+	}
+	To operator()(From a) const {
+		return _func(a);
+	}
+};
+
 //// A Func is an arrow ((->) From) To
 //template <typename To>
 //class Func<To, VStarArray> {
@@ -81,10 +115,6 @@ public:
 //		return _func(std::move(a));
 //	}
 //};
-
-// Curried Function Shorthand as Arrow From -> To
-template <typename From, typename To>
-using Arr = Func<To, From>;
 
 
 
