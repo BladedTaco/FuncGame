@@ -18,7 +18,7 @@ class HONOURSPROJ_API ABlockFunctionConstant : public ABlockFunction
 	GENERATED_BODY()
 public:
 	UPROPERTY(EditAnywhere)
-		int Value = 0;
+		int Value = 5;
 
 
 	virtual Arr<VStarArray, VStarArrayReturn> GetInnerFunc() override;

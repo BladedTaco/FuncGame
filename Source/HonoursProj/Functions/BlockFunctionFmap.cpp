@@ -26,9 +26,6 @@
 
 #include "FunctionHUD.h"
 
-#include <any>
-
-
 void ABlockFunctionFmap::SetFunctionTypes() {
 
 	HUDInstance->FunctionName = FString(TEXT("FMap"));
@@ -53,175 +50,20 @@ void ABlockFunctionFmap::SetFunctionTypes() {
 }
 
 
-
-
-/*
-SPECIALIZE TYPE
-
-
-*/
-
-
-
-//
-//template <typename T>
-//Arr<VStar, Arr<VStar, T>>* _h[2] = {
-//	&Functor<Maybe<Number<int>>>::fmap<T>,
-//	&Functor<Maybe<Number<float>>>::fmap<T>
-//};
-//
-//
-//
-//
-//template <typename T>
-//Arr<void*, Arr<void*, T>> h[2] = {
-//	Functor<Maybe<Number<int>>>::v_fmap<T>,
-//	Functor<Maybe<Number<float>>>::v_fmap<T>
-//};
-//
-//
-//template <typename T>
-//Arr<void*, Arr<void*, T>> g[10] = {
-//	Functor<Maybe<Number<int>>>::v_fmap<T>,
-//	Functor<Maybe<Number<float>>>::v_fmap<T>,
-//	Functor< Maybe<Maybe<Number<int>>>>::v_fmap<T>,
-//	Functor< Maybe<Maybe<Number<float>>>>::v_fmap<T>
-//};
-//
-//
-//template <typename T>
-//Arr<void*, Arr<void*, T>> g[10] = {
-//	Functor<Maybe<VStar>>::v_fmap<T>,
-//	Functor<Arr<VStar, VStar>>::v_fmap<T>,
-//
-//	Functor<Maybe<NumberV>>::v_fmap<T>,
-//	Functor<Maybe<int>>::v_fmap<T>,
-//	Functor<Maybe<Maybe<VStar>>>::v_fmap<T>,
-//	Functor<Maybe<Arr<Maybe<VStar>, VStar>>>::v_fmap<T>,
-//	Functor<Arr<Maybe<VStar>, VStar>>::v_fmap<T>,
-//	Functor<Arr<Arr<VStar, VStar>, VStar>>::v_fmap<T>,
-//};
-
-//
-//template <typename Return, template <typename...> class Typeclass, typename... Args>
-//Return GetFunction(UType* type) {
-//
-//	auto x = Functor::_fmap(Arr<int, float>([](int x) {return 1.0f}), Maybe::Just(1));
-//
-//	switch (type->GetType()) {
-//	case EType::MAYBE:
-//		break;
-//	case EType::INT:
-//		return Typeclass<Maybe<Number<int>>>::Get("v_fmap")
-//	}
-//}
-
-
-
 Arr<VStarArray, VStarArrayReturn> ABlockFunctionFmap::GetInnerFunc() {
 	return Arr<VStarArray, VStarArrayReturn>([this](VStarArray values) -> VStarArrayReturn {
 
 
 		// Destruct Values
 		auto [t0, t1] = Destruct<2, TArray, VStar>(values);
-
-		//auto n1 = t1.ResolveToSafe<MaybeV>();
-		//VStar n2 = n1->fromMaybe( VStar(NumberV(-1)) );
-		//auto n3 = n2.ResolveToSafe<NumberV>();
-		//auto n4 = *n3;
-		//auto n5 = n4.get<int>();
-
-		//auto q1 = t1.ResolveToSafe<Maybe<Number<int>>>();
-		//int q2 = q1->fromMaybe(Number(-1)).get();
-
 		const IFunctor* const functor = t1.getTypeclass()->Functor;
 
 		VStar result = functor->fmap()(t0)(t1);
 
-		//this->TextComponent->SetText(FText::Format(FText::FromString(FString("Type {0}")), FText::FromString(result.Type()->ToString())));
-
-		//auto m = result.ResolveToSafe<Maybe<bool>>();
-
-		//if (m && m) {
-		//	bool n = m->fromMaybe(false);
-		//	this->TextComponent->SetText(FText::Format(FText::FromString(FString("Just {0}")), n));
-		//} else {
-		//	this->TextComponent->SetText(FText::FromString(FString("Nothing")));
-		//}
-
-
 		const IShow* const show = result.getTypeclass()->Show;
-		
-		this->HUDInstance->LastResult = FString(TEXT("FMap: ")) + show->show()(result);
+		this->HUDInstance->LastResult = show->show()(result);
 
 		return { result };
 
-
-		//return {};
-
-		//auto& [t0, t1] = Destruct<2, TArray, VStar>(values);
-
-
-
-
-		//auto x = Functor<Maybe<VStar>>::fmap<VStar>(t0)(t1);
-
-
-		//Maybe<Number<int>> a = decltype(a)::Just({ 1 });
-		//Arr<Number<int>, Number<int>> f = curry([](Number<int> a) { return a; });
-
-		//auto x = Functor<decltype(a)>::fmap<decltype(f)::to>(f)(a);
-
-
-		// TODO: Make this reflect actual types
-		//EType numType = this->TypeVars[0]->GetType();
-
-		//// Destruct Values
-		//const auto& [t0, t1] = Destruct<2, TArray, ValType>(values);
-		//const auto& [u0, v0] = t0;
-		//const auto& [u1, v1] = t1;
-
-		//TArray<UType*> templates = u1->GetTemplates();
-		//const auto& [f1, f2] = Destruct<2, TArray, UType*>(templates);
-
-		//EType fromType = f1->GetType();
-		//EType toType = f2->GetType();
-
-		//// Get Number Type
-		//ETypeData wrapperType = ( ETypeData )u1->GetType();
-
-
-		//auto f = Functor<Maybe<Number<int>>>::v_fmap<Number<float>>;
-		//auto g = Functor<Maybe<Number<float>>>::v_fmap<Number<float>>;
-
-		////h = &g;
-
-		////h = &f;
-
-
-		////auto y = f(v0)(v1);
-
-		////Node<typename std::decay<decltype(*start)>::type>*
-
-		//// Do GT Calculation
-		//bool result;
-		//switch (wrapperType) {
-		//case ETypeData::FUNC:
-		//	//Functor<Arr<void*, decltype(f1->GetType() == EType::INT ? rint : rfloat)>>::fmap<int>;
-		//	break;
-		//case ETypeData::MAYBE:
-		//	//Functor<Maybe<int>>::fmap<int>;
-		//	break;
-		//}
-
-		//this->TextComponent->SetText(FText::Format(FText::FromString(FString("GT {0}")), result));
-
-
-		return {};
-
-		//// Save Result and Return
-		//this->ConcreteOutputs = result;
-		//this->OutputValues = { ( void* )&this->ConcreteOutputs };
-		//return this->OutputValues;
 	} );
 }
