@@ -135,7 +135,7 @@ void AHonoursProjPawn::OnLClickRelease() {
 
 	 //Usage Example
 	VStar ma1 = VStar(MaybeV::Just(4));
-	VStar ma2 = VStar(MaybeV::Nothing<int>());
+	VStar ma2 = VStar(MaybeV::Nothing());
 	const IFunctor* const fo1 = ma1.getTypeclass()->Functor;
 	const IFunctor* const fo2 = ma2.getTypeclass()->Functor;
 
@@ -236,7 +236,7 @@ void AHonoursProjPawn::OnLClickRelease() {
 
 
 
-	
+	/*
 	a = Maybe<int>::Nothing();
 	a = Functor<Maybe<int>>::fmap<int>(square)(a);
 	a = Functor<Maybe<int>>::map_replace_by<int>(2)(a);
@@ -261,7 +261,7 @@ void AHonoursProjPawn::OnLClickRelease() {
 	UE_LOG(LogTemp, Warning, TEXT("ARROW %f %d %f"), f_r, fa_r, x_r);
 
 
-	UE_LOG(LogTemp, Warning, TEXT("ORD %d %d %d %d"), n1, n2, n3, n4.get());
+	UE_LOG(LogTemp, Warning, TEXT("ORD %d %d %d %d"), n1, n2, n3, n4.get());*/
 
 	//UE_LOG(LogTemp, Warning, TEXT("ORD %d %d"), 
 	//	Ordinal<Number<int>>::lt(5)(6),

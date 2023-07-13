@@ -79,10 +79,11 @@ AHonoursProjBlock* AFunctionConnector::HandleClick(UPrimitiveComponent* ClickedC
 
 		UType* myType = ResolveType();
 		for (AActor* act : actors) {
-			// Skip Leftwards Actors
-			if ((act->GetActorLocation() - GetActorLocation()).Y < 10) {
-				continue;
-			}
+
+			//// Skip Leftwards Actors
+			//if ((act->GetActorLocation() - GetActorLocation()).Y < 10) {
+			//	continue;
+			//}
 
 			// Get other and its type
 			auto other = Cast<AFunctionConnector>(act);

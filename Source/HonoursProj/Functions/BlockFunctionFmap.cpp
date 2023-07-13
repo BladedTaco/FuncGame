@@ -16,16 +16,25 @@
 #include "Types/Type.h"
 
 #include "Types/Functor.h"
+#include "Types/Show.h"
 #include "Types/Maybe_gen.h"
 #include "Types/Func_gen.h"
 #include "Types/Int_gen.h"
 
 #include "MyUtils.h"
 
+
+#include "FunctionHUD.h"
+
 #include <any>
 
 
 void ABlockFunctionFmap::SetFunctionTypes() {
+
+	HUDInstance->FunctionName = FString(TEXT("FMap"));
+
+	HUDInstance->LastResult = FString(TEXT("Unevaluated"));
+
 	// Initialize Type Variables
 	UTypeVar* F = UTypeVar::New(ETypeClass::FUNCTOR);
 	UTypeVar* A = UTypeVar::New(ETypeClass::ANY);
@@ -111,7 +120,44 @@ SPECIALIZE TYPE
 
 Arr<VStarArray, VStarArrayReturn> ABlockFunctionFmap::GetInnerFunc() {
 	return Arr<VStarArray, VStarArrayReturn>([this](VStarArray values) -> VStarArrayReturn {
-		return {};
+
+
+		// Destruct Values
+		auto [t0, t1] = Destruct<2, TArray, VStar>(values);
+
+		//auto n1 = t1.ResolveToSafe<MaybeV>();
+		//VStar n2 = n1->fromMaybe( VStar(NumberV(-1)) );
+		//auto n3 = n2.ResolveToSafe<NumberV>();
+		//auto n4 = *n3;
+		//auto n5 = n4.get<int>();
+
+		//auto q1 = t1.ResolveToSafe<Maybe<Number<int>>>();
+		//int q2 = q1->fromMaybe(Number(-1)).get();
+
+		const IFunctor* const functor = t1.getTypeclass()->Functor;
+
+		VStar result = functor->fmap()(t0)(t1);
+
+		//this->TextComponent->SetText(FText::Format(FText::FromString(FString("Type {0}")), FText::FromString(result.Type()->ToString())));
+
+		//auto m = result.ResolveToSafe<Maybe<bool>>();
+
+		//if (m && m) {
+		//	bool n = m->fromMaybe(false);
+		//	this->TextComponent->SetText(FText::Format(FText::FromString(FString("Just {0}")), n));
+		//} else {
+		//	this->TextComponent->SetText(FText::FromString(FString("Nothing")));
+		//}
+
+
+		const IShow* const show = result.getTypeclass()->Show;
+		
+		this->HUDInstance->LastResult = FString(TEXT("FMap: ")) + show->show()(result);
+
+		return { result };
+
+
+		//return {};
 
 		//auto& [t0, t1] = Destruct<2, TArray, VStar>(values);
 

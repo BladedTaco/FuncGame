@@ -11,6 +11,8 @@
 #include "FunctionInput.h"
 #include "FunctionOutput.h"
 
+#include "FunctionHUD.h"
+
 #include "Types/Types_gen.h"
 #include "Types/Type.h"
 
@@ -22,6 +24,12 @@
 #include "MyUtils.h"
 
 void ABlockFunctionGreaterThan::SetFunctionTypes() {
+
+	HUDInstance->FunctionName = FString(TEXT("Greater Than"));
+
+	HUDInstance->LastResult = FString(TEXT("Unevaluated"));
+
+
 	// Initialize Type Variables
 	UTypeVar* F = UTypeVar::New(ETypeClass::ANY);
 	TypeVars = { F };
@@ -41,7 +49,24 @@ void ABlockFunctionGreaterThan::SetFunctionTypes() {
 
 Arr<VStarArray, VStarArrayReturn> ABlockFunctionGreaterThan::GetInnerFunc() {
 	return Arr<VStarArray, VStarArrayReturn>([this](VStarArray values) -> VStarArrayReturn {
-		return {};
+
+		// Destruct Values
+		auto [t0, t1] = Destruct<2, TArray, VStar>(values);
+
+		const IOrdinal* const ordinal = t0.getTypeclass()->Ordinal;
+
+		Bool result = ordinal->gt()(t0)(t1);
+
+		//this->TextComponent->SetText(FText::FromString(FString(TEXT("GT ")) + result.GetTypeclass()->Show->show()(VStar(result))));
+
+		this->HUDInstance->LastResult = FString(TEXT("GT ")) + result.GetTypeclass()->Show->show()(VStar(result));
+
+		//this->TextComponent->SetText(FText::Format(FText::FromString(FString("GT {0}")), result));
+
+		return { VStar(result) };
+
+
+		//return {};
 		//// TODO: Make this reflect actual types
 		////EType numType = this->TypeVars[0]->GetType();
 

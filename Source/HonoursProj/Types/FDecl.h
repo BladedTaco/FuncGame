@@ -8,6 +8,7 @@ class VStar;
 // Dataclass Instances
 template <class T> class Number;
 template <class T> class Maybe;
+class Bool;
 
 template <class From, class To> class Func;
 
@@ -33,12 +34,14 @@ using Arr = Func<To, From>;
 // Typeclass Interfaces
 class IOrdinal;
 class IFunctor;
+class IShow;
 
 
 // Aggregate Interface
 struct Typeclass {
 	const IOrdinal* Ordinal;
 	const IFunctor* Functor;
+	const IShow* Show;
 };
 
 // ITypeclass Interface

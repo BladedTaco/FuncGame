@@ -301,15 +301,22 @@ FromType() {
 	return UTypeConst::New(ETypeBase::NONE);
 };
 
+
 template <class T>
-typename std::enable_if_t< std::is_integral<T>::value, UTypeConst*>
+typename std::enable_if_t< std::is_same_v<T, Bool>, UTypeConst*>
+FromType() {
+	return UTypeConst::New(ETypeBase::BOOL);
+};
+
+template <class T>
+typename std::enable_if_t< std::is_same_v<T, int>, UTypeConst*>
 FromType() {
 	return UTypeConst::New(ETypeBase::INT);
 };
 
 
 template <class T>
-typename std::enable_if_t< std::is_floating_point<T>::value, UTypeConst*>
+typename std::enable_if_t< std::is_same_v<T, float>, UTypeConst*>
 FromType() {
 	return UTypeConst::New(ETypeBase::FLOAT);
 };

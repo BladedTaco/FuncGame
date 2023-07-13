@@ -16,6 +16,7 @@
 
 #include "Types/Int_gen.h"
 
+#include "FunctionHUD.h"
 
 
 #include "MyUtils.h"
@@ -23,6 +24,10 @@
 
 
 void ABlockFunctionConstant::SetFunctionTypes() {
+
+	HUDInstance->FunctionName = FString(TEXT("Number Constant"));
+
+	HUDInstance->LastResult = FString(TEXT("Unevaluated"));
 
 	// Set Inputs and Outputs
 	Inputs = {};
@@ -33,7 +38,16 @@ void ABlockFunctionConstant::SetFunctionTypes() {
 
 Arr<VStarArray, VStarArrayReturn> ABlockFunctionConstant::GetInnerFunc() {
 	return Arr<VStarArray, VStarArrayReturn>([this](VStarArray values) -> VStarArrayReturn {
-		return {};
+
+		VStar out = VStar(NumberV(Value));
+
+		//this->TextComponent->SetText(FText::Format(FText::FromString(FString("Val {0}")), this->Value));
+
+		this->HUDInstance->LastResult = FString::Format(TEXT("Val {0}"), { this->Value });
+
+		return { out };
+
+		//return {};
 		////Number<int> n(Value);
 
 

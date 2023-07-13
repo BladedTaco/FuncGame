@@ -12,7 +12,7 @@
  UENUM(BlueprintType) 
  enum class EType : uint8 { 
  NONE, INT, FLOAT, BOOL, CHAR 
- , ANY, FUNCTOR, ORDINAL 
+ , ANY, FUNCTOR, ORDINAL, SHOW 
  , FUNC, NUMBER, MAYBE 
  
  }; 
@@ -32,6 +32,7 @@
  ANY = (uint8)EType::ANY 
  , FUNCTOR = (uint8)EType::FUNCTOR 
  , ORDINAL = (uint8)EType::ORDINAL 
+ , SHOW = (uint8)EType::SHOW 
  
  }; 
  
@@ -56,6 +57,13 @@ inline bool operator< (const EType lhs, const EType rhs) {
  case EType::ORDINAL: 
  switch (lhs) { 
  case EType::NUMBER: return true; 
+ default: return false; 
+ } 
+ break; 
+ case EType::SHOW: 
+ switch (lhs) { 
+ case EType::NUMBER: return true; 
+ case EType::MAYBE: return true; 
  default: return false; 
  } 
  break; 

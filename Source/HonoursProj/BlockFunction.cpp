@@ -13,18 +13,27 @@
 #include "FunctionOutput.h"
 #include "FunctionConnector.h"
 
+#include "FunctionHUD.h"
+
+#include "AssetLoader_gen.h"
 
 #include "Algo/AllOf.h"
 
 #include "MyUtils.h"
 
+#include "Components/WidgetComponent.h"
+
+
 ABlockFunction::ABlockFunction() {
-	TextComponent = CreateDefaultSubobject<UTextRenderComponent>(TEXT("TextOutput"));
-	TextComponent->SetText(FText::FromString(FString("test")));
-	TextComponent->SetRelativeLocation(FVector::UpVector * 200.0f);
-	TextComponent->SetWorldRotation(FRotator(90, 0, 180));
-	TextComponent->SetRelativeScale3D(FVector(10));
-	TextComponent->SetupAttachment(GetBlockMesh());
+	//HUDComponent = Cast<UFunctionHUD>(Assets.HUD.RawFunction.Get());
+
+	HUDComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("HUD"));
+	HUDComponent->SetRelativeLocation(FVector::UpVector * 200.0f);
+	HUDComponent->SetWorldRotation(FRotator(90, 0, 180));
+	HUDComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	HUDComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	HUDComponent->SetDrawAtDesiredSize(true);
+	HUDComponent->SetupAttachment(GetBlockMesh());
 }
 
 
@@ -32,6 +41,22 @@ ABlockFunction::ABlockFunction() {
 void ABlockFunction::BeginPlay() {
 	Super::BeginPlay();
 
+
+
+	// LOAD HUD
+	// Some Reason This has to be loaded During Runtime?
+	FString TheClassPath = "/Game/MyContent/Blueprints/BP_FunctionBlock.BP_FunctionBlock_C";
+	const TCHAR* TheClass = *TheClassPath;
+	UClass* ActorClass = LoadObject<UClass>(nullptr, TheClass);
+
+	HUDComponent->SetWidgetClass(ActorClass);
+	HUDComponent->UpdateWidget();
+
+	HUDInstance = Cast<UFunctionHUD>(HUDComponent->GetUserWidgetObject());
+
+
+
+	
 	// Set Function Signature
 	SetFunctionTypes();
 
@@ -81,6 +106,7 @@ void ABlockFunction::BeginPlay() {
 // Calculate Values
 AHonoursProjBlock* ABlockFunction::HandleClick(UPrimitiveComponent* ClickedComponent) {
 	GetValue();
+	HUDComponent->UpdateWidget();
 	return this;
 }
 
@@ -150,22 +176,31 @@ VStarArrayReturn ABlockFunction::CollectInputs() {
 
 
 // Requests a single input, and recurses
-Arr<VStar, VStar> ABlockFunction::ApplyInput(int output, VStarArray vals, int idx, Arr<VStarArray, VStarArrayReturn> f) {
-	return Arr<VStar, VStar>([&] (VStar val) -> VStar {
+ArrV ABlockFunction::ApplyInput(int output, TArray<VStar> vals, int idx, Arr<VStarArray, VStarArrayReturn> f) {
+	return ArrV([this, idx, output, vals, f] (VStar val) -> VStar {
 		// Copy Vals
 		TArray<VStar> m_vals = vals;
-		// Set Value
-		m_vals[idx].Replace(val);
+		if (m_vals.IsValidIndex(idx)) {
+			// Set Value
+			m_vals[idx].Replace(val);
+		} else {
+			m_vals.Add(val);
+		}
+
 		// Recurse further
-		return ApplyInputs(output, std::move(m_vals), idx + 1, f);
+		return this->ApplyInputs(output, m_vals, idx + 1, f);
 	});
 };
 
 // Partially Applies function appropriately
-VStar ABlockFunction::ApplyInputs(int output, VStarArray vals, int idx, Arr<VStarArray, VStarArrayReturn> f) {
+VStar ABlockFunction::ApplyInputs(int output, TArray<VStar> vals, int idx, Arr<VStarArray, VStarArrayReturn> f) {
 	// Fully Applied Base Case
-	if (vals.Num() <= idx) {
-		return std::move(f(std::move(vals))[output]);
+	if (!vals.IsValidIndex(idx)) {
+		//TArray<VStar> f_res = f(std::move(vals));
+		TArray<VStar> f_res = std::move(f(vals));
+		VStar f_out = f_res[output];
+		return f_out;
+		//return f(vals)[output];
 	}
 
 	// Extract type and value

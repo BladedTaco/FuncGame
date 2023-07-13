@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Types/Ord.h"
+#include "Types/Show.h"
 
 
 
@@ -48,23 +49,24 @@ private:
 public:
 	class Ordinal : public virtual IOrdinal {
 	private:
-		virtual ORD _ord(const VStar& me, const VStar& other) const override {
-			// Resolve
-			A a = me.ResolveToUnsafe<Number<A>>().get();
-			A b = other.ResolveToUnsafe<Number<A>>().get();
-
-			// Calculate
-			return a == b ? ORD::EQ : a < b ? ORD::LT : ORD::GT;
-		}
+		virtual ORD _ord(const VStar& me, const VStar& other) const override;
 	public:
 		Ordinal() = default;
 	};
+	inline static const Ordinal OrdinalInst = {};
 
-	inline static const Ordinal POrdinal = {};
+	class Show : public virtual IShow {
+	private:
+		virtual FString _show(const VStar& me) const override;
+	public:
+		Show() = default;
+	};
+	inline static const Show ShowInst = {};
 
 public:
 	InlineStaticConstStruct(Typeclass, Instances,
-		$.Ordinal = &INumber<A>::POrdinal
+		$.Ordinal = &INumber<A>::OrdinalInst;
+		$.Show = &INumber<A>::ShowInst;
 	);
 };
 
@@ -167,6 +169,24 @@ Number<A>::Number(const NumberV* other) {
 	_value = other->_value.ResolveToUnsafe<A>();
 }
 
+template <typename A>
+inline ORD INumber<A>::Ordinal::_ord(const VStar& me, const VStar& other) const {
+	// Resolve
+	A a = me.ResolveToUnsafe<Number<A>>().get();
+	A b = other.ResolveToUnsafe<Number<A>>().get();
+
+	// Calculate
+	return a == b ? ORD::EQ : a < b ? ORD::LT : ORD::GT;
+}
+
+template <typename A>
+inline FString INumber<A>::Show::_show(const VStar& me) const {
+	// Resolve
+	A a = me.ResolveToUnsafe<Number<A>>().get();
+
+	// return result
+	return FString::Format(TEXT("{0}"), { a });
+}
 
 //
 //class INumber {
@@ -191,6 +211,7 @@ ORDINAL((A), Number, (
 	})
 );
 
+SHOW((A), Number, ());
 
 //template <> class Ordinal<IOrdinal> : public BaseOrdinal<IOrdinal> {
 //private: 

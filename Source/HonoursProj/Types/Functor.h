@@ -20,9 +20,13 @@ TYPECLASS_DEFN(Functor, TEMPLATES, INST) {					 \
 
 // Functor Interface
 class IFunctor {
-public: const auto fmap() const {
+public: 
+	const auto fmap() const {
 	return curry([this](const VStar& f, const VStar& f_a) { return this->_fmap(f, f_a); });
-}; private: virtual VStar _fmap(const VStar& f, const VStar& f_a) const = 0;
+}; 
+private:
+	virtual VStar _fmap(const VStar& f, const VStar& f_a) const = 0;
+
 public: const auto map_replace_by() const {
 	return curry([this](const VStar& a, const VStar& f_b) { return this->_map_replace_by(a, f_b); });
 }; private: virtual VStar _map_replace_by(const VStar& a, const VStar& f_b) const {

@@ -30,6 +30,16 @@ include <type_traits>
 //template <typename T>
 //struct IsDataclass <T, decltype(( void )std::declval<T>().Instances, 0)> : std::true_type {};
 
+
+
+
+
+
+
+
+
+
+
 template <typename T>
 struct IsDataclass : std::is_base_of<ITypeclass, T> {};
 
@@ -205,7 +215,8 @@ public:
 	// Copy Constructor, Should be used sparingly
 	VStar(const VStar& other) {
 		storedType = other.storedType;
-		storedValue = shared_void_ptr(other.storedValue);
+		storedValue = other.storedValue;
+		storedInstances = other.storedInstances;
 	};
 
 	// Move Constructor
@@ -220,6 +231,7 @@ public:
 		storedType = other.storedType;
 		//storedValue.reset();
 		storedValue = other.storedValue;
+		storedInstances = other.storedInstances;
 
 		return *this;
 	}
@@ -255,7 +267,7 @@ public:
 		// Release any held values
 		storedValue.reset();
 		// Todo, decide if this should be make const or deepcopy
-		storedType = UTypeConst::MakeConst(type);
+		storedType = UTypeConst::MakeConst(type); 
 	}
 
 
@@ -269,9 +281,11 @@ public:
 		// Steal from other
 		storedValue.swap(other.storedValue);
 		storedType = other.storedType;
+		storedInstances = other.storedInstances;
 		// Destroy other
 		other.storedValue.reset();
 		other.storedType = NULL;
+		other.storedInstances = NULL;
 	}
 
 	// Query the Type
@@ -306,6 +320,12 @@ public:
 	typename std::enable_if_t< std::is_same_v<T, float>, bool>
 	ValidCast(const UType* type) const {
 		return type->GetType() == EType::FLOAT;
+	}
+
+	template <typename T>
+	typename std::enable_if_t< std::is_same_v<T, Bool>, bool>
+		ValidCast(const UType* type) const {
+		return type->GetType() == EType::BOOL;
 	}
 
 	// NumberV
@@ -360,9 +380,14 @@ public:
 		}
 		// Handle is a MaybeV
 		else if (type->GetTemplates()[0]->GetType() == EType::NONE) {
+			// Nothing Maybes can cast to anything
+			if (GetUnsafePtr<MaybeV>()->_isNothing) {
+				return true;
+			}
+			// Just Maybes can only cast to their inner values
 			return GetUnsafePtr<MaybeV>()->_value.ValidCast<T_0>();
 		}
-		// Handle is a Number<T>
+		// Handle is a Maybe<T>
 		else {
 			return ValidCast<T_0>(type->GetTemplates()[0]);
 		}

@@ -5,6 +5,17 @@
 #include "Functional/Prelude.h"
 #include "Functional/Typeclass.h"
 
+//#include "Types/Bool_gen.h"
+
+#ifndef PP__PREPROCESSING
+
+#include "Types/Bool_gen.h"
+
+#else
+
+include "Types/Bool_gen.h"
+
+#endif
 
 // Functor Instance Macro
 #define ORDINAL(TEMPLATES, INST, ORD)				\
@@ -31,24 +42,25 @@ public:
 }; 
 private: 
 	virtual ORD _ord(const VStar& a, const VStar& b) const = 0;
+
 public: const auto lt() const {
 	return curry([this](const VStar& a, const VStar& b) { return this->_lt(a, b); });
-}; private: virtual bool _lt(const VStar& a, const VStar& b) const { return _ord(a, b) == ORD::LT; };
+}; private: virtual Bool _lt(const VStar& a, const VStar& b) const { return _ord(a, b) == ORD::LT; };
 public: const auto lte() const {
 	return curry([this](const VStar& a, const VStar& b) { return this->_lte(a, b); });
-}; private: virtual bool _lte(const VStar& a, const VStar& b) const { return _ord(a, b) != ORD::GT; };
+}; private: virtual Bool _lte(const VStar& a, const VStar& b) const { return _ord(a, b) != ORD::GT; };
 public: const auto gt() const {
 	return curry([this](const VStar& a, const VStar& b) { return this->_gt(a, b); });
-}; private: virtual bool _gt(const VStar& a, const VStar& b) const { return _ord(a, b) == ORD::GT; };
+}; private: virtual Bool _gt(const VStar& a, const VStar& b) const { return _ord(a, b) == ORD::GT; };
 public: const auto gte() const {
 	return curry([this](const VStar& a, const VStar& b) { return this->_gte(a, b); });
-}; private: virtual bool _gte(const VStar& a, const VStar& b) const { return _ord(a, b) != ORD::LT; };
+}; private: virtual Bool _gte(const VStar& a, const VStar& b) const { return _ord(a, b) != ORD::LT; };
 public: const auto eq() const {
 	return curry([this](const VStar& a, const VStar& b) { return this->_eq(a, b); });
-}; private: virtual bool _eq(const VStar& a, const VStar& b) const { return _ord(a, b) == ORD::EQ; };
+}; private: virtual Bool _eq(const VStar& a, const VStar& b) const { return _ord(a, b) == ORD::EQ; };
 public: const auto neq() const {
 	return curry([this](const VStar& a, const VStar& b) { return this->_neq(a, b); });
-}; private: virtual bool _neq(const VStar& a, const VStar& b) const { return _ord(a, b) != ORD::EQ; };
+}; private: virtual Bool _neq(const VStar& a, const VStar& b) const { return _ord(a, b) != ORD::EQ; };
 public: const auto min() const {
 	return curry([this](const VStar& a, const VStar& b) { return this->_min(a, b); });
 }; private: virtual VStar _min(const VStar& a, const VStar& b) const { return _ord(a, b) == ORD::LT ? a : b; };
@@ -63,12 +75,12 @@ public: const auto max() const {
 //// Ordinal Interface
 //class IOrdinal {
 //	TypeclassVirtual(ORD,	ord, a, b) = 0;
-//	TypeclassVirtual(bool,	lt , a, b) { return _ord(a, b) == ORD::LT; };
-//	TypeclassVirtual(bool,	lte, a, b) { return _ord(a, b) != ORD::GT; };
-//	TypeclassVirtual(bool,	gt , a, b) { return _ord(a, b) == ORD::GT; };
-//	TypeclassVirtual(bool,	gte, a, b) { return _ord(a, b) != ORD::LT; };
-//	TypeclassVirtual(bool,	eq , a, b) { return _ord(a, b) == ORD::EQ; };
-//	TypeclassVirtual(bool,	neq, a, b) { return _ord(a, b) != ORD::EQ; };
+//	TypeclassVirtual(Bool,	lt , a, b) { return _ord(a, b) == ORD::LT; };
+//	TypeclassVirtual(Bool,	lte, a, b) { return _ord(a, b) != ORD::GT; };
+//	TypeclassVirtual(Bool,	gt , a, b) { return _ord(a, b) == ORD::GT; };
+//	TypeclassVirtual(Bool,	gte, a, b) { return _ord(a, b) != ORD::LT; };
+//	TypeclassVirtual(Bool,	eq , a, b) { return _ord(a, b) == ORD::EQ; };
+//	TypeclassVirtual(Bool,	neq, a, b) { return _ord(a, b) != ORD::EQ; };
 //	TypeclassVirtual(VStar, min, a, b) { return _ord(a, b) == ORD::LT ? a : b; };
 //	TypeclassVirtual(VStar, max, a, b) { return _ord(a, b) == ORD::GT ? a : b; };
 //};

@@ -19,15 +19,17 @@
 #include "Engine/StaticMesh.h"
 #include "Materials/MaterialInstance.h"
 #include "Engine/DataTable.h"
+#include "Blueprint/UserWidget.h"
+#include "FunctionHUD.h"
 
 
 <# foreach (ResourceDefinition resourceDef in resources) { #>
 struct FResource_<#=resourceDef.name #> {
-	<# foreach (AssetDefinition asset in resourceDef.privateMembers) { #>
-	ConstructorHelpers::FObjectFinderOptional<<#=asset.type #>> <#=asset.name#>;
+	<# foreach (AssetDefinition asset in resourceDef.Assets) { #>
+	ConstructorHelpers::<# if (asset.isObject) { #>FObjectFinderOptional<# } else { #>FClassFinder<# } #><<#=asset.type #>> <#=asset.name#>;
 	<# } #>
 	FResource_<#=resourceDef.name #>()
-	<# isComma = false; foreach (AssetDefinition asset in resourceDef.privateMembers) { #>
+	<# isComma = false; foreach (AssetDefinition asset in resourceDef.Assets) { #>
 	<# if (isComma) { #>,<# } else {  #>:<# isComma = true; } #>	<#=asset.name#>(TEXT("<#=asset.location#>"))
 	<# } #>
 	{}
@@ -55,14 +57,38 @@ static FAssets Assets;
 <#+
 	public class ResourceDefinition {
 		public string name;
-		public List<AssetDefinition> privateMembers;
+		public List<AssetDefinition> Objects;
+		public List<AssetDefinition> Classes;
+		public List<AssetDefinition> Assets;
 
 		public ResourceDefinition() {
-			privateMembers = new List<AssetDefinition>();
+			
+			Objects = new List<AssetDefinition>();
+			Classes = new List<AssetDefinition>();
+			Assets = new List<AssetDefinition>();
+		}
+
+		public void AddAsset(bool isObject, XmlNode node) {
+			// Get Data
+			AssetDefinition newAsset = new AssetDefinition();
+			newAsset.isObject = isObject;
+			newAsset.name = 	node.Attributes["Name"].InnerText;
+			newAsset.type = 	node.Attributes["Type"].InnerText;
+			newAsset.location = node.Attributes["Location"].InnerText;
+
+			// Put in relevant array(s)
+			Assets.Add(newAsset);
+			if (isObject) {
+				Objects.Add(newAsset);
+			} else {
+				Classes.Add(newAsset);
+			}
+
 		}
  	}
 
  	public class AssetDefinition {
+		public bool isObject;
 		public string name;
 		public string type;
 		public string location;
@@ -77,12 +103,11 @@ static FAssets Assets;
 		foreach (XmlNode node in doc.SelectNodes("/root/ResourceType")) {
 			ResourceDefinition newResource = new ResourceDefinition();
 			newResource.name = node.Attributes["Name"].InnerText;
-			foreach (XmlNode memberNode in node.SelectNodes("Asset")) {
-				AssetDefinition newAsset = new AssetDefinition();
-				newAsset.name = memberNode.Attributes["Name"].InnerText;
-				newAsset.type = memberNode.Attributes["Type"].InnerText;
-				newAsset.location = memberNode.Attributes["Location"].InnerText;
-				newResource.privateMembers.Add(newAsset);
+			foreach (XmlNode memberNode in node.SelectNodes("Object")) {
+				newResource.AddAsset(true, memberNode);
+			}
+			foreach (XmlNode memberNode in node.SelectNodes("Class")) {
+				newResource.AddAsset(false, memberNode);
 			}
 			resources.Add(newResource);
 		}

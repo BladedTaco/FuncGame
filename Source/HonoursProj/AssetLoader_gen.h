@@ -9,6 +9,8 @@
 #include "Engine/StaticMesh.h"
 #include "Materials/MaterialInstance.h"
 #include "Engine/DataTable.h"
+#include "Blueprint/UserWidget.h"
+#include "FunctionHUD.h"
 
 
 struct FResource_Material {

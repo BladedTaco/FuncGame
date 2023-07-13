@@ -36,13 +36,10 @@ public:
 	Func(Function<To, From> f) {
 		_func = f;
 	}
-	To operator()(VStarArray a) const {
-		return _func(std::move(a));
+	To operator()(const VStar& a) const {
+		return _func(a.ResolveToUnsafe<From>());
 	}
-	To operator()(VStar& a) const {
-		return _func(a.GetUnsafe<From>());
-	}
-	To operator()(const From& a) const {
+	To operator()(From a) const {
 		return _func(a);
 	}
 };
@@ -72,6 +69,24 @@ public:
 	}
 	To operator()(From a) const {
 		return _func(a);
+	}
+};
+template <>
+class Func<VStarArrayReturn, VStarArray> {
+	using From = VStarArray;
+	using To = VStarArrayReturn;
+private:
+	Function<To, From> _func;
+	friend class Functor<Func<To, From>>;
+public:
+	Func(Function<To, From> f) {
+		_func = f;
+	}
+	To operator()(From a) const {
+		return _func(std::move(a));
+	}
+	To operator()(TArray<VStar> a) const {
+		return _func(std::move(a));
 	}
 };
 template <typename First, typename To>

@@ -15,7 +15,7 @@
 
 #include "BlockFunction.generated.h"
 
-
+class UFunctionHUD;
 
 USTRUCT(BlueprintType)
 struct FParameter {
@@ -62,9 +62,13 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		TArray<class AFunctionOutput*> OutputBlocks;
 
-	// Text Component to render value
-	UPROPERTY(VisibleAnywhere)
-		class UTextRenderComponent* TextComponent;
+	// Block HUD
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<UFunctionHUD> HUDClass;
+	UPROPERTY(EditAnywhere)
+		class UWidgetComponent* HUDComponent;
+	UPROPERTY(EditAnywhere)
+		UFunctionHUD* HUDInstance;
 public:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -74,8 +78,8 @@ public:
 	// Partially/Fully Apply Inputs on InnerFunc
 	VStarArrayReturn GetValue();
 	// Helpers
-	Arr<VStar, VStar> ApplyInput(int output, VStarArray vals, int idx, Arr<VStarArray, VStarArrayReturn> f);
-	VStar ApplyInputs(int output, VStarArray vals, int idx, Arr<VStarArray, VStarArrayReturn> f);
+	Arr<VStar, VStar> ApplyInput(int output, TArray<VStar> vals, int idx, Arr<VStarArray, VStarArrayReturn> f);
+	VStar ApplyInputs(int output, TArray<VStar> vals, int idx, Arr<VStarArray, VStarArrayReturn> f);
 
 	UType* ResolveTypesWithPartial(int output, const TArray<VStar>& partialInputs);
 

@@ -9,7 +9,8 @@
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
-				"Engine"
+				"Engine",
+				"UMG"
 			]
 		}
 	],
@@ -19,7 +20,8 @@
 			"Enabled": true
 		}
 	],
-	"PreBuildSteps": {
+	"PreBuildSteps":
+	{
 		"Win64": [
 			"\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\IDE\\TextTransform.exe\" -out \"$(ProjectDir)\\Source\\Generated\\temp_gen.h\" -a \"!!dir!$(ProjectDir)\" \"$(ProjectDir)\\Source\\Template\\Preprocess.tt\"",
 			"\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\IDE\\TextTransform.exe\" -out \"$(ProjectDir)\\Source\\HonoursProj\\AssetLoader_gen.h\" -a \"!!dir!$(ProjectDir)\" \"$(ProjectDir)\\Source\\Template\\AssetLoader.tt\"",

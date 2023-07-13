@@ -60,7 +60,7 @@ public:									PP__NEWLINE \
 // Define the Type UENUMS
 PP_COMPOSITE_UENUM((BlueprintType), EType
 	, (ETypeBase, NONE, INT, FLOAT, BOOL, CHAR)
-	, (ETypeClass, ANY, FUNCTOR, ORDINAL)
+	, (ETypeClass, ANY, FUNCTOR, ORDINAL, SHOW)
 	, (ETypeData, FUNC, NUMBER, MAYBE)
 )
 
@@ -96,7 +96,7 @@ inline bool operator< (const EType lhs, const EType rhs) {
 	// Everything is less than any except any
 	if (rhs == EType::ANY) { return lhs != EType::ANY; }
 	// Loop through each Typeclass
-	PP_TYPECLASS_TESTS((FUNCTOR, FUNC, MAYBE), (ORDINAL, NUMBER));
+	PP_TYPECLASS_TESTS((FUNCTOR, FUNC, MAYBE), (ORDINAL, NUMBER), (SHOW, NUMBER, MAYBE));
 	// RHS is DataClass or Base, it cannot be greater
 	return false;
 }

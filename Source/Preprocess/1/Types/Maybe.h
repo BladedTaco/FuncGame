@@ -1,41 +1,50 @@
 #pragma once
 
 #include "Types/Functor.h"
+#include "Types/Show.h"
 
 #include "Types/FDecl.h"
 
 
+#ifndef PP__PREPROCESSING
 
-template <typename A>
+#include "Misc/Optional.h"
+
+#else
+
+include "Misc/Optional.h"
+
+#endif
+
+
+
 class IMaybe : public virtual ITypeclass {
 private:
 	virtual const Typeclass* _GetTypeclass() const override {
-		return &IMaybe<A>::Instances;
+		return &IMaybe::Instances;
 	}
 public:
 	class Functor : public virtual IFunctor {
 	private:
-		virtual VStar _fmap(const VStar& f, const VStar& f_a) const override {
-			// Resolve Variables
-			ArrV g = f.ResolveToUnsafe<ArrV>();
-			MaybeV m_a = f_a.ResolveToUnsafe<MaybeV>();
-
-			// Logic
-			if (m_a._isNothing) {
-				return VStar(MaybeV::Nothing(f_a));
-			} else {
-				return VStar(MaybeV::Just(g(m_a._value).ResolveToUnsafe<int>()));
-			}												
-		}
+		virtual VStar _fmap(const VStar& f, const VStar& f_a) const override;
 	public:
 		Functor() = default;
 	}; 
 
 	inline static const Functor FunctorInst = {};
 
+	class Show : public virtual IShow {
+	private:
+		virtual FString _show(const VStar& a) const override;
+	public:
+		Show() = default;
+	};
+	inline static const Show ShowInst = {};
+
 public:
 	InlineStaticConstStruct(Typeclass, Instances,
-		$.Functor = &IMaybe<A>::FunctorInst;
+		$.Functor = &IMaybe::FunctorInst;
+		$.Show = &IMaybe::ShowInst;
 	);
 };
 
@@ -44,19 +53,19 @@ public:
 
 // Functor Maybe
 template <typename A>
-class Maybe : public virtual IMaybe<A> {
+class Maybe : public virtual IMaybe {
 private:
 	bool _isNothing;
-	A _value;
+	TOptional<A> _value;
 	Maybe() {
 		_isNothing = true;
-		_value = false;
 	}
 	Maybe(A a) {
 		_isNothing = false;
 		_value = a;
 	}
-	friend IMaybe<A>::Functor;
+	friend IMaybe::Functor;
+	friend IMaybe::Show;
 	friend class ::Functor<Maybe<A>>;
 	friend MaybeV;
 public:
@@ -73,7 +82,7 @@ public:
 		if (_isNothing) {
 			return fallback;
 		} else {
-			return _value;
+			return _value.GetValue();
 		}
 	}
 
@@ -84,21 +93,14 @@ public:
 
 // Functor Maybe
 template <>
-class Maybe<VStar> : public virtual ITypeclass {
+class Maybe<VStar> : public virtual IMaybe {
 private:
-
-	const Typeclass* Instances;
-
-	virtual const Typeclass* _GetTypeclass() const override {
-		return Instances;
-	}
-
 
 	friend VStar;
 	friend Maybe;
 	
-	template <typename A>
-	friend class IMaybe<A>::Functor;
+	friend IMaybe::Functor;
+	friend IMaybe::Show;
 
 	template <typename A>
 	friend Maybe<A>::Maybe(const MaybeV* other);
@@ -116,58 +118,23 @@ private:
 		_value = from;
 	}
 
-	
-	template <typename A>
-	static MaybeV New(A a) {
-		MaybeV inst = MaybeV::Maybe(VStar(a));
-		inst.SetTypeclass<A>();
-		return inst;
-	}
-
-	template <>
-	static MaybeV New(VStar a) {
-		MaybeV inst = MaybeV::Maybe();
-		inst.Instances = a.getTypeclass();
-		return inst;
-	}
-
-	template <typename A>
-	static MaybeV New() {
-		MaybeV inst = MaybeV::Maybe();
-		inst.SetTypeclass<A>();
-		inst._value = VStar::New<A>();
-		return inst;
-	}
-
-
-
 	friend class ::Functor<MaybeV>;
 public:
-	template <typename T>
-	void SetTypeclass() {
-		Instances = &IMaybe<T>::Instances;
-	}
-
 	virtual ~Maybe() = default;
 
 	template <typename A>
 	static MaybeV Just(A a) {
-		return New(a);
+		return MaybeV::Maybe(VStar(a));
 	}
-
-	template <typename A>
+	template <>
 	static MaybeV Just(VStar a) {
-		return New(a.ResolveToUnsafe<A>());
+		return MaybeV::Maybe(a);
 	}
 
-	template <typename A>
 	static MaybeV Nothing() {
-		return MaybeV::New<A>();
+		return MaybeV::Maybe();
 	}
 
-	static MaybeV Nothing(VStar from) {
-		return New(from);
-	}
 public:
 	template <typename A>
 	A fromMaybe(A fallback) {
@@ -175,6 +142,14 @@ public:
 			return fallback;
 		} else {
 			return _value.ResolveToUnsafe<A>();
+		}
+	}
+	template <>
+	VStar fromMaybe(VStar fallback) {
+		if (_isNothing) {
+			return fallback;
+		} else {
+			return _value;
 		}
 	}
 };
@@ -186,6 +161,40 @@ Maybe<A>::Maybe(const MaybeV* other) {
 		_value = other->_value.ResolveToUnsafe<A>();
 	}
 }
+
+
+
+inline VStar IMaybe::Functor::_fmap(const VStar& f, const VStar& f_a) const {
+	// Resolve Variables
+	ArrV g = f.ResolveToUnsafe<ArrV>();
+	MaybeV m_a = f_a.ResolveToUnsafe<MaybeV>();
+
+	// Logic
+	if (m_a._isNothing) {
+		return VStar(MaybeV::Nothing());
+	} else {
+		//return VStar(MaybeV::Just(g(m_a._value).ResolveToUnsafe<int>()));
+		//return VStar(MaybeV::Just(g(m_a._value)));
+		VStar result = g(m_a._value);
+		return VStar(MaybeV::Just(result));
+	}
+}
+
+
+
+inline FString IMaybe::Show::_show(const VStar& a) const {
+	// Resolve Variables
+	MaybeV m_a = a.ResolveToUnsafe<MaybeV>();
+
+	// Logic
+	if (m_a._isNothing) {
+		return FString(TEXT("Nothing"));
+	} else {
+		FString inner = m_a._value.getTypeclass()->Show->show()(m_a._value);
+		return FString(TEXT("Just ")) + inner;
+	}
+}
+
 
 
 
@@ -318,8 +327,10 @@ FUNCTOR((A), Maybe, (
 		if (f_a._isNothing) {						    PP__NEWLINE
 			return Maybe<B>::Nothing();				    PP__NEWLINE
 		} else {									    PP__NEWLINE
-			return Maybe<B>::Just(func(f_a._value));    PP__NEWLINE
+			return Maybe<B>::Just(func(f_a._value.GetValue()));    PP__NEWLINE
 		}												PP__NEWLINE
 	}), 
 	()
 );
+
+SHOW((A), Maybe, ());
