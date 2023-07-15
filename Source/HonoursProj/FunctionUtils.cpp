@@ -15,7 +15,7 @@
 #include "AssetLoader_gen.h"
 
 UTypeHandler::UTypeHandler() {
-	UDataTable* types = Assets.Data.TypesTable.Get();
+	UDataTable* types = Assets()->Data.TypesTable.Get();
 
 	/*
 	Maybe

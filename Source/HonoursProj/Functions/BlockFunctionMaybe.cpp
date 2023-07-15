@@ -11,7 +11,7 @@
 #include "FunctionInput.h"
 #include "FunctionOutput.h"
 
-#include "FunctionHUD.h"
+#include "HUD/FunctionHUD.h"
 
 #include "Types/Types_gen.h"
 #include "Types/Type.h"

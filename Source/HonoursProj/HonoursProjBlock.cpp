@@ -14,9 +14,9 @@
 
 AHonoursProjBlock::AHonoursProjBlock() {
 	// Save a pointer to the materials
-	LitMaterial = Assets.Material.White.Get();
-	UnlitMaterial = Assets.Material.Blue.Get();
-	ActiveMaterial = Assets.Material.Orange.Get();
+	LitMaterial = Assets()->Material.White.Get();
+	UnlitMaterial = Assets()->Material.Blue.Get();
+	ActiveMaterial = Assets()->Material.Orange.Get();
 
 	// Create dummy root scene component
 	DummyRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Dummy0"));
@@ -24,7 +24,7 @@ AHonoursProjBlock::AHonoursProjBlock() {
 	
 	// Create static mesh component
 	BlockMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BlockMesh0"));
-	BlockMesh->SetStaticMesh(Assets.Mesh.PuzzleCube.Get());
+	BlockMesh->SetStaticMesh(Assets()->Mesh.PuzzleCube.Get());
 	BlockMesh->SetRelativeScale3D(FVector(1.f, 1.f, 0.25f));
 	BlockMesh->SetRelativeLocation(FVector(0.f, 0.f, 25.f));
 	BlockMesh->SetMaterial(0, UnlitMaterial);

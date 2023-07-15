@@ -23,7 +23,7 @@
 #include "MyUtils.h"
 
 
-#include "FunctionHUD.h"
+#include "HUD/FunctionHUD.h"
 #include "BlockFunctionCounter.h"
 
 #include "Algo/AllOf.h"
@@ -71,7 +71,11 @@ void ABlockFunctionCounter::Tick(float DeltaTime) {
 			if (func && (func->OutputBlocks.Num() == 0 || Algo::AllOf(func->OutputBlocks, [](const AFunctionOutput* outBlock) {
 				return outBlock->connectedTo.Num() == 0;
 			}))) {
-				func->GetValue();
+				if (func->InputBlocks.Num() == 0 || Algo::AllOf(func->InputBlocks, [](const AFunctionInput* inBlock) {
+					return !!inBlock->connectedTo;
+				})) {
+					func->GetValue();
+				}
 			}
 		}
 	}

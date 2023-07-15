@@ -16,7 +16,7 @@
 
 #include "Types/Int_gen.h"
 
-#include "FunctionHUD.h"
+#include "HUD/FunctionHUD.h"
 
 
 #include "MyUtils.h"

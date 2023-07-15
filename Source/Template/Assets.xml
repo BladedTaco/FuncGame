@@ -16,6 +16,12 @@
 	<ResourceType Name='Icon'>
         <Object Name="Percentage" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/percent.percent'"/>
     </ResourceType>
+	<ResourceType Name='HUD'>
+        <Class Name="Function" Type="UUserWidget" Location="/Game/MyContent/Blueprints/HUD_Function"/>
+        <Class Name="Parameter" Type="UUserWidget" Location="/Game/MyContent/Blueprints/HUD_Parameter"/>
+        
+    </ResourceType>
+    
 	<!-- <ResourceType Name='HUD'>
         <Class Name="Function" Type="UFunctionHUD" Location="WidgetBlueprint'/Game/MyContent/Blueprints/BP_FunctionBlock.BP_FunctionBlock_C'"/>
     </ResourceType> -->

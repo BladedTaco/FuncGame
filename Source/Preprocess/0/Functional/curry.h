@@ -43,12 +43,35 @@ using Function = std::function<Return(Params...)>;
 template <typename F>
 class Functor;
 
+
+
+
+class IFunc : public virtual ITypeclass {
+private:
+	virtual const Typeclass* _GetTypeclass() const override;
+public:
+	class Functor;
+
+	static const Functor FunctorInst;
+
+	class Show;
+	static const Show ShowInst;
+
+public:
+	static const Typeclass Instances;
+};
+
+
+
+
+
+
 // A Func is an arrow ((->) From) To
 template <typename To, typename From>
-class Func {
+class Func : public virtual IFunc {
 private:
 	Function<To, From> _func;
-	friend class Functor<Func<To, From>>;
+	//friend class Functor<Func<To, From>>;
 public:
 	// Copyable Lambdas
 	Func(Function<To, From> f) {
@@ -73,11 +96,11 @@ public:
 };
 
 template <typename To>
-class Func<To, VStar> {
+class Func<To, VStar> : public virtual IFunc {
 	using From = const VStar&;
 private:
 	Function<To, From> _func;
-	friend class Functor<Func<To, From>>;
+	//friend class Functor<Func<To, From>>;
 public:
 	// Copyable Lambdas
 	Func(Function<To, From> f) {
@@ -89,11 +112,11 @@ public:
 };
 
 template <typename To>
-class Func<To, const VStar&> {
+class Func<To, const VStar&> : public virtual IFunc {
 	using From = const VStar&;
 private:
 	Function<To, From> _func;
-	friend class Functor<Func<To, From>>;
+	//friend class Functor<Func<To, From>>;
 public:
 	// Copyable Lambdas
 	Func(Function<To, From> f) {
@@ -105,12 +128,12 @@ public:
 };
 
 template <>
-class Func<VStarArrayReturn, VStarArray> {
+class Func<VStarArrayReturn, VStarArray> : public virtual IFunc {
 	using From = VStarArray;
 	using To = VStarArrayReturn;
 private:
 	Function<To, From> _func;
-	friend class Functor<Func<To, From>>;
+	//friend class Functor<Func<To, From>>;
 public:
 	// Copyable Lambdas
 	Func(Function<To, From> f) {

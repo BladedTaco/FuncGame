@@ -20,7 +20,6 @@
 #include "Materials/MaterialInstance.h"
 #include "Engine/DataTable.h"
 #include "Blueprint/UserWidget.h"
-#include "FunctionHUD.h"
 
 
 <# foreach (ResourceDefinition resourceDef in resources) { #>
@@ -34,7 +33,6 @@ struct FResource_<#=resourceDef.name #> {
 	<# } #>
 	{}
 };
-static FResource_<#=resourceDef.name #> ResourceInst_<#=resourceDef.name #>;
 
 <# } #>
 
@@ -45,11 +43,12 @@ struct FAssets {
 	<# } #>
 	FAssets()
 	<# isComma = false; foreach (ResourceDefinition resourceDef in resources) { #>
-	<# if (isComma) { #>,<# } else {  #>:<# isComma = true; } #>	<#=resourceDef.name#>(ResourceInst_<#=resourceDef.name #>)
+	<# if (isComma) { #>,<# } else {  #>:<# isComma = true; } #>	<#=resourceDef.name#>({})
 	<# } #>
 	{}
 };
-static FAssets Assets;
+
+FAssets* Assets();
 
 
 

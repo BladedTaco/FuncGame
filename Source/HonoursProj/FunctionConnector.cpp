@@ -16,25 +16,29 @@
 
 #include "AssetLoader_gen.h"
 
+#include "HUD/AutoScalingHUD.h"
+#include "HUD/ParameterHUD.h"
+
+
 // Sets default values
 AFunctionConnector::AFunctionConnector() {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	// change materials
-	ActiveMaterial = LitMaterial = Assets.Material.White.Get();
-	UnlitMaterial = Assets.Material.Grey.Get();
-	ConnectMaterial = Assets.Material.Pink.Get();
+	ActiveMaterial = LitMaterial = Assets()->Material.White.Get();
+	UnlitMaterial = Assets()->Material.Grey.Get();
+	ConnectMaterial = Assets()->Material.Pink.Get();
 
 	// Create static mesh component
 	auto blockMesh = GetBlockMesh();
-	blockMesh->SetStaticMesh(Assets.Mesh.PuzzleCube.Get());
+	blockMesh->SetStaticMesh(Assets()->Mesh.PuzzleCube.Get());
 	blockMesh->SetRelativeScale3D(FVector(0.2f, 0.2f, 0.2f));
 	blockMesh->SetMaterial(0, UnlitMaterial);
 
 	// Create Connector
 	ConnectMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ConnectorMesh0"));
-	ConnectMesh->SetStaticMesh(Assets.Mesh.Cylinder.Get());
+	ConnectMesh->SetStaticMesh(Assets()->Mesh.Cylinder.Get());
 	ConnectMesh->SetRelativeScale3D(FVector(0.3f, 0.3f, 0.3f));
 	ConnectMesh->SetRelativeLocation(FVector(0, 0, 32.0f));
 	ConnectMesh->SetMaterial(0, UnlitMaterial);
@@ -42,8 +46,26 @@ AFunctionConnector::AFunctionConnector() {
 	ConnectMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	ConnectMesh->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepWorldTransform);
 
+	// Create HUDComponent
+	HUDComponent = CreateDefaultSubobject<UAutoScalingHUD>(TEXT("HUD"));
+	HUDComponent->SetRelativeLocation(FVector::UpVector * 200.0f);
+	HUDComponent->SetWorldRotation(FRotator(90, 0, 180));
+	HUDComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	HUDComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	HUDComponent->SetDrawAtDesiredSize(true);
+	HUDComponent->SetupAttachment(RootComponent);
+	HUDComponent->SetWidgetClass(Assets()->HUD.Parameter.Class);
+	HUDComponent->SizeToBounds(blockMesh);
+	HUDComponent->UpdateWidget();
 }
 
+
+void AFunctionConnector::BeginPlay() {
+	Super::BeginPlay();
+
+	HUDComponent->SizeToBounds(GetBlockMesh());
+	HUDInstance = Cast<UParameterHUD>(HUDComponent->GetUserWidgetObject());
+}
 
 FTransform AFunctionConnector::Connect(FVector a, FVector b) {
 	return FTransform(
@@ -104,6 +126,7 @@ AHonoursProjBlock* AFunctionConnector::HandleClick(UPrimitiveComponent* ClickedC
 				UE_LOG(LogTemp, Warning, TEXT("Applicable"));
 				ValidConnections.Add(other);
 				other->GetBlockMesh()->SetMaterial(0, other->ConnectMaterial);
+				// TODO: APPLY EVIDENCE
 			}
 		}
 
@@ -115,6 +138,10 @@ AHonoursProjBlock* AFunctionConnector::HandleClick(UPrimitiveComponent* ClickedC
 		}
 		ValidConnections = {};
 
+	}
+
+	if (HUDInstance) {
+		HUDInstance->Type = ResolveType()->ToString();
 	}
 
 

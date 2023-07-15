@@ -13,7 +13,8 @@
 #include "FunctionOutput.h"
 #include "FunctionConnector.h"
 
-#include "FunctionHUD.h"
+#include "HUD/FunctionHUD.h"
+#include "HUD/ParameterHUD.h"
 
 #include "AssetLoader_gen.h"
 
@@ -21,19 +22,22 @@
 
 #include "MyUtils.h"
 
-#include "Components/WidgetComponent.h"
+#include "HUD/AutoScalingHUD.h"
 
 
 ABlockFunction::ABlockFunction() {
-	//HUDComponent = Cast<UFunctionHUD>(Assets.HUD.RawFunction.Get());
 
-	HUDComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("HUD"));
+
+	HUDComponent = CreateDefaultSubobject<UAutoScalingHUD>(TEXT("HUD"));
 	HUDComponent->SetRelativeLocation(FVector::UpVector * 200.0f);
 	HUDComponent->SetWorldRotation(FRotator(90, 0, 180));
 	HUDComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	HUDComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	HUDComponent->SetDrawAtDesiredSize(true);
-	HUDComponent->SetupAttachment(GetBlockMesh());
+	HUDComponent->SetupAttachment(RootComponent);
+	HUDComponent->SetWidgetClass(Assets()->HUD.Function.Class);
+	HUDComponent->SizeToBounds(GetBlockMesh());
+	HUDComponent->UpdateWidget();
 }
 
 
@@ -42,19 +46,8 @@ void ABlockFunction::BeginPlay() {
 	Super::BeginPlay();
 
 
-
-	// LOAD HUD
-	// Some Reason This has to be loaded During Runtime?
-	FString TheClassPath = "/Game/MyContent/Blueprints/BP_FunctionBlock.BP_FunctionBlock_C";
-	const TCHAR* TheClass = *TheClassPath;
-	UClass* ActorClass = LoadObject<UClass>(nullptr, TheClass);
-
-	HUDComponent->SetWidgetClass(ActorClass);
-	HUDComponent->UpdateWidget();
-
+	HUDComponent->SizeToBounds(GetBlockMesh());
 	HUDInstance = Cast<UFunctionHUD>(HUDComponent->GetUserWidgetObject());
-
-
 
 	
 	// Set Function Signature
@@ -94,6 +87,9 @@ void ABlockFunction::BeginPlay() {
 			actor->ParameterInfo = FParameter(param.Name, UTypePtr::New(param.Type));
 			actor->Index = idx;
 			blocks->Add(actor);
+			if (actor && actor->HUDInstance) {
+				actor->HUDInstance->Name = actor->ParameterInfo.Name;
+			}
 			// Attach to self
 			actor->AttachToActor(this, attachRules);
 			actor->SetActorRelativeLocation(FVector(100 * -idx + 50, yOff*100, 0.5 * extent.Z));

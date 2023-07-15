@@ -10,7 +10,6 @@
 #include "Materials/MaterialInstance.h"
 #include "Engine/DataTable.h"
 #include "Blueprint/UserWidget.h"
-#include "FunctionHUD.h"
 
 
 struct FResource_Material {
@@ -27,7 +26,6 @@ struct FResource_Material {
 		,	Pink(TEXT("/Game/Puzzle/Meshes/PinkMaterial.PinkMaterial"))
 		{}
 };
-static FResource_Material ResourceInst_Material;
 
 struct FResource_Mesh {
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> PuzzleCube;
@@ -37,7 +35,6 @@ struct FResource_Mesh {
 		,	Cylinder(TEXT("/Game/MyContent/Meshes/Cylinder.Cylinder"))
 		{}
 };
-static FResource_Mesh ResourceInst_Mesh;
 
 struct FResource_Data {
 		ConstructorHelpers::FObjectFinderOptional<UDataTable> TypesTable;
@@ -45,7 +42,6 @@ struct FResource_Data {
 		:	TypesTable(TEXT("DataTable'/Game/MyContent/Data/Tbl_Types.Tbl_Types'"))
 		{}
 };
-static FResource_Data ResourceInst_Data;
 
 struct FResource_Icon {
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Percentage;
@@ -53,7 +49,15 @@ struct FResource_Icon {
 		:	Percentage(TEXT("StaticMesh'/Game/MyContent/Meshes/percent.percent'"))
 		{}
 };
-static FResource_Icon ResourceInst_Icon;
+
+struct FResource_HUD {
+		ConstructorHelpers::FClassFinder<UUserWidget> Function;
+		ConstructorHelpers::FClassFinder<UUserWidget> Parameter;
+		FResource_HUD()
+		:	Function(TEXT("/Game/MyContent/Blueprints/HUD_Function"))
+		,	Parameter(TEXT("/Game/MyContent/Blueprints/HUD_Parameter"))
+		{}
+};
 
 
 
@@ -62,14 +66,17 @@ struct FAssets {
 		FResource_Mesh Mesh;
 		FResource_Data Data;
 		FResource_Icon Icon;
+		FResource_HUD HUD;
 		FAssets()
-		:	Material(ResourceInst_Material)
-		,	Mesh(ResourceInst_Mesh)
-		,	Data(ResourceInst_Data)
-		,	Icon(ResourceInst_Icon)
+		:	Material({})
+		,	Mesh({})
+		,	Data({})
+		,	Icon({})
+		,	HUD({})
 		{}
 };
-static FAssets Assets;
+
+FAssets* Assets();
 
 
 

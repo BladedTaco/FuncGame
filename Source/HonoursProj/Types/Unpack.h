@@ -198,6 +198,14 @@ static_assert(std::is_same_v< repack<X<int, float>, int, float>, X<int, float> >
 static_assert(std::is_same_v< repack<X<int, float>, int, float>, unwrap<X<int, float>>::rewrap<X> >, "");
 
 
+template <typename T, typename U>
+inline constexpr bool is_similar = std::is_same<std::remove_const_t<std::remove_reference_t<T>>, U>::value;
+
+
+static_assert(is_similar<const int&, int>, "");
+static_assert(!is_similar<const float&, int>, "");
+
+
 //
 //template <typename Inst>
 //struct is_instance_t {};
@@ -239,7 +247,7 @@ using is_instance_t = typename std::is_same<T, rewrap<T, U> >;
 
 
 template <class T, template <class, class...> class U>
-inline constexpr bool is_instance = std::is_same_v<T, rewrap<T, U> >;
+inline constexpr bool is_instance = is_similar<T, rewrap<T, U> >;
 //
 //template <int N, class T, template <class, class...> class U>
 //inline constexpr bool is_instance_n = std::is_same_v<T, rewrap_cut<N, T, U> >;
@@ -248,7 +256,7 @@ inline constexpr bool is_instance = std::is_same_v<T, rewrap<T, U> >;
 template <int N, class T, template <class, class...> class U>
 inline constexpr bool is_instance_n = []() {
 	if constexpr (unwrap<T>::size == N) {
-		return std::is_same_v<T, rewrap_cut<N, T, U> >;
+		return is_similar<T, rewrap_cut<N, T, U> >;
 	}
 	return false;
 }();
@@ -296,27 +304,27 @@ class VStar;
 
 // TODOODODODOOD;
 template <class T>
-typename std::enable_if_t< std::is_same_v<T, VStar>, UTypeConst*>
+typename std::enable_if_t< is_similar<T, VStar>, UTypeConst*>
 FromType() {
 	return UTypeConst::New(ETypeBase::NONE);
 };
 
 
 template <class T>
-typename std::enable_if_t< std::is_same_v<T, Bool>, UTypeConst*>
+typename std::enable_if_t< is_similar<T, Bool>, UTypeConst*>
 FromType() {
 	return UTypeConst::New(ETypeBase::BOOL);
 };
 
 template <class T>
-typename std::enable_if_t< std::is_same_v<T, int>, UTypeConst*>
+typename std::enable_if_t< is_similar<T, int>, UTypeConst*>
 FromType() {
 	return UTypeConst::New(ETypeBase::INT);
 };
 
 
 template <class T>
-typename std::enable_if_t< std::is_same_v<T, float>, UTypeConst*>
+typename std::enable_if_t< is_similar<T, float>, UTypeConst*>
 FromType() {
 	return UTypeConst::New(ETypeBase::FLOAT);
 };

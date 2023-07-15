@@ -11,6 +11,7 @@
 
 #include "FunctionConnector.generated.h"
 
+class UParameterHUD;
 
 /**
  * 
@@ -18,6 +19,16 @@
 UCLASS()
 class HONOURSPROJ_API AFunctionConnector : public AHonoursProjBlock {
 	GENERATED_BODY()
+
+
+public:
+	// Parameter HUD
+	UPROPERTY(EditAnywhere)
+		class UAutoScalingHUD* HUDComponent;
+	UPROPERTY(EditAnywhere)
+		UParameterHUD* HUDInstance;
+
+	virtual void BeginPlay() override;
 
 public:
 	// Sets default values for this actor's properties

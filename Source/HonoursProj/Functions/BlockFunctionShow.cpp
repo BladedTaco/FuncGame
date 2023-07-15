@@ -23,7 +23,7 @@
 #include "MyUtils.h"
 
 
-#include "FunctionHUD.h"
+#include "HUD/FunctionHUD.h"
 
 
 
@@ -33,11 +33,18 @@ void ABlockFunctionShow::SetFunctionTypes() {
 
 	HUDInstance->LastResult = FString(TEXT("Unevaluated"));
 
-	UTypeVar* A = UTypeVar::New(ETypeClass::SHOW);
+	//UTypeVar* A = UTypeVar::New(ETypeClass::SHOW);
+	//TypeVars = { A };
+	UTypeVar* A = UTypeVar::New(ETypeClass::ANY);
 	TypeVars = { A };
+
 
 	Inputs = {
 		{"Showable", UTypePtr::New(A) }
+	};
+
+	Outputs = {
+		{"Passthrough", UTypePtr::New(A) }
 	};
 
 }
@@ -54,7 +61,7 @@ Arr<VStarArray, VStarArrayReturn> ABlockFunctionShow::GetInnerFunc() {
 		this->HUDInstance->LastResult = show->show()(t0);
 
 		// Return empty
-		return { };
+		return { t0 };
 
 	});
 }

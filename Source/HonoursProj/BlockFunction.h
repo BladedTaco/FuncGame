@@ -64,9 +64,7 @@ public:
 
 	// Block HUD
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<UFunctionHUD> HUDClass;
-	UPROPERTY(EditAnywhere)
-		class UWidgetComponent* HUDComponent;
+		class UAutoScalingHUD* HUDComponent;
 	UPROPERTY(EditAnywhere)
 		UFunctionHUD* HUDInstance;
 public:

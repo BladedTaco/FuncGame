@@ -24,7 +24,7 @@
 #include "MyUtils.h"
 
 
-#include "FunctionHUD.h"
+#include "HUD/FunctionHUD.h"
 
 void ABlockFunctionFmap::SetFunctionTypes() {
 

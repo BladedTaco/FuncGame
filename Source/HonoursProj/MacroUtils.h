@@ -191,3 +191,7 @@
 
 #define InlineStaticConstStruct(T, NAME, ...) \
 static const inline T NAME = []{ T ${}; __VA_ARGS__; return $; }()
+
+
+#define CppStaticConstStruct(T, NAME, ...) \
+const T NAME = []{ T ${}; __VA_ARGS__; return $; }()
