@@ -33,7 +33,7 @@ AFunctionConnector::AFunctionConnector() {
 	// Create static mesh component
 	auto blockMesh = GetBlockMesh();
 	blockMesh->SetStaticMesh(Assets()->Mesh.PuzzleCube.Get());
-	blockMesh->SetRelativeScale3D(FVector(0.2f, 0.2f, 0.2f));
+	blockMesh->SetRelativeScale3D(FVector(1, 3, 1) * FVector(0.2f, 0.2f, 0.2f));
 	blockMesh->SetMaterial(0, UnlitMaterial);
 
 	// Create Connector
@@ -63,6 +63,7 @@ AFunctionConnector::AFunctionConnector() {
 void AFunctionConnector::BeginPlay() {
 	Super::BeginPlay();
 
+	HUDComponent->AspectRatio = FVector2D(3, 1);
 	HUDComponent->SizeToBounds(GetBlockMesh());
 	HUDInstance = Cast<UParameterHUD>(HUDComponent->GetUserWidgetObject());
 }

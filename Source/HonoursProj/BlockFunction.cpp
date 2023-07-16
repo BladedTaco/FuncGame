@@ -143,13 +143,23 @@ UType* ABlockFunction::ResolveType() {
 	// Intiialize Output Arrow Terminal TypeVar
 	UType* outArrow = UTypeVar::New(ETypeClass::ANY);
 
+	// Reset All TypeVars
+	for (auto typevar : TypeVars) {
+		typevar->ResetEvidence();
+	}
+
 	// For Each Input (reversed)
 	for (int idx = InputBlocks.Num(); idx --> 0;) {
 		 AFunctionInput* input = InputBlocks[idx];
+
 		// Try to Resolve precursors when a Connected Type
 		if (!input->connectedTo) {
 			// On Resolution fail, Unconnected Type, Add Arrow Layer
 			outArrow = UTypeConst::New(ETypeData::FUNC, { input->ParameterInfo.Type, UTypePtr::New(outArrow) });
+
+		// Apply Evidence Otherwise
+		} else {
+			Inputs[idx].Type->UnifyWith(input->ResolveType());
 		}
 	}
 

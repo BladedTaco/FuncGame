@@ -49,6 +49,17 @@ FString UType::ToString() const {
 	return type;
 }
 
+bool UType::UnifyWith(const UType* concreteType) {
+	if (GetType() != concreteType->GetType()) return false;
+
+	auto templates = GetTemplates();
+	auto otherTemplates = concreteType->GetTemplates();
+
+	return Algo::CompareByPredicate(templates, otherTemplates, [](UType* a, UType* b) {
+		return a->UnifyWith(b);
+	});
+}
+
 
 ////// TYPE CONSTANT
 
@@ -82,7 +93,7 @@ UType* UTypeConst::DeepCopy(const TMap<UType*, UType*>& ptrMap) const {
 }
 
 // Recursively Turn any InType into a constant
-UTypeConst* UTypeConst::MakeConst(UType* InType) {
+UTypeConst* UTypeConst::MakeConst(const UType* InType) {
 	// Initialize a new TypeConst and give it its InType after
 	UTypeConst* out = UTypeConst::New(ETypeBase::NONE);
 	out->Type = InType->GetType();
@@ -183,6 +194,13 @@ UType* UTypePtr::DeepCopy(const TMap<UType*, UType*>& ptrMap) const {
 	return out;
 }
 
+bool UTypePtr::UnifyWith(const UType* concreteType) {
+	return (
+		UType::UnifyWith(concreteType) 
+		|| (Templates.Num() == 0 && !CopyTemplates)
+	) && Get()->UnifyWith(concreteType);
+}
+
 UType* UTypePtr::Get() {
 	return Type;
 }
@@ -233,6 +251,10 @@ UType* UTypeVar::DeepCopy(const TMap<UType*, UType*>& ptrMap) const {
 	return out;
 }
 
+bool UTypeVar::UnifyWith(const UType* concreteType) {
+	return ApplyEvidence(concreteType);
+}
+
 
 // Try to return Instances Type, Else return own Type
 EType UTypeVar::GetType() const {
@@ -250,20 +272,21 @@ TArray<UType*> UTypeVar::GetTemplates() const {
 	return {};
 }
 
-bool UTypeVar::ApplyEvidence(UType* InType) {
-	bool applicable = Supercedes(InType);
+bool UTypeVar::ApplyEvidence(const UType* InType) {
+	UTypeConst* ConstIn = UTypeConst::MakeConst(InType);
+	bool applicable = Supercedes(ConstIn);
 	if (applicable) {
-		Evidence.Add(InType);
+		Evidence.Add(ConstIn);
 		if (Instance && IsValid(Instance)) {
-			Instance->RestrictTo(InType);
+			Instance->RestrictTo(ConstIn);
 		} else {
-			Instance = UTypeConst::MakeConst(InType);
+			Instance = ConstIn;
 		}
 	}
 	return applicable;
 }
 
-bool UTypeVar::RemoveEvidence(UType* InType) {
+bool UTypeVar::RemoveEvidence(const UType* InType) {
 	// Track old number of Evidence
 	int32 oldNum = Evidence.Num();
 	// Filter out Evidence for invalid evidence and the specified Evidence
@@ -282,6 +305,11 @@ bool UTypeVar::RemoveEvidence(UType* InType) {
 
 	// Return Success
 	return true;
+}
+
+void UTypeVar::ResetEvidence() {
+	Instance = NULL;
+	Evidence = {};
 }
 
 
@@ -307,4 +335,3 @@ bool UType::EqualTo(const UType* other) const {
 	// return equal
 	return true;
 }
-

@@ -31,21 +31,30 @@
 //
 //}
 
+UAutoScalingHUD::UAutoScalingHUD() {
+	SetDrawAtDesiredSize(false);
+}
+
 void UAutoScalingHUD::SizeToBounds(UStaticMeshComponent* Mesh) {
 
 	// Get Size
 	FVector min, max;
 	Mesh->GetLocalBounds(min, max);
 	FVector2D HUDSize = FVector2D((max - min) * Mesh->GetComponentScale());
+	UE_LOG(LogTemp, Warning, TEXT("HUDSize, %f %f"), HUDSize.X, HUDSize.Y);
 	// Set Size
 	TargetSize = HUDSize;
 
 	// Update Size on Next opportunity
 	UpdateSize = true;
+	SetDrawAtDesiredSize(false);
+
 }
 
 void UAutoScalingHUD::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	SetDrawAtDesiredSize(false);
 
 	if (UpdateSize) {
 		// Get Size
@@ -55,8 +64,10 @@ void UAutoScalingHUD::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 		if (!currSize.IsNearlyZero()) {
 			UE_LOG(LogTemp, Warning, TEXT("CurrSize, %f %f"), currSize.X, currSize.Y);
 
-			FVector2D scale = TargetSize / currSize;
-			SetRelativeScale3D(FVector(1.0f, scale.X, scale.Y));
+			//FVector2D scale = TargetSize / currSize;
+			//SetRelativeScale3D(FVector(1.0f, scale.Y, scale.X));
+
+			SetDrawSize(FVector2D(TargetSize.Y, TargetSize.X));
 
 			UpdateSize = false;
 		}

@@ -28,6 +28,7 @@ public:
 	UPROPERTY(EditAnywhere)
 		FVector2D TargetSize = FVector2D(512, 512);
 
+	UAutoScalingHUD();
 
 	void SizeToBounds(class UStaticMeshComponent* Mesh);
 

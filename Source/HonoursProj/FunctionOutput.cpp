@@ -46,7 +46,8 @@ void AFunctionOutput::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 
 UType* AFunctionOutput::ResolveType() {
 	// Copy Owners OutputArrow
-	UType* arrow = Cast<ABlockFunction>(GetAttachParentActor())->ResolveType()->DeepCopy();
+	auto parent = Cast<ABlockFunction>(GetAttachParentActor());
+	UType* arrow = parent->ResolveType()->DeepCopy();
 	// Get a pointer to the arrow
 	UTypePtr* arrowPtr = UTypePtr::New(arrow);
 
@@ -55,7 +56,8 @@ UType* AFunctionOutput::ResolveType() {
 		arrowPtr = Cast<UTypePtr>(arrowPtr->GetTemplates()[1]);
 	}
 	// Apply the Outputs Type to the TypeVar
-	Cast<UTypeVar>(arrowPtr->Get())->ApplyEvidence(ParameterInfo.Type);
+	//Cast<UTypeVar>(arrowPtr->Get())->ApplyEvidence(ParameterInfo.Type);
+	Cast<UTypeVar>(arrowPtr->Get())->ApplyEvidence(parent->Outputs[Index].Type);
 
 	// Return the arrow with applied type
 	return arrow;

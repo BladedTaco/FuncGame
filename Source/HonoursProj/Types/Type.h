@@ -34,6 +34,8 @@ public:
 	UFUNCTION()
 		bool EqualTo(const UType* other) const;
 
+	virtual bool UnifyWith(const UType* concreteType);
+
 	//~UType() {
 	//	UE_LOG(LogTemp, Warning, TEXT("Type Destroyed"));
 	//}
@@ -66,9 +68,10 @@ public:
 	virtual UType* DeepCopy(const TMap<UType*, UType*>& ptrMap = emptyPtrMap) const override;
 
 	UFUNCTION(BlueprintCallable)
-		static UTypeConst* MakeConst(UType* InType);
+		static UTypeConst* MakeConst(const UType* InType);
 	UFUNCTION(BlueprintCallable)
 		void RestrictTo(UType* InType);
+
 };
 
 // A Class that relies entirely on a TypeVar for its Type Information
@@ -97,6 +100,8 @@ public:
 	static UTypePtr* New(UType* TypeVar);
 
 	virtual UType* DeepCopy(const TMap<UType*, UType*>& ptrMap = emptyPtrMap) const override;
+
+	virtual bool UnifyWith(const UType* concreteType) override;
 };
 
 // A Class That has an ETypeClass EType that gets resolved into an ETypeData or ETypeBase EType
@@ -114,13 +119,18 @@ private:
 
 public:
 	UFUNCTION(BlueprintCallable)
-		bool ApplyEvidence(UType* InType);
+		bool ApplyEvidence(const UType* InType);
 	UFUNCTION(BlueprintCallable)
-		bool RemoveEvidence(UType* InType);
+		bool RemoveEvidence(const UType* InType);
+	UFUNCTION(BlueprintCallable)
+		void ResetEvidence();
 
 	virtual EType GetType() const override;
 	virtual TArray<UType*> GetTemplates() const override;
 
 	static UTypeVar* New(ETypeClass InType);
 	virtual UType* DeepCopy(const TMap<UType*, UType*>& ptrMap = emptyPtrMap) const override;
+
+
+	virtual bool UnifyWith(const UType* concreteType) override;
 };
