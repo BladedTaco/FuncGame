@@ -65,6 +65,7 @@ namespace std {
 		return (*t._inst)[Idx];
 	}
 
+
 	// Destruct Ptr
 	template <int N, template <typename> typename Cls, typename Type>
 	struct tuple_size<DestructPtr<N, Cls, Type>> : integral_constant<size_t, N> {};

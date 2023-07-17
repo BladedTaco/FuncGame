@@ -8,6 +8,10 @@
 #include "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Preprocess/Include.h"
 #include "CoreMinimal.h"
 #include "Algo/Transform.h"
+template <typename IntType, typename EnumType, EnumType... Vals>
+inline constexpr bool IsMember(IntType n) {
+	return ((n == static_cast< IntType >(Vals)) || ...);
+}
 
  UENUM(BlueprintType) 
  enum class EType : uint8 { 
@@ -26,7 +30,10 @@
  , CHAR = (uint8)EType::CHAR 
  
  }; 
- 
+ template <typename IntType> 
+ inline constexpr bool IsETypeBase(IntType from) { 
+ return IsMember<IntType, ETypeBase, ETypeBase::NONE , ETypeBase::INT , ETypeBase::FLOAT , ETypeBase::BOOL , ETypeBase::CHAR>(from); 
+ } 
  UENUM(BlueprintType) 
  enum class ETypeClass : uint8 { 
  ANY = (uint8)EType::ANY 
@@ -35,7 +42,10 @@
  , SHOW = (uint8)EType::SHOW 
  
  }; 
- 
+ template <typename IntType> 
+ inline constexpr bool IsETypeClass(IntType from) { 
+ return IsMember<IntType, ETypeClass, ETypeClass::ANY , ETypeClass::FUNCTOR , ETypeClass::ORDINAL , ETypeClass::SHOW>(from); 
+ } 
  UENUM(BlueprintType) 
  enum class ETypeData : uint8 { 
  FUNC = (uint8)EType::FUNC 
@@ -43,7 +53,10 @@
  , MAYBE = (uint8)EType::MAYBE 
  
  }; 
-
+ template <typename IntType> 
+ inline constexpr bool IsETypeData(IntType from) { 
+ return IsMember<IntType, ETypeData, ETypeData::FUNC , ETypeData::NUMBER , ETypeData::MAYBE>(from); 
+ }
 inline bool operator< (const EType lhs, const EType rhs) {
 	if (rhs == EType::ANY) { return lhs != EType::ANY; }
 	switch (rhs) { 

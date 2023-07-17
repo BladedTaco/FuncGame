@@ -9,7 +9,7 @@
 
 #include "Type.generated.h"
 
-const auto emptyPtrMap = TMap<UType*, UType*>();
+inline const auto emptyPtrMap = TMap<UType*, UType*>();
 
 // This class does not need to be modified.
 UCLASS()
@@ -17,22 +17,19 @@ class HONOURSPROJ_API UType : public UObject
 {
 	GENERATED_BODY()
 public:
-	UFUNCTION(BlueprintCallable)
-		virtual EType GetType() const PURE_VIRTUAL(UType::GetType, return EType::ANY;);
-	UFUNCTION(BlueprintCallable)
-		virtual TArray<UType*> GetTemplates() const PURE_VIRTUAL(UType::GetTemplates, return {}; );
+	virtual EType GetType() const PURE_VIRTUAL(UType::GetType, return EType::ANY;);
+	virtual TArray<UType*> GetTemplates() const PURE_VIRTUAL(UType::GetTemplates, return {}; );
+	virtual TArray<UType*> GetTemplates(ETypeClass As) const;
+	virtual TArray<UType*> GetTemplates(EType As) const;
 
 	virtual UType* DeepCopy(const TMap<UType*, UType*>& ptrMap = emptyPtrMap) const PURE_VIRTUAL(UType::DeepCopy, return NULL; );
 
 public:
-	UFUNCTION()
-		bool Supercedes(UType* other) const;
+	bool Supercedes(const UType* other) const;
 
-	UFUNCTION()
-		FString ToString() const;
+	FString ToString() const;
 
-	UFUNCTION()
-		bool EqualTo(const UType* other) const;
+	bool EqualTo(const UType* other) const;
 
 	virtual bool UnifyWith(const UType* concreteType);
 

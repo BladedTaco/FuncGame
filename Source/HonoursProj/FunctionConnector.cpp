@@ -143,6 +143,7 @@ AHonoursProjBlock* AFunctionConnector::HandleClick(UPrimitiveComponent* ClickedC
 
 	if (HUDInstance) {
 		HUDInstance->Type = ResolveType()->ToString();
+		// Proprogate
 	}
 
 

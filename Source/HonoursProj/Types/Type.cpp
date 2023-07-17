@@ -4,10 +4,11 @@
 #include "Algo/Compare.h"
 #include "Algo/Transform.h"
 
+#include "MyUtils.h"
 
 
 // Test Compatibility
-bool UType::Supercedes(UType* other) const {
+bool UType::Supercedes(const UType* other) const {
 	EType myType = GetType();
 	EType otherType = other->GetType();
 
@@ -21,7 +22,7 @@ bool UType::Supercedes(UType* other) const {
 	UE_LOG(LogTemp, Warning, TEXT("%s >= %s"), *UEnum::GetValueAsString(myType), *UEnum::GetValueAsString(otherType));
 
 	// Check Satisfies on all Template Pairs
-	return Algo::CompareByPredicate(GetTemplates(), other->GetTemplates(), [](UType* a, UType* b) {
+	return Algo::CompareByPredicate(GetTemplates(), other->GetTemplates(myType), [](UType* a, UType* b) {
 		return a->Supercedes(b);
 	});
 }
@@ -50,16 +51,43 @@ FString UType::ToString() const {
 }
 
 bool UType::UnifyWith(const UType* concreteType) {
-	if (GetType() != concreteType->GetType()) return false;
+	if (!Supercedes(concreteType)) return false;
 
 	auto templates = GetTemplates();
-	auto otherTemplates = concreteType->GetTemplates();
+	auto otherTemplates = concreteType->GetTemplates(GetType());
 
 	return Algo::CompareByPredicate(templates, otherTemplates, [](UType* a, UType* b) {
 		return a->UnifyWith(b);
 	});
 }
 
+// Get Templates as Typeclass
+TArray<UType*> UType::GetTemplates(ETypeClass As) const {
+	auto templates = GetTemplates();
+
+	// Check for special cases
+	switch (GetType()) {
+	case EType::FUNC:
+		switch (As) {
+		case ETypeClass::FUNCTOR: {
+			auto [t0, t1] = Destruct<2, TArray, UType*>(templates);
+			return { t1 };
+		};
+		default:
+			return templates;	
+		}
+	}
+
+	// Return templates as normal
+	return templates;
+}
+
+TArray<UType*> UType::GetTemplates(EType As) const {
+	if (IsETypeClass(As)) {
+		return GetTemplates(( ETypeClass )As);
+	} 
+	return GetTemplates();
+}
 
 ////// TYPE CONSTANT
 
@@ -122,7 +150,7 @@ void UTypeConst::RestrictTo(UType* other) {
 	Type = Intersection(Type, other->GetType());
 
 	// For each Template pair
-	auto otherTemplates = other->GetTemplates();
+	auto otherTemplates = other->GetTemplates(GetType());
 	for (int i = Templates.Num() - 1; i >= 0; i--) {
 		// Get Template as Const Type
 		auto t = Cast<UTypeConst>(Templates[i]);
@@ -195,10 +223,10 @@ UType* UTypePtr::DeepCopy(const TMap<UType*, UType*>& ptrMap) const {
 }
 
 bool UTypePtr::UnifyWith(const UType* concreteType) {
-	return (
-		UType::UnifyWith(concreteType) 
-		|| (Templates.Num() == 0 && !CopyTemplates)
-	) && Get()->UnifyWith(concreteType);
+	return Supercedes(concreteType) && Get()->UnifyWith(concreteType)
+		&& Algo::CompareByPredicate(GetTemplates(), concreteType->GetTemplates(GetType()), [](UType* me, const UType* other) {
+		return me->UnifyWith(other);
+	});
 }
 
 UType* UTypePtr::Get() {
@@ -274,16 +302,19 @@ TArray<UType*> UTypeVar::GetTemplates() const {
 
 bool UTypeVar::ApplyEvidence(const UType* InType) {
 	UTypeConst* ConstIn = UTypeConst::MakeConst(InType);
-	bool applicable = Supercedes(ConstIn);
-	if (applicable) {
-		Evidence.Add(ConstIn);
-		if (Instance && IsValid(Instance)) {
-			Instance->RestrictTo(ConstIn);
-		} else {
-			Instance = ConstIn;
-		}
+
+	if (Instance && IsValid(Instance)) {
+		// Only succeed if Instance Supercedes InType
+		if (!Instance->Supercedes(ConstIn)) return false;
+		// Restrict Type Instance
+		Instance->RestrictTo(ConstIn);
+	} else {
+		// Instance becomes InType as UTypeConst
+		Instance = ConstIn;
 	}
-	return applicable;
+	// Add Evidence and Return Success
+	Evidence.Add(ConstIn);
+	return true;
 }
 
 bool UTypeVar::RemoveEvidence(const UType* InType) {

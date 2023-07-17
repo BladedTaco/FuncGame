@@ -446,6 +446,10 @@ include "Algo/Transform.h"
 
 
 
+template <typename IntType, typename EnumType, EnumType... Vals>
+inline constexpr bool IsMember(IntType n) {
+	return ((n == static_cast< IntType >(Vals)) || ...);
+}
 
 
 
@@ -483,7 +487,20 @@ include "Algo/Transform.h"
 
 
 
-PP__NEWLINE UENUM(BlueprintType) PP__NEWLINE enum class EType : uint8 { PP__NEWLINE NONE, INT, FLOAT, BOOL, CHAR PP__NEWLINE , ANY, FUNCTOR, ORDINAL, SHOW PP__NEWLINE , FUNC, NUMBER, MAYBE PP__NEWLINE PP__NEWLINE }; PP__NEWLINE PP__NEWLINE UENUM(BlueprintType) PP__NEWLINE enum class ETypeBase : uint8 { PP__NEWLINE NONE = (uint8)EType::NONE PP__NEWLINE , INT = (uint8)EType::INT PP__NEWLINE , FLOAT = (uint8)EType::FLOAT PP__NEWLINE , BOOL = (uint8)EType::BOOL PP__NEWLINE , CHAR = (uint8)EType::CHAR PP__NEWLINE PP__NEWLINE }; PP__NEWLINE PP__NEWLINE UENUM(BlueprintType) PP__NEWLINE enum class ETypeClass : uint8 { PP__NEWLINE ANY = (uint8)EType::ANY PP__NEWLINE , FUNCTOR = (uint8)EType::FUNCTOR PP__NEWLINE , ORDINAL = (uint8)EType::ORDINAL PP__NEWLINE , SHOW = (uint8)EType::SHOW PP__NEWLINE PP__NEWLINE }; PP__NEWLINE PP__NEWLINE UENUM(BlueprintType) PP__NEWLINE enum class ETypeData : uint8 { PP__NEWLINE FUNC = (uint8)EType::FUNC PP__NEWLINE , NUMBER = (uint8)EType::NUMBER PP__NEWLINE , MAYBE = (uint8)EType::MAYBE PP__NEWLINE PP__NEWLINE }; PP__NEWLINE
+
+
+
+
+
+
+
+
+
+
+
+
+PP__NEWLINE UENUM(BlueprintType) PP__NEWLINE enum class EType : uint8 { PP__NEWLINE NONE, INT, FLOAT, BOOL, CHAR PP__NEWLINE , ANY, FUNCTOR, ORDINAL, SHOW PP__NEWLINE , FUNC, NUMBER, MAYBE PP__NEWLINE PP__NEWLINE }; PP__NEWLINE PP__NEWLINE UENUM(BlueprintType) PP__NEWLINE enum class ETypeBase : uint8 { PP__NEWLINE NONE = (uint8)EType::NONE PP__NEWLINE , INT = (uint8)EType::INT PP__NEWLINE , FLOAT = (uint8)EType::FLOAT PP__NEWLINE , BOOL = (uint8)EType::BOOL PP__NEWLINE , CHAR = (uint8)EType::CHAR PP__NEWLINE PP__NEWLINE }; PP__NEWLINE template <typename IntType> PP__NEWLINE inline constexpr bool IsETypeBase(IntType from) { PP__NEWLINE return IsMember<IntType, ETypeBase, ETypeBase::NONE , ETypeBase::INT , ETypeBase::FLOAT , ETypeBase::BOOL , ETypeBase::CHAR>(from); PP__NEWLINE } PP__NEWLINE UENUM(BlueprintType) PP__NEWLINE enum class ETypeClass : uint8 { PP__NEWLINE ANY = (uint8)EType::ANY PP__NEWLINE , FUNCTOR = (uint8)EType::FUNCTOR PP__NEWLINE , ORDINAL = (uint8)EType::ORDINAL PP__NEWLINE , SHOW = (uint8)EType::SHOW PP__NEWLINE PP__NEWLINE }; PP__NEWLINE template <typename IntType> PP__NEWLINE inline constexpr bool IsETypeClass(IntType from) { PP__NEWLINE return IsMember<IntType, ETypeClass, ETypeClass::ANY , ETypeClass::FUNCTOR , ETypeClass::ORDINAL , ETypeClass::SHOW>(from); PP__NEWLINE } PP__NEWLINE UENUM(BlueprintType) PP__NEWLINE enum class ETypeData : uint8 { PP__NEWLINE FUNC = (uint8)EType::FUNC PP__NEWLINE , NUMBER = (uint8)EType::NUMBER PP__NEWLINE , MAYBE = (uint8)EType::MAYBE PP__NEWLINE PP__NEWLINE }; PP__NEWLINE template <typename IntType> PP__NEWLINE inline constexpr bool IsETypeData(IntType from) { PP__NEWLINE return IsMember<IntType, ETypeData, ETypeData::FUNC , ETypeData::NUMBER , ETypeData::MAYBE>(from); PP__NEWLINE }
+
 
 
 
