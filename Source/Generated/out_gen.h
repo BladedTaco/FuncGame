@@ -542,7 +542,7 @@ inline bool operator< (const EType lhs, const EType rhs) {
 	
 	return false;
 }
-inline bool operator > (const EType lhs, const EType rhs) { return rhs < lhs; } PP__NEWLINE inline bool operator <= (const EType lhs, const EType rhs) { return !(lhs > rhs); } PP__NEWLINE inline bool operator >= (const EType lhs, const EType rhs) { return !(lhs < rhs); } PP__NEWLINE ;
+inline bool operator > (const EType lhs, const EType rhs) { return rhs < lhs; } PP__NEWLINE inline bool operator <= (const EType lhs, const EType rhs) { return (lhs == rhs) || (lhs < rhs); } PP__NEWLINE inline bool operator >= (const EType lhs, const EType rhs) { return (lhs == rhs) || (lhs > rhs); } PP__NEWLINE ;
 
 
 

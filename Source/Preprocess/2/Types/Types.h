@@ -105,8 +105,8 @@ switch (rhs) { PP__NEWLINE						\
 
 #define ALL_ORDINALS(CLS) \
 OPERATOR_IMPL(CLS, > , (return   rhs < lhs; )) \
-OPERATOR_IMPL(CLS, <=, (return !(lhs > rhs);)) \
-OPERATOR_IMPL(CLS, >=, (return !(lhs < rhs);))
+OPERATOR_IMPL(CLS, <=, (return (lhs == rhs) || (lhs < rhs);)) \
+OPERATOR_IMPL(CLS, >=, (return (lhs == rhs) || (lhs > rhs);))
 
 // Define Category like less than
 inline bool operator< (const EType lhs, const EType rhs) {

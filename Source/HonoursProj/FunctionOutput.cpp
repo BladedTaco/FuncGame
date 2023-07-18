@@ -7,6 +7,8 @@
 #include "Components/StaticMeshComponent.h"
 
 AHonoursProjBlock* AFunctionOutput::HandleClick(UPrimitiveComponent* ClickedComponent) {
+	// Proprogate
+	Function->PropogateUpdate(true);
 	// losing active
 	if (bIsActive) {
 		// Hide connection mesh
@@ -14,10 +16,12 @@ AHonoursProjBlock* AFunctionOutput::HandleClick(UPrimitiveComponent* ClickedComp
 
 		// Get other, and make them handle the click
 		if (auto other = Cast<AFunctionInput>(ClickedComponent->GetOwner())) {
-			// Set Active
-			other->bIsActive = true;
-			// Handle Click
-			other->HandleClick(GetBlockMesh());
+			if (ValidConnections.Contains(other)) {
+				// Set Active
+				other->bIsActive = true;
+				// Handle Click
+				other->HandleClick(GetBlockMesh());
+			}
 		}
 	}
 	// Handle gaining active
@@ -25,6 +29,8 @@ AHonoursProjBlock* AFunctionOutput::HandleClick(UPrimitiveComponent* ClickedComp
 }
 
 AHonoursProjBlock* AFunctionOutput::HandleRClick(UPrimitiveComponent* ClickedComponent) {
+	// Proprogate
+	Function->PropogateUpdate(true);
 	// Break all inputs connected to this output
 	for (auto inputBlock : connectedTo) {
 		inputBlock->HandleRClick(ClickedComponent);
@@ -35,7 +41,7 @@ AHonoursProjBlock* AFunctionOutput::HandleRClick(UPrimitiveComponent* ClickedCom
 
 void AFunctionOutput::EndPlay(const EEndPlayReason::Type EndPlayReason) {	
 	// Remove Connected to if it exists
-	auto copy = connectedTo ;
+	auto copy = connectedTo;
 	for (auto inputBlock : copy) {
 		if (IsValid(inputBlock)) {
 			inputBlock->HandleRClick(NULL);
@@ -46,8 +52,7 @@ void AFunctionOutput::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 
 UType* AFunctionOutput::ResolveType() {
 	// Copy Owners OutputArrow
-	auto parent = Cast<ABlockFunction>(GetAttachParentActor());
-	UType* arrow = parent->ResolveType()->DeepCopy();
+	UType* arrow = Function->ResolveType()->DeepCopy();
 	// Get a pointer to the arrow
 	UTypePtr* arrowPtr = UTypePtr::New(arrow);
 
@@ -57,12 +62,12 @@ UType* AFunctionOutput::ResolveType() {
 	}
 	// Apply the Outputs Type to the TypeVar
 	//Cast<UTypeVar>(arrowPtr->Get())->ApplyEvidence(ParameterInfo.Type);
-	Cast<UTypeVar>(arrowPtr->Get())->ApplyEvidence(parent->Outputs[Index].Type);
+	Cast<UTypeVar>(arrowPtr->Get())->ApplyEvidence(Function->Outputs[Index].Type);
 
 	// Return the arrow with applied type
 	return arrow;
 }
 
 VStar AFunctionOutput::GetValue() {
-	return std::move(Cast<ABlockFunction>(GetAttachParentActor())->GetValue()[Index]);
+	return std::move(Function->GetValue()[Index]);
 }

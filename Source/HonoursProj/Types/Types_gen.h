@@ -84,6 +84,6 @@ inline bool operator< (const EType lhs, const EType rhs) {
 	return false;
 }
 inline bool operator > (const EType lhs, const EType rhs) { return rhs < lhs; } 
- inline bool operator <= (const EType lhs, const EType rhs) { return !(lhs > rhs); } 
- inline bool operator >= (const EType lhs, const EType rhs) { return !(lhs < rhs); } 
+ inline bool operator <= (const EType lhs, const EType rhs) { return (lhs == rhs) || (lhs < rhs); } 
+ inline bool operator >= (const EType lhs, const EType rhs) { return (lhs == rhs) || (lhs > rhs); } 
  ;

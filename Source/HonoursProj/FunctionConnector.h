@@ -28,6 +28,10 @@ public:
 	UPROPERTY(EditAnywhere)
 		UParameterHUD* HUDInstance;
 
+	UPROPERTY(VisibleAnywhere)
+		ABlockFunction* Function;
+
+
 	virtual void BeginPlay() override;
 
 public:

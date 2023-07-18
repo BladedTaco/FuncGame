@@ -19,6 +19,7 @@
 #include "AssetLoader_gen.h"
 
 #include "Algo/AllOf.h"
+#include "Algo/Partition.h"
 
 #include "MyUtils.h"
 
@@ -40,6 +41,19 @@ ABlockFunction::ABlockFunction() {
 	HUDComponent->UpdateWidget();
 }
 
+
+void ABlockFunction::PropogateUpdate(bool Origin) {
+	// Dont propogate if already dirty and not origin
+	if (Origin || !Dirty) {
+		for (auto block : OutputBlocks) {
+			for (auto to : block->connectedTo) {
+				to->Function->PropogateUpdate(false);
+			}
+		}
+	}
+	// Make Dirty
+	Dirty = true;
+}
 
 // Called when the game starts or when spawned
 void ABlockFunction::BeginPlay() {
@@ -86,6 +100,7 @@ void ABlockFunction::BeginPlay() {
 			AFunctionConnector* actor = GetWorld()->SpawnActor<AFunctionConnector>(blockClass, spawnParams);
 			actor->ParameterInfo = FParameter(param.Name, UTypePtr::New(param.Type));
 			actor->Index = idx;
+			actor->Function = this;
 			blocks->Add(actor);
 			if (actor && actor->HUDInstance) {
 				actor->HUDInstance->Name = actor->ParameterInfo.Name;
@@ -96,6 +111,27 @@ void ABlockFunction::BeginPlay() {
 			// Iterate index
 			idx += 1;
 		}
+	}
+}
+
+void ABlockFunction::Tick(float DeltaTime) {
+	Super::Tick(DeltaTime);
+
+	ResolveType();
+	if (Dirty) {
+		// For inputs
+		for (auto input : InputBlocks) {
+			//input->HUDInstance->Type = input->ResolveType()->ToString();
+			input->HUDInstance->Type = Inputs[input->Index].Type->ToString();
+		}
+		// For Outputs
+		for (auto output : OutputBlocks) {
+			//output->HUDInstance->Type = output->ResolveType()->ToString();
+			output->HUDInstance->Type = Outputs[output->Index].Type->ToString();
+		}
+
+		// Clean
+		Dirty = false;
 	}
 }
 
@@ -148,6 +184,20 @@ UType* ABlockFunction::ResolveType() {
 		typevar->ResetEvidence();
 	}
 
+	// Apply Evidence
+
+	// For Each Input (reversed)
+	for (int idx = InputBlocks.Num(); idx-- > 0;) {
+		AFunctionInput* input = InputBlocks[idx];
+
+		// Apply Evidence When Possible
+		if (input->connectedTo) {
+			Inputs[idx].Type->UnifyWith(input->ResolveType());
+		}
+	}
+
+	// Apply Arrow Parameters
+
 	// For Each Input (reversed)
 	for (int idx = InputBlocks.Num(); idx --> 0;) {
 		 AFunctionInput* input = InputBlocks[idx];
@@ -156,10 +206,6 @@ UType* ABlockFunction::ResolveType() {
 		if (!input->connectedTo) {
 			// On Resolution fail, Unconnected Type, Add Arrow Layer
 			outArrow = UTypeConst::New(ETypeData::FUNC, { input->ParameterInfo.Type, UTypePtr::New(outArrow) });
-
-		// Apply Evidence Otherwise
-		} else {
-			Inputs[idx].Type->UnifyWith(input->ResolveType());
 		}
 	}
 

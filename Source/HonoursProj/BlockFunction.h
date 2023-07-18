@@ -44,7 +44,16 @@ UCLASS()
 class HONOURSPROJ_API ABlockFunction : public AHonoursProjBlock {
 	GENERATED_BODY()
 
+private:
+	UPROPERTY(VisibleAnywhere)
+		bool Dirty = true;
+	UPROPERTY(VisibleAnywhere)
+		bool Valid = true;
+
 public:
+	void PropogateUpdate(bool Origin);
+
+
 	// Type Resolution
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TArray<FParameter> Inputs;
@@ -70,6 +79,7 @@ public:
 public:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 
 	ABlockFunction();
 

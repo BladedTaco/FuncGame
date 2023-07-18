@@ -12,12 +12,17 @@ bool UType::Supercedes(const UType* other) const {
 	EType myType = GetType();
 	EType otherType = other->GetType();
 
+	// Functor < any >  my
+	// Number < int > other
+	// my !< other
+	// other !< my
+
 	UE_LOG(LogTemp, Warning, TEXT("%s ? %s"), *UEnum::GetValueAsString(myType), *UEnum::GetValueAsString(otherType));
 
 	// ANY is guaranteed match
 	if (myType == EType::ANY) { return true; }
-	// No Match on other strictly superceding this
-	if (myType < otherType) { return false; }
+	// No Match if Other isn't instance or same
+	if (!(myType >= otherType)) { return false; }
 
 	UE_LOG(LogTemp, Warning, TEXT("%s >= %s"), *UEnum::GetValueAsString(myType), *UEnum::GetValueAsString(otherType));
 
@@ -31,6 +36,29 @@ bool UType::Supercedes(const UType* other) const {
 FString UType::ToString() const {
 	// Get Base Type
 	EType t = GetType();
+
+	switch (t) {
+	// Function
+	case EType::FUNC: {
+		auto templates = GetTemplates();
+		auto [from, to] = Destruct<2, TArray, UType*>(templates);
+		return FString::Format(TEXT("({0} -> {1})"), { from->ToString(), to->ToString() });
+	}
+	// Number
+	case EType::NUMBER: {
+		const UType* t = GetTemplates()[0];
+		if (t->GetType() == EType::ANY) {
+			return FString("Number");
+		} else {
+			return t->ToString();
+		}
+	}
+	// Fallthrough
+	default: break;
+	}
+
+
+
 	FString type = UEnum::GetValueAsString(t).Replace(TEXT("EType::"), TEXT("")).ToLower();
 
 
