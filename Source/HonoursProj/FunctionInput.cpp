@@ -18,7 +18,7 @@ void AFunctionInput::Tick(float DeltaSeconds) {
 
 AHonoursProjBlock* AFunctionInput::HandleClick(UPrimitiveComponent* ClickedComponent) {
 	// Proprogate
-	Function->PropogateUpdate(true);
+	Function->Propagate({ EPropagable::DIRTY });
 	// Remove any existing Connections
 	HandleRClick(ClickedComponent);
 
@@ -26,18 +26,15 @@ AHonoursProjBlock* AFunctionInput::HandleClick(UPrimitiveComponent* ClickedCompo
 	if (bIsActive) {
 		// Give Connection
 		if (auto other = Cast<AFunctionOutput>(ClickedComponent->GetOwner())) {
-			if (ValidConnections.Contains(other) && Function != other->Function) {
-				
-				UE_LOG(LogTemp, Warning, TEXT("OVERLAP"));
+			UE_LOG(LogTemp, Warning, TEXT("OVERLAP"));
 
-				// Connect input to output
-				connectedTo = other;
-				ConnectMesh->SetVisibility(true); 
+			// Connect input to output
+			connectedTo = other;
+			ConnectMesh->SetVisibility(true); 
 
-				// Connect Output back
-				if (!other->connectedTo.Contains(this)) {
-					other->connectedTo.Add(this);
-				}
+			// Connect Output back
+			if (!other->connectedTo.Contains(this)) {
+				other->connectedTo.Add(this);
 			}
 		} else {
 			UE_LOG(LogTemp, Warning, TEXT("NO OVERLAP"));
@@ -50,7 +47,7 @@ AHonoursProjBlock* AFunctionInput::HandleClick(UPrimitiveComponent* ClickedCompo
 
 AHonoursProjBlock* AFunctionInput::HandleRClick(UPrimitiveComponent* ClickedComponent) {
 	// Proprogate
-	Function->PropogateUpdate(true);
+	Function->Propagate({ EPropagable::DIRTY });
 	// Remove Connected to if it exists
 	if (connectedTo) {
 		connectedTo->connectedTo.Remove(this);

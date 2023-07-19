@@ -12,6 +12,7 @@
 
 
 #include "Types/VStar.h"
+#include "Utils/MaskedBitFlags.h"
 
 #include "BlockFunction.generated.h"
 
@@ -36,6 +37,14 @@ public:
 		, Type(type) {};
 };
 
+UENUM(BlueprintType, meta = (Bitflags, UseEnumValuesAsMaskValuesInEditor = "true"))
+enum class EPropagable : uint8 {
+	NONE		= 0				UMETA(Hidden),
+	DIRTY		= 1 << 0,
+	VALID		= 1 << 1,
+	ALL			= ((1 << 2) - 1)	UMETA(Hidden)
+};
+ENUM_CLASS_FLAGS(EPropagable);
 
 /**
  * 
@@ -46,13 +55,17 @@ class HONOURSPROJ_API ABlockFunction : public AHonoursProjBlock {
 
 private:
 	UPROPERTY(VisibleAnywhere)
-		bool Dirty = true;
-	UPROPERTY(VisibleAnywhere)
-		bool Valid = true;
+		EPropagable Status = EPropagable::ALL;
 
 public:
-	void PropogateUpdate(bool Origin);
+	// Status Handling
+	void Propagate(MaskedBitFlags<EPropagable> Values, bool Origin = true);
 
+	inline bool IsStatus(EPropagable InTest) const { return EnumHasAllFlags(Status, InTest); }
+
+	// Materials
+	UPROPERTY(EditAnywhere)
+		UMaterialInstance* ErrorMaterial;
 
 	// Type Resolution
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

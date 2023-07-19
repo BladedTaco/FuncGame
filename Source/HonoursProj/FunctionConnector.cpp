@@ -111,7 +111,13 @@ AHonoursProjBlock* AFunctionConnector::HandleClick(UPrimitiveComponent* ClickedC
 			// Get other and its type
 			auto other = Cast<AFunctionConnector>(act);
 			UType* otherType = other->ResolveType();
-			
+
+			// Skip Shared Connectors
+			if (other->Function == Function) {
+				continue;
+			}
+
+
 			// Get Applicability
 			bool applicable;
 			if (IsA<AFunctionInput>()) {
@@ -144,7 +150,7 @@ AHonoursProjBlock* AFunctionConnector::HandleClick(UPrimitiveComponent* ClickedC
 	if (HUDInstance) {
 		HUDInstance->Type = ResolveType()->ToString();
 		// Proprogate
-		Function->PropogateUpdate(true);
+		Function->Propagate({ EPropagable::DIRTY });
 	}
 
 

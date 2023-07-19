@@ -59,8 +59,8 @@ public:
 
 	/** Pointer to Yellow material used on Connectable Connectors */
 	UPROPERTY()
-
 		class UMaterialInstance* ConnectMaterial;
-	UPROPERTY()
+
+	UPROPERTY(VisibleAnywhere)
 		TArray<AFunctionConnector*> ValidConnections;
 };

@@ -5,6 +5,7 @@
         <Object Name="Orange" Type="UMaterialInstance" Location="/Game/Puzzle/Meshes/OrangeMaterial.OrangeMaterial"/>
         <Object Name="Grey" Type="UMaterialInstance" Location="/Game/Puzzle/Meshes/GreyMaterial.GreyMaterial"/>
         <Object Name="Pink" Type="UMaterialInstance" Location="/Game/Puzzle/Meshes/PinkMaterial.PinkMaterial"/>
+        <Object Name="Red" Type="UMaterialInstance" Location="/Game/Puzzle/Meshes/RedMaterial.RedMaterial"/>
     </ResourceType>
     <ResourceType Name='Mesh'>    
         <Object Name="PuzzleCube" Type="UStaticMesh" Location="/Game/Puzzle/Meshes/PuzzleCube.PuzzleCube"/>

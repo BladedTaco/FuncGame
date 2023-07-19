@@ -8,7 +8,7 @@
 
 AHonoursProjBlock* AFunctionOutput::HandleClick(UPrimitiveComponent* ClickedComponent) {
 	// Proprogate
-	Function->PropogateUpdate(true);
+	Function->Propagate({ EPropagable::DIRTY });
 	// losing active
 	if (bIsActive) {
 		// Hide connection mesh
@@ -30,7 +30,7 @@ AHonoursProjBlock* AFunctionOutput::HandleClick(UPrimitiveComponent* ClickedComp
 
 AHonoursProjBlock* AFunctionOutput::HandleRClick(UPrimitiveComponent* ClickedComponent) {
 	// Proprogate
-	Function->PropogateUpdate(true);
+	Function->Propagate({ EPropagable::DIRTY });
 	// Break all inputs connected to this output
 	for (auto inputBlock : connectedTo) {
 		inputBlock->HandleRClick(ClickedComponent);

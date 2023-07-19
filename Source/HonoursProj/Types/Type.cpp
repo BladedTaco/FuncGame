@@ -41,16 +41,24 @@ FString UType::ToString() const {
 	// Function
 	case EType::FUNC: {
 		auto templates = GetTemplates();
-		auto [from, to] = Destruct<2, TArray, UType*>(templates);
-		return FString::Format(TEXT("({0} -> {1})"), { from->ToString(), to->ToString() });
+		FString fromStr, toStr;
+		if (templates.Num() == 1) {
+			fromStr = "?";
+			toStr = templates[0]->ToString();
+		} else {
+			auto [from, to] = Destruct<2, TArray, UType*>(templates);
+			fromStr = from->ToString();
+			toStr = to->ToString();
+		}
+		return FString::Format(TEXT("({0} -> {1})"), { fromStr, toStr });
 	}
 	// Number
 	case EType::NUMBER: {
-		const UType* t = GetTemplates()[0];
-		if (t->GetType() == EType::ANY) {
+		const UType* inner = GetTemplates()[0];
+		if (inner->GetType() == EType::ANY) {
 			return FString("Number");
 		} else {
-			return t->ToString();
+			return inner->ToString();
 		}
 	}
 	// Fallthrough
@@ -241,20 +249,18 @@ UType* UTypePtr::DeepCopy(const TMap<UType*, UType*>& ptrMap) const {
 	// Create InType, Deep Copying pointer
 	UTypePtr* out = New(inner);
 	out->CopyTemplates = CopyTemplates;
-	if (!CopyTemplates) {
-		// Recursively Copy InTemplates
-		Algo::Transform(Templates, out->Templates, [&ptrMap](UType* t) {
-			return t->DeepCopy(ptrMap);
-		});
-	}
+	// Recursively Copy InTemplates
+	Algo::Transform(Templates, out->Templates, [&ptrMap](UType* t) {
+		return t->DeepCopy(ptrMap);
+	});
 	return out;
 }
 
 bool UTypePtr::UnifyWith(const UType* concreteType) {
 	return Supercedes(concreteType) && Get()->UnifyWith(concreteType)
-		&& Algo::CompareByPredicate(GetTemplates(), concreteType->GetTemplates(GetType()), [](UType* me, const UType* other) {
+		&& (Templates.Num() == 0 || Algo::CompareByPredicate(Templates, concreteType->GetTemplates(GetType()), [](UType* me, const UType* other) {
 		return me->UnifyWith(other);
-	});
+	}));
 }
 
 UType* UTypePtr::Get() {
@@ -272,9 +278,14 @@ EType UTypePtr::GetType() const {
 
 // Return TypeVars Templates
 TArray<UType*> UTypePtr::GetTemplates() const {
-	if (Type && CopyTemplates) {
-		return Type->GetTemplates();
+	if (Type) {
+		// Return pointed to templates when there are any
+		auto templates = Type->GetTemplates();
+		if (templates.Num() > 0) {
+			return templates;
+		}
 	}
+	// Else fall through to own templates
 	return Templates;
 }
 

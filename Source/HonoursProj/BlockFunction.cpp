@@ -27,7 +27,7 @@
 
 
 ABlockFunction::ABlockFunction() {
-
+	ErrorMaterial = Assets()->Material.Red.Get();
 
 	HUDComponent = CreateDefaultSubobject<UAutoScalingHUD>(TEXT("HUD"));
 	HUDComponent->SetRelativeLocation(FVector::UpVector * 200.0f);
@@ -41,18 +41,19 @@ ABlockFunction::ABlockFunction() {
 	HUDComponent->UpdateWidget();
 }
 
+void ABlockFunction::Propagate(MaskedBitFlags<EPropagable> Values, bool Origin) {
+	// Dont propogate if (not the Origin) and (already satisfying Values).
+	if (!Origin && Values.Satisfies(Status)) return;
 
-void ABlockFunction::PropogateUpdate(bool Origin) {
-	// Dont propogate if already dirty and not origin
-	if (Origin || !Dirty) {
-		for (auto block : OutputBlocks) {
-			for (auto to : block->connectedTo) {
-				to->Function->PropogateUpdate(false);
-			}
+	// Update Status
+	Status = Values.Apply(Status);
+
+	// Propogate
+	for (auto block : OutputBlocks) {
+		for (auto to : block->connectedTo) {
+			to->Function->Propagate(Values, false);
 		}
 	}
-	// Make Dirty
-	Dirty = true;
 }
 
 // Called when the game starts or when spawned
@@ -117,21 +118,43 @@ void ABlockFunction::BeginPlay() {
 void ABlockFunction::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
-	ResolveType();
-	if (Dirty) {
+	if (IsStatus(EPropagable::DIRTY)) {
+		ResolveType();
+
+
+		// Is Valid
+		if (IsStatus(EPropagable::VALID)) {
+			if (GetBlockMesh()->GetMaterial(0) == ErrorMaterial) {
+				GetBlockMesh()->SetMaterial(0, UnlitMaterial);
+			}
+		// When Invalid
+		} else {
+			// Set Block to Error Material
+			GetBlockMesh()->SetMaterial(0, ErrorMaterial);
+		}
+
+		//// Aggregate Validity
+		//Valid = true;
+
 		// For inputs
 		for (auto input : InputBlocks) {
-			//input->HUDInstance->Type = input->ResolveType()->ToString();
-			input->HUDInstance->Type = Inputs[input->Index].Type->ToString();
+			if (input->connectedTo) {
+				input->HUDInstance->Type = input->ResolveType()->ToString();
+			} else {
+				input->HUDInstance->Type = Inputs[input->Index].Type->ToString();
+			}
+			
+			//Valid &= Inputs[input->Index].Type->Supercedes(input->ParameterInfo.Type);
+			//input->HUDInstance->Type = Inputs[input->Index].Type->ToString();
 		}
 		// For Outputs
 		for (auto output : OutputBlocks) {
-			//output->HUDInstance->Type = output->ResolveType()->ToString();
-			output->HUDInstance->Type = Outputs[output->Index].Type->ToString();
+			output->HUDInstance->Type = output->ResolveType()->ToString();
+			//output->HUDInstance->Type = Outputs[output->Index].Type->ToString();
 		}
 
 		// Clean
-		Dirty = false;
+		Status ^= EPropagable::DIRTY;
 	}
 }
 
@@ -186,14 +209,26 @@ UType* ABlockFunction::ResolveType() {
 
 	// Apply Evidence
 
+	bool Valid = true; // Aggregate Validity
 	// For Each Input (reversed)
-	for (int idx = InputBlocks.Num(); idx-- > 0;) {
+	for (int idx = InputBlocks.Num(); idx --> 0;) {
 		AFunctionInput* input = InputBlocks[idx];
 
 		// Apply Evidence When Possible
 		if (input->connectedTo) {
-			Inputs[idx].Type->UnifyWith(input->ResolveType());
+			// Resolve Type First to check validity
+			Valid 
+				&= input->connectedTo->Function->IsStatus(EPropagable::VALID)
+				&& Inputs[idx].Type->UnifyWith(input->ResolveType());
 		}
+	}
+
+	// Update Status on Valid
+	if (Valid) {
+		Status |= EPropagable::VALID;
+	// Propagate on invalid
+	} else {
+		Propagate({ EPropagable::VALID, EPropagable::NONE });
 	}
 
 	// Apply Arrow Parameters
@@ -271,6 +306,11 @@ VStar ABlockFunction::ApplyInputs(int output, TArray<VStar> vals, int idx, Arr<V
 
 // Gets the Value of a function
 VStarArrayReturn ABlockFunction::GetValue() {
+	// On Invalid, cancel
+	if (!IsStatus(EPropagable::VALID)) {
+		return {};
+	}
+
 	// Collect Output Types and Values
 	VStarArray outputs = {};
 	for (const auto& output : OutputBlocks) {
