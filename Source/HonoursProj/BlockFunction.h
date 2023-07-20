@@ -42,7 +42,8 @@ enum class EPropagable : uint8 {
 	NONE		= 0				UMETA(Hidden),
 	DIRTY		= 1 << 0,
 	VALID		= 1 << 1,
-	ALL			= ((1 << 2) - 1)	UMETA(Hidden)
+	GETVALUE	= 1 << 2,
+	ALL			= ((1 << 3) - 1)	UMETA(Hidden)
 };
 ENUM_CLASS_FLAGS(EPropagable);
 
@@ -60,6 +61,7 @@ private:
 public:
 	// Status Handling
 	void Propagate(MaskedBitFlags<EPropagable> Values, bool Origin = true);
+	void PropagateToEnds(MaskedBitFlags<EPropagable> Values);
 
 	inline bool IsStatus(EPropagable InTest) const { return EnumHasAllFlags(Status, InTest); }
 

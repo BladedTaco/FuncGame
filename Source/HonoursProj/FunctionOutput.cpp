@@ -29,10 +29,11 @@ AHonoursProjBlock* AFunctionOutput::HandleClick(UPrimitiveComponent* ClickedComp
 }
 
 AHonoursProjBlock* AFunctionOutput::HandleRClick(UPrimitiveComponent* ClickedComponent) {
+	auto copy = connectedTo;
 	// Proprogate
 	Function->Propagate({ EPropagable::DIRTY });
 	// Break all inputs connected to this output
-	for (auto inputBlock : connectedTo) {
+	for (auto inputBlock : copy) {
 		inputBlock->HandleRClick(ClickedComponent);
 	}
 	connectedTo.Empty();
@@ -51,8 +52,9 @@ void AFunctionOutput::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 }
 
 UType* AFunctionOutput::ResolveType() {
+	TMap<UType*, UType*> ptrMap = {};
 	// Copy Owners OutputArrow
-	UType* arrow = Function->ResolveType()->DeepCopy();
+	UType* arrow = Function->ResolveType()->DeepCopy(ptrMap);
 	// Get a pointer to the arrow
 	UTypePtr* arrowPtr = UTypePtr::New(arrow);
 
@@ -62,7 +64,7 @@ UType* AFunctionOutput::ResolveType() {
 	}
 	// Apply the Outputs Type to the TypeVar
 	//Cast<UTypeVar>(arrowPtr->Get())->ApplyEvidence(ParameterInfo.Type);
-	Cast<UTypeVar>(arrowPtr->Get())->ApplyEvidence(Function->Outputs[Index].Type);
+	Cast<UTypeVar>(arrowPtr->Get())->ApplyEvidence(Function->Outputs[Index].Type->DeepCopy(ptrMap));
 
 	// Return the arrow with applied type
 	return arrow;

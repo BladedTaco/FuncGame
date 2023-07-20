@@ -118,13 +118,18 @@ AHonoursProjBlock* AFunctionConnector::HandleClick(UPrimitiveComponent* ClickedC
 			}
 
 
-			// Get Applicability
-			bool applicable;
-			if (IsA<AFunctionInput>()) {
-				applicable = myType->Supercedes(otherType);
-			} else {
-				applicable = otherType->Supercedes(myType);
-			}
+			//// Get Applicability
+			//bool applicable;
+			//if (IsA<AFunctionInput>()) {
+			//	applicable = myType->Supercedes(otherType);
+			//} else {
+			//	applicable = otherType->Supercedes(myType);
+			//}
+			
+			//bool applicable = myType->Supercedes(otherType) || otherType->Supercedes(myType);
+
+			bool applicable = myType->RecursiveCopy()->UnifyWith(otherType);
+
 
 			UE_LOG(LogTemp, Warning, TEXT("SUPERCEDES? %d"), applicable);
 

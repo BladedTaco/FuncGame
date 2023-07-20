@@ -7,6 +7,17 @@
 #include "MyUtils.h"
 
 
+// Determine the intersection of two types
+EType Intersection(EType a, EType b) {
+	if (a <= b) {
+		return a;
+	} else if (b <= a) {
+		return b;
+	}
+	return EType::NONE;
+}
+
+
 // Test Compatibility
 bool UType::Supercedes(const UType* other) const {
 	EType myType = GetType();
@@ -34,6 +45,11 @@ bool UType::Supercedes(const UType* other) const {
 
 
 FString UType::ToString() const {
+	if (IsA<UTypeVar>()) {
+		((UTypeVar*)this)->ReapplyEvidence();
+		//me->ReapplyEvidence();
+	}
+	
 	// Get Base Type
 	EType t = GetType();
 
@@ -86,13 +102,16 @@ FString UType::ToString() const {
 	return type;
 }
 
-bool UType::UnifyWith(const UType* concreteType) {
-	if (!Supercedes(concreteType)) return false;
+bool UType::UnifyWith(UType* concreteType) {
+	// Get Type Intersection
+	EType inter = Intersection(GetType(), concreteType->GetType());
+	if (inter == EType::NONE) return false;
 
-	auto templates = GetTemplates();
-	auto otherTemplates = concreteType->GetTemplates(GetType());
+	//if (!Supercedes(concreteType)) return false;
+	auto otherTemplates = concreteType->GetTemplates(inter);
+	if (otherTemplates.Num() == 0) return true;
 
-	return Algo::CompareByPredicate(templates, otherTemplates, [](UType* a, UType* b) {
+	return Algo::CompareByPredicate(GetTemplates(), otherTemplates, [](UType* a, UType* b) {
 		return a->UnifyWith(b);
 	});
 }
@@ -118,10 +137,29 @@ TArray<UType*> UType::GetTemplates(ETypeClass As) const {
 	return templates;
 }
 
+// Get Templates as TypeData
+TArray<UType*> UType::GetTemplates(ETypeData As) const {
+	auto templates = GetTemplates();
+
+	// Check for special cases
+	switch (As) {
+	case ETypeData::FUNC: 
+		if (templates.Num() == 1) {
+			return { UTypeVar::New(ETypeClass::ANY) , templates[0] };
+		}
+	default:
+		return templates;
+	}
+	// Return templates as normal
+	return templates;
+}
+
 TArray<UType*> UType::GetTemplates(EType As) const {
 	if (IsETypeClass(As)) {
 		return GetTemplates(( ETypeClass )As);
-	} 
+	} else if (IsETypeData(As)) {
+		return GetTemplates(( ETypeData )As);
+	}
 	return GetTemplates();
 }
 
@@ -142,7 +180,7 @@ UTypeConst* UTypeConst::New(ETypeBase InType) {
 }
 
 // Recursive Deep Copying
-UType* UTypeConst::DeepCopy(const TMap<UType*, UType*>& ptrMap) const {
+UType* UTypeConst::DeepCopy(TMap<UType*, UType*>& ptrMap) const {
 	// Simply copy Type when terminal
 	if (Terminal()) { return New(( ETypeBase )Type); }
 
@@ -169,32 +207,31 @@ UTypeConst* UTypeConst::MakeConst(const UType* InType) {
 	return out;
 }
 
-
-// Determine the intersection of two types
-EType Intersection(EType a, EType b) {
-	if (a <= b) {
-		return a;
-	} else if (b <= a) {
-		return b;
-	}
-	return EType::NONE;
-}
-
 // Constrict the Constant Type to the other InType
-void UTypeConst::RestrictTo(UType* other) {
+bool UTypeConst::RestrictTo(UType* other) {
 	// Set InType to intersection of this InType and 
 	Type = Intersection(Type, other->GetType());
+	if (Type == EType::NONE) return false;
+
 
 	// For each Template pair
 	auto otherTemplates = other->GetTemplates(GetType());
+	if (otherTemplates.Num() == 0) return true;
+
 	for (int i = Templates.Num() - 1; i >= 0; i--) {
 		// Get Template as Const Type
 		auto t = Cast<UTypeConst>(Templates[i]);
 		// If NonConst, Make Const
 		if (!t) { Templates[i] = t = UTypeConst::MakeConst(t); }
 		// Edit Type Recursively
-		t->RestrictTo(otherTemplates[i]);
+		if (!t->RestrictTo(otherTemplates[i])) {
+			return false;
+		}
 	}
+	return true;
+	//Algo::CompareByPredicate(Templates, other->GetTemplates(GetType()), [](UType* me, UType* bound) {
+
+	//})
 }
 
 
@@ -231,7 +268,7 @@ UTypePtr* UTypePtr::New(UType* TypeVar) {
 }
 
 // Recursive Deep Copy
-UType* UTypePtr::DeepCopy(const TMap<UType*, UType*>& ptrMap) const {
+UType* UTypePtr::DeepCopy(TMap<UType*, UType*>& ptrMap) const {
 	// Strip any Invalid ptrs 
 	if (!Valid()) { return New(NULL); }
 
@@ -244,6 +281,7 @@ UType* UTypePtr::DeepCopy(const TMap<UType*, UType*>& ptrMap) const {
 	// Else Deep Copy Type
 	} else {
 		inner = Type->DeepCopy(ptrMap);
+		ptrMap.Add(Type, inner);
 	}
 
 	// Create InType, Deep Copying pointer
@@ -256,11 +294,16 @@ UType* UTypePtr::DeepCopy(const TMap<UType*, UType*>& ptrMap) const {
 	return out;
 }
 
-bool UTypePtr::UnifyWith(const UType* concreteType) {
-	return Supercedes(concreteType) && Get()->UnifyWith(concreteType)
-		&& (Templates.Num() == 0 || Algo::CompareByPredicate(Templates, concreteType->GetTemplates(GetType()), [](UType* me, const UType* other) {
-		return me->UnifyWith(other);
-	}));
+bool UTypePtr::UnifyWith(UType* concreteType) {
+	if (!Get()->UnifyWith(concreteType)) return false;
+
+	auto otherTemplates = concreteType->GetTemplates(GetType());
+	auto myTemplates = UType::GetTemplates(GetType());
+	return myTemplates.Num() == 0
+		|| otherTemplates.Num() == 0
+		|| Algo::CompareByPredicate(myTemplates, otherTemplates, [](UType* me, UType* other) {
+			return me->UnifyWith(other);
+		});
 }
 
 UType* UTypePtr::Get() {
@@ -278,13 +321,28 @@ EType UTypePtr::GetType() const {
 
 // Return TypeVars Templates
 TArray<UType*> UTypePtr::GetTemplates() const {
-	if (Type) {
-		// Return pointed to templates when there are any
-		auto templates = Type->GetTemplates();
-		if (templates.Num() > 0) {
-			return templates;
-		}
+	// Check for No Pointer
+	if (!Type) return Templates;
+
+	// Get Pointed to Templates
+	auto templates = Type->GetTemplates();
+
+	// If Equal Numbers
+	if (templates.Num() == Templates.Num()) {
+		// Return based on CopyTemplates
+		return CopyTemplates ? templates : Templates;
 	}
+
+	// If One is Zero
+	if (templates.Num() * Templates.Num() == 0) {
+		return templates.Num() == 0 ? Templates : templates;
+	}
+
+	// Else Handle Partial Pasting
+	if (templates.Num() == 2 && Templates.Num() == 1) {
+		return { templates[0], Templates[0] };
+	}
+
 	// Else fall through to own templates
 	return Templates;
 }
@@ -307,7 +365,7 @@ UTypeVar* UTypeVar::New(ETypeClass InType) {
 }
 
 // Base Case of Deep Copy Recursion
-UType* UTypeVar::DeepCopy(const TMap<UType*, UType*>& ptrMap) const {
+UType* UTypeVar::DeepCopy(TMap<UType*, UType*>& ptrMap) const {
 	//// Simply copy InType, Evidence is not copied
 	//return New(Type);
 	UTypeVar* out = New(Type);
@@ -318,8 +376,18 @@ UType* UTypeVar::DeepCopy(const TMap<UType*, UType*>& ptrMap) const {
 	return out;
 }
 
-bool UTypeVar::UnifyWith(const UType* concreteType) {
-	return ApplyEvidence(concreteType);
+bool UTypeVar::UnifyWith(UType* concreteType) {
+	bool success = ApplyEvidence(concreteType);
+	
+	ReapplyEvidence();
+
+	//for (auto& evidence : Evidence) {
+	//	evidence->UnifyWith(Instance);
+	//}
+
+	//ReapplyEvidence();
+
+	return success;
 }
 
 
@@ -339,20 +407,22 @@ TArray<UType*> UTypeVar::GetTemplates() const {
 	return {};
 }
 
-bool UTypeVar::ApplyEvidence(const UType* InType) {
+bool UTypeVar::ApplyEvidence(UType* InType) {
 	UTypeConst* ConstIn = UTypeConst::MakeConst(InType);
 
 	if (Instance && IsValid(Instance)) {
-		// Only succeed if Instance Supercedes InType
-		if (!Instance->Supercedes(ConstIn)) return false;
-		// Restrict Type Instance
-		Instance->RestrictTo(ConstIn);
+		// try to apply bound to copy, returning on failure
+		auto copyInst = Cast<UTypeConst>(Instance->RecursiveCopy());
+		if (!copyInst->RestrictTo(ConstIn)) return false;
+
+		// Copy back to original instance on success
+		Instance = copyInst;
 	} else {
 		// Instance becomes InType as UTypeConst
 		Instance = ConstIn;
 	}
 	// Add Evidence and Return Success
-	Evidence.Add(ConstIn);
+	Evidence.Add(InType);
 	return true;
 }
 
@@ -369,12 +439,22 @@ bool UTypeVar::RemoveEvidence(const UType* InType) {
 	// Release Type Instance
 	Instance = NULL;
 	// Reapply all remaining evidence
-	for (const auto& t : Evidence) {
+	for (auto& t : Evidence) {
 		ApplyEvidence(t);
 	}
 
 	// Return Success
 	return true;
+}
+
+void UTypeVar::ReapplyEvidence() {
+	auto copy = Evidence;
+	// Release Type Instance
+	ResetEvidence();
+	// Reapply all remaining evidence
+	for (auto& t : copy) {
+		ApplyEvidence(t);
+	}
 }
 
 void UTypeVar::ResetEvidence() {
@@ -404,4 +484,9 @@ bool UType::EqualTo(const UType* other) const {
 
 	// return equal
 	return true;
+}
+
+UType* UType::RecursiveCopy() {
+	TMap<UType*, UType*> map = {};
+	return DeepCopy(map);
 }

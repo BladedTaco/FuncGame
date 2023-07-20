@@ -9,8 +9,6 @@
 
 #include "Type.generated.h"
 
-inline const auto emptyPtrMap = TMap<UType*, UType*>();
-
 // This class does not need to be modified.
 UCLASS()
 class HONOURSPROJ_API UType : public UObject
@@ -20,9 +18,11 @@ public:
 	virtual EType GetType() const PURE_VIRTUAL(UType::GetType, return EType::ANY;);
 	virtual TArray<UType*> GetTemplates() const PURE_VIRTUAL(UType::GetTemplates, return {}; );
 	virtual TArray<UType*> GetTemplates(ETypeClass As) const;
+	virtual TArray<UType*> GetTemplates(ETypeData As) const;
 	virtual TArray<UType*> GetTemplates(EType As) const;
 
-	virtual UType* DeepCopy(const TMap<UType*, UType*>& ptrMap = emptyPtrMap) const PURE_VIRTUAL(UType::DeepCopy, return NULL; );
+	UType* RecursiveCopy();
+	virtual UType* DeepCopy(TMap<UType*, UType*>& ptrMap) const PURE_VIRTUAL(UType::DeepCopy, return NULL; );
 
 public:
 	bool Supercedes(const UType* other) const;
@@ -31,7 +31,7 @@ public:
 
 	bool EqualTo(const UType* other) const;
 
-	virtual bool UnifyWith(const UType* concreteType);
+	virtual bool UnifyWith(UType* concreteType);
 
 	//~UType() {
 	//	UE_LOG(LogTemp, Warning, TEXT("Type Destroyed"));
@@ -62,12 +62,12 @@ public:
 
 	static UTypeConst* New(ETypeData InType, TArray<UType*> InTemplates);
 	static UTypeConst* New(ETypeBase InType);
-	virtual UType* DeepCopy(const TMap<UType*, UType*>& ptrMap = emptyPtrMap) const override;
+	virtual UType* DeepCopy(TMap<UType*, UType*>& ptrMap) const override;
 
 	UFUNCTION(BlueprintCallable)
 		static UTypeConst* MakeConst(const UType* InType);
 	UFUNCTION(BlueprintCallable)
-		void RestrictTo(UType* InType);
+		bool RestrictTo(UType* InType);
 
 };
 
@@ -96,9 +96,9 @@ public:
 	static UTypePtr* New(UType* TypeVar, TArray<UType*> InTemplates);
 	static UTypePtr* New(UType* TypeVar);
 
-	virtual UType* DeepCopy(const TMap<UType*, UType*>& ptrMap = emptyPtrMap) const override;
+	virtual UType* DeepCopy(TMap<UType*, UType*>& ptrMap) const override;
 
-	virtual bool UnifyWith(const UType* concreteType) override;
+	virtual bool UnifyWith(UType* concreteType) override;
 };
 
 // A Class That has an ETypeClass EType that gets resolved into an ETypeData or ETypeBase EType
@@ -116,9 +116,11 @@ private:
 
 public:
 	UFUNCTION(BlueprintCallable)
-		bool ApplyEvidence(const UType* InType);
+		bool ApplyEvidence(UType* InType);
 	UFUNCTION(BlueprintCallable)
 		bool RemoveEvidence(const UType* InType);
+	UFUNCTION(BlueprintCallable)
+		void ReapplyEvidence();
 	UFUNCTION(BlueprintCallable)
 		void ResetEvidence();
 
@@ -126,8 +128,8 @@ public:
 	virtual TArray<UType*> GetTemplates() const override;
 
 	static UTypeVar* New(ETypeClass InType);
-	virtual UType* DeepCopy(const TMap<UType*, UType*>& ptrMap = emptyPtrMap) const override;
+	virtual UType* DeepCopy(TMap<UType*, UType*>& ptrMap) const override;
 
 
-	virtual bool UnifyWith(const UType* concreteType) override;
+	virtual bool UnifyWith(UType* concreteType) override;
 };

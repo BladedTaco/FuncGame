@@ -56,6 +56,25 @@ void ABlockFunction::Propagate(MaskedBitFlags<EPropagable> Values, bool Origin) 
 	}
 }
 
+void ABlockFunction::PropagateToEnds(MaskedBitFlags<EPropagable> Values) {
+	// If all Outputs are Unconnected
+	if (Algo::AllOf(OutputBlocks, [](const AFunctionOutput* output) {
+		return output->connectedTo.Num() == 0;
+
+	// Update Status
+	})) {
+		Status = Values.Apply(Status);
+
+	// Propogate
+	} else {
+		for (auto block : OutputBlocks) {
+			for (auto to : block->connectedTo) {
+				to->Function->PropagateToEnds(Values);
+			}
+		}
+	}
+}
+
 // Called when the game starts or when spawned
 void ABlockFunction::BeginPlay() {
 	Super::BeginPlay();
@@ -118,6 +137,7 @@ void ABlockFunction::BeginPlay() {
 void ABlockFunction::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
+	// If Needs to update Type
 	if (IsStatus(EPropagable::DIRTY)) {
 		ResolveType();
 
@@ -138,23 +158,33 @@ void ABlockFunction::Tick(float DeltaTime) {
 
 		// For inputs
 		for (auto input : InputBlocks) {
-			if (input->connectedTo) {
-				input->HUDInstance->Type = input->ResolveType()->ToString();
-			} else {
-				input->HUDInstance->Type = Inputs[input->Index].Type->ToString();
-			}
-			
+			//if (input->connectedTo) {
+			//	input->HUDInstance->Type = input->ResolveType()->ToString();
+			//} else {
+			//	input->HUDInstance->Type = Inputs[input->Index].Type->ToString();
+			//}
+
+			input->HUDInstance->Type = input->ParameterInfo.Type->ToString();
+
 			//Valid &= Inputs[input->Index].Type->Supercedes(input->ParameterInfo.Type);
 			//input->HUDInstance->Type = Inputs[input->Index].Type->ToString();
 		}
 		// For Outputs
 		for (auto output : OutputBlocks) {
-			output->HUDInstance->Type = output->ResolveType()->ToString();
-			//output->HUDInstance->Type = Outputs[output->Index].Type->ToString();
+			//output->HUDInstance->Type = output->ResolveType()->ToString();
+			output->HUDInstance->Type = Outputs[output->Index].Type->ToString();
 		}
 
 		// Clean
 		Status ^= EPropagable::DIRTY;
+	}
+
+	// If needs to update value
+	if (IsStatus(EPropagable::GETVALUE)) {
+		// Get Value
+		GetValue();
+		// Remove from Status
+		Status ^= EPropagable::GETVALUE;
 	}
 }
 
@@ -178,7 +208,7 @@ UType* ABlockFunction::ResolveTypesWithPartial(int output, const TArray<VStar>& 
 	// DeepCopy TypeVars and use in ptrMap
 	TMap<UType*, UType*> ptrMap;
 	for (UTypeVar* var : TypeVars) {
-		ptrMap.Add(var, var->DeepCopy());
+		ptrMap.Add(var, var->RecursiveCopy());
 	}
 
 	// Get Original Output Type

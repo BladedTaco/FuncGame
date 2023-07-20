@@ -62,22 +62,27 @@ void ABlockFunctionCounter::Tick(float DeltaTime) {
 	float NextValue = CurrentValue + DeltaTime * TickRate;
 
 	if (FMath::Fmod(CurrentValue, 1.0f) > FMath::Fmod(NextValue, 1.0f)) {
-		TArray<AActor*> actors;
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ABlockFunction::StaticClass(), actors);
+		// Propogate Update
+		PropagateToEnds({ EPropagable::GETVALUE });
 
-		for (AActor* act : actors) {
-			auto func = Cast<ABlockFunction>(act);
+		// Old system
 
-			if (func && (func->OutputBlocks.Num() == 0 || Algo::AllOf(func->OutputBlocks, [](const AFunctionOutput* outBlock) {
-				return outBlock->connectedTo.Num() == 0;
-			}))) {
-				if (func->InputBlocks.Num() == 0 || Algo::AllOf(func->InputBlocks, [](const AFunctionInput* inBlock) {
-					return !!inBlock->connectedTo;
-				})) {
-					func->GetValue();
-				}
-			}
-		}
+		//TArray<AActor*> actors;
+		//UGameplayStatics::GetAllActorsOfClass(GetWorld(), ABlockFunction::StaticClass(), actors);
+
+		//for (AActor* act : actors) {
+		//	auto func = Cast<ABlockFunction>(act);
+
+		//	if (func && (func->OutputBlocks.Num() == 0 || Algo::AllOf(func->OutputBlocks, [](const AFunctionOutput* outBlock) {
+		//		return outBlock->connectedTo.Num() == 0;
+		//	}))) {
+		//		if (func->InputBlocks.Num() == 0 || Algo::AllOf(func->InputBlocks, [](const AFunctionInput* inBlock) {
+		//			return !!inBlock->connectedTo;
+		//		})) {
+		//			func->GetValue();
+		//		}
+		//	}
+		//}
 	}
 
 	CurrentValue = FMath::Fmod(NextValue, MaxValue);
