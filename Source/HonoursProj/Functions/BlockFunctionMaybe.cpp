@@ -26,9 +26,8 @@
 
 void ABlockFunctionMaybe::SetFunctionTypes() {
 
-	HUDInstance->FunctionName = FString(TEXT("Maybe Constructor"));
+	FunctionName = FString(TEXT("Maybe Constructor"));
 
-	HUDInstance->LastResult = FString(TEXT("Unevaluated"));
 
 
 	// Initialize Type Variables

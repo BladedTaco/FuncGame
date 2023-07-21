@@ -37,8 +37,88 @@ ABlockFunction::ABlockFunction() {
 	HUDComponent->SetDrawAtDesiredSize(true);
 	HUDComponent->SetupAttachment(RootComponent);
 	HUDComponent->SetWidgetClass(Assets()->HUD.Function.Class);
-	HUDComponent->SizeToBounds(GetBlockMesh());
+}
+
+void ABlockFunction::SpawnConnectors() {
+	// Requires World
+	if (!GetWorld()) return;
+
+	bool exitEarly = !!HUDInstance;
+
+	HUDComponent->InitWidget();
 	HUDComponent->UpdateWidget();
+	HUDComponent->SizeToBounds(GetBlockMesh());
+	HUDInstance = Cast<UFunctionHUD>(HUDComponent->GetUserWidgetObject());
+
+	HUDInstance->FunctionName = FunctionName;
+	HUDInstance->LastResult = FString(TEXT("Unevaluated"));
+
+	// Call once
+	if (exitEarly) return;
+
+
+	// Set Function Signature
+	SetFunctionTypes();
+
+	// Ensure Attachment is entirely KeepRelative
+	FAttachmentTransformRules attachRules = FAttachmentTransformRules(
+		EAttachmentRule::KeepRelative,
+		EAttachmentRule::KeepRelative,
+		EAttachmentRule::KeepRelative,
+		false
+	);
+
+	// Get Length from block center to top
+	FVector lower, upper, extent;
+	GetBlockMesh()->GetLocalBounds(lower, upper);
+	extent = (upper - lower) * GetBlockMesh()->GetComponentScale();
+
+
+	int idx;
+	FString name;
+	FActorSpawnParameters spawnParams;
+	// Loop over both Inputs and Outputs
+	for (auto [yOff, blockType, iterable, blocks, blockClass] : {
+		MakeTuple(-1, TEXT("Input"),  &Inputs,  (TArray<AFunctionConnector*>*) & InputBlocks,  AFunctionInput::StaticClass()),
+		MakeTuple(1, TEXT("Output"), &Outputs, (TArray<AFunctionConnector*>*) & OutputBlocks, AFunctionOutput::StaticClass())
+		}) {
+				// Reset Index
+		idx = 0;
+		// For each of the Inputs/Outputs
+		for (FParameter& param : *iterable) {
+			// Set Actor Name
+			name = FString::Format(TEXT("{0}_{1}_{2}"), { GetFName().ToString(), blockType, param.Name });
+			spawnParams.Name = FName(*name);
+			// Spawn Actor and give data
+			AFunctionConnector* actor = GetWorld()->SpawnActor<AFunctionConnector>(blockClass, spawnParams);
+			actor->Function = this;
+			actor->ParameterInfo = FParameter(param.Name, UTypePtr::New(param.Type));
+			actor->Index = idx;
+			blocks->Add(actor);
+			if (actor && actor->HUDInstance) {
+				actor->HUDInstance->Name = actor->ParameterInfo.Name;
+			}
+			// Attach to self
+			actor->AttachToActor(this, attachRules);
+			actor->SetActorRelativeLocation(FVector(100 * -idx + 50, yOff * 100, 0.5 * extent.Z));
+			actor->SetupHUD();
+			// Iterate index
+			idx += 1;
+		}
+	}
+}
+
+void ABlockFunction::SpawnAllConnectors() {
+	TArray<AActor*> actors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), StaticClass(), actors);
+
+	for (auto actor : actors) {
+		auto func = Cast<ABlockFunction>(actor);
+		func->SpawnConnectors();
+		func->Status |= EPropagable::DIRTY;
+		actor->Tick(0.0f);
+	}
+
 }
 
 void ABlockFunction::Propagate(MaskedBitFlags<EPropagable> Values, bool Origin) {
@@ -79,59 +159,8 @@ void ABlockFunction::PropagateToEnds(MaskedBitFlags<EPropagable> Values) {
 void ABlockFunction::BeginPlay() {
 	Super::BeginPlay();
 
-
-	HUDComponent->SizeToBounds(GetBlockMesh());
-	HUDInstance = Cast<UFunctionHUD>(HUDComponent->GetUserWidgetObject());
-
+	SpawnConnectors();
 	
-	// Set Function Signature
-	SetFunctionTypes();
-
-	// Ensure Attachment is entirely KeepRelative
-	FAttachmentTransformRules attachRules = FAttachmentTransformRules(
-		EAttachmentRule::KeepRelative,
-		EAttachmentRule::KeepRelative,
-		EAttachmentRule::KeepRelative,
-		false
-	);
-
-	// Get Length from block center to top
-	FVector lower, upper, extent;
-	GetBlockMesh()->GetLocalBounds(lower, upper);
-	extent = (upper - lower) * GetBlockMesh()->GetComponentScale();
-
-
-	int idx;
-	FString name;
-	FActorSpawnParameters spawnParams;
-	// Loop over both Inputs and Outputs
-	for (auto [yOff, blockType, iterable, blocks, blockClass] : {
-		MakeTuple(-1, TEXT("Input"),  &Inputs,  (TArray<AFunctionConnector*>*)&InputBlocks,  AFunctionInput::StaticClass()),
-		MakeTuple( 1, TEXT("Output"), &Outputs, (TArray<AFunctionConnector*>*)&OutputBlocks, AFunctionOutput::StaticClass())
-	}) {
-			// Reset Index
-		idx = 0;
-		// For each of the Inputs/Outputs
-		for (FParameter& param : *iterable) {
-			// Set Actor Name
-			name = FString::Format(TEXT("{0}_{1}_{2}"), { GetFName().ToString(), blockType, param.Name });
-			spawnParams.Name = FName(*name);
-			// Spawn Actor and give data
-			AFunctionConnector* actor = GetWorld()->SpawnActor<AFunctionConnector>(blockClass, spawnParams);
-			actor->ParameterInfo = FParameter(param.Name, UTypePtr::New(param.Type));
-			actor->Index = idx;
-			actor->Function = this;
-			blocks->Add(actor);
-			if (actor && actor->HUDInstance) {
-				actor->HUDInstance->Name = actor->ParameterInfo.Name;
-			}
-			// Attach to self
-			actor->AttachToActor(this, attachRules);
-			actor->SetActorRelativeLocation(FVector(100 * -idx + 50, yOff*100, 0.5 * extent.Z));
-			// Iterate index
-			idx += 1;
-		}
-	}
 }
 
 void ABlockFunction::Tick(float DeltaTime) {

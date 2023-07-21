@@ -25,9 +25,7 @@
 
 void ABlockFunctionConstant::SetFunctionTypes() {
 
-	HUDInstance->FunctionName = FString(TEXT("Number Constant"));
-
-	HUDInstance->LastResult = FString(TEXT("Unevaluated"));
+	FunctionName = FString(TEXT("Number Constant"));
 
 	// Set Inputs and Outputs
 	Inputs = {};

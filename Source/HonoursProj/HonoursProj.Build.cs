@@ -9,6 +9,22 @@ public class HonoursProj : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 		//PCHUsage = PCHUsageMode.NoSharedPCHs;
 		CppStandard = CppStandardVersion.Cpp17;
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "UMG", "Slate", "SlateCore" });
+		PublicDependencyModuleNames.AddRange(new string[] {
+			"Core", 
+			"CoreUObject",
+			"Engine", 
+			"InputCore",
+			"HeadMountedDisplay",
+            "DetailsCustomizer",
+			"PropertyEditor",
+            "UMG", 
+			"Slate", 
+			"SlateCore" 
+		});
+
+        PrivateDependencyModuleNames.AddRange(new string[] {
+			"PropertyEditor",
+			"DetailsCustomizer"
+		});
 	}
 }

@@ -60,12 +60,19 @@ AFunctionConnector::AFunctionConnector() {
 }
 
 
+void AFunctionConnector::SetupHUD() {
+	HUDComponent->AspectRatio = FVector2D(3, 1);
+	HUDComponent->InitWidget();
+	HUDComponent->UpdateWidget();
+	HUDComponent->SizeToBounds(GetBlockMesh());
+	HUDInstance = Cast<UParameterHUD>(HUDComponent->GetUserWidgetObject());
+}
+
+
 void AFunctionConnector::BeginPlay() {
 	Super::BeginPlay();
 
-	HUDComponent->AspectRatio = FVector2D(3, 1);
-	HUDComponent->SizeToBounds(GetBlockMesh());
-	HUDInstance = Cast<UParameterHUD>(HUDComponent->GetUserWidgetObject());
+	SetupHUD();
 }
 
 FTransform AFunctionConnector::Connect(FVector a, FVector b) {
@@ -131,11 +138,11 @@ AHonoursProjBlock* AFunctionConnector::HandleClick(UPrimitiveComponent* ClickedC
 			bool applicable = myType->RecursiveCopy()->UnifyWith(otherType);
 
 
-			UE_LOG(LogTemp, Warning, TEXT("SUPERCEDES? %d"), applicable);
+			//UE_LOG(LogTemp, Warning, TEXT("SUPERCEDES? %d"), applicable);
 
 			// Highlight Applicable
 			if (applicable) {
-				UE_LOG(LogTemp, Warning, TEXT("Applicable"));
+				//UE_LOG(LogTemp, Warning, TEXT("Applicable"));
 				ValidConnections.Add(other);
 				other->GetBlockMesh()->SetMaterial(0, other->ConnectMaterial);
 				// TODO: APPLY EVIDENCE
@@ -160,4 +167,24 @@ AHonoursProjBlock* AFunctionConnector::HandleClick(UPrimitiveComponent* ClickedC
 
 
 	return this;
+}
+
+void AFunctionConnector::EditorConnectTo() {
+	if (!EditorConnect || !EditorConnect->GetBlockMesh()) {
+		UE_LOG(LogTemp, Warning, TEXT("Invalid EditorConnect for AFunctionConnector::EditorConnectTo"));
+		return;
+	}
+
+	// Select This
+	HandleClick(GetBlockMesh());
+	// Drag to EditorConnect
+	HandleClick(EditorConnect->GetBlockMesh());
+	// Update ConnectMesh
+	if (IsA<AFunctionInput>()) {
+		ConnectMesh->SetVisibility(true);
+		Tick(0.0f);
+	} else {
+		EditorConnect->ConnectMesh->SetVisibility(true);
+		EditorConnect->Tick(0.0f);
+	}
 }

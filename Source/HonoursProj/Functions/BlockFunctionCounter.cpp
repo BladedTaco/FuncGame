@@ -31,10 +31,7 @@
 
 void ABlockFunctionCounter::SetFunctionTypes() {
 
-	HUDInstance->FunctionName = FString(TEXT("Counter"));
-
-	HUDInstance->LastResult = FString(TEXT("Unevaluated"));
-
+	FunctionName = FString(TEXT("Counter"));
 
 	Outputs = {
 		{"Counter", UTypeConst::New(ETypeData::NUMBER, { UTypeConst::New(ETypeBase::INT) }) }

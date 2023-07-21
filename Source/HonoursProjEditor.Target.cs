@@ -9,5 +9,6 @@ public class HonoursProjEditorTarget : TargetRules
 	{
 		Type = TargetType.Editor;
 		ExtraModuleNames.Add("HonoursProj");
+		ExtraModuleNames.Add("DetailsCustomizer");
 	}
 }

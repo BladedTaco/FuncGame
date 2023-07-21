@@ -29,9 +29,8 @@
 
 void ABlockFunctionShow::SetFunctionTypes() {
 
-	HUDInstance->FunctionName = FString(TEXT("Show"));
+	FunctionName = FString(TEXT("Show"));
 
-	HUDInstance->LastResult = FString(TEXT("Unevaluated"));
 
 	//UTypeVar* A = UTypeVar::New(ETypeClass::SHOW);
 	//TypeVars = { A };

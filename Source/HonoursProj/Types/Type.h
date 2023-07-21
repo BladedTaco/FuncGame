@@ -27,11 +27,12 @@ public:
 public:
 	bool Supercedes(const UType* other) const;
 
-	FString ToString() const;
+	virtual FString ToString() const;
 
 	bool EqualTo(const UType* other) const;
 
 	virtual bool UnifyWith(UType* concreteType);
+
 
 	//~UType() {
 	//	UE_LOG(LogTemp, Warning, TEXT("Type Destroyed"));
@@ -68,7 +69,6 @@ public:
 		static UTypeConst* MakeConst(const UType* InType);
 	UFUNCTION(BlueprintCallable)
 		bool RestrictTo(UType* InType);
-
 };
 
 // A Class that relies entirely on a TypeVar for its Type Information
@@ -130,6 +130,7 @@ public:
 	static UTypeVar* New(ETypeClass InType);
 	virtual UType* DeepCopy(TMap<UType*, UType*>& ptrMap) const override;
 
+	virtual FString ToString() const override;
 
 	virtual bool UnifyWith(UType* concreteType) override;
 };

@@ -25,9 +25,8 @@
 
 void ABlockFunctionGreaterThan::SetFunctionTypes() {
 
-	HUDInstance->FunctionName = FString(TEXT("Greater Than"));
+	FunctionName = FString(TEXT("Greater Than"));
 
-	HUDInstance->LastResult = FString(TEXT("Unevaluated"));
 
 
 	// Initialize Type Variables

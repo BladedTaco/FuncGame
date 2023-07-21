@@ -28,9 +28,8 @@
 
 void ABlockFunctionFmap::SetFunctionTypes() {
 
-	HUDInstance->FunctionName = FString(TEXT("FMap"));
+	FunctionName = FString(TEXT("FMap"));
 
-	HUDInstance->LastResult = FString(TEXT("Unevaluated"));
 
 	// Initialize Type Variables
 	UTypeVar* F = UTypeVar::New(ETypeClass::FUNCTOR);

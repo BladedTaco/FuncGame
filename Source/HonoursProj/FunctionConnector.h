@@ -51,6 +51,16 @@ public:
 	virtual UType* ResolveType() PURE_VIRTUAL(AFunctionConnector::ResolveType, return NULL;);
 	virtual VStar GetValue() PURE_VIRTUAL(AFunctionConnector::GetValue, return VStar(););
 
+	void SetupHUD();
+
+
+public:
+	UPROPERTY(Category = EditorConnect, EditAnywhere)
+		AFunctionConnector* EditorConnect;
+
+	UFUNCTION(Category = EditorConnect, BlueprintCallable, CallInEditor)
+		void EditorConnectTo();
+
 public:
 	UPROPERTY(VisibleAnywhere)
 		FParameter ParameterInfo;

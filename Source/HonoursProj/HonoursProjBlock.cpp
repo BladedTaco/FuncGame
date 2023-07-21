@@ -37,8 +37,13 @@ AHonoursProjBlock::AHonoursProjBlock() {
 
 
 FVector AHonoursProjBlock::MousePos() {
+	if (!GetWorld()) return FVector::ZeroVector;
+
 	FVector worldPos, worldDir;
 	auto playerCon = GetWorld()->GetFirstPlayerController<AHonoursProjPlayerController>();
+
+	if (!playerCon) return FVector::ZeroVector;
+
 	playerCon->DeprojectMousePositionToWorld(worldPos, worldDir);
 	return worldPos;
 }

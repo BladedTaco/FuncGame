@@ -14,6 +14,8 @@ class HONOURSPROJ_API ABlockFunctionShow : public ABlockFunction {
 	GENERATED_BODY()
 
 public:
+	ABlockFunctionShow() { SpawnConnectors(); };
+
 	virtual Arr<VStarArray, VStarArrayReturn> GetInnerFunc() override;
 	virtual void SetFunctionTypes() override;
 };

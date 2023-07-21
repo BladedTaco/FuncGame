@@ -41,7 +41,7 @@ void UAutoScalingHUD::SizeToBounds(UStaticMeshComponent* Mesh) {
 	FVector min, max;
 	Mesh->GetLocalBounds(min, max);
 	FVector2D HUDSize = FVector2D((max - min) * Mesh->GetComponentScale());
-	UE_LOG(LogTemp, Warning, TEXT("HUDSize, %f %f"), HUDSize.X, HUDSize.Y);
+	//UE_LOG(LogTemp, Warning, TEXT("HUDSize, %f %f"), HUDSize.X, HUDSize.Y);
 	// Set Size
 	TargetSize = HUDSize;
 
@@ -62,7 +62,7 @@ void UAutoScalingHUD::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 		// When Valid
 		if (!currSize.IsNearlyZero()) {
-			UE_LOG(LogTemp, Warning, TEXT("CurrSize, %f %f"), currSize.X, currSize.Y);
+			//UE_LOG(LogTemp, Warning, TEXT("CurrSize, %f %f"), currSize.X, currSize.Y);
 
 			//FVector2D scale = TargetSize / currSize;
 			//SetRelativeScale3D(FVector(1.0f, scale.Y, scale.X));

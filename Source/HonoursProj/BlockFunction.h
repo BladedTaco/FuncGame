@@ -50,9 +50,15 @@ ENUM_CLASS_FLAGS(EPropagable);
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class HONOURSPROJ_API ABlockFunction : public AHonoursProjBlock {
 	GENERATED_BODY()
+
+protected:
+	UFUNCTION(BlueprintCallable, CallInEditor)
+		void SpawnConnectors();
+	UFUNCTION(BlueprintCallable, CallInEditor)
+		void SpawnAllConnectors();
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -91,6 +97,9 @@ public:
 		class UAutoScalingHUD* HUDComponent;
 	UPROPERTY(EditAnywhere)
 		UFunctionHUD* HUDInstance;
+
+	UPROPERTY(VisibleAnywhere)
+		FString FunctionName;
 public:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

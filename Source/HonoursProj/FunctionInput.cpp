@@ -26,7 +26,7 @@ AHonoursProjBlock* AFunctionInput::HandleClick(UPrimitiveComponent* ClickedCompo
 	if (bIsActive) {
 		// Give Connection
 		if (auto other = Cast<AFunctionOutput>(ClickedComponent->GetOwner())) {
-			UE_LOG(LogTemp, Warning, TEXT("OVERLAP"));
+			//UE_LOG(LogTemp, Warning, TEXT("OVERLAP"));
 
 			// Connect input to output
 			connectedTo = other;
@@ -37,7 +37,7 @@ AHonoursProjBlock* AFunctionInput::HandleClick(UPrimitiveComponent* ClickedCompo
 				other->connectedTo.Add(this);
 			}
 		} else {
-			UE_LOG(LogTemp, Warning, TEXT("NO OVERLAP"));
+			//UE_LOG(LogTemp, Warning, TEXT("NO OVERLAP"));
 			ConnectMesh->SetVisibility(false);
 		}
 	}

@@ -28,14 +28,14 @@ bool UType::Supercedes(const UType* other) const {
 	// my !< other
 	// other !< my
 
-	UE_LOG(LogTemp, Warning, TEXT("%s ? %s"), *UEnum::GetValueAsString(myType), *UEnum::GetValueAsString(otherType));
+	//UE_LOG(LogTemp, Warning, TEXT("%s ? %s"), *UEnum::GetValueAsString(myType), *UEnum::GetValueAsString(otherType));
 
 	// ANY is guaranteed match
 	if (myType == EType::ANY) { return true; }
 	// No Match if Other isn't instance or same
 	if (!(myType >= otherType)) { return false; }
 
-	UE_LOG(LogTemp, Warning, TEXT("%s >= %s"), *UEnum::GetValueAsString(myType), *UEnum::GetValueAsString(otherType));
+	//UE_LOG(LogTemp, Warning, TEXT("%s >= %s"), *UEnum::GetValueAsString(myType), *UEnum::GetValueAsString(otherType));
 
 	// Check Satisfies on all Template Pairs
 	return Algo::CompareByPredicate(GetTemplates(), other->GetTemplates(myType), [](UType* a, UType* b) {
@@ -45,11 +45,6 @@ bool UType::Supercedes(const UType* other) const {
 
 
 FString UType::ToString() const {
-	if (IsA<UTypeVar>()) {
-		((UTypeVar*)this)->ReapplyEvidence();
-		//me->ReapplyEvidence();
-	}
-	
 	// Get Base Type
 	EType t = GetType();
 
@@ -376,16 +371,21 @@ UType* UTypeVar::DeepCopy(TMap<UType*, UType*>& ptrMap) const {
 	return out;
 }
 
+FString UTypeVar::ToString() const {
+	//ReapplyEvidence();
+	return UType::ToString();
+}
+
 bool UTypeVar::UnifyWith(UType* concreteType) {
 	bool success = ApplyEvidence(concreteType);
 	
 	ReapplyEvidence();
 
-	//for (auto& evidence : Evidence) {
-	//	evidence->UnifyWith(Instance);
-	//}
+	for (auto& evidence : Evidence) {
+		evidence->UnifyWith(Instance);
+	}
 
-	//ReapplyEvidence();
+	ReapplyEvidence();
 
 	return success;
 }
