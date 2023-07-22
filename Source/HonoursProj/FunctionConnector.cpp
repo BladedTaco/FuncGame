@@ -66,6 +66,8 @@ void AFunctionConnector::SetupHUD() {
 	HUDComponent->UpdateWidget();
 	HUDComponent->SizeToBounds(GetBlockMesh());
 	HUDInstance = Cast<UParameterHUD>(HUDComponent->GetUserWidgetObject());
+
+	HUDInstance->Name = ParameterInfo.Name;
 }
 
 

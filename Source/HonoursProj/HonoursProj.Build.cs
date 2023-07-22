@@ -15,7 +15,6 @@ public class HonoursProj : ModuleRules
 			"Engine", 
 			"InputCore",
 			"HeadMountedDisplay",
-            "DetailsCustomizer",
 			"PropertyEditor",
             "UMG", 
 			"Slate", 
@@ -23,8 +22,7 @@ public class HonoursProj : ModuleRules
 		});
 
         PrivateDependencyModuleNames.AddRange(new string[] {
-			"PropertyEditor",
-			"DetailsCustomizer"
+			"PropertyEditor"
 		});
 	}
 }

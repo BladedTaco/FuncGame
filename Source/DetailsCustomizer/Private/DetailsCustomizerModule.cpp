@@ -27,48 +27,11 @@ void FDetailsCustomizerModule::StartupModule()
 	// import the PropertyEditor module...
 	FPropertyEditorModule& PropertyModule = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
 	
-
-	//// to register our custom property
-	//PropertyModule.RegisterCustomPropertyTypeLayout(
-	//	// This is the name of the Struct (we can also use "MyStruct" instead)
-	//	// this tells the property editor which is the struct property our customization will applied on.
-	//	FMyStruct::StaticStruct()->GetFName(),
-	//	// this is where our MakeInstance() method is usefull
-	//	FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FMyStructCustomization::MakeInstance));
-
-
-	//// Custom detail views
-	//PropertyModule.RegisterCustomClassLayout(
-	//	"Type",
-	//	FOnGetDetailCustomizationInstance::CreateStatic(&FTypeDetails::MakeInstance)
-	//);
-	//PropertyModule.RegisterCustomClassLayout(
-	//	"TypeVar",
-	//	FOnGetDetailCustomizationInstance::CreateStatic(&FTypeDetails::MakeInstance)
-	//);
-	//PropertyModule.RegisterCustomClassLayout(
-	//	"TypePtr",
-	//	FOnGetDetailCustomizationInstance::CreateStatic(&FTypeDetails::MakeInstance)
-	//);
-	//PropertyModule.RegisterCustomClassLayout(
-	//	"BlockFunction",
-	//	FOnGetDetailCustomizationInstance::CreateStatic(&FTypeDetails::MakeInstance)
-	//);
-
-
 	// Custom properties
 	PropertyModule.RegisterCustomPropertyTypeLayout(
-		"Type", 
+		UType::StaticClass()->GetFName(), 
 		FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FTypeProperty::MakeInstance)
 	);
-
-	//// Custom properties
-	//PropertyModule.RegisterCustomPropertyTypeLayout(
-	//	"TypePtr",
-	//	FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FTypeProperty::MakeInstance)
-	//);
-
-
 
 	PropertyModule.NotifyCustomizationModuleChanged();
 
@@ -79,6 +42,7 @@ void FDetailsCustomizerModule::ShutdownModule()
 	//FPropertyEditorModule::ShutdownModule();
 	// This function may be called during shutdown to clean up your module.  For modules that support dynamic reloading,
 	// we call this function before unloading the module.
+
 }
 
 

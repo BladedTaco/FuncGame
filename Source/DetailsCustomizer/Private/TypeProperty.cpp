@@ -15,10 +15,17 @@
 #include "DetailCategoryBuilder.h"
 
 #include "IDetailChildrenBuilder.h"
+
+#include "IDetailGroup.h"
+#include "IDetailPropertyRow.h"
+
+
 #include "IPropertyUtilities.h"
 
 #include "Engine/RendererSettings.h"
 
+
+#include "HonoursProj/Types/Type.h"
 
 #define LOCTEXT_NAMESPACE "FDetailsCustomizer"
 
@@ -30,52 +37,50 @@ TSharedRef<IPropertyTypeCustomization> FTypeProperty::MakeInstance() {
 void FTypeProperty::CustomizeHeader(TSharedRef<IPropertyHandle> StructPropertyHandle,
 	class FDetailWidgetRow& HeaderRow,
 	IPropertyTypeCustomizationUtils& StructCustomizationUtils) {
-	UE_LOG(LogTemp, Warning, TEXT("%s - The header customization is called"), ANSI_TO_TCHAR(__FUNCTION__));
-	// Should customize here soon
 
-  /*  uint32 NumChildren;
-    StructPropertyHandle->GetNumChildren(NumChildren);
+	auto SetName = [&]() {
+		if (auto prop = StructPropertyHandle->GetProperty()) {
+			//TypeType = prop->GetCPPType();
 
-    for (uint32 ChildIndex = 0; ChildIndex < NumChildren; ++ChildIndex) {
-        const TSharedRef< IPropertyHandle > ChildHandle = StructPropertyHandle->GetChildHandle(ChildIndex).ToSharedRef();
+			UObject* obj;
+			StructPropertyHandle->GetValue(obj);
 
-        
-        ChildHandle->GetProperty()
-    }*/
+			if (obj) {
+				if (auto typ = Cast<UType>(obj)) {
+					TypeName = typ->ToString();
+					TypeType = typ->GetClass()->GetFName().ToString();
+				}
+			}
+		}
+	};
 
-    HeaderRow
-        .NameContent()
-        [
-            StructPropertyHandle->CreatePropertyNameWidget(LOCTEXT("Prop Name", "New property header name"))
-        ]
-    .ValueContent().MinDesiredWidth(500)
-        [
-            SNew(STextBlock)
-            .Text(LOCTEXT("Extra info", "Some new representation"))
-        .Font(IDetailLayoutBuilder::GetDetailFont())
-        ];
-    
+	SetName();
+		
+	StructPropertyHandle->SetOnChildPropertyValueChanged(FSimpleDelegate::CreateLambda(SetName));
+		
 
-    //HeaderRow.NameContent()[
-    //    StructPropertyHandle->CreatePropertyNameWidget(
-    //        LOCTEXT("Property header", "New property header name")
-    //    )
-    //];
+	HeaderRow
+		.NameContent()[
+			StructPropertyHandle->CreatePropertyNameWidget(FText::GetEmpty(), FText::GetEmpty(), false)
+		]
+		.ValueContent()[
 
-    //HeaderRow
-    //    .NameContent()
-    //    [
-    //        StructPropertyHandle->CreatePropertyNameWidget(
-    //            LOCTEXT("Property header", "New property header name")
-    //        )
-    //    ]
-    //.ValueContent().MinDesiredWidth(500)
-    //    [
-    //        SNew(STextBlock)
-    //        .Text(LOCTEXT("Extra info", "Some new representation"))
-    //    .Font(IDetailLayoutBuilder::GetDetailFont())
-    //    ];
 
+			SNew(SHorizontalBox)
+				+ SHorizontalBox::Slot()
+				.AutoWidth()
+				[
+					
+					SNew(STextBlock)
+						.AutoWrapText(true)
+						.Font(FEditorStyle::GetFontStyle("PropertyWindow.NormalFont"))
+						.Text_Lambda([&]() {
+						return FText::FromString(FString::Format(TEXT("{0} : {1}"), {TypeType, TypeName}));
+					})
+
+				]
+			//StructPropertyHandle->CreatePropertyValueWidget()
+		];
 
 }
 
@@ -87,53 +92,34 @@ void FTypeProperty::CustomizeChildren(TSharedRef<IPropertyHandle> StructProperty
     uint32 NumChildren;
     StructPropertyHandle->GetNumChildren(NumChildren);
 
+
     for (uint32 ChildIndex = 0; ChildIndex < NumChildren; ++ChildIndex) {
         const TSharedRef< IPropertyHandle > ChildHandle = StructPropertyHandle->GetChildHandle(ChildIndex).ToSharedRef();
-        
-        StructBuilder.AddProperty(ChildHandle);
+
+		uint32 NumChildren2;
+		ChildHandle->GetNumChildren(NumChildren2);
+
+		for (uint32 ChildIndex2 = 0; ChildIndex2 < NumChildren2; ++ChildIndex2) {
+			auto childchild = ChildHandle->GetChildHandle(ChildIndex2).ToSharedRef();
+
+			uint32 NumChildren3;
+			childchild->GetNumChildren(NumChildren3);
+			for (uint32 ChildIndex3 = 0; ChildIndex3 < NumChildren3; ++ChildIndex3) {
+
+				auto child3 = childchild->GetChildHandle(ChildIndex3).ToSharedRef();
+				
+				TSharedRef<SWidget> nameWidget = child3->CreatePropertyNameWidget();
+				TSharedRef<SWidget> valueWidget = child3->CreatePropertyValueWidget();
+
+				auto& row = StructBuilder.AddProperty(child3);
+				row.IsEnabled(true);
+
+			}
+		}
     }
 
 
 
-
-
-
-
-	// Should customize here soon
-
-    //TSharedPtr<IPropertyHandle> TypePropertyHandle = StructPropertyHandle->GetChildHandle(
-    //    GET_MEMBER_NAME_CHECKED(FMyStruct, Type)
-    //);
-
-
-    //TSharedPtr<IPropertyUtilities> PropertyUtils = StructCustomizationUtils.GetPropertyUtilities();
-    //uint32 NumberOfChild;
-    //if (StructPropertyHandle->GetNumChildren(NumberOfChild) == FPropertyAccess::Success) {
-    //    for (uint32 Index = 0; Index < NumberOfChild; ++Index) {
-    //        TSharedRef<IPropertyHandle> ChildPropertyHandle = StructPropertyHandle->GetChildHandle(Index).ToSharedRef();
-    //        StructBuilder.AddProperty(ChildPropertyHandle);
-    //    }
-    //}
-    //
-   
-    //
-    //
-    //
-    //
-
-    //StructBuilder.AddCustomRow(LOCTEXT("MyStructRow", "MyStruct"))
-    //    .NameContent()
-    //    [
-    //        SNew(STextBlock)
-    //        .Text(LOCTEXT("Extra info", "Custom row header name"))
-    //    .Font(IDetailLayoutBuilder::GetDetailFont())
-    //    ]
-    //.ValueContent().MinDesiredWidth(500)
-    //    [
-    //        SNew(STextBlock)
-    //        .Text(LOCTEXT("Extra info", "Custom row content"))
-    //    .Font(IDetailLayoutBuilder::GetDetailFont())
-    //    ];
 }
 
 #undef LOCTEXT_NAMESPACE

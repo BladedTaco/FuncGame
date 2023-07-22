@@ -8,7 +8,7 @@
 #include "PropertyEditorModule.h"
 
 //class DETAILSCUSTOMIZER_API FDetailsCustomizerModule : public FPropertyEditorModule
-class DETAILSCUSTOMIZER_API FDetailsCustomizerModule : public IModuleInterface
+class FDetailsCustomizerModule : public IModuleInterface
 {
 public:
 

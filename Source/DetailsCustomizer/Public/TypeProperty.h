@@ -24,4 +24,8 @@ public:
 		class IDetailChildrenBuilder& StructBuilder,
 		IPropertyTypeCustomizationUtils& StructCustomizationUtils) override;
 	// END IPropertyTypeCustomization interface
+
+
+	FString TypeName = { TEXT("Unevaluated") };
+	FString TypeType = { TEXT("UType") };
 };

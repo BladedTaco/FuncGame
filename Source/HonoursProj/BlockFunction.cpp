@@ -53,8 +53,14 @@ void ABlockFunction::SpawnConnectors() {
 	HUDInstance->FunctionName = FunctionName;
 	HUDInstance->LastResult = FString(TEXT("Unevaluated"));
 
+	Status |= EPropagable::DIRTY;
+
 	// Call once
-	if (exitEarly) return;
+	if (exitEarly) {
+		Tick(0.0f);
+		HUDComponent->UpdateWidget();
+		return;
+	}
 
 
 	// Set Function Signature
@@ -203,6 +209,8 @@ void ABlockFunction::Tick(float DeltaTime) {
 			//output->HUDInstance->Type = output->ResolveType()->ToString();
 			output->HUDInstance->Type = Outputs[output->Index].Type->ToString();
 		}
+
+
 
 		// Clean
 		Status ^= EPropagable::DIRTY;
