@@ -7,7 +7,7 @@
 #include "HonoursProjBlock.generated.h"
 
 /** A block that can be clicked */
-UCLASS(minimalapi)
+UCLASS()
 class AHonoursProjBlock : public AActor
 {
 	GENERATED_BODY()
@@ -20,6 +20,10 @@ class AHonoursProjBlock : public AActor
 	UPROPERTY(Category = Block, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* BlockMesh;
 
+	/** HUD component for the clickable block */
+	UPROPERTY(Category = Block, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class UAutoScalingHUD* HUDComponent;
+
 public:
 	AHonoursProjBlock();
 
@@ -27,15 +31,15 @@ public:
 	bool bIsActive;
 
 	/** Pointer to white material used on the focused block */
-	UPROPERTY()
+	UPROPERTY(Category = BlockMaterials, VisibleAnywhere)
 	class UMaterialInstance* LitMaterial;
 
 	/** Pointer to blue material used on inactive blocks */
-	UPROPERTY()
+	UPROPERTY(Category = BlockMaterials, VisibleAnywhere)
 	class UMaterialInstance* UnlitMaterial;
 
 	/** Pointer to orange material used on active blocks */
-	UPROPERTY()
+	UPROPERTY(Category = BlockMaterials, VisibleAnywhere)
 	class UMaterialInstance* ActiveMaterial;
 
 	/** Grid that owns us */
@@ -49,6 +53,8 @@ public:
 	FORCEINLINE class USceneComponent* GetDummyRoot() const { return DummyRoot; }
 	/** Returns BlockMesh subobject **/
 	FORCEINLINE class UStaticMeshComponent* GetBlockMesh() const { return BlockMesh; }
+	/** Returns BlockMesh subobject **/
+	FORCEINLINE class UAutoScalingHUD* GetHUDComponent() const { return HUDComponent; }
 
 	FVector MousePos();
 	void Tick(float DeltaSeconds);

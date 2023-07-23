@@ -1,2 +1,3 @@
 .NET Core placeholder content to avoid ignoring the output extension directive
 
+

@@ -33,7 +33,6 @@ public class DetailsCustomizer : ModuleRules
 				"Slate",
 				"SlateCore",
                 "PropertyEditor",
-                "UnrealEd", // for FAssetEditorManager
 				"EditorStyle",
                 "EditorWidgets",
 				// ... add private dependencies that you statically link with here ...

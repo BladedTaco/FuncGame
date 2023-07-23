@@ -7,6 +7,8 @@
 #include "Engine/StaticMesh.h"
 #include "Materials/MaterialInstance.h"
 
+#include "HUD/AutoScalingHUD.h"
+
 #include "HonoursProjPlayerController.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -30,6 +32,8 @@ AHonoursProjBlock::AHonoursProjBlock() {
 	BlockMesh->SetMaterial(0, UnlitMaterial);
 	BlockMesh->SetupAttachment(DummyRoot);
 
+	// Create Empty HUD
+	HUDComponent = CreateDefaultSubobject<UAutoScalingHUD>(TEXT("HUD"));
 
 	PrimaryActorTick.bCanEverTick = true;
 	SetActorTickEnabled(true);

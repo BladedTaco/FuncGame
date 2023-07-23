@@ -29,38 +29,36 @@
 ABlockFunction::ABlockFunction() {
 	ErrorMaterial = Assets()->Material.Red.Get();
 
-	HUDComponent = CreateDefaultSubobject<UAutoScalingHUD>(TEXT("HUD"));
-	HUDComponent->SetRelativeLocation(FVector::UpVector * 200.0f);
-	HUDComponent->SetWorldRotation(FRotator(90, 0, 180));
-	HUDComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	HUDComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-	HUDComponent->SetDrawAtDesiredSize(true);
-	HUDComponent->SetupAttachment(RootComponent);
-	HUDComponent->SetWidgetClass(Assets()->HUD.Function.Class);
+	HUD.UpdateComponent(GetHUDComponent());
+	HUD.Component->SetRelativeLocation(FVector::UpVector * 200.0f);
+	HUD.Component->SetWorldRotation(FRotator(90, 0, 180));
+	HUD.Component->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	HUD.Component->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	HUD.Component->SetDrawAtDesiredSize(true);
+	HUD.Component->SetupAttachment(RootComponent);
+	HUD.Component->SetWidgetClass(Assets()->HUD.Function.Class);
 }
 
 void ABlockFunction::SpawnConnectors() {
 	// Requires World
 	if (!GetWorld()) return;
 
-	bool exitEarly = !!HUDInstance;
+	bool exitEarly = InputBlocks.Num() + OutputBlocks.Num() > 0;
 
-	HUDComponent->InitWidget();
-	HUDComponent->UpdateWidget();
-	HUDComponent->SizeToBounds(GetBlockMesh());
-	HUDInstance = Cast<UFunctionHUD>(HUDComponent->GetUserWidgetObject());
+	HUD.Component->InitWidget();
+	HUD.Component->UpdateWidget();
+	HUD.Component->SizeToBounds(GetBlockMesh());
+	HUD.UpdateInstance();
 
-	HUDInstance->FunctionName = FunctionName;
-	HUDInstance->LastResult = FString(TEXT("Unevaluated"));
+	HUD.Instance->FunctionName = FunctionName;
+	HUD.Instance->LastResult = FString(TEXT("Unevaluated"));
+
+	HUD.Component->MarkRenderStateDirty();
 
 	Status |= EPropagable::DIRTY;
 
 	// Call once
-	if (exitEarly) {
-		Tick(0.0f);
-		HUDComponent->UpdateWidget();
-		return;
-	}
+	if (exitEarly) return;
 
 
 	// Set Function Signature
@@ -101,8 +99,8 @@ void ABlockFunction::SpawnConnectors() {
 			actor->ParameterInfo = FParameter(param.Name, UTypePtr::New(param.Type));
 			actor->Index = idx;
 			blocks->Add(actor);
-			if (actor && actor->HUDInstance) {
-				actor->HUDInstance->Name = actor->ParameterInfo.Name;
+			if (actor && actor->HUD.Instance.IsValid()) {
+				actor->HUD.Instance->Name = actor->ParameterInfo.Name;
 			}
 			// Attach to self
 			actor->AttachToActor(this, attachRules);
@@ -194,20 +192,20 @@ void ABlockFunction::Tick(float DeltaTime) {
 		// For inputs
 		for (auto input : InputBlocks) {
 			//if (input->connectedTo) {
-			//	input->HUDInstance->Type = input->ResolveType()->ToString();
+			//	input->HUD.Instance->Type = input->ResolveType()->ToString();
 			//} else {
-			//	input->HUDInstance->Type = Inputs[input->Index].Type->ToString();
+			//	input->HUD.Instance->Type = Inputs[input->Index].Type->ToString();
 			//}
 
-			input->HUDInstance->Type = input->ParameterInfo.Type->ToString();
+			input->HUD.Instance->Type = input->ParameterInfo.Type->ToString();
 
 			//Valid &= Inputs[input->Index].Type->Supercedes(input->ParameterInfo.Type);
-			//input->HUDInstance->Type = Inputs[input->Index].Type->ToString();
+			//input->HUD.Instance->Type = Inputs[input->Index].Type->ToString();
 		}
 		// For Outputs
 		for (auto output : OutputBlocks) {
-			//output->HUDInstance->Type = output->ResolveType()->ToString();
-			output->HUDInstance->Type = Outputs[output->Index].Type->ToString();
+			//output->HUD.Instance->Type = output->ResolveType()->ToString();
+			output->HUD.Instance->Type = Outputs[output->Index].Type->ToString();
 		}
 
 
@@ -228,7 +226,7 @@ void ABlockFunction::Tick(float DeltaTime) {
 // Calculate Values
 AHonoursProjBlock* ABlockFunction::HandleClick(UPrimitiveComponent* ClickedComponent) {
 	GetValue();
-	HUDComponent->UpdateWidget();
+	HUD.Component->UpdateWidget();
 	return this;
 }
 
@@ -270,7 +268,7 @@ UType* ABlockFunction::ResolveType() {
 	UType* outArrow = UTypeVar::New(ETypeClass::ANY);
 
 	// Reset All TypeVars
-	for (auto typevar : TypeVars) {
+	for (auto& typevar : TypeVars) {
 		typevar->ResetEvidence();
 	}
 

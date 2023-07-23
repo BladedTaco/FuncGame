@@ -25,9 +25,12 @@
 #include "Engine/RendererSettings.h"
 
 
-#include "HonoursProj/Types/Type.h"
-
 #define LOCTEXT_NAMESPACE "FDetailsCustomizer"
+
+
+struct Params {
+	FString RetVal;
+};
 
 TSharedRef<IPropertyTypeCustomization> FTypeProperty::MakeInstance() {
 	// Create the instance and returned a SharedRef
@@ -45,11 +48,19 @@ void FTypeProperty::CustomizeHeader(TSharedRef<IPropertyHandle> StructPropertyHa
 			UObject* obj;
 			StructPropertyHandle->GetValue(obj);
 
+
 			if (obj) {
-				if (auto typ = Cast<UType>(obj)) {
-					TypeName = typ->ToString();
-					TypeType = typ->GetClass()->GetFName().ToString();
-				}
+				UFunction* f = obj->FindFunction("UToString");
+				Params params = {};
+				obj->ProcessEvent(f, &params);
+
+				TypeName = params.RetVal;
+				TypeType = obj->GetClass()->GetFName().ToString();
+
+				//if (auto typ = Cast<UType>(obj)) {
+				//	TypeName = typ->ToString();
+				//	TypeType = typ->GetClass()->GetFName().ToString();
+				//}
 			}
 		}
 	};

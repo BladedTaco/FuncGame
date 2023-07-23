@@ -16,7 +16,6 @@
 
 #include "AssetLoader_gen.h"
 
-#include "HUD/AutoScalingHUD.h"
 #include "HUD/ParameterHUD.h"
 
 
@@ -45,29 +44,30 @@ AFunctionConnector::AFunctionConnector() {
 	ConnectMesh->SetVisibility(false);
 	ConnectMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	ConnectMesh->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepWorldTransform);
+	//ConnectMesh->SetupAttachment(RootComponent, FAttachmentTransformRules::KeepWorldTransform);
 
-	// Create HUDComponent
-	HUDComponent = CreateDefaultSubobject<UAutoScalingHUD>(TEXT("HUD"));
-	HUDComponent->SetRelativeLocation(FVector::UpVector * 200.0f);
-	HUDComponent->SetWorldRotation(FRotator(90, 0, 180));
-	HUDComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	HUDComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-	HUDComponent->SetDrawAtDesiredSize(true);
-	HUDComponent->SetupAttachment(RootComponent);
-	HUDComponent->SetWidgetClass(Assets()->HUD.Parameter.Class);
-	HUDComponent->SizeToBounds(blockMesh);
-	HUDComponent->UpdateWidget();
+	// Create HUD.Component
+	HUD.UpdateComponent(GetHUDComponent());
+	HUD.Component->SetRelativeLocation(FVector::UpVector * 200.0f);
+	HUD.Component->SetWorldRotation(FRotator(90, 0, 180));
+	HUD.Component->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	HUD.Component->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	HUD.Component->SetDrawAtDesiredSize(true);
+	HUD.Component->SetupAttachment(RootComponent);
+	HUD.Component->SetWidgetClass(Assets()->HUD.Parameter.Class);
+	HUD.Component->SizeToBounds(blockMesh);
+	HUD.Component->UpdateWidget();
 }
 
 
 void AFunctionConnector::SetupHUD() {
-	HUDComponent->AspectRatio = FVector2D(3, 1);
-	HUDComponent->InitWidget();
-	HUDComponent->UpdateWidget();
-	HUDComponent->SizeToBounds(GetBlockMesh());
-	HUDInstance = Cast<UParameterHUD>(HUDComponent->GetUserWidgetObject());
+	HUD.Component->AspectRatio = FVector2D(3, 1);
+	HUD.Component->InitWidget();
+	HUD.Component->UpdateWidget();
+	HUD.Component->SizeToBounds(GetBlockMesh());
+	HUD.UpdateInstance();
 
-	HUDInstance->Name = ParameterInfo.Name;
+	HUD.Instance->Name = ParameterInfo.Name;
 }
 
 
@@ -161,8 +161,8 @@ AHonoursProjBlock* AFunctionConnector::HandleClick(UPrimitiveComponent* ClickedC
 
 	}
 
-	if (HUDInstance) {
-		HUDInstance->Type = ResolveType()->ToString();
+	if (HUD.Instance.IsValid()) {
+		HUD.Instance->Type = ResolveType()->ToString();
 		// Proprogate
 		Function->Propagate({ EPropagable::DIRTY });
 	}

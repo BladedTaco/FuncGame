@@ -4,8 +4,6 @@
 
 #define LOCTEXT_NAMESPACE "FDetailsCustomizer"
 
-#include "HonoursProj/Types/Type.h"
-
 #include "TypeDetails.h"
 #include "TypeProperty.h"
 
@@ -29,7 +27,8 @@ void FDetailsCustomizerModule::StartupModule()
 	
 	// Custom properties
 	PropertyModule.RegisterCustomPropertyTypeLayout(
-		UType::StaticClass()->GetFName(), 
+		//UType::StaticClass()->GetFName(), 
+		"Type",
 		FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FTypeProperty::MakeInstance)
 	);
 

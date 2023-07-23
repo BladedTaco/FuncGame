@@ -29,6 +29,9 @@ public:
 
 	virtual FString ToString() const;
 
+	UFUNCTION(BlueprintCallable, CallInEditor)
+	FString UToString() const { return ToString(); }
+
 	bool EqualTo(const UType* other) const;
 
 	virtual bool UnifyWith(UType* concreteType);

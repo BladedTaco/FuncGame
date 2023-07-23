@@ -57,7 +57,7 @@ Arr<VStarArray, VStarArrayReturn> ABlockFunctionShow::GetInnerFunc() {
 
 		// Show
 		const IShow* const show = t0.getTypeclass()->Show;
-		this->HUDInstance->LastResult = show->show()(t0);
+		this->HUD.Instance->LastResult = show->show()(t0);
 
 		// Return empty
 		return { t0 };

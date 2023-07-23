@@ -14,6 +14,8 @@
 #include "Types/VStar.h"
 #include "Utils/MaskedBitFlags.h"
 
+#include "HUD/AutoScalingHUD.h"
+
 #include "BlockFunction.generated.h"
 
 class UFunctionHUD;
@@ -55,9 +57,9 @@ class HONOURSPROJ_API ABlockFunction : public AHonoursProjBlock {
 	GENERATED_BODY()
 
 protected:
-	UFUNCTION(BlueprintCallable, CallInEditor)
+	UFUNCTION(BlueprintCallable, CallInEditor, Category = EditorFunctions)
 		void SpawnConnectors();
-	UFUNCTION(BlueprintCallable, CallInEditor)
+	UFUNCTION(BlueprintCallable, CallInEditor, Category = EditorFunctions)
 		void SpawnAllConnectors();
 
 private:
@@ -72,7 +74,7 @@ public:
 	inline bool IsStatus(EPropagable InTest) const { return EnumHasAllFlags(Status, InTest); }
 
 	// Materials
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = BlockMaterials)
 		UMaterialInstance* ErrorMaterial;
 
 	// Type Resolution
@@ -93,10 +95,7 @@ public:
 		TArray<class AFunctionOutput*> OutputBlocks;
 
 	// Block HUD
-	UPROPERTY(EditAnywhere)
-		class UAutoScalingHUD* HUDComponent;
-	UPROPERTY(EditAnywhere)
-		UFunctionHUD* HUDInstance;
+	THUD<class UFunctionHUD> HUD;
 
 	UPROPERTY(VisibleAnywhere)
 		FString FunctionName;

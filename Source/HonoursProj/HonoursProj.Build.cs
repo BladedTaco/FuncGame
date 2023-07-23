@@ -15,14 +15,9 @@ public class HonoursProj : ModuleRules
 			"Engine", 
 			"InputCore",
 			"HeadMountedDisplay",
-			"PropertyEditor",
             "UMG", 
 			"Slate", 
-			"SlateCore" 
-		});
-
-        PrivateDependencyModuleNames.AddRange(new string[] {
-			"PropertyEditor"
+			"SlateCore"
 		});
 	}
 }

@@ -9,6 +9,9 @@
 #include "Types/Type.h"
 #include "BlockFunction.h"
 
+
+#include "HUD/AutoScalingHUD.h"
+
 #include "FunctionConnector.generated.h"
 
 class UParameterHUD;
@@ -23,10 +26,8 @@ class HONOURSPROJ_API AFunctionConnector : public AHonoursProjBlock {
 
 public:
 	// Parameter HUD
-	UPROPERTY(EditAnywhere)
-		class UAutoScalingHUD* HUDComponent;
-	UPROPERTY(EditAnywhere)
-		UParameterHUD* HUDInstance;
+	//UPROPERTY(EditAnywhere)
+		THUD<class UParameterHUD> HUD;
 
 	UPROPERTY(VisibleAnywhere)
 		ABlockFunction* Function;
@@ -58,7 +59,7 @@ public:
 	UPROPERTY(Category = EditorConnect, EditAnywhere)
 		AFunctionConnector* EditorConnect;
 
-	UFUNCTION(Category = EditorConnect, BlueprintCallable, CallInEditor)
+	UFUNCTION(Category = EditorFunctions, BlueprintCallable, CallInEditor)
 		void EditorConnectTo();
 
 public:

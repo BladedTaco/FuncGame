@@ -36,3 +36,26 @@ public:
 
 
 };
+
+template <class HUDClass>
+struct THUD {
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TWeakObjectPtr<UAutoScalingHUD> Component;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced)
+		TWeakObjectPtr<HUDClass> Instance;
+
+public:
+	// Base Constructor
+	THUD()
+		: Component(NULL)
+		, Instance(NULL) {};
+
+public:
+	void UpdateInstance() {
+		Instance = MakeWeakObjectPtr( Cast<HUDClass>(Component->GetUserWidgetObject()) );
+	}
+	void UpdateComponent(UAutoScalingHUD* InComponent) {
+		Component = MakeWeakObjectPtr(InComponent);
+	}
+};

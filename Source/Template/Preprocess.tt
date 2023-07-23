@@ -46,6 +46,15 @@
             string filebase = Path.GetFileNameWithoutExtension(filepath);
             string outName = filebase + "_gen.h";
 
+            // Skip if last generated file is newer than source file
+            FileInfo srcFileInfo = new FileInfo(filepath);
+            FileInfo dstFileInfo = new FileInfo(Path.Combine(outputPath, outName));
+
+            if (dstFileInfo.Exists && srcFileInfo.LastWriteTimeUtc < dstFileInfo.LastWriteTimeUtc) {
+                fileManager.MarkFileClean(outName, null, outputPath);
+                continue;
+            }
+
             // Preprocess the file to output file
             fileManager.StartNewFile(outName, null, outputPath);
             foreach (string line in pp.Preprocess(filepath)) {

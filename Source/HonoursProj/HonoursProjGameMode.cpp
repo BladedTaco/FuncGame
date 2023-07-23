@@ -14,6 +14,6 @@ AHonoursProjGameMode::AHonoursProjGameMode()
 	// use our own player controller class
 	PlayerControllerClass = AHonoursProjPlayerController::StaticClass();
 
-	FDetailsCustomizerModule& PropertyModule = FModuleManager::LoadModuleChecked<FDetailsCustomizerModule>("DetailsCustomizer");
+	//FDetailsCustomizerModule& PropertyModule = FModuleManager::LoadModuleChecked<FDetailsCustomizerModule>("DetailsCustomizer");
 
 }
