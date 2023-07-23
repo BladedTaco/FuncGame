@@ -22,6 +22,15 @@ private:
 
 public:
 
+	void Update() { 
+		bEditTimeUsable = true;
+		RegisterWindow();
+		DrawWidgetToRenderTarget(0.0001f); 
+		RecreateRenderState_Concurrent();
+	}
+
+	virtual bool ShouldActivate() const override { return true;  }
+
 	UPROPERTY(EditAnywhere)
 		FVector2D AspectRatio = FVector2D::UnitVector;
 

@@ -37,6 +37,7 @@ ABlockFunction::ABlockFunction() {
 	HUD.Component->SetDrawAtDesiredSize(true);
 	HUD.Component->SetupAttachment(RootComponent);
 	HUD.Component->SetWidgetClass(Assets()->HUD.Function.Class);
+	HUD.Component->RegisterComponent();
 }
 
 void ABlockFunction::SpawnConnectors() {
@@ -120,9 +121,52 @@ void ABlockFunction::SpawnAllConnectors() {
 		auto func = Cast<ABlockFunction>(actor);
 		func->SpawnConnectors();
 		func->Status |= EPropagable::DIRTY;
-		actor->Tick(0.0f);
+		//actor->Tick(0.0f);
 	}
 
+}
+
+void ABlockFunction::UpdateHUD() {
+	HUD.UpdateComponent(GetHUDComponent());
+	HUD.UpdateInstance();
+	HUD.Instance->FunctionName = "TESTS";
+
+
+	HUD.Component->SetWidget(HUD.Instance.Get());
+
+	HUD.Component->SetActive(true, true);
+
+	HUD.Component->SetEditTimeUsable(true);
+
+	//HUD.Component->SetIsVisualizationComponent(true);
+
+	HUD.Component->UpdateBodySetup(true);
+
+	HUD.Instance->SynchronizeProperties();
+
+	//HUD.Component->DoDeferredRenderUpdates_Concurrent();
+	//HUD.Component->RecreateRenderState_Concurrent();
+
+	//HUD.Component->ReregisterComponent();
+	//HUD.Component->SendRenderTransform_Concurrent();
+
+	//HUD.Component->ReceiveTick(0.01f);
+
+	//HUD.Component->bTickInEditor = 1;
+	
+	HUD.Component->SetTickableWhenPaused(true);
+	HUD.Component->SetComponentTickEnabled(true);
+
+	//HUD.Component->Update();
+	//HUD.Component->UpdateWidget();
+	
+	//HUD.Component->RequestRedraw();
+
+	//Tick(0.0f);
+
+	//HUD.Component->TickComponent(0.01f, ELevelTick::LEVELTICK_All, NULL);
+
+	UE_LOG(LogTemp, Warning, TEXT("Update"));
 }
 
 void ABlockFunction::Propagate(MaskedBitFlags<EPropagable> Values, bool Origin) {
@@ -169,6 +213,8 @@ void ABlockFunction::BeginPlay() {
 
 void ABlockFunction::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
+
+	UE_LOG(LogTemp, Warning, TEXT("Tick"));
 
 	// If Needs to update Type
 	if (IsStatus(EPropagable::DIRTY)) {
@@ -269,6 +315,7 @@ UType* ABlockFunction::ResolveType() {
 
 	// Reset All TypeVars
 	for (auto& typevar : TypeVars) {
+		if (!typevar) return NULL;
 		typevar->ResetEvidence();
 	}
 

@@ -6,7 +6,6 @@
 #include "Components/StaticMeshComponent.h"
 #include "Blueprint/WidgetTree.h"
 
-
 //void UAutoScalingHUD::NativeOnInitialized() {
 //	//Super::NativeOnInitialized();
 //
@@ -33,6 +32,11 @@
 
 UAutoScalingHUD::UAutoScalingHUD() {
 	SetDrawAtDesiredSize(false);
+
+	PrimaryComponentTick.bCanEverTick = true;
+	bTickInEditor = 1;
+	bAutoActivate = true;
+	
 }
 
 void UAutoScalingHUD::SizeToBounds(UStaticMeshComponent* Mesh) {
@@ -54,7 +58,7 @@ void UAutoScalingHUD::SizeToBounds(UStaticMeshComponent* Mesh) {
 void UAutoScalingHUD::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	SetDrawAtDesiredSize(false);
+	UE_LOG(LogTemp, Warning, TEXT("Tick"));
 
 	if (UpdateSize) {
 		// Get Size

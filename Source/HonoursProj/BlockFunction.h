@@ -62,11 +62,20 @@ protected:
 	UFUNCTION(BlueprintCallable, CallInEditor, Category = EditorFunctions)
 		void SpawnAllConnectors();
 
+	UFUNCTION(BlueprintCallable, CallInEditor, Category = EditorFunctions)
+		void UpdateHUD();
+
+
+
 private:
 	UPROPERTY(VisibleAnywhere)
 		EPropagable Status = EPropagable::ALL;
 
 public:
+
+	virtual bool ShouldTickIfViewportsOnly() const override { return true; }
+
+
 	// Status Handling
 	void Propagate(MaskedBitFlags<EPropagable> Values, bool Origin = true);
 	void PropagateToEnds(MaskedBitFlags<EPropagable> Values);
