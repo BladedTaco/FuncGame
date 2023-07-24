@@ -38,6 +38,15 @@ ABlockFunction::ABlockFunction() {
 	HUD.Component->SetupAttachment(RootComponent);
 	HUD.Component->SetWidgetClass(Assets()->HUD.Function.Class);
 	HUD.Component->RegisterComponent();
+
+	
+}
+
+void ABlockFunction::OnConstruction(const FTransform& Transform) {
+	/*HUD.Component->InitWidget();
+	HUD.Component->UpdateWidget();*/
+	HUD.Component->SizeToBounds(GetBlockMesh());
+	HUD.UpdateInstance();
 }
 
 void ABlockFunction::SpawnConnectors() {
@@ -46,15 +55,20 @@ void ABlockFunction::SpawnConnectors() {
 
 	bool exitEarly = InputBlocks.Num() + OutputBlocks.Num() > 0;
 
-	HUD.Component->InitWidget();
-	HUD.Component->UpdateWidget();
+	if (!exitEarly) {
+		// Set Function Signature
+		SetFunctionTypes();
+	}
+
+	//HUD.Component->InitWidget();
+	//HUD.Component->UpdateWidget();
 	HUD.Component->SizeToBounds(GetBlockMesh());
 	HUD.UpdateInstance();
 
 	HUD.Instance->FunctionName = FunctionName;
 	HUD.Instance->LastResult = FString(TEXT("Unevaluated"));
 
-	HUD.Component->MarkRenderStateDirty();
+	//HUD.UpdateInEditor();
 
 	Status |= EPropagable::DIRTY;
 
@@ -62,8 +76,8 @@ void ABlockFunction::SpawnConnectors() {
 	if (exitEarly) return;
 
 
-	// Set Function Signature
-	SetFunctionTypes();
+	//// Set Function Signature
+	//SetFunctionTypes();
 
 	// Ensure Attachment is entirely KeepRelative
 	FAttachmentTransformRules attachRules = FAttachmentTransformRules(
@@ -124,49 +138,10 @@ void ABlockFunction::SpawnAllConnectors() {
 		//actor->Tick(0.0f);
 	}
 
-}
+	HUD.RecompileInstanceClass();
 
-void ABlockFunction::UpdateHUD() {
-	HUD.UpdateComponent(GetHUDComponent());
-	HUD.UpdateInstance();
-	HUD.Instance->FunctionName = "TESTS";
+	HUD.UpdateInEditor(Assets()->HUD.Parameter.Class);
 
-
-	HUD.Component->SetWidget(HUD.Instance.Get());
-
-	HUD.Component->SetActive(true, true);
-
-	HUD.Component->SetEditTimeUsable(true);
-
-	//HUD.Component->SetIsVisualizationComponent(true);
-
-	HUD.Component->UpdateBodySetup(true);
-
-	HUD.Instance->SynchronizeProperties();
-
-	//HUD.Component->DoDeferredRenderUpdates_Concurrent();
-	//HUD.Component->RecreateRenderState_Concurrent();
-
-	//HUD.Component->ReregisterComponent();
-	//HUD.Component->SendRenderTransform_Concurrent();
-
-	//HUD.Component->ReceiveTick(0.01f);
-
-	//HUD.Component->bTickInEditor = 1;
-	
-	HUD.Component->SetTickableWhenPaused(true);
-	HUD.Component->SetComponentTickEnabled(true);
-
-	//HUD.Component->Update();
-	//HUD.Component->UpdateWidget();
-	
-	//HUD.Component->RequestRedraw();
-
-	//Tick(0.0f);
-
-	//HUD.Component->TickComponent(0.01f, ELevelTick::LEVELTICK_All, NULL);
-
-	UE_LOG(LogTemp, Warning, TEXT("Update"));
 }
 
 void ABlockFunction::Propagate(MaskedBitFlags<EPropagable> Values, bool Origin) {
@@ -214,7 +189,7 @@ void ABlockFunction::BeginPlay() {
 void ABlockFunction::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
-	UE_LOG(LogTemp, Warning, TEXT("Tick"));
+	//UE_LOG(LogTemp, Warning, TEXT("Tick"));
 
 	// If Needs to update Type
 	if (IsStatus(EPropagable::DIRTY)) {
@@ -243,7 +218,7 @@ void ABlockFunction::Tick(float DeltaTime) {
 			//	input->HUD.Instance->Type = Inputs[input->Index].Type->ToString();
 			//}
 
-			input->HUD.Instance->Type = input->ParameterInfo.Type->ToString();
+			input->HUD.Inst()->Type = input->ParameterInfo.Type->ToString();
 
 			//Valid &= Inputs[input->Index].Type->Supercedes(input->ParameterInfo.Type);
 			//input->HUD.Instance->Type = Inputs[input->Index].Type->ToString();
@@ -251,7 +226,7 @@ void ABlockFunction::Tick(float DeltaTime) {
 		// For Outputs
 		for (auto output : OutputBlocks) {
 			//output->HUD.Instance->Type = output->ResolveType()->ToString();
-			output->HUD.Instance->Type = Outputs[output->Index].Type->ToString();
+			output->HUD.Inst()->Type = Outputs[output->Index].Type->ToString();
 		}
 
 

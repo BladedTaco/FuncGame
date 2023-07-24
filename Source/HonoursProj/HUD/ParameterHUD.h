@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 
-#include "Blueprint/UserWidget.h"
+#include "HUD/EditorUserWidget.h"
 
 #include "ParameterHUD.generated.h"
 
@@ -12,7 +12,7 @@
  * 
  */
 UCLASS(Abstract, BlueprintType, Blueprintable)
-class HONOURSPROJ_API UParameterHUD : public UUserWidget
+class HONOURSPROJ_API UParameterHUD : public UEditorUserWidget
 {
 	GENERATED_BODY()
 

@@ -60,7 +60,7 @@ Arr<VStarArray, VStarArrayReturn> ABlockFunctionFmap::GetInnerFunc() {
 		VStar result = functor->fmap()(t0)(t1);
 
 		const IShow* const show = result.getTypeclass()->Show;
-		this->HUD.Instance->LastResult = show->show()(result);
+		this->HUD.Inst()->LastResult = show->show()(result);
 
 		return { result };
 

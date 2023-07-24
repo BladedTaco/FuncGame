@@ -21,14 +21,6 @@ private:
 		bool UpdateSize = false;
 
 public:
-
-	void Update() { 
-		bEditTimeUsable = true;
-		RegisterWindow();
-		DrawWidgetToRenderTarget(0.0001f); 
-		RecreateRenderState_Concurrent();
-	}
-
 	virtual bool ShouldActivate() const override { return true;  }
 
 	UPROPERTY(EditAnywhere)
@@ -43,28 +35,53 @@ public:
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	virtual void OnComponentCreated() override;
+
 
 };
 
-template <class HUDClass>
-struct THUD {
+// Generic Version
+USTRUCT(BlueprintType)
+struct FGeneric3DHUD {
+	GENERATED_BODY()
+private:
+	inline static TMap<UClass*, bool> Compiled = {};
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TWeakObjectPtr<UAutoScalingHUD> Component;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced)
-		TWeakObjectPtr<HUDClass> Instance;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TWeakObjectPtr<UUserWidget> GenericInstance;
 public:
 	// Base Constructor
-	THUD()
+	FGeneric3DHUD()
 		: Component(NULL)
-		, Instance(NULL) {};
-
+		, GenericInstance(NULL) {};
 public:
-	void UpdateInstance() {
-		Instance = MakeWeakObjectPtr( Cast<HUDClass>(Component->GetUserWidgetObject()) );
+	virtual void UpdateInstance();
+	void UpdateComponent(UAutoScalingHUD* InComponent);
+
+	void RecompileInstanceClass();
+	static void UpdateInEditor(UClass* cls);
+};
+
+// Templated Version
+template <class HUDClass>
+struct THUD : public FGeneric3DHUD {
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced)
+		TWeakObjectPtr<HUDClass> Instance;
+public:
+	// Base Constructor
+	THUD() : Instance(NULL) {};
+public:
+	virtual void UpdateInstance() override {
+		FGeneric3DHUD::UpdateInstance();
+		Instance = MakeWeakObjectPtr<HUDClass>( Cast<HUDClass>(Component->GetUserWidgetObject()) );
 	}
-	void UpdateComponent(UAutoScalingHUD* InComponent) {
-		Component = MakeWeakObjectPtr(InComponent);
+
+	TWeakObjectPtr<HUDClass> Inst() {
+		UpdateInstance();
+		return Instance;
 	}
+
 };

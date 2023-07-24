@@ -172,7 +172,7 @@ AHonoursProjBlock* AFunctionConnector::HandleClick(UPrimitiveComponent* ClickedC
 }
 
 void AFunctionConnector::EditorConnectTo() {
-	if (!EditorConnect || !EditorConnect->GetBlockMesh()) {
+	if (!EditorConnect.IsValid() || !EditorConnect->GetBlockMesh()) {
 		UE_LOG(LogTemp, Warning, TEXT("Invalid EditorConnect for AFunctionConnector::EditorConnectTo"));
 		return;
 	}

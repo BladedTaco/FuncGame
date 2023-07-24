@@ -6,6 +6,9 @@
 #include "Components/StaticMeshComponent.h"
 #include "Blueprint/WidgetTree.h"
 
+#include "Editor.h"
+#include "Kismet2/KismetEditorUtilities.h"
+
 //void UAutoScalingHUD::NativeOnInitialized() {
 //	//Super::NativeOnInitialized();
 //
@@ -33,9 +36,17 @@
 UAutoScalingHUD::UAutoScalingHUD() {
 	SetDrawAtDesiredSize(false);
 
-	PrimaryComponentTick.bCanEverTick = true;
-	bTickInEditor = 1;
-	bAutoActivate = true;
+	//PrimaryComponentTick.bCanEverTick = true;
+	//PrimaryComponentTick.bStartWithTickEnabled = true;
+	//PrimaryComponentTick.SetTickFunctionEnable(true);
+	//PrimaryComponentTick.bTickEvenWhenPaused = true;
+	//bTickInEditor = true;
+	//bAutoActivate = true;
+	//SetComponentTickEnabled(true);
+	//TickWhenOffscreen = true;
+	//
+	//RedrawTime = 1.0f;
+
 	
 }
 
@@ -58,24 +69,66 @@ void UAutoScalingHUD::SizeToBounds(UStaticMeshComponent* Mesh) {
 void UAutoScalingHUD::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	UE_LOG(LogTemp, Warning, TEXT("Tick"));
-
 	if (UpdateSize) {
 		// Get Size
 		FVector2D currSize = GetCurrentDrawSize();
 
 		// When Valid
 		if (!currSize.IsNearlyZero()) {
-			//UE_LOG(LogTemp, Warning, TEXT("CurrSize, %f %f"), currSize.X, currSize.Y);
-
-			//FVector2D scale = TargetSize / currSize;
-			//SetRelativeScale3D(FVector(1.0f, scale.Y, scale.X));
-
 			SetDrawSize(FVector2D(TargetSize.Y, TargetSize.X));
-
 			UpdateSize = false;
 		}
 	}
+}
+
+void UAutoScalingHUD::OnComponentCreated() {
+	InitWidget();
+	UpdateWidget();
+}
 
 
+// FGeneric3DHUD impls
+
+// Updates the HUD.Instance based on HUD.Component
+void FGeneric3DHUD::UpdateInstance() {
+	GenericInstance = MakeWeakObjectPtr(Component->GetUserWidgetObject());
+}
+
+// Sets the new HUD.Component
+void FGeneric3DHUD::UpdateComponent(UAutoScalingHUD* InComponent) {
+	Component = MakeWeakObjectPtr(InComponent);
+
+}
+
+void FGeneric3DHUD::RecompileInstanceClass() {
+	if (!GenericInstance.IsValid()) return;
+	UClass* cls = GenericInstance->GetClass();
+	UpdateInEditor(cls);
+}
+
+	// Makes HUD update while in editor
+void FGeneric3DHUD::UpdateInEditor(UClass* cls) {
+	// Only compile once
+	if (!GIsEditor || !GEditor) return;
+	if (!IsValid(cls)) return;
+	if (Compiled.Contains(cls)) return;
+
+	UE_LOG(LogTemp, Warning, TEXT("Compile"));
+
+	auto BlueprintObj = Cast<UBlueprint>(cls->ClassGeneratedBy);
+
+	if (BlueprintObj) {
+		Compiled.Add(cls, true);
+
+		FCompilerResultsLog LogResults;
+		LogResults.SetSourcePath(BlueprintObj->GetPathName());
+		LogResults.BeginEvent(TEXT("Compile"));
+
+		EBlueprintCompileOptions CompileOptions = EBlueprintCompileOptions::None;
+		FKismetEditorUtilities::CompileBlueprint(BlueprintObj, CompileOptions, &LogResults);
+
+		LogResults.EndEvent();
+	} else {
+		UE_LOG(LogTemp, Warning, TEXT("Failked Compile"));
+	}
 }

@@ -34,9 +34,9 @@ AHonoursProjBlock::AHonoursProjBlock() {
 
 	// Create Empty HUD
 	HUDComponent = CreateDefaultSubobject<UAutoScalingHUD>(TEXT("HUD"));
-	HUDComponent->bTickInEditor = 1;
 
 	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bTickEvenWhenPaused = true;
 	SetActorTickEnabled(true);
 }
 

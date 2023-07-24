@@ -16,9 +16,9 @@
 
 #include "HUD/AutoScalingHUD.h"
 
-#include "BlockFunction.generated.h"
+#include "HUD/FunctionHUD.h"
 
-class UFunctionHUD;
+#include "BlockFunction.generated.h"
 
 USTRUCT(BlueprintType)
 struct FParameter {
@@ -57,13 +57,10 @@ class HONOURSPROJ_API ABlockFunction : public AHonoursProjBlock {
 	GENERATED_BODY()
 
 protected:
-	UFUNCTION(BlueprintCallable, CallInEditor, Category = EditorFunctions)
+	UFUNCTION(BlueprintCallable, CallInEditor, Category = "Functions")
 		void SpawnConnectors();
-	UFUNCTION(BlueprintCallable, CallInEditor, Category = EditorFunctions)
+	UFUNCTION(BlueprintCallable, CallInEditor, Category = "Functions")
 		void SpawnAllConnectors();
-
-	UFUNCTION(BlueprintCallable, CallInEditor, Category = EditorFunctions)
-		void UpdateHUD();
 
 
 
@@ -104,7 +101,7 @@ public:
 		TArray<class AFunctionOutput*> OutputBlocks;
 
 	// Block HUD
-	THUD<class UFunctionHUD> HUD;
+	THUD<UFunctionHUD> HUD;
 
 	UPROPERTY(VisibleAnywhere)
 		FString FunctionName;
@@ -112,6 +109,7 @@ public:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+	virtual void OnConstruction(const FTransform& Transform) override;
 
 	ABlockFunction();
 

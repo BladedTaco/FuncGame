@@ -11,10 +11,9 @@
 
 
 #include "HUD/AutoScalingHUD.h"
+#include "HUD/ParameterHUD.h"
 
 #include "FunctionConnector.generated.h"
-
-class UParameterHUD;
 
 /**
  * 
@@ -27,7 +26,7 @@ class HONOURSPROJ_API AFunctionConnector : public AHonoursProjBlock {
 public:
 	// Parameter HUD
 	//UPROPERTY(EditAnywhere)
-		THUD<class UParameterHUD> HUD;
+		THUD<UParameterHUD> HUD;
 
 	UPROPERTY(VisibleAnywhere)
 		ABlockFunction* Function;
@@ -56,10 +55,10 @@ public:
 
 
 public:
-	UPROPERTY(Category = EditorConnect, EditAnywhere)
-		AFunctionConnector* EditorConnect;
+	UPROPERTY(Category = "Functions", EditAnywhere, Instanced, Transient)
+		TWeakObjectPtr<AFunctionConnector> EditorConnect;
 
-	UFUNCTION(Category = EditorFunctions, BlueprintCallable, CallInEditor)
+	UFUNCTION(Category = "Functions", BlueprintCallable, CallInEditor)
 		void EditorConnectTo();
 
 public:

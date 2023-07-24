@@ -20,9 +20,13 @@ class AHonoursProjBlock : public AActor
 	UPROPERTY(Category = Block, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* BlockMesh;
 
+public:
 	/** HUD component for the clickable block */
-	UPROPERTY(Category = Block, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Category = Block, VisibleAnywhere, Instanced, BlueprintReadOnly, meta = (AllowPrivateAccess = "true", BindWidget))
 		class UAutoScalingHUD* HUDComponent;
+	/** HUD component for the clickable block */
+	UPROPERTY(Category = Block, EditAnywhere, meta = (AllowPrivateAccess = "true", BindWidget))
+		class UUserWidget* HUDInstance;
 
 public:
 	AHonoursProjBlock();

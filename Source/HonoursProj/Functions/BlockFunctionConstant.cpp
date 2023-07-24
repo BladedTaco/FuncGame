@@ -41,7 +41,7 @@ Arr<VStarArray, VStarArrayReturn> ABlockFunctionConstant::GetInnerFunc() {
 
 		//this->TextComponent->SetText(FText::Format(FText::FromString(FString("Val {0}")), this->Value));
 
-		this->HUD.Instance->LastResult = FString::Format(TEXT("Val {0}"), { this->Value });
+		this->HUD.Inst()->LastResult = FString::Format(TEXT("Val {0}"), { this->Value });
 
 		return { out };
 

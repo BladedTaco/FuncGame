@@ -58,7 +58,7 @@ Arr<VStarArray, VStarArrayReturn> ABlockFunctionGreaterThan::GetInnerFunc() {
 
 		//this->TextComponent->SetText(FText::FromString(FString(TEXT("GT ")) + result.GetTypeclass()->Show->show()(VStar(result))));
 
-		this->HUD.Instance->LastResult = FString(TEXT("GT ")) + result.GetTypeclass()->Show->show()(VStar(result));
+		this->HUD.Inst()->LastResult = FString(TEXT("GT ")) + result.GetTypeclass()->Show->show()(VStar(result));
 
 		//this->TextComponent->SetText(FText::Format(FText::FromString(FString("GT {0}")), result));
 
