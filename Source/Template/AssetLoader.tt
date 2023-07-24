@@ -49,6 +49,7 @@
 #include "Materials/MaterialInstance.h"
 #include "Engine/DataTable.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/WidgetComponent.h"
 
 
 <# foreach (ResourceDefinition resourceDef in resources) { #>

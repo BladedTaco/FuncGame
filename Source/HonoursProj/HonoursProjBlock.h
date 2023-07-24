@@ -7,7 +7,7 @@
 #include "HonoursProjBlock.generated.h"
 
 /** A block that can be clicked */
-UCLASS()
+UCLASS(MinimalAPI)
 class AHonoursProjBlock : public AActor
 {
 	GENERATED_BODY()
@@ -20,13 +20,10 @@ class AHonoursProjBlock : public AActor
 	UPROPERTY(Category = Block, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* BlockMesh;
 
-public:
+protected:
 	/** HUD component for the clickable block */
-	UPROPERTY(Category = Block, VisibleAnywhere, Instanced, BlueprintReadOnly, meta = (AllowPrivateAccess = "true", BindWidget))
+	UPROPERTY(Category = Block, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		class UAutoScalingHUD* HUDComponent;
-	/** HUD component for the clickable block */
-	UPROPERTY(Category = Block, EditAnywhere, meta = (AllowPrivateAccess = "true", BindWidget))
-		class UUserWidget* HUDInstance;
 
 public:
 	AHonoursProjBlock();

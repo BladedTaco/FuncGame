@@ -43,8 +43,8 @@ AFunctionConnector::AFunctionConnector() {
 	ConnectMesh->SetMaterial(0, UnlitMaterial);
 	ConnectMesh->SetVisibility(false);
 	ConnectMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	ConnectMesh->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepWorldTransform);
-	//ConnectMesh->SetupAttachment(RootComponent, FAttachmentTransformRules::KeepWorldTransform);
+	//ConnectMesh->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepWorldTransform);
+	ConnectMesh->SetupAttachment(RootComponent);
 
 	// Create HUD.Component
 	HUD.UpdateComponent(GetHUDComponent());
@@ -56,14 +56,13 @@ AFunctionConnector::AFunctionConnector() {
 	HUD.Component->SetupAttachment(RootComponent);
 	HUD.Component->SetWidgetClass(Assets()->HUD.Parameter.Class);
 	HUD.Component->SizeToBounds(blockMesh);
-	HUD.Component->UpdateWidget();
 }
 
 
 void AFunctionConnector::SetupHUD() {
 	HUD.Component->AspectRatio = FVector2D(3, 1);
-	HUD.Component->InitWidget();
-	HUD.Component->UpdateWidget();
+	//HUD.Component->InitWidget();
+	//HUD.Component->UpdateWidget();
 	HUD.Component->SizeToBounds(GetBlockMesh());
 	HUD.UpdateInstance();
 
@@ -75,6 +74,19 @@ void AFunctionConnector::BeginPlay() {
 	Super::BeginPlay();
 
 	SetupHUD();
+}
+
+void AFunctionConnector::OnConstruction(const FTransform& Transform) {
+	HUD.UpdateComponent(GetHUDComponent());
+	HUD.Component->SizeToBounds(GetBlockMesh());
+	HUD.UpdateInstance();
+
+	if (!ParameterInfo.Type && !!Function) {
+		ParameterInfo.Type = ResolveType();
+		if (!ParameterInfo.Type) {
+			ParameterInfo.Type = UTypeConst::New(ETypeBase::NONE);
+		}
+	}
 }
 
 FTransform AFunctionConnector::Connect(FVector a, FVector b) {
@@ -174,6 +186,8 @@ AHonoursProjBlock* AFunctionConnector::HandleClick(UPrimitiveComponent* ClickedC
 void AFunctionConnector::EditorConnectTo() {
 	if (!EditorConnect.IsValid() || !EditorConnect->GetBlockMesh()) {
 		UE_LOG(LogTemp, Warning, TEXT("Invalid EditorConnect for AFunctionConnector::EditorConnectTo"));
+		HandleRClick(GetBlockMesh());
+		HandleRClick(GetBlockMesh());
 		return;
 	}
 
@@ -181,12 +195,4 @@ void AFunctionConnector::EditorConnectTo() {
 	HandleClick(GetBlockMesh());
 	// Drag to EditorConnect
 	HandleClick(EditorConnect->GetBlockMesh());
-	// Update ConnectMesh
-	if (IsA<AFunctionInput>()) {
-		ConnectMesh->SetVisibility(true);
-		Tick(0.0f);
-	} else {
-		EditorConnect->ConnectMesh->SetVisibility(true);
-		EditorConnect->Tick(0.0f);
-	}
 }

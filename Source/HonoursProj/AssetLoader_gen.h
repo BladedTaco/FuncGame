@@ -10,6 +10,7 @@
 #include "Materials/MaterialInstance.h"
 #include "Engine/DataTable.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/WidgetComponent.h"
 
 
 struct FResource_Material {
@@ -55,9 +56,11 @@ struct FResource_Icon {
 struct FResource_HUD {
 		ConstructorHelpers::FClassFinder<UUserWidget> Function;
 		ConstructorHelpers::FClassFinder<UUserWidget> Parameter;
+		ConstructorHelpers::FClassFinder<UWidgetComponent> ASH;
 		FResource_HUD()
 		:	Function(TEXT("/Game/MyContent/Blueprints/HUD_Function"))
 		,	Parameter(TEXT("/Game/MyContent/Blueprints/HUD_Parameter"))
+		,	ASH(TEXT("/Game/MyContent/Blueprints/BP_AutoScalingHUD"))
 		{}
 };
 

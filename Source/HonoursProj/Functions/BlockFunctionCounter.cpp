@@ -28,6 +28,7 @@
 
 #include "Algo/AllOf.h"
 #include "Kismet/GameplayStatics.h"
+#include "Engine.h"
 
 void ABlockFunctionCounter::SetFunctionTypes() {
 
@@ -55,6 +56,8 @@ Arr<VStarArray, VStarArrayReturn> ABlockFunctionCounter::GetInnerFunc() {
 
 void ABlockFunctionCounter::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
+
+	if (GEngine && GIsEditor) return;
 
 	float NextValue = CurrentValue + DeltaTime * TickRate;
 

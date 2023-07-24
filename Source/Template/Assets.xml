@@ -20,7 +20,7 @@
 	<ResourceType Name='HUD'>
         <Class Name="Function" Type="UUserWidget" Location="/Game/MyContent/Blueprints/HUD_Function"/>
         <Class Name="Parameter" Type="UUserWidget" Location="/Game/MyContent/Blueprints/HUD_Parameter"/>
-        
+        <Class Name="ASH" Type="UWidgetComponent" Location="/Game/MyContent/Blueprints/BP_AutoScalingHUD"/>
     </ResourceType>
     
 	<!-- <ResourceType Name='HUD'>

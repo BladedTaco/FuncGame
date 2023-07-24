@@ -13,6 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 
 #include "AssetLoader_gen.h"
+//#include "OutputDeviceNull.h"
 
 AHonoursProjBlock::AHonoursProjBlock() {
 	// Save a pointer to the materials
@@ -33,7 +34,16 @@ AHonoursProjBlock::AHonoursProjBlock() {
 	BlockMesh->SetupAttachment(DummyRoot);
 
 	// Create Empty HUD
-	HUDComponent = CreateDefaultSubobject<UAutoScalingHUD>(TEXT("HUD"));
+	HUDComponent = Cast< UAutoScalingHUD >(
+		CreateDefaultSubobject(TEXT("HUD"), UWidgetComponent::StaticClass(), Assets()->HUD.ASH.Class.Get(), true, false)
+	);
+
+
+	//FOutputDeviceNull OutputDeviceNull;
+	//HUDComponent->CallFunctionByNameWithArguments(TEXT("UpdateWidgetRender"), OutputDeviceNull, nullptr, true);
+
+	//HUDComponent = Cast< UAutoScalingHUD >(DuplicateObject(Assets()->HUD.ASH.Get(), this));
+	//HUDComponent = CreateDefaultSubobject<UAutoScalingHUD>(TEXT("HUD"));
 
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bTickEvenWhenPaused = true;

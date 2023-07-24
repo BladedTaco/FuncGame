@@ -37,16 +37,23 @@ ABlockFunction::ABlockFunction() {
 	HUD.Component->SetDrawAtDesiredSize(true);
 	HUD.Component->SetupAttachment(RootComponent);
 	HUD.Component->SetWidgetClass(Assets()->HUD.Function.Class);
-	HUD.Component->RegisterComponent();
+	//HUD.Component->RegisterComponent();
 
-	
+
+
+	TypeVars = {};
 }
 
 void ABlockFunction::OnConstruction(const FTransform& Transform) {
 	/*HUD.Component->InitWidget();
 	HUD.Component->UpdateWidget();*/
-	HUD.Component->SizeToBounds(GetBlockMesh());
-	HUD.UpdateInstance();
+	HUD.UpdateComponent(GetHUDComponent());
+	if (HUD.Component.IsValid()) {
+		HUD.Component->SizeToBounds(GetBlockMesh());
+		HUD.UpdateInstance();
+	}
+
+	SpawnConnectors();
 }
 
 void ABlockFunction::SpawnConnectors() {
@@ -55,20 +62,19 @@ void ABlockFunction::SpawnConnectors() {
 
 	bool exitEarly = InputBlocks.Num() + OutputBlocks.Num() > 0;
 
-	if (!exitEarly) {
+	//if (!exitEarly) {
 		// Set Function Signature
 		SetFunctionTypes();
-	}
+	//}
 
 	//HUD.Component->InitWidget();
 	//HUD.Component->UpdateWidget();
 	HUD.Component->SizeToBounds(GetBlockMesh());
-	HUD.UpdateInstance();
+
+	if (!HUD.Inst().IsValid()) return;
 
 	HUD.Instance->FunctionName = FunctionName;
 	HUD.Instance->LastResult = FString(TEXT("Unevaluated"));
-
-	//HUD.UpdateInEditor();
 
 	Status |= EPropagable::DIRTY;
 

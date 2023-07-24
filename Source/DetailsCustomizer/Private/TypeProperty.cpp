@@ -42,6 +42,7 @@ void FTypeProperty::CustomizeHeader(TSharedRef<IPropertyHandle> StructPropertyHa
 	IPropertyTypeCustomizationUtils& StructCustomizationUtils) {
 
 	auto SetName = [&]() {
+		if (!StructPropertyHandle.Get().IsValidHandle()) return;
 		if (auto prop = StructPropertyHandle->GetProperty()) {
 			//TypeType = prop->GetCPPType();
 

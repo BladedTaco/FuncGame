@@ -36,8 +36,6 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	virtual void OnComponentCreated() override;
-
-
 };
 
 // Generic Version
@@ -45,7 +43,8 @@ USTRUCT(BlueprintType)
 struct FGeneric3DHUD {
 	GENERATED_BODY()
 private:
-	inline static TMap<UClass*, bool> Compiled = {};
+	inline static TMap<UClass*, FTimerHandle> Compiled = {};
+	static void CompileBlueprint(UBlueprint* BlueprintObj);
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TWeakObjectPtr<UAutoScalingHUD> Component;
@@ -61,7 +60,7 @@ public:
 	void UpdateComponent(UAutoScalingHUD* InComponent);
 
 	void RecompileInstanceClass();
-	static void UpdateInEditor(UClass* cls);
+	static void UpdateInEditor(UClass* cls, bool Force = false);
 };
 
 // Templated Version

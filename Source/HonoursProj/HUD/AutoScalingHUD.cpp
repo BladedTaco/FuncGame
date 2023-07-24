@@ -84,6 +84,9 @@ void UAutoScalingHUD::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 void UAutoScalingHUD::OnComponentCreated() {
 	InitWidget();
 	UpdateWidget();
+
+	FGeneric3DHUD::UpdateInEditor(UAutoScalingHUD::StaticClass());
+	FGeneric3DHUD::UpdateInEditor(GetWidgetClass());
 }
 
 
@@ -106,28 +109,45 @@ void FGeneric3DHUD::RecompileInstanceClass() {
 	UpdateInEditor(cls);
 }
 
+void FGeneric3DHUD::CompileBlueprint(UBlueprint* BlueprintObj) {
+	FCompilerResultsLog LogResults;
+	LogResults.SetSourcePath(BlueprintObj->GetPathName());
+	LogResults.BeginEvent(TEXT("Compile"));
+
+	EBlueprintCompileOptions CompileOptions = EBlueprintCompileOptions::None;
+	FKismetEditorUtilities::CompileBlueprint(BlueprintObj, CompileOptions, &LogResults);
+
+	LogResults.EndEvent();
+}
+
 	// Makes HUD update while in editor
-void FGeneric3DHUD::UpdateInEditor(UClass* cls) {
+void FGeneric3DHUD::UpdateInEditor(UClass* cls, bool Force) {
 	// Only compile once
 	if (!GIsEditor || !GEditor) return;
 	if (!IsValid(cls)) return;
-	if (Compiled.Contains(cls)) return;
+	FTimerHandle* timer = Compiled.Find(cls);
+	if (timer && !Force) return;
 
 	UE_LOG(LogTemp, Warning, TEXT("Compile"));
 
 	auto BlueprintObj = Cast<UBlueprint>(cls->ClassGeneratedBy);
 
+
 	if (BlueprintObj) {
-		Compiled.Add(cls, true);
+		if (!cls->GetWorld()) {
+			CompileBlueprint(BlueprintObj);
+			return;
+		} 
 
-		FCompilerResultsLog LogResults;
-		LogResults.SetSourcePath(BlueprintObj->GetPathName());
-		LogResults.BeginEvent(TEXT("Compile"));
-
-		EBlueprintCompileOptions CompileOptions = EBlueprintCompileOptions::None;
-		FKismetEditorUtilities::CompileBlueprint(BlueprintObj, CompileOptions, &LogResults);
-
-		LogResults.EndEvent();
+		FTimerHandle timer;
+		Compiled.Add(cls, timer);
+		
+		cls->GetWorld()->GetTimerManager().SetTimer(timer, FTimerDelegate::CreateLambda(
+			[BlueprintObj, cls]() { 
+			FGeneric3DHUD::CompileBlueprint(BlueprintObj); 
+			FGeneric3DHUD::Compiled.Remove(cls);
+		}
+		), 0.1f, false);
 	} else {
 		UE_LOG(LogTemp, Warning, TEXT("Failked Compile"));
 	}

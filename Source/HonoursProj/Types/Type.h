@@ -53,9 +53,9 @@ class HONOURSPROJ_API UTypeConst : public UType {
 
 private:
 	UPROPERTY(VisibleAnywhere)
-		EType Type;
+		EType Type = EType::ANY;
 	UPROPERTY(VisibleAnywhere, Instanced)
-		TArray<UType*> Templates;
+		TArray<UType*> Templates = {};
 
 public:
 	UFUNCTION(BlueprintCallable)
@@ -81,11 +81,11 @@ class HONOURSPROJ_API UTypePtr : public UType {
 
 private:
 	UPROPERTY(VisibleAnywhere, Instanced)
-		UType* Type;
+		UType* Type = NULL;
 	UPROPERTY(VisibleAnywhere, Instanced)
-		TArray<UType*> Templates;
+		TArray<UType*> Templates = {};
 	UPROPERTY(VisibleAnywhere)
-		bool CopyTemplates;
+		bool CopyTemplates = false;
 
 public:
 	UFUNCTION(BlueprintCallable)
@@ -111,11 +111,11 @@ class HONOURSPROJ_API UTypeVar : public UType {
 
 private:
 	UPROPERTY(VisibleAnywhere, Instanced)
-		TArray<UType*> Evidence;
+		TArray<UType*> Evidence = {};
 	UPROPERTY(EditAnywhere)
-		ETypeClass Type;
+		ETypeClass Type = ETypeClass::ANY;
 	UPROPERTY(EditAnywhere, Instanced)
-		UTypeConst* Instance;
+		UTypeConst* Instance = NULL;
 
 public:
 	UFUNCTION(BlueprintCallable)

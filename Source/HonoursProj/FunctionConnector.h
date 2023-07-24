@@ -35,6 +35,8 @@ public:
 	virtual void BeginPlay() override;
 
 public:
+	virtual void OnConstruction(const FTransform& Transform) override;
+
 	// Sets default values for this actor's properties
 	AFunctionConnector();
 
@@ -55,7 +57,7 @@ public:
 
 
 public:
-	UPROPERTY(Category = "Functions", EditAnywhere, Instanced, Transient)
+	UPROPERTY(Category = "Functions", EditAnywhere, BlueprintReadWrite, Transient, NonTransactional)
 		TWeakObjectPtr<AFunctionConnector> EditorConnect;
 
 	UFUNCTION(Category = "Functions", BlueprintCallable, CallInEditor)
