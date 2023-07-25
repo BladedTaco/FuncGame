@@ -36,6 +36,7 @@ public:
 
 public:
 	virtual void OnConstruction(const FTransform& Transform) override;
+	virtual void BeginDestroy() override;
 
 	// Sets default values for this actor's properties
 	AFunctionConnector();
@@ -44,7 +45,7 @@ public:
 
 
 	UPROPERTY(Category = Connector, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* ConnectMesh;
+		class UStaticMeshComponent* ConnectMesh;
 
 	FTransform Connect(FVector a, FVector b);
 
@@ -70,7 +71,7 @@ public:
 		int Index;
 
 	/** Pointer to Yellow material used on Connectable Connectors */
-	UPROPERTY()
+	UPROPERTY(Category = BlockMaterials, VisibleAnywhere)
 		class UMaterialInstance* ConnectMaterial;
 
 	UPROPERTY(VisibleAnywhere)

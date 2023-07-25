@@ -60,33 +60,43 @@ AFunctionConnector::AFunctionConnector() {
 
 
 void AFunctionConnector::SetupHUD() {
+	HUD.UpdateComponent(GetHUDComponent());
+
 	HUD.Component->AspectRatio = FVector2D(3, 1);
 	//HUD.Component->InitWidget();
 	//HUD.Component->UpdateWidget();
 	HUD.Component->SizeToBounds(GetBlockMesh());
-	HUD.UpdateInstance();
 
 	HUD.Instance->Name = ParameterInfo.Name;
+	HUD.Instance->Type = ParameterInfo.Type->ToString();
 }
 
 
 void AFunctionConnector::BeginPlay() {
 	Super::BeginPlay();
 
+	HUD.UpdateComponent(GetHUDComponent());
+
 	SetupHUD();
 }
 
 void AFunctionConnector::OnConstruction(const FTransform& Transform) {
-	HUD.UpdateComponent(GetHUDComponent());
-	HUD.Component->SizeToBounds(GetBlockMesh());
-	HUD.UpdateInstance();
+	Super::OnConstruction(Transform);
 
-	if (!ParameterInfo.Type && !!Function) {
-		ParameterInfo.Type = ResolveType();
-		if (!ParameterInfo.Type) {
-			ParameterInfo.Type = UTypeConst::New(ETypeBase::NONE);
-		}
+	if (!ParameterInfo.Type) {
+		ParameterInfo.Type = UTypeConst::New(ETypeBase::NONE);
 	}
+
+	SetupHUD();
+	Tick(0.1f);
+}
+
+void AFunctionConnector::BeginDestroy() {
+	if (Function) {
+		Function->InputBlocks.Remove(Cast<AFunctionInput>(this));
+		Function->OutputBlocks.Remove(Cast<AFunctionOutput>(this));
+	}
+	Super::BeginDestroy();
 }
 
 FTransform AFunctionConnector::Connect(FVector a, FVector b) {
@@ -101,6 +111,7 @@ FTransform AFunctionConnector::Connect(FVector a, FVector b) {
 }
 
 void AFunctionConnector::Tick(float DeltaSeconds) {
+	AActor::Tick(DeltaSeconds);
 	if (bIsActive) {
 		FVector me = GetBlockMesh()->GetComponentLocation();
 		FVector mouse = MousePos();
@@ -131,7 +142,7 @@ AHonoursProjBlock* AFunctionConnector::HandleClick(UPrimitiveComponent* ClickedC
 
 			// Get other and its type
 			auto other = Cast<AFunctionConnector>(act);
-			UType* otherType = other->ResolveType();
+			UType* otherType = other->ResolveType()->RecursiveCopy();
 
 			// Skip Shared Connectors
 			if (other->Function == Function) {
@@ -188,6 +199,7 @@ void AFunctionConnector::EditorConnectTo() {
 		UE_LOG(LogTemp, Warning, TEXT("Invalid EditorConnect for AFunctionConnector::EditorConnectTo"));
 		HandleRClick(GetBlockMesh());
 		HandleRClick(GetBlockMesh());
+		this->Tick(0.1f);
 		return;
 	}
 
@@ -195,4 +207,7 @@ void AFunctionConnector::EditorConnectTo() {
 	HandleClick(GetBlockMesh());
 	// Drag to EditorConnect
 	HandleClick(EditorConnect->GetBlockMesh());
+
+	this->Tick(0.1f);
+	EditorConnect->Tick(0.1f);
 }

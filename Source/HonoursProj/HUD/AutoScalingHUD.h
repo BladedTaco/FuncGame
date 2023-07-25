@@ -36,6 +36,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	virtual void OnComponentCreated() override;
+	virtual void DestroyComponent(bool bPromoteChildren = false) override;
 };
 
 // Generic Version
@@ -43,7 +44,7 @@ USTRUCT(BlueprintType)
 struct FGeneric3DHUD {
 	GENERATED_BODY()
 private:
-	inline static TMap<UClass*, FTimerHandle> Compiled = {};
+	inline static TMap<UBlueprint*, FTimerHandle> Compiled = {};
 	static void CompileBlueprint(UBlueprint* BlueprintObj);
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

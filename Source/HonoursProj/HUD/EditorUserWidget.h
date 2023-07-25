@@ -13,4 +13,6 @@
 UCLASS(Abstract, BlueprintType, Blueprintable)
 class HONOURSPROJ_API UEditorUserWidget : public UUserWidget {
 	GENERATED_BODY()
+public:
+	virtual void ReleaseSlateResources(bool bReleaseChildren) override;
 };

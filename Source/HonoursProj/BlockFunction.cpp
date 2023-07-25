@@ -25,6 +25,14 @@
 
 #include "HUD/AutoScalingHUD.h"
 
+#include "Engine.h"
+
+TArray<AFunctionConnector*> ABlockFunction::GetConnectors() {
+	TArray<AFunctionConnector*> connectors;
+	connectors.Append(InputBlocks);
+	connectors.Append(OutputBlocks);
+	return connectors;
+}
 
 ABlockFunction::ABlockFunction() {
 	ErrorMaterial = Assets()->Material.Red.Get();
@@ -39,12 +47,31 @@ ABlockFunction::ABlockFunction() {
 	HUD.Component->SetWidgetClass(Assets()->HUD.Function.Class);
 	//HUD.Component->RegisterComponent();
 
-
-
 	TypeVars = {};
+	Inputs = {};
+	Outputs = {};
+
+	InputBlocks = {};
+	OutputBlocks = {};
+}
+
+void ABlockFunction::DestroyConnectors(AActor* deletedActor) {
+	auto actor = Cast<ABlockFunction>(deletedActor);
+	if (!actor) return;
+
+	for (auto connector : actor->GetConnectors()) {
+		if (IsValid(connector)) continue;
+		connector->Destroy();
+	}
+	actor->InputBlocks = {};
+	actor->OutputBlocks = {};
+	
 }
 
 void ABlockFunction::OnConstruction(const FTransform& Transform) {
+	GEngine->OnLevelActorDeleted().AddUObject(this, &ABlockFunction::DestroyConnectors);
+
+	Super::OnConstruction(Transform);
 	/*HUD.Component->InitWidget();
 	HUD.Component->UpdateWidget();*/
 	HUD.UpdateComponent(GetHUDComponent());
@@ -54,6 +81,13 @@ void ABlockFunction::OnConstruction(const FTransform& Transform) {
 	}
 
 	SpawnConnectors();
+}
+
+void ABlockFunction::BeginDestroy() {
+	for (auto connector : GetConnectors()) {
+		connector->Destroy();
+	}
+	Super::BeginDestroy();
 }
 
 void ABlockFunction::SpawnConnectors() {
@@ -78,8 +112,23 @@ void ABlockFunction::SpawnConnectors() {
 
 	Status |= EPropagable::DIRTY;
 
+	HUD.RecompileInstanceClass();
+	HUD.UpdateInEditor(Assets()->HUD.Parameter.Class);
+
 	// Call once
-	if (exitEarly) return;
+	if (exitEarly) {
+		FParameter p;
+		for (auto param : GetConnectors()) {
+			param->Function = this;
+			if (param->IsA<AFunctionInput>()) {
+				p = Inputs[param->Index];
+			} else {
+				p = Outputs[param->Index];
+			}
+			param->ParameterInfo = FParameter(p.Name, UTypePtr::New(p.Type));
+		}
+		return;
+	}
 
 
 	//// Set Function Signature
@@ -120,9 +169,6 @@ void ABlockFunction::SpawnConnectors() {
 			actor->ParameterInfo = FParameter(param.Name, UTypePtr::New(param.Type));
 			actor->Index = idx;
 			blocks->Add(actor);
-			if (actor && actor->HUD.Instance.IsValid()) {
-				actor->HUD.Instance->Name = actor->ParameterInfo.Name;
-			}
 			// Attach to self
 			actor->AttachToActor(this, attachRules);
 			actor->SetActorRelativeLocation(FVector(100 * -idx + 50, yOff * 100, 0.5 * extent.Z));
@@ -144,9 +190,6 @@ void ABlockFunction::SpawnAllConnectors() {
 		//actor->Tick(0.0f);
 	}
 
-	HUD.RecompileInstanceClass();
-
-	HUD.UpdateInEditor(Assets()->HUD.Parameter.Class);
 
 }
 
@@ -187,6 +230,8 @@ void ABlockFunction::PropagateToEnds(MaskedBitFlags<EPropagable> Values) {
 // Called when the game starts or when spawned
 void ABlockFunction::BeginPlay() {
 	Super::BeginPlay();
+
+	HUD.UpdateComponent(GetHUDComponent());
 
 	SpawnConnectors();
 	

@@ -89,18 +89,33 @@ void UAutoScalingHUD::OnComponentCreated() {
 	FGeneric3DHUD::UpdateInEditor(GetWidgetClass());
 }
 
+void UAutoScalingHUD::DestroyComponent(bool bPromoteChildren) {
+	if (auto widget = GetUserWidgetObject()) {
+		widget->ReleaseSlateResources(true);
+	}
+	Super::DestroyComponent(bPromoteChildren);
+}
+
 
 // FGeneric3DHUD impls
 
 // Updates the HUD.Instance based on HUD.Component
 void FGeneric3DHUD::UpdateInstance() {
-	GenericInstance = MakeWeakObjectPtr(Component->GetUserWidgetObject());
+	// Get current
+	auto newInst = MakeWeakObjectPtr(Component->GetUserWidgetObject());
+	// If different
+	if (newInst.Get() != GenericInstance.Get()) {
+		// Update
+		GenericInstance = newInst;
+		// Recompile Blueprint
+		RecompileInstanceClass();
+	}
 }
 
 // Sets the new HUD.Component
 void FGeneric3DHUD::UpdateComponent(UAutoScalingHUD* InComponent) {
 	Component = MakeWeakObjectPtr(InComponent);
-
+	UpdateInstance();
 }
 
 void FGeneric3DHUD::RecompileInstanceClass() {
@@ -122,33 +137,26 @@ void FGeneric3DHUD::CompileBlueprint(UBlueprint* BlueprintObj) {
 
 	// Makes HUD update while in editor
 void FGeneric3DHUD::UpdateInEditor(UClass* cls, bool Force) {
-	// Only compile once
-	if (!GIsEditor || !GEditor) return;
+	// Require Editor, and Class
+	if (!GIsEditor || !GEditor || GWorld->HasBegunPlay()) return;
 	if (!IsValid(cls)) return;
-	FTimerHandle* timer = Compiled.Find(cls);
-	if (timer && !Force) return;
 
-	UE_LOG(LogTemp, Warning, TEXT("Compile"));
-
+	// Require Blueprint
 	auto BlueprintObj = Cast<UBlueprint>(cls->ClassGeneratedBy);
+	if (!BlueprintObj) return;
 
+	// Get Cached or New Timer
+	FTimerHandle timer = Compiled.FindOrAdd(BlueprintObj);
 
-	if (BlueprintObj) {
-		if (!cls->GetWorld()) {
-			CompileBlueprint(BlueprintObj);
-			return;
-		} 
-
-		FTimerHandle timer;
-		Compiled.Add(cls, timer);
-		
-		cls->GetWorld()->GetTimerManager().SetTimer(timer, FTimerDelegate::CreateLambda(
-			[BlueprintObj, cls]() { 
-			FGeneric3DHUD::CompileBlueprint(BlueprintObj); 
-			FGeneric3DHUD::Compiled.Remove(cls);
+	// Dispatch Delegate on 0.5s delay, without looping
+	GEditor->GetTimerManager()->SetTimer(timer, FTimerDelegate::CreateLambda(
+		[BlueprintObj]() {
+			FGeneric3DHUD::CompileBlueprint(BlueprintObj);
+			FGeneric3DHUD::Compiled.Remove(BlueprintObj);
+			UE_LOG(LogTemp, Warning, TEXT("Execute Compile"));
 		}
-		), 0.1f, false);
-	} else {
-		UE_LOG(LogTemp, Warning, TEXT("Failked Compile"));
-	}
+	), 0.5f, false);
+
+	// Repush Timer
+	Compiled.Add(BlueprintObj, timer);
 }

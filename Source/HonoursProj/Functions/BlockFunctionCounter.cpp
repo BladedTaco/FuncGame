@@ -57,7 +57,7 @@ Arr<VStarArray, VStarArrayReturn> ABlockFunctionCounter::GetInnerFunc() {
 void ABlockFunctionCounter::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
-	if (GEngine && GIsEditor) return;
+	if (GEngine && GIsEditor && !GWorld->HasBegunPlay()) return;
 
 	float NextValue = CurrentValue + DeltaTime * TickRate;
 

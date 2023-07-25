@@ -11,9 +11,9 @@ void AFunctionInput::Tick(float DeltaSeconds) {
 		FVector target = connectedTo->GetBlockMesh()->GetComponentLocation();
 		me.Z = target.Z = ConnectMesh->GetComponentLocation().Z;
 		ConnectMesh->SetWorldTransform(Connect(me, target));
-	} else {
-		AFunctionConnector::Tick(DeltaSeconds);
-	}
+		ConnectMesh->SetVisibility(true);
+	} 
+	AFunctionConnector::Tick(DeltaSeconds);
 }
 
 AHonoursProjBlock* AFunctionInput::HandleClick(UPrimitiveComponent* ClickedComponent) {

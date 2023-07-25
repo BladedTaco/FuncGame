@@ -64,10 +64,11 @@ protected:
 
 
 
+	TArray<class AFunctionConnector*> GetConnectors();
+
 private:
 	UPROPERTY(VisibleAnywhere)
 		EPropagable Status = EPropagable::ALL;
-
 public:
 
 	virtual bool ShouldTickIfViewportsOnly() const override { return true; }
@@ -110,6 +111,9 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void OnConstruction(const FTransform& Transform) override;
+	virtual void BeginDestroy() override;
+
+	void DestroyConnectors(AActor* deletedActor);
 
 	ABlockFunction();
 
