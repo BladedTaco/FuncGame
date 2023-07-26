@@ -67,15 +67,15 @@ void AFunctionConnector::SetupHUD() {
 	//HUD.Component->UpdateWidget();
 	HUD.Component->SizeToBounds(GetBlockMesh());
 
-	HUD.Instance->Name = ParameterInfo.Name;
-	HUD.Instance->Type = ParameterInfo.Type->ToString();
+	if (ParameterInfo.Type && HUD.Inst().IsValid()) {
+		HUD.Instance->Name = ParameterInfo.Name;
+		HUD.Instance->Type = ParameterInfo.Type->ToString();
+	}
 }
 
 
 void AFunctionConnector::BeginPlay() {
 	Super::BeginPlay();
-
-	HUD.UpdateComponent(GetHUDComponent());
 
 	SetupHUD();
 }
@@ -114,7 +114,7 @@ void AFunctionConnector::Tick(float DeltaSeconds) {
 	AActor::Tick(DeltaSeconds);
 	if (bIsActive) {
 		FVector me = GetBlockMesh()->GetComponentLocation();
-		FVector mouse = MousePos();
+		FVector mouse = MousePosWorld(GetWorld());
 		mouse.Z = me.Z = ConnectMesh->GetComponentLocation().Z;
 		ConnectMesh->SetWorldTransform(Connect(me, mouse));
 	}
@@ -125,7 +125,7 @@ AHonoursProjBlock* AFunctionConnector::HandleClick(UPrimitiveComponent* ClickedC
 	bIsActive = !bIsActive;
 	if (bIsActive) {
 		ConnectMesh->SetVisibility(true);
-		clickOffset = MousePos() - GetActorLocation();
+		clickOffset = MousePosWorld(GetWorld()) - GetActorLocation();
 
 		// Get All connectable actors
 		TArray<AActor*> actors;

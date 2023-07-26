@@ -77,7 +77,19 @@ void ABlockFunction::OnConstruction(const FTransform& Transform) {
 	HUD.UpdateComponent(GetHUDComponent());
 	if (HUD.Component.IsValid()) {
 		HUD.Component->SizeToBounds(GetBlockMesh());
-		HUD.UpdateInstance();
+	}
+
+	ConnectorsSpawned = InputBlocks.Num() + OutputBlocks.Num() > 0;
+
+	for (auto connector : GetConnectors()) {
+		if (connector->GetAttachParentActor() != this) {
+			if (connector->GetAttachParentActor() == nullptr) {
+				connector->Destroy();
+			}
+			ConnectorsSpawned = false;
+			InputBlocks = {};
+			OutputBlocks = {};
+		}
 	}
 
 	SpawnConnectors();
@@ -94,15 +106,10 @@ void ABlockFunction::SpawnConnectors() {
 	// Requires World
 	if (!GetWorld()) return;
 
-	bool exitEarly = InputBlocks.Num() + OutputBlocks.Num() > 0;
+	// Set Function Signature
+	SetFunctionTypes();
 
-	//if (!exitEarly) {
-		// Set Function Signature
-		SetFunctionTypes();
-	//}
-
-	//HUD.Component->InitWidget();
-	//HUD.Component->UpdateWidget();
+	HUD.UpdateComponent(GetHUDComponent());
 	HUD.Component->SizeToBounds(GetBlockMesh());
 
 	if (!HUD.Inst().IsValid()) return;
@@ -116,7 +123,7 @@ void ABlockFunction::SpawnConnectors() {
 	HUD.UpdateInEditor(Assets()->HUD.Parameter.Class);
 
 	// Call once
-	if (exitEarly) {
+	if (ConnectorsSpawned) {
 		FParameter p;
 		for (auto param : GetConnectors()) {
 			param->Function = this;
@@ -129,7 +136,7 @@ void ABlockFunction::SpawnConnectors() {
 		}
 		return;
 	}
-
+	ConnectorsSpawned = true;
 
 	//// Set Function Signature
 	//SetFunctionTypes();

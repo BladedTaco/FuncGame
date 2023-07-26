@@ -30,6 +30,9 @@ protected:
 	void OnRClickPress();
 	void OnRClickRelease();
 
+	void OnMClickPress();
+	void OnMClickRelease();
+
 	void OnScroll(float axis);
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite)
@@ -40,4 +43,12 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	TArray<AHonoursProjBlock*> SelectedBlocks;
+
+
+	UPROPERTY(VisibleAnywhere)
+		FVector PanOffset;
+	UPROPERTY(VisibleAnywhere)
+		FVector PanOrigin;
+	UPROPERTY(VisibleAnywhere)
+		bool PanningCamera = false;
 };

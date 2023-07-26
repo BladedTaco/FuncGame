@@ -57,7 +57,6 @@ public:
 	/** Returns BlockMesh subobject **/
 	FORCEINLINE class UAutoScalingHUD* GetHUDComponent() const { return HUDComponent; }
 
-	FVector MousePos();
 	void Tick(float DeltaSeconds);
 	virtual AHonoursProjBlock* HandleClick(UPrimitiveComponent* ClickedComponent);
 	virtual AHonoursProjBlock* HandleRClick(UPrimitiveComponent* ClickedComponent);

@@ -63,13 +63,14 @@ protected:
 		void SpawnAllConnectors();
 
 
-
 	TArray<class AFunctionConnector*> GetConnectors();
 
 private:
 	UPROPERTY(VisibleAnywhere)
 		EPropagable Status = EPropagable::ALL;
 public:
+	UPROPERTY(VisibleAnywhere)
+		bool ConnectorsSpawned = false;
 
 	virtual bool ShouldTickIfViewportsOnly() const override { return true; }
 
@@ -96,9 +97,9 @@ public:
 
 
 	// Parameter Actors
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Instanced)
 		TArray<class AFunctionInput*> InputBlocks;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Instanced)
 		TArray<class AFunctionOutput*> OutputBlocks;
 
 	// Block HUD

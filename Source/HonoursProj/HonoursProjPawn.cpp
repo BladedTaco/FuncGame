@@ -35,6 +35,14 @@ void AHonoursProjPawn::Tick(float DeltaSeconds)
 		End = Start + (Dir * 8000.0f);
 		TraceForBlock(Start, End, false);
 	}
+
+	if (PanningCamera) {
+		FVector newPos = MousePosScreen(GetWorld());
+
+		AActor* camera = GetWorld()->GetFirstPlayerController()->GetViewTarget();
+		camera->SetActorLocation(PanOrigin - newPos + PanOffset);
+
+	}
 }
 
 void AHonoursProjPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -46,6 +54,9 @@ void AHonoursProjPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 	PlayerInputComponent->BindAction("RClick", EInputEvent::IE_Pressed, this, &AHonoursProjPawn::OnRClickPress);
 	PlayerInputComponent->BindAction("RClick", EInputEvent::IE_Released, this, &AHonoursProjPawn::OnRClickRelease);
+
+	PlayerInputComponent->BindAction("MClick", EInputEvent::IE_Pressed, this, &AHonoursProjPawn::OnMClickPress);
+	PlayerInputComponent->BindAction("MClick", EInputEvent::IE_Released, this, &AHonoursProjPawn::OnMClickRelease);
 
 	PlayerInputComponent->BindAxis("Scroll", this, &AHonoursProjPawn::OnScroll);
 }
@@ -290,6 +301,16 @@ void AHonoursProjPawn::OnRClickRelease(){
 		block->HandleRClick(CurrentComponentFocus.Get());
 	}
 	RemoveInactive();
+}
+
+void AHonoursProjPawn::OnMClickPress() {
+	PanningCamera = true;
+	PanOrigin = GetWorld()->GetFirstPlayerController()->GetViewTarget()->GetActorLocation();
+	PanOffset = MousePosScreen(GetWorld());
+}
+
+void AHonoursProjPawn::OnMClickRelease() {
+	PanningCamera = false;
 }
 
 void AHonoursProjPawn::OnScroll(float axis) {

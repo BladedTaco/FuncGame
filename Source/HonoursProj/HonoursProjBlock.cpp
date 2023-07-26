@@ -12,6 +12,8 @@
 #include "HonoursProjPlayerController.h"
 #include "Kismet/GameplayStatics.h"
 
+#include "MyUtils.h"
+
 #include "AssetLoader_gen.h"
 //#include "OutputDeviceNull.h"
 
@@ -50,22 +52,9 @@ AHonoursProjBlock::AHonoursProjBlock() {
 	SetActorTickEnabled(true);
 }
 
-
-FVector AHonoursProjBlock::MousePos() {
-	if (!GetWorld()) return FVector::ZeroVector;
-
-	FVector worldPos, worldDir;
-	auto playerCon = GetWorld()->GetFirstPlayerController<AHonoursProjPlayerController>();
-
-	if (!playerCon) return FVector::ZeroVector;
-
-	playerCon->DeprojectMousePositionToWorld(worldPos, worldDir);
-	return worldPos;
-}
-
 void AHonoursProjBlock::Tick(float DeltaSeconds) {
 	if (bIsActive) {
-		SetActorLocation(MousePos() - clickOffset);
+		SetActorLocation(MousePosWorld(GetWorld()) - clickOffset);
 	}
 }
 
@@ -73,7 +62,7 @@ void AHonoursProjBlock::Tick(float DeltaSeconds) {
 AHonoursProjBlock* AHonoursProjBlock::HandleClick(UPrimitiveComponent* ClickedComponent) {
 	bIsActive = !bIsActive;
 	if (bIsActive) {
-		clickOffset = MousePos() - GetActorLocation();
+		clickOffset = MousePosWorld(GetWorld()) - GetActorLocation();
 		// Change material
 		BlockMesh->SetMaterial(0, ActiveMaterial);
 	} else {

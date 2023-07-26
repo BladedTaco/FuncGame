@@ -115,6 +115,7 @@ void FGeneric3DHUD::UpdateInstance() {
 // Sets the new HUD.Component
 void FGeneric3DHUD::UpdateComponent(UAutoScalingHUD* InComponent) {
 	Component = MakeWeakObjectPtr(InComponent);
+	Component->InitWidget();
 	UpdateInstance();
 }
 

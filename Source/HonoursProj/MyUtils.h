@@ -94,3 +94,6 @@ namespace std {
 };
 
 #endif
+
+FVector MousePosWorld(UWorld* WorldContext);
+FVector MousePosScreen(UWorld* WorldContext);
