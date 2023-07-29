@@ -177,9 +177,10 @@ void ABlockFunction::SpawnConnectors() {
 			actor->Index = idx;
 			blocks->Add(actor);
 			// Attach to self
-			actor->AttachToActor(this, attachRules);
+			//actor->AttachToActor(this, attachRules);
+			actor->AttachToComponent(GetRootComponent(), attachRules);
 			actor->SetActorRelativeLocation(FVector(100 * -idx + 50, yOff * 100, 0.5 * extent.Z));
-			actor->SetupHUD();
+			actor->SetupHUD(); 
 			// Iterate index
 			idx += 1;
 		}
