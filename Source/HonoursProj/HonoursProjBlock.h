@@ -57,7 +57,8 @@ public:
 	/** Returns BlockMesh subobject **/
 	FORCEINLINE class UAutoScalingHUD* GetHUDComponent() const { return HUDComponent; }
 
-	void Tick(float DeltaSeconds);
+	virtual void EndPlay(EEndPlayReason::Type EndPlayReason) override;
+	virtual void Tick(float DeltaSeconds) override;
 	virtual AHonoursProjBlock* HandleClick(UPrimitiveComponent* ClickedComponent);
 	virtual AHonoursProjBlock* HandleRClick(UPrimitiveComponent* ClickedComponent);
 

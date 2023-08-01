@@ -2,8 +2,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+
+#include "Types/Types_gen.h"
+
 #include "TypeRepr.generated.h"
 
+class UType;
 class UStaticMeshComponent;
 
 
@@ -12,21 +16,22 @@ class ATypeRepr : public AActor
 {
 	GENERATED_BODY()
 
+private:
+	inline static TMap<EType, UClass*> ClassMap = {};
 public:	
 	// Sets default values for this component's properties
 	ATypeRepr();
 
-	virtual void OnConstruction(const FTransform& Transform) override;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		USceneComponent* ChildBoundingPlanesParent;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Instanced)
-		TArray<UStaticMeshComponent*> MyTypeMeshes;
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Instanced)
-		TArray<UStaticMeshComponent*> ChildBoundingPlanes;
+	// Get Bounding Planes
+	TArray<UStaticMeshComponent*> GetChildBoundingPlanes();
 
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-		int MyMeshNumber = 0;
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-		int ChildTypes = 0;
-	
-		
+	// Get ATypeRepr subclass from EType
+	static UClass* GetRepr(EType Type);
+
+	// Create Full Representation from UType
+	static ATypeRepr* CreateRepr(UType* Type, UWorld* World);
+
 };

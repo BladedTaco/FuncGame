@@ -16,7 +16,11 @@
 
 #include "AssetLoader_gen.h"
 
+#include "Types/TypeRepr.h"
+
 #include "HUD/ParameterHUD.h"
+
+#include "MyUtils.h"
 
 
 // Sets default values
@@ -210,4 +214,10 @@ void AFunctionConnector::EditorConnectTo() {
 
 	this->Tick(0.1f);
 	EditorConnect->Tick(0.1f);
+}
+
+
+void AFunctionConnector::SpawnRepr() {
+	auto repr = ATypeRepr::CreateRepr(ResolveType(), GetWorld());
+	FitActorToPlane(repr, GetBlockMesh());
 }

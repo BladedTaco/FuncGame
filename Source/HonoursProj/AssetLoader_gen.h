@@ -64,6 +64,33 @@ struct FResource_HUD {
 		{}
 };
 
+struct FResource_TypeRepr {
+		ConstructorHelpers::FClassFinder<AActor> Float;
+		ConstructorHelpers::FClassFinder<AActor> Function;
+		ConstructorHelpers::FClassFinder<AActor> Functor;
+		ConstructorHelpers::FClassFinder<AActor> Int;
+		ConstructorHelpers::FClassFinder<AActor> Ordinal;
+		ConstructorHelpers::FClassFinder<AActor> Show;
+		ConstructorHelpers::FClassFinder<AActor> Template;
+		ConstructorHelpers::FClassFinder<AActor> Bool;
+		ConstructorHelpers::FClassFinder<AActor> Char;
+		ConstructorHelpers::FClassFinder<AActor> Maybe;
+		ConstructorHelpers::FClassFinder<AActor> Number;
+		FResource_TypeRepr()
+		:	Float(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Float"))
+		,	Function(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Function"))
+		,	Functor(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Functor"))
+		,	Int(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Int"))
+		,	Ordinal(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Ordinal"))
+		,	Show(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Show"))
+		,	Template(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Template"))
+		,	Bool(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Bool"))
+		,	Char(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Char"))
+		,	Maybe(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Maybe"))
+		,	Number(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Number"))
+		{}
+};
+
 
 
 struct FAssets {
@@ -72,12 +99,14 @@ struct FAssets {
 		FResource_Data Data;
 		FResource_Icon Icon;
 		FResource_HUD HUD;
+		FResource_TypeRepr TypeRepr;
 		FAssets()
 		:	Material({})
 		,	Mesh({})
 		,	Data({})
 		,	Icon({})
 		,	HUD({})
+		,	TypeRepr({})
 		{}
 };
 

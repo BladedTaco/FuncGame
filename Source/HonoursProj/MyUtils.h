@@ -97,3 +97,6 @@ namespace std {
 
 FVector MousePosWorld(UWorld* WorldContext);
 FVector MousePosScreen(UWorld* WorldContext);
+
+
+void FitActorToPlane(AActor* actor, UStaticMeshComponent* plane);

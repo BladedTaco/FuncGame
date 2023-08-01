@@ -65,6 +65,10 @@ public:
 		void EditorConnectTo();
 
 public:
+	UFUNCTION(Category = "Functions", BlueprintCallable, CallInEditor)
+		void SpawnRepr();
+
+public:
 	UPROPERTY(VisibleAnywhere)
 		FParameter ParameterInfo;
 	UPROPERTY(VisibleAnywhere)

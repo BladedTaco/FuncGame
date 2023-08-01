@@ -22,7 +22,22 @@
         <Class Name="Parameter" Type="UUserWidget" Location="/Game/MyContent/Blueprints/HUD_Parameter"/>
         <Class Name="ASH" Type="UWidgetComponent" Location="/Game/MyContent/Blueprints/BP_AutoScalingHUD"/>
     </ResourceType>
+	<ResourceType Name='TypeRepr'>
+        <Class Name="Float" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Float"/>
+        <Class Name="Function" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Function"/>
+        <Class Name="Functor" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Functor"/>
+        <Class Name="Int" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Int"/>
+        <Class Name="Ordinal" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Ordinal"/>
+        <Class Name="Show" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Show"/>
+        <Class Name="Template" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Template"/>
+        <Class Name="Bool" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Bool"/>
+        <Class Name="Char" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Char"/>
+        <Class Name="Maybe" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Maybe"/>
+        <Class Name="Number" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Number"/>
+    </ResourceType>
     
+
+
 	<!-- <ResourceType Name='HUD'>
         <Class Name="Function" Type="UFunctionHUD" Location="WidgetBlueprint'/Game/MyContent/Blueprints/BP_FunctionBlock.BP_FunctionBlock_C'"/>
     </ResourceType> -->

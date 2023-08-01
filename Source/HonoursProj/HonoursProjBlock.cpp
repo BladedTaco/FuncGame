@@ -52,10 +52,16 @@ AHonoursProjBlock::AHonoursProjBlock() {
 	SetActorTickEnabled(true);
 }
 
+void AHonoursProjBlock::EndPlay(EEndPlayReason::Type EndPlayReason) {
+	if (HUDComponent) HUDComponent->DestroyComponent(false);
+	Super::EndPlay(EndPlayReason);
+}
+
 void AHonoursProjBlock::Tick(float DeltaSeconds) {
 	if (bIsActive) {
 		SetActorLocation(MousePosWorld(GetWorld()) - clickOffset);
 	}
+	Super::Tick(DeltaSeconds);
 }
 
 
