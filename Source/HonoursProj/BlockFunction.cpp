@@ -31,7 +31,11 @@ TArray<AFunctionConnector*> ABlockFunction::GetConnectors() {
 	TArray<AFunctionConnector*> connectors;
 	connectors.Append(InputBlocks);
 	connectors.Append(OutputBlocks);
-	return connectors;
+
+	// Filter Invalid Connectors
+	return connectors.FilterByPredicate([](AFunctionConnector* connector) {
+		return IsValid(connector);
+	});
 }
 
 ABlockFunction::ABlockFunction() {

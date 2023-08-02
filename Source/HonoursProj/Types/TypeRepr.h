@@ -9,6 +9,7 @@
 
 class UType;
 class UStaticMeshComponent;
+class UBoxComponent;
 
 
 UCLASS( Blueprintable, ClassGroup=(Custom) )
@@ -24,6 +25,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		USceneComponent* ChildBoundingPlanesParent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UBoxComponent* BoundingBox;
 
 	// Get Bounding Planes
 	TArray<UStaticMeshComponent*> GetChildBoundingPlanes();

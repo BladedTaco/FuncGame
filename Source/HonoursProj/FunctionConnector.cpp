@@ -219,5 +219,5 @@ void AFunctionConnector::EditorConnectTo() {
 
 void AFunctionConnector::SpawnRepr() {
 	auto repr = ATypeRepr::CreateRepr(ResolveType(), GetWorld());
-	FitActorToPlane(repr, GetBlockMesh());
+	FitActorToPlane(repr, repr->BoundingBox, GetBlockMesh());
 }

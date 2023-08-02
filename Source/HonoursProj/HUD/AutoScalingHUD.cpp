@@ -96,6 +96,14 @@ void UAutoScalingHUD::DestroyComponent(bool bPromoteChildren) {
 	Super::DestroyComponent(bPromoteChildren);
 }
 
+void UAutoScalingHUD::BeginDestroy() {
+	if (auto widget = GetUserWidgetObject()) {
+		widget->ReleaseSlateResources(true);
+		SetWidget(nullptr);
+	}
+	Super::BeginDestroy();
+}
+
 
 // FGeneric3DHUD impls
 

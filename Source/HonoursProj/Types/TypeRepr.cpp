@@ -4,6 +4,7 @@
 #include "Types/Type.h"
 
 #include "Components/StaticMeshComponent.h"
+#include "Components/BoxComponent.h"
 #include "Algo/Transform.h"
 #include "Algo/Compare.h"
 
@@ -20,7 +21,10 @@ ATypeRepr::ATypeRepr()
 	// ...
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+	BoundingBox = CreateDefaultSubobject<UBoxComponent>(TEXT("BoundsComponent"));
 	ChildBoundingPlanesParent = CreateDefaultSubobject<USceneComponent>(TEXT("ChildBoundingPlanesParent"));
+
+	BoundingBox->SetupAttachment(RootComponent);
 
 	ChildBoundingPlanesParent->SetupAttachment(RootComponent);
 
@@ -83,12 +87,22 @@ ATypeRepr* ATypeRepr::CreateRepr(UType* Type, UWorld* World) {
 	auto templates = Type->GetTemplates();
 	auto planes = me->GetChildBoundingPlanes();
 
-	if (templates.Num() == 0) return me;
+	// No Templates, Terminal Type
+	if (templates.Num() == 0) {
+		if (planes.Num() == 1) {
+			planes[0]->SetVisibility(false);
+		}
+		return me;
+	}
+	// MisMatch, Invalid Representation
 	if (templates.Num() != planes.Num()) return nullptr;
 
+	// For Each Template/Plane Pair
 	for (int idx = templates.Num(); idx --> 0;) {
 		// Create Specialized TypeRepr, and Fit it to Plane.
-		FitActorToPlane(CreateRepr(templates[idx], World), planes[idx]);
+		auto repr = CreateRepr(templates[idx], World);
+		FitActorToPlane(repr, repr->BoundingBox, planes[idx]);
+		planes[idx]->SetVisibility(false);
 	}
 
 	return me;

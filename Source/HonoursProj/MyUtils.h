@@ -99,4 +99,6 @@ FVector MousePosWorld(UWorld* WorldContext);
 FVector MousePosScreen(UWorld* WorldContext);
 
 
-void FitActorToPlane(AActor* actor, UStaticMeshComponent* plane);
+void FitActorToPlane(AActor* Actor, UStaticMeshComponent* Plane);
+void FitActorToPlane(AActor* Actor, FVector ActorOrigin, FVector ActorRange, UStaticMeshComponent* Plane);
+void FitActorToPlane(AActor* Actor, class UBoxComponent* ActorBounds, UStaticMeshComponent* Plane);

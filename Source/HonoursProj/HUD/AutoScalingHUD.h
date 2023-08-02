@@ -37,6 +37,7 @@ public:
 
 	virtual void OnComponentCreated() override;
 	virtual void DestroyComponent(bool bPromoteChildren = false) override;
+	virtual void BeginDestroy() override;
 };
 
 // Generic Version
