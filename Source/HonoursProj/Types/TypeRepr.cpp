@@ -97,6 +97,15 @@ ATypeRepr* ATypeRepr::CreateRepr(UType* Type, UWorld* World) {
 	// MisMatch, Invalid Representation
 	if (templates.Num() != planes.Num()) return nullptr;
 
+	if (Type->GetType() == EType::NUMBER) {
+		if (templates[0]->GetType() == EType::ANY) {
+			planes[0]->SetVisibility(false);
+			return me;
+		} else {
+			me->SetActorHiddenInGame(true);
+		}
+	}
+
 	// For Each Template/Plane Pair
 	for (int idx = templates.Num(); idx --> 0;) {
 		// Create Specialized TypeRepr, and Fit it to Plane.

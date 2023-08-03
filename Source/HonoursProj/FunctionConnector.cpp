@@ -220,4 +220,17 @@ void AFunctionConnector::EditorConnectTo() {
 void AFunctionConnector::SpawnRepr() {
 	auto repr = ATypeRepr::CreateRepr(ResolveType(), GetWorld());
 	FitActorToPlane(repr, repr->BoundingBox, GetBlockMesh());
+	repr->AddActorLocalOffset(FVector::UpVector * 1000);
+}
+
+void AFunctionConnector::SpawnAllRepr() {
+	TArray<AActor*> actors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), StaticClass(), actors);
+
+	for (auto actor : actors) {
+		auto func = Cast<AFunctionConnector>(actor);
+		func->SpawnRepr();
+		func->HUDComponent->AddLocalOffset(FVector::UpVector * 50);
+	}
+
 }

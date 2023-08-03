@@ -68,6 +68,9 @@ public:
 	UFUNCTION(Category = "Functions", BlueprintCallable, CallInEditor)
 		void SpawnRepr();
 
+	UFUNCTION(Category = "Functions", BlueprintCallable, CallInEditor)
+		void SpawnAllRepr();
+
 public:
 	UPROPERTY(VisibleAnywhere)
 		FParameter ParameterInfo;
