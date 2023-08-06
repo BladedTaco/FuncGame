@@ -18,6 +18,9 @@
 
 #include "Types/Unpack.h"
 
+#include "Kismet/GameplayStatics.h"
+#include "Camera/CameraActor.h"
+
 AHonoursProjPawn::AHonoursProjPawn(const FObjectInitializer& ObjectInitializer) 
 	: Super(ObjectInitializer)
 {
@@ -39,6 +42,7 @@ void AHonoursProjPawn::Tick(float DeltaSeconds)
 	if (PanningCamera) {
 		FVector newPos = MousePosScreen(GetWorld());
 
+		
 		AActor* camera = GetWorld()->GetFirstPlayerController()->GetViewTarget();
 		camera->SetActorLocation(PanOrigin - newPos + PanOffset);
 
@@ -316,8 +320,28 @@ void AHonoursProjPawn::OnMClickRelease() {
 void AHonoursProjPawn::OnScroll(float axis) {
 	if (-0.01 < axis && axis < 0.01) { return; }
 
-	AActor* camera = GetWorld()->GetFirstPlayerController()->GetViewTarget();
-	camera->SetActorLocation(camera->GetActorLocation() + FVector(axis * 100, 0, 0));
+	static UCameraComponent* camera = NULL;
+
+	if (!camera) {
+		TArray<AActor*> actors;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACameraActor::StaticClass(), actors);
+		for (AActor* actor : actors) {
+			if (auto cam = Cast<ACameraActor>(actor)) {
+				if (cam->HasActiveCameraComponent()) {
+					camera = cam->GetCameraComponent();
+					break;
+				}
+			}
+		}
+	}
+
+	if (camera) {
+		camera->SetOrthoWidth(camera->OrthoWidth * (100 - 10*axis)/100 );
+	}
+
+
+
+	//camera->SetActorLocation(camera->GetActorLocation() + FVector(axis * 100, 0, 0));
 
 }
 
