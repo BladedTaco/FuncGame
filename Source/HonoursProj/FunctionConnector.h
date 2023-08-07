@@ -15,6 +15,8 @@
 
 #include "FunctionConnector.generated.h"
 
+class ATypeRepr;
+
 /**
  * 
  */
@@ -70,6 +72,9 @@ public:
 
 	UFUNCTION(Category = "Functions", BlueprintCallable, CallInEditor)
 		void SpawnAllRepr();
+
+	UPROPERTY(VisibleAnywhere)
+		ATypeRepr* TypeRepr;
 
 public:
 	UPROPERTY(VisibleAnywhere)

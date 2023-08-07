@@ -20,11 +20,27 @@
 
 #include "Kismet/GameplayStatics.h"
 #include "Camera/CameraActor.h"
+#include "Engine/GameViewportClient.h"
 
 AHonoursProjPawn::AHonoursProjPawn(const FObjectInitializer& ObjectInitializer) 
 	: Super(ObjectInitializer)
 {
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
+}
+
+void AHonoursProjPawn::BeginPlay() {
+	Super::BeginPlay();
+
+	TArray<AActor*> actors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACameraActor::StaticClass(), actors);
+	for (AActor* actor : actors) {
+		if (auto cam = Cast<ACameraActor>(actor)) {
+			if (cam->HasActiveCameraComponent()) {
+				MainCamera = cam->GetCameraComponent();
+				break;
+			}
+		}
+	}
 }
 
 void AHonoursProjPawn::Tick(float DeltaSeconds)
@@ -42,9 +58,15 @@ void AHonoursProjPawn::Tick(float DeltaSeconds)
 	if (PanningCamera) {
 		FVector newPos = MousePosScreen(GetWorld());
 
-		
+		FVector2D ViewSize;
+		auto viewport = GetWorld()->GetGameViewport();
+		viewport->GetViewportSize(ViewSize);
+
+		float scale = MainCamera->OrthoWidth / ViewSize.X;
+		FVector offset = (newPos * scale);
+
 		AActor* camera = GetWorld()->GetFirstPlayerController()->GetViewTarget();
-		camera->SetActorLocation(PanOrigin - newPos + PanOffset);
+		camera->SetActorLocation(PanOrigin + PanOffset - offset);
 
 	}
 }
@@ -310,7 +332,14 @@ void AHonoursProjPawn::OnRClickRelease(){
 void AHonoursProjPawn::OnMClickPress() {
 	PanningCamera = true;
 	PanOrigin = GetWorld()->GetFirstPlayerController()->GetViewTarget()->GetActorLocation();
-	PanOffset = MousePosScreen(GetWorld());
+
+	// Get Starting Offset
+	FVector2D ViewSize;
+	auto viewport = GetWorld()->GetGameViewport();
+	viewport->GetViewportSize(ViewSize);
+
+	float scale = MainCamera->OrthoWidth / ViewSize.X;
+	PanOffset = MousePosScreen(GetWorld()) * scale;
 }
 
 void AHonoursProjPawn::OnMClickRelease() {
@@ -320,25 +349,9 @@ void AHonoursProjPawn::OnMClickRelease() {
 void AHonoursProjPawn::OnScroll(float axis) {
 	if (-0.01 < axis && axis < 0.01) { return; }
 
-	static UCameraComponent* camera = NULL;
-
-	if (!camera) {
-		TArray<AActor*> actors;
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACameraActor::StaticClass(), actors);
-		for (AActor* actor : actors) {
-			if (auto cam = Cast<ACameraActor>(actor)) {
-				if (cam->HasActiveCameraComponent()) {
-					camera = cam->GetCameraComponent();
-					break;
-				}
-			}
-		}
+	if (MainCamera) {
+		MainCamera->SetOrthoWidth(MainCamera->OrthoWidth * (100 - 10*axis)/100 );
 	}
-
-	if (camera) {
-		camera->SetOrthoWidth(camera->OrthoWidth * (100 - 10*axis)/100 );
-	}
-
 
 
 	//camera->SetActorLocation(camera->GetActorLocation() + FVector(axis * 100, 0, 0));

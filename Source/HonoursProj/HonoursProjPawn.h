@@ -6,6 +6,8 @@
 #include "GameFramework/Pawn.h"
 #include "HonoursProjPawn.generated.h"
 
+class UCameraComponent;
+
 UCLASS(config=Game)
 class AHonoursProjPawn : public APawn
 {
@@ -13,6 +15,7 @@ class AHonoursProjPawn : public APawn
 
 public:
 
+	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
@@ -44,6 +47,8 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	TArray<AHonoursProjBlock*> SelectedBlocks;
 
+	UPROPERTY(VisibleAnywhere)
+		UCameraComponent* MainCamera;
 
 	UPROPERTY(VisibleAnywhere)
 		FVector PanOffset;

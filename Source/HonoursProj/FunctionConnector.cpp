@@ -218,9 +218,17 @@ void AFunctionConnector::EditorConnectTo() {
 
 
 void AFunctionConnector::SpawnRepr() {
-	auto repr = ATypeRepr::CreateRepr(ResolveType(), GetWorld());
-	FitActorToPlane(repr, repr->BoundingBox, GetBlockMesh());
-	repr->AddActorLocalOffset(FVector::UpVector * 1000);
+
+	// Destory Existing TypeRepr
+	if (TypeRepr && IsValid(TypeRepr)) {
+		TypeRepr->Destroy();
+		TypeRepr = NULL;
+	}
+
+	// Spawn new Repr
+	TypeRepr = ATypeRepr::CreateRepr(ResolveType(), GetWorld());
+	FitActorToPlane(TypeRepr, TypeRepr->BoundingBox, GetBlockMesh());
+	TypeRepr->AddActorLocalOffset(FVector::UpVector * 1000);
 }
 
 void AFunctionConnector::SpawnAllRepr() {
