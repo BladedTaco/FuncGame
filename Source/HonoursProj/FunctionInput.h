@@ -25,6 +25,6 @@ public:
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
-	virtual VStar GetValue() override;
-	virtual UType* ResolveType() override;
+	virtual VStar GetValue_Impl() override;
+	virtual UType* ResolveType_Impl() override;
 };

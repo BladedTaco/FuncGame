@@ -10,6 +10,7 @@
 class UType;
 class UStaticMeshComponent;
 class UBoxComponent;
+class VStar;
 
 
 UCLASS( Blueprintable, ClassGroup=(Custom) )
@@ -28,8 +29,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UBoxComponent* BoundingBox;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+		EType Type;
+
+	// Updates Displayed Value
+	void UpdateValue(VStar value);
+	void UpdateText(FString text);
+
 	// Get Bounding Planes
 	TArray<UStaticMeshComponent*> GetChildBoundingPlanes();
+	TArray<ATypeRepr*> GetChildTypes();
+
 
 	// Get ATypeRepr subclass from EType
 	static UClass* GetRepr(EType Type);

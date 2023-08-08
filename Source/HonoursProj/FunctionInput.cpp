@@ -67,14 +67,14 @@ void AFunctionInput::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 	}
 }
 
-UType* AFunctionInput::ResolveType() {
+UType* AFunctionInput::ResolveType_Impl() {
 	if (connectedTo && IsValid(connectedTo)) {
 		return connectedTo->ResolveType();
 	}
 	return ParameterInfo.Type;
 }
 
-VStar AFunctionInput::GetValue() {	
+VStar AFunctionInput::GetValue_Impl() {
 	UType* type = ResolveType();
 	// Handle no connection
 	if (!connectedTo) { return VStar(ResolveType());  }

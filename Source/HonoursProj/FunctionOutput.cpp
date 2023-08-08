@@ -51,7 +51,7 @@ void AFunctionOutput::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 	connectedTo.Empty();
 }
 
-UType* AFunctionOutput::ResolveType() {
+UType* AFunctionOutput::ResolveType_Impl() {
 	TMap<UType*, UType*> ptrMap = {};
 	// Copy Owners OutputArrow
 	UType* arrow = Function->ResolveType()->DeepCopy(ptrMap);
@@ -70,6 +70,6 @@ UType* AFunctionOutput::ResolveType() {
 	return arrow;
 }
 
-VStar AFunctionOutput::GetValue() {
+VStar AFunctionOutput::GetValue_Impl() {
 	return std::move(Function->GetValue()[Index]);
 }

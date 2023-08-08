@@ -70,6 +70,7 @@ class Maybe<VStar> : public virtual IMaybe {
 private:
 	friend VStar;
 	friend Maybe;
+	friend class ATypeRepr;
 	friend IMaybe::Functor;
 	friend IMaybe::Show;
 	template <typename A>

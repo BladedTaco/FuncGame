@@ -8,7 +8,13 @@
 #include "Algo/Transform.h"
 #include "Algo/Compare.h"
 
+#include "Types/VStar.h"
+#include "Types/Show.h"
+#include "Types/Int_gen.h"
+#include "Types/Maybe_gen.h"
+
 #include "MyUtils.h"
+#include <Components/TextRenderComponent.h>
 
 // Sets default values for this component's properties
 ATypeRepr::ATypeRepr()
@@ -33,6 +39,64 @@ ATypeRepr::ATypeRepr()
 	UpdateComponentTransforms();
 }
 
+void ATypeRepr::UpdateValue(VStar value) {
+	// Get the Type
+	EType type = value.Type()->GetType();
+
+	// Base Types
+	if (IsETypeBase(type)
+		//|| type == EType::NUMBER
+		) {
+		UpdateText(value.getTypeclass()->Show->show()(value));
+		return;
+
+	// Container Types
+	} else if (IsETypeData(type)) {
+		if (type == EType::NUMBER) {
+			if (auto number = value.ResolveToSafe<Number<int>>()) {
+				return UpdateText(number->GetTypeclass()->Show->show()(value));
+			}
+			if (auto number = value.ResolveToSafe<Number<float>>()) {
+				return UpdateText(number->GetTypeclass()->Show->show()(value));
+			}
+		}
+
+		// Maybe
+		if (type == EType::MAYBE) {
+			auto maybe = value.ResolveToSafe<MaybeV>();
+			if (!maybe->_isNothing) {
+				GetChildTypes()[0]->UpdateValue(maybe->_value);
+				return;
+			}
+		}
+		// Functions dont support concrete values
+
+	// TypeClasses / incomplete types have no written values
+	} // else...
+
+	return UpdateText("?");
+	
+}
+
+void ATypeRepr::UpdateText(FString text) {
+	// Set all text components to given text
+	for (auto plane : GetChildBoundingPlanes()) {
+		if (auto textComp = Cast<UTextRenderComponent>(plane->GetChildComponent(0))) {
+			textComp->SetText(text);
+		}
+	}
+
+	// Recursively Update all Attached ATypeReprs
+	TArray<AActor*> actors;
+	GetAttachedActors(actors);
+	for (AActor* actor : actors) {
+		if (auto repr = Cast<ATypeRepr>(actor)) {
+			repr->UpdateText(text);
+		}
+	}
+
+}
+
 TArray<UStaticMeshComponent*> ATypeRepr::GetChildBoundingPlanes() {
 	// Initialize Arrays
 	TArray<USceneComponent*> components;
@@ -47,6 +111,17 @@ TArray<UStaticMeshComponent*> ATypeRepr::GetChildBoundingPlanes() {
 
 	// return casted components array
 	return outComponents;
+}
+
+TArray<ATypeRepr*> ATypeRepr::GetChildTypes() {
+	TArray<ATypeRepr*> typeReprs;
+	for (auto* plane : GetChildBoundingPlanes()) {
+		auto repr = Cast<ATypeRepr>(plane->GetAttachChildren()[0]->GetOwner());
+		if (repr) {
+			typeReprs.Add(repr);
+		}
+	}
+	return typeReprs;
 }
 
 UClass* ATypeRepr::GetRepr(EType Type) {

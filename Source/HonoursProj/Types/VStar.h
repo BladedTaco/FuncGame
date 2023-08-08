@@ -224,7 +224,7 @@ public:
 		Replace(other);
 	}
 
-	// Equality op
+	// Assignment op
 	constexpr VStar& operator=(const VStar& other) {
 		if (this == &other) return *this;
 

@@ -25,6 +25,11 @@ class HONOURSPROJ_API AFunctionConnector : public AHonoursProjBlock {
 	GENERATED_BODY()
 
 
+protected:
+
+	virtual UType* ResolveType_Impl() PURE_VIRTUAL(AFunctionConnector::ResolveType_Impl, return NULL;);
+	virtual VStar GetValue_Impl() PURE_VIRTUAL(AFunctionConnector::GetValue_Impl, return VStar(););
+
 public:
 	// Parameter HUD
 	//UPROPERTY(EditAnywhere)
@@ -53,8 +58,9 @@ public:
 
 	void Tick(float DeltaSeconds);
 
-	virtual UType* ResolveType() PURE_VIRTUAL(AFunctionConnector::ResolveType, return NULL;);
-	virtual VStar GetValue() PURE_VIRTUAL(AFunctionConnector::GetValue, return VStar(););
+	virtual UType* ResolveType();
+	virtual VStar GetValue();
+
 
 	void SetupHUD();
 
@@ -67,8 +73,7 @@ public:
 		void EditorConnectTo();
 
 public:
-	UFUNCTION(Category = "Functions", BlueprintCallable, CallInEditor)
-		void SpawnRepr();
+	void SpawnRepr(UType* Type);
 
 	UFUNCTION(Category = "Functions", BlueprintCallable, CallInEditor)
 		void SpawnAllRepr();

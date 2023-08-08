@@ -124,6 +124,18 @@ void AFunctionConnector::Tick(float DeltaSeconds) {
 	}
 }
 
+UType* AFunctionConnector::ResolveType() {
+	UType* type = ResolveType_Impl();
+	SpawnRepr(type);
+	return type;
+}
+
+VStar AFunctionConnector::GetValue() {
+	VStar value = GetValue_Impl();
+	TypeRepr->UpdateValue(value);
+	return value;
+}
+
 
 AHonoursProjBlock* AFunctionConnector::HandleClick(UPrimitiveComponent* ClickedComponent) {
 	bIsActive = !bIsActive;
@@ -217,7 +229,7 @@ void AFunctionConnector::EditorConnectTo() {
 }
 
 
-void AFunctionConnector::SpawnRepr() {
+void AFunctionConnector::SpawnRepr(UType* Type) {
 
 	// Destory Existing TypeRepr
 	if (TypeRepr && IsValid(TypeRepr)) {
@@ -226,7 +238,7 @@ void AFunctionConnector::SpawnRepr() {
 	}
 
 	// Spawn new Repr
-	TypeRepr = ATypeRepr::CreateRepr(ResolveType(), GetWorld());
+	TypeRepr = ATypeRepr::CreateRepr(Type, GetWorld());
 	FitActorToPlane(TypeRepr, TypeRepr->BoundingBox, GetBlockMesh());
 	TypeRepr->AddActorLocalOffset(FVector::UpVector * 1000);
 }
@@ -237,7 +249,7 @@ void AFunctionConnector::SpawnAllRepr() {
 
 	for (auto actor : actors) {
 		auto func = Cast<AFunctionConnector>(actor);
-		func->SpawnRepr();
+		func->SpawnRepr(func->ResolveType_Impl());
 		func->HUDComponent->AddLocalOffset(FVector::UpVector * 50);
 	}
 
