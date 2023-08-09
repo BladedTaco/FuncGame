@@ -37,6 +37,9 @@ public:
 	virtual bool UnifyWith(UType* concreteType);
 
 
+	virtual FColor GetColour() { return FColor::Black; }
+
+
 	//~UType() {
 	//	UE_LOG(LogTemp, Warning, TEXT("Type Destroyed"));
 	//}
@@ -93,6 +96,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		UType* Get();
 
+	virtual FColor GetColour() override;
+
+
 	virtual EType GetType() const override;
 	virtual TArray<UType*> GetTemplates() const override;
 
@@ -117,7 +123,13 @@ private:
 	UPROPERTY(EditAnywhere, Instanced)
 		UTypeConst* Instance = NULL;
 
+
+	UPROPERTY(VisibleAnywhere)
+	FColor TypeColour;
+
 public:
+	UTypeVar() { TypeColour = FColor::MakeRandomColor(); }
+
 	UFUNCTION(BlueprintCallable)
 		bool ApplyEvidence(UType* InType);
 	UFUNCTION(BlueprintCallable)
@@ -126,6 +138,8 @@ public:
 		void ReapplyEvidence();
 	UFUNCTION(BlueprintCallable)
 		void ResetEvidence();
+
+	virtual FColor GetColour() override;
 
 	virtual EType GetType() const override;
 	virtual TArray<UType*> GetTemplates() const override;

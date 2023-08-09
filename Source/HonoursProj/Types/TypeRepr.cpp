@@ -37,9 +37,13 @@ ATypeRepr::ATypeRepr()
 	ChildBoundingPlanesParent->SetAbsolute(false, false, false);
 	ChildBoundingPlanesParent->SetComponentTickEnabled(false);
 	UpdateComponentTransforms();
+
+	SetActorEnableCollision(false);
 }
 
 void ATypeRepr::UpdateValue(VStar value) {
+	if (!value.Valid()) return UpdateText("?");
+
 	// Get the Type
 	EType type = value.Type()->GetType();
 
@@ -158,6 +162,7 @@ UClass* ATypeRepr::GetRepr(EType Type) {
 
 ATypeRepr* ATypeRepr::CreateRepr(UType* Type, UWorld* World) {
 	auto me = World->SpawnActor<ATypeRepr>(GetRepr(Type->GetType()));
+	me->FullType = UTypeConst::MakeConst(Type);
 
 	auto templates = Type->GetTemplates();
 	auto planes = me->GetChildBoundingPlanes();
@@ -167,6 +172,15 @@ ATypeRepr* ATypeRepr::CreateRepr(UType* Type, UWorld* World) {
 		if (planes.Num() == 1) {
 			planes[0]->SetVisibility(false);
 		}
+
+		// Handle TypeVar Colours
+		if (Type->GetType() == EType::ANY) {
+			FColor col = Type->GetColour();
+			for (auto* comp : me->GetComponentsByClass(UStaticMeshComponent::StaticClass())) {
+				Cast<UStaticMeshComponent>(comp)->SetVectorParameterValueOnMaterials("DiffuseColor", FVector(col.ReinterpretAsLinear()));
+			}
+		}	
+
 		return me;
 	}
 	// MisMatch, Invalid Representation
@@ -190,4 +204,33 @@ ATypeRepr* ATypeRepr::CreateRepr(UType* Type, UWorld* World) {
 	}
 
 	return me;
+}
+
+void ATypeRepr::BeginDestroy() {
+	DestroyChildren();
+	Super::BeginDestroy();
+}
+
+void ATypeRepr::DestroyChildren() {
+	// Destroy all Attached Actors
+	TArray<AActor*> actors;
+	GetAttachedActors(actors);
+	for (AActor* actor : actors) {
+		if (auto repr = Cast<ATypeRepr>(actor)) {
+			repr->DestroyChildren();
+		}
+		actor->Destroy();
+	}
+}
+
+ATypeRepr* ATypeRepr::UpdateRepr(UType* newType) {
+	// Equal Types means no Change
+	if (FullType->EqualTo(newType)) return this;
+	
+	DestroyChildren();
+	Destroy();
+
+	// Different Types, for now just recreate
+	return CreateRepr(newType, GetWorld());
+	
 }

@@ -1,7 +1,7 @@
 #line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj\\Source\\Generated\\out_pre.h"
 #pragma once
 
-#line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Types/Functor.h"
+#line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Types/Show.h"
 #pragma once
 
 #line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\MacroUtils.h"
@@ -405,7 +405,7 @@
 
 
 
-#line 4 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Types/Functor.h"
+#line 4 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Types/Show.h"
 
 #line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Functional/Prelude.h"
 
@@ -561,7 +561,7 @@ namespace Prelude {
 		return MakeTuple(tup.Get<1>(), tup.Get<0>());
 	});
 };
-#line 6 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Types/Functor.h"
+#line 6 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Types/Show.h"
 #line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Functional/Typeclass.h"
 #pragma once
 
@@ -690,7 +690,7 @@ namespace Prelude {
 
 
 
-#line 7 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Types/Functor.h"
+#line 7 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Types/Show.h"
 
 #line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Types/Unpack.h"
 #pragma once
@@ -1101,187 +1101,7 @@ FromType() {
 	return UTypeConst::New(ETypeData::FUNC, { FromType<From>(), FromType<To>() });
 };
 
-#line 9 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Types/Functor.h"
-
-
-
-
-
-
-
-
-
-
-
-
-
-class IFunctor {
-public: 
-	const auto fmap() const {
-	return curry([this](const VStar& f, const VStar& f_a) { return this->_fmap(f, f_a); });
-}; 
-private:
-	virtual VStar _fmap(const VStar& f, const VStar& f_a) const = 0;
-
-public: const auto map_replace_by() const {
-	return curry([this](const VStar& a, const VStar& f_b) { return this->_map_replace_by(a, f_b); });
-}; private: virtual VStar _map_replace_by(const VStar& a, const VStar& f_b) const {
-		Arr<VStar, VStar> f = { Prelude::constant<VStar, VStar>(a) };
-		return _fmap(f, f_b);
-	};
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-template <typename A>
-class Functor {
-public:
-
-	inline static bool Valid = false;
-	static_assert(sizeof(A) == 0, "Only specializations of Functor can be used");
-
-	template <typename B>
-	inline static Function<Functor<B>, Arr<A, B>, Functor<A>> _fmap;
-	template <typename B>
-	inline static Function<Functor<B>, Arr<A, B>, Functor<A>> _map_replace_by;
-
-public:
-	template <typename B>
-	inline static auto fmap = curry(Functor<A>::_fmap<B>);
-
-	template <typename B>
-	inline static auto map_replace_by = curry(Functor<A>::_map_replace_by<B>);
-
-
-	
-};
-
-
-
-
-
-
-
-
-
-
-template <template <class, class...> class F, typename A, typename... Rest>
-class BaseFunctor {
-protected:
-	template <class B>
-	inline static Function<F<B, Rest...>, Arr<A, B>, F<A, Rest...>> _fmap;
-	
-	template <class B>
-	inline static auto _map_replace_by = [](A a, F<B, Rest...> f_b) -> F<A, Rest...> {
-		Arr<B, A> f = { Prelude::constant<A, B>(a) };
-		return Functor<F<B, Rest...>>::fmap<A>(f)(f_b);
-	};
-public:
-	inline static bool Valid = true;
-	template <class B>
-	inline static auto fmap = curry(_fmap<B>);
-	template <class B>
-	inline static auto map_replace_by = curry(_map_replace_by<B>);
-
-	
-	template <class B> inline static auto v_fmap = curry([](void* f, void* fa) -> decltype(auto) { 
-		return fmap<B>(*(Arr<A, B>*)f) (*(F<A, Rest...>*)fa);
-	});
-
-	template <class B> 
-	inline static auto vs_fmap = curry([](VStar f, VStar fa) -> VStar {
-		return VStar(
-			FromType<F<B, Rest...>>(), 
-			fmap<B>( f.GetUnsafe<Arr<A, B>>() )( fa.GetUnsafe<F<A, Rest...>>() )
-		);
-	});
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#line 4 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj\\Source\\Generated\\out_pre.h"
-#line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Types/Show.h"
-#pragma once
-
-
-
-
-
-
-
+#line 9 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj/Source/HonoursProj\\Types/Show.h"
 
 
 
@@ -1367,7 +1187,7 @@ private:
 
 
 
-#line 5 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj\\Source\\Generated\\out_pre.h"
+#line 4 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj\\Source\\Generated\\out_pre.h"
 
 
 
@@ -1377,39 +1197,34 @@ private:
 
 
 
+include "Types/VStar.h"
 
-include "Misc/Optional.h"
-
-#line 18 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj\\Source\\Generated\\out_pre.h"
-
+#line 16 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj\\Source\\Generated\\out_pre.h"
 
 
-class IMaybe : public virtual ITypeclass {
+
+
+
+
+
+
+
+class IBool : public virtual ITypeclass {
 private:
 	virtual const Typeclass* _GetTypeclass() const override {
-		return &IMaybe::Instances;
+		return &IBool::Instances;
 	}
 public:
-	class Functor : public virtual IFunctor {
-	private:
-		virtual VStar _fmap(const VStar& f, const VStar& f_a) const override;
-	public:
-		Functor() = default;
-	}; 
-
-	inline static const Functor FunctorInst = {};
-
 	class Show : public virtual IShow {
 	private:
-		virtual FString _show(const VStar& a) const override;
+		virtual FString _show(const VStar& me) const override;
 	public:
 		Show() = default;
 	};
 	inline static const Show ShowInst = {};
 
 public:
-	static const inline Typeclass Instances = []{ Typeclass ${}; $.Functor = &IMaybe::FunctorInst; $.Show = &IMaybe::ShowInst;; return $; }()
-
+	static const inline Typeclass Instances = []{ Typeclass ${}; $.Show = &IBool::ShowInst;; return $; }()
 
 ;
 };
@@ -1418,286 +1233,29 @@ public:
 
 
 
-template <typename A>
-class Maybe : public virtual IMaybe {
+class Bool : public virtual IBool {
 private:
-	bool _isNothing;
-	TOptional<A> _value;
-	Maybe() {
-		_isNothing = true;
-	}
-	Maybe(A a) {
-		_isNothing = false;
-		_value = a;
-	}
-	friend IMaybe::Functor;
-	friend IMaybe::Show;
-	friend class ::Functor<Maybe<A>>;
-	friend MaybeV;
-public:
-	virtual ~Maybe() = default;
+	bool _value;
 
-	static Maybe<A> Just(A a) {
-		return Maybe<A>(a);
-	}
-	static Maybe<A> Nothing() {
-		return Maybe<A>();
-	}
+	friend IBool;
 public:
-	A fromMaybe(A fallback) {
-		if (_isNothing) {
-			return fallback;
-		} else {
-			return _value.GetValue();
-		}
-	}
+	virtual ~Bool() = default;
 
-	
-	Maybe(const MaybeV* other);
+	Bool(bool value) : _value(value) {};
+	Bool(const Bool& other) : _value(other._value) {};
+
+
+	virtual bool get() const { return _value; }
+
 };
 
+inline FString IBool::Show::_show(const VStar& me) const {
+	
+	bool a = me.ResolveToUnsafe<Bool>().get();
 
-
-template <>
-class Maybe<VStar> : public virtual IMaybe {
-private:
-
-	friend VStar;
-	friend Maybe;
-	friend class ATypeRepr;
-
-	friend IMaybe::Functor;
-	friend IMaybe::Show;
-
-	template <typename A>
-	friend Maybe<A>::Maybe(const MaybeV* other);
-
-	bool _isNothing;
-	VStar _value;
-
-
-	Maybe() {
-		_isNothing = true;
-	}
-
-	Maybe(VStar from) {
-		_isNothing = false;
-		_value = from;
-	}
-
-	friend class ::Functor<MaybeV>;
-public:
-	virtual ~Maybe() = default;
-
-	template <typename A>
-	static MaybeV Just(A a) {
-		return MaybeV::Maybe(VStar(a));
-	}
-	template <>
-	static MaybeV Just(VStar a) {
-		return MaybeV::Maybe(a);
-	}
-
-	static MaybeV Nothing() {
-		return MaybeV::Maybe();
-	}
-
-public:
-	template <typename A>
-	A fromMaybe(A fallback) {
-		if (_isNothing) {
-			return fallback;
-		} else {
-			return _value.ResolveToUnsafe<A>();
-		}
-	}
-	template <>
-	VStar fromMaybe(VStar fallback) {
-		if (_isNothing) {
-			return fallback;
-		} else {
-			return _value;
-		}
-	}
-};
-
-template <typename A>
-Maybe<A>::Maybe(const MaybeV* other) {
-	_isNothing = other->_isNothing;
-	if (!_isNothing) {
-		_value = other->_value.ResolveToUnsafe<A>();
-	}
+	
+	
+	return a ? FString(TEXT("O")) : FString(TEXT("X"));
 }
 
 
-
-inline VStar IMaybe::Functor::_fmap(const VStar& f, const VStar& f_a) const {
-	
-	ArrV g = f.ResolveToUnsafe<ArrV>();
-	MaybeV m_a = f_a.ResolveToUnsafe<MaybeV>();
-
-	
-	if (m_a._isNothing) {
-		return VStar(MaybeV::Nothing());
-	} else {
-		
-		
-		VStar result = g(m_a._value);
-		return VStar(MaybeV::Just(result));
-	}
-}
-
-
-
-inline FString IMaybe::Show::_show(const VStar& a) const {
-	
-	MaybeV m_a = a.ResolveToUnsafe<MaybeV>();
-
-	
-	if (m_a._isNothing) {
-		return FString(TEXT("Nothing"));
-	} else {
-		FString inner = m_a._value.getTypeclass()->Show->show()(m_a._value);
-		return FString(TEXT("Just ")) + inner;
-	}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-template <typename A>
-auto fromMaybe = curry([](A a, Maybe<A> m_a) -> A {
-	return m_a.fromMaybe(a);
-});
-
-
-PP__NEWLINE PP__DIRECTIVE(Typeclass, Functor, Maybe) PP__NEWLINE template <class A> PP__NEWLINE class Functor<Maybe <A> > : public BaseFunctor<Maybe,A> { PP__NEWLINE private: PP__NEWLINE template <class B> PP__NEWLINE inline static auto _fmap = [](Arr<A, B> func, Maybe<A> f_a) -> Maybe<B> { PP__NEWLINE if (f_a._isNothing) { PP__NEWLINE return Maybe<B>::Nothing(); PP__NEWLINE } else { PP__NEWLINE return Maybe<B>::Just(func(f_a._value.GetValue())); PP__NEWLINE } PP__NEWLINE }; PP__NEWLINE public: PP__NEWLINE template <class B> PP__NEWLINE inline static auto fmap = curry(_fmap<B>); PP__NEWLINE };
-
-
-
-
-
-
-
-
-;
-
-PP__NEWLINE PP__DIRECTIVE(Typeclass, Show, Maybe) PP__NEWLINE ;

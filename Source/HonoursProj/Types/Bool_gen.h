@@ -35,5 +35,5 @@ public:
 };
 inline FString IBool::Show::_show(const VStar& me) const {
 	bool a = me.ResolveToUnsafe<Bool>().get();
-	return a ? FString(TEXT("True")) : FString(TEXT("False"));
+	return a ? FString(TEXT("O")) : FString(TEXT("X"));
 }

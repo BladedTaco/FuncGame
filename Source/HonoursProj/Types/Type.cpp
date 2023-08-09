@@ -305,6 +305,13 @@ UType* UTypePtr::Get() {
 	return Type;
 }
 
+FColor UTypePtr::GetColour() {
+	if (Type) {
+		return Type->GetColour();
+	}
+	return UType::GetColour();
+}
+
 // Return TypeVars Type
 EType UTypePtr::GetType() const {
 	if (Type) {
@@ -364,6 +371,7 @@ UType* UTypeVar::DeepCopy(TMap<UType*, UType*>& ptrMap) const {
 	//// Simply copy InType, Evidence is not copied
 	//return New(Type);
 	UTypeVar* out = New(Type);
+	out->TypeColour = TypeColour;
 	// Apply all evidence as copy
 	for (const auto &t : Evidence) {
 		out->ApplyEvidence(t->DeepCopy(ptrMap));
@@ -460,6 +468,10 @@ void UTypeVar::ReapplyEvidence() {
 void UTypeVar::ResetEvidence() {
 	Instance = NULL;
 	Evidence = {};
+}
+
+FColor UTypeVar::GetColour() {
+	return TypeColour;
 }
 
 

@@ -45,6 +45,9 @@ void FitActorToPlane(AActor* Actor, UBoxComponent* ActorBounds, UStaticMeshCompo
 
 void FitActorToPlane(AActor* Actor, FVector ActorOrigin, FVector ActorRange, UStaticMeshComponent* Plane) {
 
+	Actor->DetachFromActor(FDetachmentTransformRules::KeepRelativeTransform);
+	Actor->SetActorLocation(FVector::ZeroVector);
+
 	FVector ActorOriginOffset = Actor->GetActorLocation() - ActorOrigin;
 
 	// Get the Bounds for the Plane

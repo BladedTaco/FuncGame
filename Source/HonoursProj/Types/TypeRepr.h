@@ -8,6 +8,7 @@
 #include "TypeRepr.generated.h"
 
 class UType;
+class UTypeConst;
 class UStaticMeshComponent;
 class UBoxComponent;
 class VStar;
@@ -32,6 +33,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 		EType Type;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		UTypeConst* FullType;
+
 	// Updates Displayed Value
 	void UpdateValue(VStar value);
 	void UpdateText(FString text);
@@ -46,5 +50,10 @@ public:
 
 	// Create Full Representation from UType
 	static ATypeRepr* CreateRepr(UType* Type, UWorld* World);
+
+	virtual void BeginDestroy() override;
+	void DestroyChildren();
+
+	ATypeRepr* UpdateRepr(UType* newType);
 
 };

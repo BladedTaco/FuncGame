@@ -82,6 +82,10 @@ void AFunctionConnector::BeginPlay() {
 	Super::BeginPlay();
 
 	SetupHUD();
+
+
+	ResolveType();
+	GetValue();
 }
 
 void AFunctionConnector::OnConstruction(const FTransform& Transform) {
@@ -231,14 +235,19 @@ void AFunctionConnector::EditorConnectTo() {
 
 void AFunctionConnector::SpawnRepr(UType* Type) {
 
-	// Destory Existing TypeRepr
+	// Update or Create Repr
 	if (TypeRepr && IsValid(TypeRepr)) {
-		TypeRepr->Destroy();
-		TypeRepr = NULL;
+		// Update Existing Repr
+		auto newRepr = TypeRepr->UpdateRepr(Type);
+		if (TypeRepr == newRepr) return; // Do Nothing on Identical
+		TypeRepr = newRepr;
+	} else {
+		// Spawn new Repr
+		TypeRepr = ATypeRepr::CreateRepr(Type, GetWorld());
 	}
 
-	// Spawn new Repr
-	TypeRepr = ATypeRepr::CreateRepr(Type, GetWorld());
+
+	// Fit to Plane and Move Up
 	FitActorToPlane(TypeRepr, TypeRepr->BoundingBox, GetBlockMesh());
 	TypeRepr->AddActorLocalOffset(FVector::UpVector * 1000);
 }
@@ -248,9 +257,7 @@ void AFunctionConnector::SpawnAllRepr() {
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), StaticClass(), actors);
 
 	for (auto actor : actors) {
-		auto func = Cast<AFunctionConnector>(actor);
-		func->SpawnRepr(func->ResolveType_Impl());
-		func->HUDComponent->AddLocalOffset(FVector::UpVector * 50);
+		Cast<AFunctionConnector>(actor)->ResolveType();
 	}
 
 }
