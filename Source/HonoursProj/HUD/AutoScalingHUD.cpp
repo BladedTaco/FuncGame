@@ -6,8 +6,11 @@
 #include "Components/StaticMeshComponent.h"
 #include "Blueprint/WidgetTree.h"
 
+#if WITH_EDITOR
 #include "Editor.h"
 #include "Kismet2/KismetEditorUtilities.h"
+#endif
+
 
 //void UAutoScalingHUD::NativeOnInitialized() {
 //	//Super::NativeOnInitialized();
@@ -134,6 +137,7 @@ void FGeneric3DHUD::RecompileInstanceClass() {
 }
 
 void FGeneric3DHUD::CompileBlueprint(UBlueprint* BlueprintObj) {
+#if WITH_EDITOR
 	FCompilerResultsLog LogResults;
 	LogResults.SetSourcePath(BlueprintObj->GetPathName());
 	LogResults.BeginEvent(TEXT("Compile"));
@@ -142,10 +146,12 @@ void FGeneric3DHUD::CompileBlueprint(UBlueprint* BlueprintObj) {
 	FKismetEditorUtilities::CompileBlueprint(BlueprintObj, CompileOptions, &LogResults);
 
 	LogResults.EndEvent();
+#endif
 }
 
 	// Makes HUD update while in editor
 void FGeneric3DHUD::UpdateInEditor(UClass* cls, bool Force) {
+#if WITH_EDITOR
 	// Require Editor, and Class
 	if (!GIsEditor || !GEditor || GWorld->HasBegunPlay()) return;
 	if (!IsValid(cls)) return;
@@ -168,4 +174,5 @@ void FGeneric3DHUD::UpdateInEditor(UClass* cls, bool Force) {
 
 	// Repush Timer
 	Compiled.Add(BlueprintObj, timer);
+#endif
 }

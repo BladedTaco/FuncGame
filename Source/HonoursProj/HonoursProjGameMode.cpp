@@ -4,7 +4,7 @@
 #include "HonoursProjPlayerController.h"
 #include "HonoursProjPawn.h"
 
-#include "DetailsCustomizer/Public/DetailsCustomizerModule.h"
+//#include "DetailsCustomizer/Public/DetailsCustomizerModule.h"
 
 
 AHonoursProjGameMode::AHonoursProjGameMode()

@@ -6,6 +6,7 @@ public class HonoursProj : ModuleRules
 {
 	public HonoursProj(ReadOnlyTargetRules Target) : base(Target)
 	{
+
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 		//PCHUsage = PCHUsageMode.NoSharedPCHs;
 		CppStandard = CppStandardVersion.Cpp17;
@@ -13,12 +14,18 @@ public class HonoursProj : ModuleRules
 			"Core", 
 			"CoreUObject",
 			"Engine", 
-			"UnrealEd",
             "InputCore",
 			"HeadMountedDisplay",
             "UMG", 
 			"Slate", 
 			"SlateCore"
 		});
-	}
+
+        if (Target.bBuildEditor)
+        {
+            PublicDependencyModuleNames.AddRange(new string[] {
+				"UnrealEd"
+			});
+        }
+    }
 }

@@ -73,7 +73,10 @@ void ABlockFunction::DestroyConnectors(AActor* deletedActor) {
 }
 
 void ABlockFunction::OnConstruction(const FTransform& Transform) {
+	
+#if WITH_EDITOR
 	GEngine->OnLevelActorDeleted().AddUObject(this, &ABlockFunction::DestroyConnectors);
+#endif
 
 	Super::OnConstruction(Transform);
 	/*HUD.Component->InitWidget();

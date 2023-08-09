@@ -7,7 +7,10 @@
 #include "Widgets/Layout/SBox.h"
 #include "Widgets/Input/SButton.h"
 #include "Widgets/Text/STextBlock.h"
+
+#if WITH_EDITOR
 #include "Editor.h"
+#endif
 
 #include "DetailLayoutBuilder.h"
 #include "DetailWidgetRow.h"

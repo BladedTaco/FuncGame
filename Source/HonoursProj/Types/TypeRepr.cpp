@@ -225,7 +225,7 @@ void ATypeRepr::DestroyChildren() {
 
 ATypeRepr* ATypeRepr::UpdateRepr(UType* newType) {
 	// Equal Types means no Change
-	if (FullType->EqualTo(newType)) return this;
+	if (FullType && newType && FullType->EqualTo(newType)) return this;
 	
 	DestroyChildren();
 	Destroy();
