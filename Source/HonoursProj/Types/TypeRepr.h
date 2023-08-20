@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 
-#include "Types/Types_gen.h"
+#include "Types_gen.h"
 
 #include "TypeRepr.generated.h"
 

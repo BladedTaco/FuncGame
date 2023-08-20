@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 
-#include "Types/Types_gen.h"
+#include "Types_gen.h"
 
 #include "Type.generated.h"
 

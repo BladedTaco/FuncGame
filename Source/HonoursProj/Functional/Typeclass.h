@@ -7,7 +7,7 @@
 #define _TEMPLATE_LOOP(A) , class A
 #define OPT_TEMPLATE(...) NULLARY( (template <MAP_LIST(_TEMPLATE_LOOP, __VA_ARGS__)> PP__NEWLINE), (), __VA_ARGS__)
 #define TEMPLATE(...) NULLARY( (template <MAP_LIST(_TEMPLATE_LOOP, __VA_ARGS__)>), (template <>), __VA_ARGS__) PP__NEWLINE
-#define STRICT_TEMPLATE(...) template <NULLARY((MAP_LIST(_TEMPLATE_LOOP, __VA_ARGS__)), (class = auto), __VA_ARGS__)> PP__NEWLINE
+#define STRICT_TEMPLATE(...) template <NULLARY((MAP_LIST(_TEMPLATE_LOOP, __VA_ARGS__)), (class = void*), __VA_ARGS__)> PP__NEWLINE
 
 #define _LIST_LOOP(A) , A
 #define TEMPLATE_INST(...) NULLARY( (<MAP_LIST(_LIST_LOOP, __VA_ARGS__)>), (), __VA_ARGS__)

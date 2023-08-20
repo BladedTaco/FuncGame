@@ -7,7 +7,8 @@ public class HonoursProjTarget : TargetRules
 {
     public HonoursProjTarget(TargetInfo Target) : base(Target)
 	{
-		Type = TargetType.Game;
+        DefaultBuildSettings = BuildSettingsVersion.V2;
+        Type = TargetType.Game;
 		ExtraModuleNames.Add("HonoursProj");
 	}
 }

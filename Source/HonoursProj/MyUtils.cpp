@@ -1,5 +1,6 @@
 
 #include "MyUtils.h"
+#include "GameFramework/Actor.h"
 #include "GameFramework/PlayerController.h"
 #include "Engine/World.h"
 #include "Components/StaticMeshComponent.h"

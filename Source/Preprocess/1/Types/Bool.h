@@ -19,7 +19,7 @@ include "Types/VStar.h"
 
 #define InlineStaticConstStruct(T, NAME, ...) \
 static const inline T NAME = []{ T ${}; __VA_ARGS__; return $; }()
-
+ 
 
 
 class IBool : public virtual ITypeclass {

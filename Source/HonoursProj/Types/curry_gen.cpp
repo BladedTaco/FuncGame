@@ -1,8 +1,8 @@
 
 #include "Functional/curry_gen.h"
 
-#include "Types/Functor.h"
-#include "Types/Show.h"
+#include "Functor.h"
+#include "Show.h"
 
 class IFunc::Functor : public virtual IFunctor {
 private:

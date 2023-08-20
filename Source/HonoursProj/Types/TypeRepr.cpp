@@ -1,17 +1,17 @@
-#include "Types/TypeRepr.h"
+#include "TypeRepr.h"
 
 #include "AssetLoader_gen.h"
-#include "Types/Type.h"
+#include "Type.h"
 
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "Algo/Transform.h"
 #include "Algo/Compare.h"
 
-#include "Types/VStar.h"
-#include "Types/Show.h"
-#include "Types/Int_gen.h"
-#include "Types/Maybe_gen.h"
+#include "VStar.h"
+#include "Show.h"
+#include "Int_gen.h"
+#include "Maybe_gen.h"
 
 #include "MyUtils.h"
 #include <Components/TextRenderComponent.h>

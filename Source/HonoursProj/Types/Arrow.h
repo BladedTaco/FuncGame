@@ -74,8 +74,8 @@ protected:
 		return Arrow<TTuple<From, From_2>, TTuple<To, To_2>>::arr(
 			[](TTuple<From, From_2> tup) -> TTuple<To, To_2> {
 				return MakeTuple(
-					f(tup.Get<0>()),
-					g(tup.Get<1>()),
+					f(tup.template Get<0>()),
+					g(tup.template Get<1>()),
 				);
 			}
 		);

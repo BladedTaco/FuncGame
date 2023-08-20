@@ -5,9 +5,13 @@ using UnrealBuildTool;
 public class DetailsCustomizer : ModuleRules
 {
 	public DetailsCustomizer (ReadOnlyTargetRules Target) : base(Target)
-	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+    {
+        PrivatePCHHeaderFile = "Private/DetailsCustomizerPCH.h";
+
+        PCHUsage = PCHUsageMode.NoSharedPCHs;
         CppStandard = CppStandardVersion.Cpp17;
+        //PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+        //CppStandard = CppStandardVersion.Cpp17;
 
         PublicIncludePaths.AddRange(
 			new string[] {

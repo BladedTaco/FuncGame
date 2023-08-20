@@ -2,10 +2,10 @@
 
 #include "Types/Functor.h"
 #include "Types/Show.h"
-
+ 
 #include "Types/FDecl.h"
 
-
+ 
 #ifndef PP__PREPROCESSING
 
 #include "Misc/Optional.h"
@@ -125,15 +125,15 @@ public:
 
 	template <typename A>
 	static MaybeV Just(A a) {
-		return MaybeV::Maybe(VStar(a));
+		return MaybeV(VStar(a));
 	}
 	template <>
 	static MaybeV Just(VStar a) {
-		return MaybeV::Maybe(a);
+		return MaybeV(a);
 	}
 
 	static MaybeV Nothing() {
-		return MaybeV::Maybe();
+		return MaybeV();
 	}
 
 public:
@@ -163,7 +163,7 @@ Maybe<A>::Maybe(const MaybeV* other) {
 	}
 }
 
-
+ 
 
 inline VStar IMaybe::Functor::_fmap(const VStar& f, const VStar& f_a) const {
 	// Resolve Variables

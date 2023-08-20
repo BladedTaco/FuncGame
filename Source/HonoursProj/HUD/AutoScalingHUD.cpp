@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "HUD/AutoScalingHUD.h"
+#include "AutoScalingHUD.h"
 
 #include "Components/StaticMeshComponent.h"
 #include "Blueprint/WidgetTree.h"
@@ -9,6 +9,7 @@
 #if WITH_EDITOR
 #include "Editor.h"
 #include "Kismet2/KismetEditorUtilities.h"
+#include "Kismet2/CompilerResultsLog.h"
 #endif
 
 

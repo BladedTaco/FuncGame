@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 
-#include "HUD/EditorUserWidget.h"
+#include "EditorUserWidget.h"
 
 #include "ParameterHUD.generated.h"
 

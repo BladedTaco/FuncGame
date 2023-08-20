@@ -40,19 +40,21 @@ inline constexpr bool IsMember(IntType n) {
 #define _UENUM_BASE(UENUM_SPECIFIERS, BASE, NAME, ...)			PP__NEWLINE \
 _UENUM UENUM_SPECIFIERS											PP__NEWLINE \
 enum class NAME : uint8 {										PP__NEWLINE \
+	ERROR = 0, 													PP__NEWLINE \
 	_UENUM_BASE_LOOP( BZIP(BASE, BRACKET_LIST2(__VA_ARGS__)))	PP__NEWLINE \
 };																PP__NEWLINE	\
 template <typename IntType>										PP__NEWLINE \
 inline constexpr bool Is ## NAME(IntType from) {				PP__NEWLINE \
 	return IsMember<IntType, NAME, _IS_ENUM_BASE_LOOP( BZIP(NAME, BRACKET_LIST2(__VA_ARGS__)))>(from); PP__NEWLINE \
 }
-
+ 
 #define _CHILD_UENUMS(...) LOOP3(_UENUM_BASE, __VA_ARGS__)
 
 // COMPOSITE_UENUM((Blueprint Specifiers), NAME, (Name, Members)...)
 #define PP_COMPOSITE_UENUM(UENUM_SPECIFIERS, NAME, ...)	PP__NEWLINE \
 _UENUM UENUM_SPECIFIERS									PP__NEWLINE \
 enum class NAME : uint8 {								PP__NEWLINE \
+	ERROR = 0, 											PP__NEWLINE \
 	MAP_LIST(_ENUM_LOOP, __VA_ARGS__)					PP__NEWLINE \
 };														PP__NEWLINE \
 _CHILD_UENUMS(MZIP2((UENUM_SPECIFIERS, NAME), __VA_ARGS__))

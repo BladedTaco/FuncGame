@@ -6,23 +6,31 @@
 #include <memory>
 #include <type_traits>
 
-#include "Types/Type.h"
-#include "Types/Types_gen.h"
+#include "Type.h"
+#include "Types_gen.h"
+
+#include "Templates/EnableIf.h"
+#include "Templates/Tuple.h"
 
 #else 
 
 include <memory>
 include <type_traits>
 
-include "Types/Type.h"
-include "Types/Types_gen.h"
+include "Type.h"
+include "Types_gen.h"
+
+include "Templates/EnableIf.h"
+include "Templates/Tuple.h"
 
 #endif
 
-#include "Types/FDecl.h"
+#include "FDecl.h"
+
+
 
 // Testing
-template <class...>
+template <class, class...>
 struct X;
 
 
@@ -81,8 +89,10 @@ struct Recurse<-1, F> {
 
 template <typename T>
 struct FlipTuple_t {
-	using type = typename Recurse<T::size - 1, typename T::template get>::result;
+	using type = typename Recurse<T::size - 1, T::template get>::result;
 };
+
+ 
 
 template <>
 struct FlipTuple_t<std::false_type> {
@@ -96,7 +106,7 @@ using FlipTuple = typename FlipTuple_t<T>::type;
 
 // Take n elements from a TyTuple
 template <int N, typename T>
-using take_n = FlipTuple<typename Recurse<N - 1, typename T::template get>::result>;
+using take_n = FlipTuple<typename Recurse<N - 1, T::template get>::result>;
 
 
 // Type Unwrapping for unwrappable type

@@ -1,4 +1,4 @@
-#include "Types/Type.h"
+#include "Type.h"
 
 #include "Algo/AllOf.h"
 #include "Algo/Compare.h"

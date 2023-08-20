@@ -203,7 +203,7 @@ inline FString INumber<A>::Show::_show(const VStar& me) const {
 //	virtual ORD _ord(VStar me, VStar other) const override { return ORD::EQ; }
 //};
 
-
+ 
 
 ORDINAL((A), Number, (
 	[](Number<A> a, Number<A> b) -> ORD {													PP__NEWLINE

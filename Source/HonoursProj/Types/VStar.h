@@ -2,8 +2,8 @@
 
 #include "CoreMinimal.h"
 
-#include "Types/Type.h"
-#include "Types/Unpack.h"
+#include "Type.h"
+#include "Unpack.h"
 
 #ifndef PP__PREPROCESSING
 
@@ -17,8 +17,10 @@ include <type_traits>
 
 #endif
 
-#include "Types/FDecl.h"
+#include "FDecl.h"
 #include "MyUtils.h"
+
+#include "Templates/EnableIf.h"
 
 //
 //template <typename T, typename = int>
@@ -349,7 +351,9 @@ public:
 		}
 		// Handle is a NumberV
 		else if (type->GetTemplates()[0]->GetType() == EType::NONE) {
-			return GetUnsafePtr<NumberV>()->_value.ValidCast<T_0>();
+
+			return true;
+			//return GetUnsafePtr<NumberV>()->template _value.ValidCast<T_0>();
 		}
 		// Handle is a Number<T>
 		else {
@@ -380,12 +384,15 @@ public:
 		}
 		// Handle is a MaybeV
 		else if (type->GetTemplates()[0]->GetType() == EType::NONE) {
-			// Nothing Maybes can cast to anything
-			if (GetUnsafePtr<MaybeV>()->_isNothing) {
-				return true;
-			}
-			// Just Maybes can only cast to their inner values
-			return GetUnsafePtr<MaybeV>()->_value.ValidCast<T_0>();
+
+			return true;
+			//// Nothing Maybes can cast to anything
+			//if (GetUnsafePtr<MaybeV>()->_isNothing) {
+			//	return true;
+			//}
+			//// Just Maybes can only cast to their inner values
+			//return GetUnsafePtr<MaybeV>()->_value.ValidCast<T_0>();
+
 		}
 		// Handle is a Maybe<T>
 		else {
@@ -420,7 +427,8 @@ public:
 		UE_LOG(LogTemp, Error, TEXT("Arrow casting not yet supported"));
 
 		// Destructure Templates
-		auto [from, to] = Destruct<2, TArray, UType*>(type->GetTemplates());
+		auto templates = type->GetTemplates();
+		auto [from, to] = Destruct<2, TArray, UType*>(templates);
 
 		// Handle is a ArrV
 		if (from->GetType() == EType::NONE) {

@@ -201,30 +201,30 @@ void AHonoursProjPawn::OnLClickRelease() {
 
 
 
-	
-	 //Usage Example
-	Maybe<int> a = Maybe<int>::Just(4);
-	a = Functor<Maybe<int>>::fmap<int>(square)(a);
-	a = Functor<Maybe<int>>::map_replace_by<int>(2)(a);
-	int q = fromMaybe<int>(0)(a);
-	UE_LOG(LogTemp, Warning, TEXT("maybe %d"), q);
+	//
+	// //Usage Example
+	//Maybe<int> a = Maybe<int>::Just(4);
+	//a = Functor<Maybe<int>>::fmap<int>(square)(a);
+	//a = Functor<Maybe<int>>::map_replace_by<int>(2)(a);
+	//int q = fromMaybe<int>(0)(a);
+	//UE_LOG(LogTemp, Warning, TEXT("maybe %d"), q);
 
-	//Maybe<int> l = a.fmap<int>(square)(a);
+	////Maybe<int> l = a.fmap<int>(square)(a);
 
-	//UE_LOG(LogTemp, Warning, TEXT("L %d"), l.fromMaybe(-1));
+	////UE_LOG(LogTemp, Warning, TEXT("L %d"), l.fromMaybe(-1));
 
-	UTypeConst* n = UTypeConst::New(ETypeData::MAYBE, { UTypeConst::New(ETypeData::NUMBER, {UTypeConst::New(ETypeBase::INT)}) });
+	//UTypeConst* n = UTypeConst::New(ETypeData::MAYBE, { UTypeConst::New(ETypeData::NUMBER, {UTypeConst::New(ETypeBase::INT)}) });
 
-	UTypeConst* g = FromType<Maybe<Number<int>>>();
-	UTypeConst* g2 = FromType<int>();
-	UTypeConst* g3 = FromType<float>();
-	UTypeConst* g4 = FromType< Number<int>>();
-	UTypeConst* g5 = FromType< Maybe<int>>();
+	//UTypeConst* g = FromType<Maybe<Number<int>>>();
+	//UTypeConst* g2 = FromType<int>();
+	//UTypeConst* g3 = FromType<float>();
+	//UTypeConst* g4 = FromType< Number<int>>();
+	//UTypeConst* g5 = FromType< Maybe<int>>();
 
-	FString n_str = n->ToString();
-	FString g_str = g->ToString();
+	//FString n_str = n->ToString();
+	//FString g_str = g->ToString();
 
-	UE_LOG(LogTemp, Warning, TEXT("FromType Result %d %d %s, %s"), g->EqualTo(n), g5->EqualTo(n), *g_str, *n_str);
+	//UE_LOG(LogTemp, Warning, TEXT("FromType Result %d %d %s, %s"), g->EqualTo(n), g5->EqualTo(n), *g_str, *n_str);
 
 
 

@@ -6,10 +6,19 @@ public class HonoursProj : ModuleRules
 {
 	public HonoursProj(ReadOnlyTargetRules Target) : base(Target)
 	{
+		PrivatePCHHeaderFile = "HonoursProjPCH.h";
 
-		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-		//PCHUsage = PCHUsageMode.NoSharedPCHs;
-		CppStandard = CppStandardVersion.Cpp17;
+        PublicIncludePaths.AddRange(
+        new string[] {
+            "HonoursProj"
+        });
+
+        //PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+        //GeneratedCodeVersion = 
+        bLegacyPublicIncludePaths = false;
+        //	BuildVersion
+        PCHUsage = PCHUsageMode.NoSharedPCHs;
+        CppStandard = CppStandardVersion.Cpp17;
 		PublicDependencyModuleNames.AddRange(new string[] {
 			"Core", 
 			"CoreUObject",

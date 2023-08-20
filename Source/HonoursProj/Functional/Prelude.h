@@ -148,6 +148,6 @@ namespace Prelude {
 
 	template <typename A, typename B>
 	auto swap = curry([](TTuple<A, B> tup) -> TTuple<B, A> {
-		return MakeTuple(tup.Get<1>(), tup.Get<0>());
+		return MakeTuple(tup.template Get<1>(), tup.template Get<0>());
 	});
 };
