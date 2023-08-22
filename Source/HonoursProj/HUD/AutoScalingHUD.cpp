@@ -96,6 +96,7 @@ void UAutoScalingHUD::OnComponentCreated() {
 void UAutoScalingHUD::DestroyComponent(bool bPromoteChildren) {
 	if (auto widget = GetUserWidgetObject()) {
 		widget->ReleaseSlateResources(true);
+		widget->RemoveFromParent();
 	}
 	Super::DestroyComponent(bPromoteChildren);
 }
@@ -154,7 +155,7 @@ void FGeneric3DHUD::CompileBlueprint(UBlueprint* BlueprintObj) {
 void FGeneric3DHUD::UpdateInEditor(UClass* cls, bool Force) {
 #if WITH_EDITOR
 	// Require Editor, and Class
-	if (!GIsEditor || !GEditor || GWorld->HasBegunPlay()) return;
+	if (!GIsEditor || !GEditor || !GWorld || GWorld->HasBegunPlay()) return;
 	if (!IsValid(cls)) return;
 
 	// Require Blueprint

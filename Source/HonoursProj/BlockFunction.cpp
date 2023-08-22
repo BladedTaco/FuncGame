@@ -99,8 +99,29 @@ void ABlockFunction::OnConstruction(const FTransform& Transform) {
 		}
 	}
 
+	//SpawnConnectors();
+}
+
+void ABlockFunction::PostInitializeComponents() {
+	Super::PostInitializeComponents();
+
+	SpawnConnectors();
+
+}
+
+void ABlockFunction::PostInitProperties() {
+	Super::PostInitProperties();
+
+	SpawnConnectors();
+
+}
+
+void ABlockFunction::PostLoad()  {
+	Super::PostLoad();
+
 	SpawnConnectors();
 }
+
 
 void ABlockFunction::BeginDestroy() {
 	for (auto connector : GetConnectors()) {
@@ -129,8 +150,9 @@ void ABlockFunction::SpawnConnectors() {
 	HUD.RecompileInstanceClass();
 	HUD.UpdateInEditor(Assets()->HUD.Parameter.Class);
 
+
 	// Call once
-	if (ConnectorsSpawned) {
+	if (ConnectorsSpawned || HasAnyFlags(RF_Transient)) {
 		FParameter p;
 		for (auto param : GetConnectors()) {
 			param->Function = this;
@@ -143,6 +165,7 @@ void ABlockFunction::SpawnConnectors() {
 		}
 		return;
 	}
+
 	ConnectorsSpawned = true;
 
 	//// Set Function Signature
@@ -176,16 +199,19 @@ void ABlockFunction::SpawnConnectors() {
 		for (FParameter& param : *iterable) {
 			// Set Actor Name
 			name = FString::Format(TEXT("{0}_{1}_{2}"), { GetFName().ToString(), blockType, param.Name });
-			spawnParams.Name = FName(*name);
+			spawnParams.Name = MakeUniqueObjectName(this, blockClass, *name);
+			spawnParams.NameMode = FActorSpawnParameters::ESpawnActorNameMode::Requested;
+			spawnParams.Owner = this;
 			// Spawn Actor and give data
 			AFunctionConnector* actor = GetWorld()->SpawnActor<AFunctionConnector>(blockClass, spawnParams);
 			actor->Function = this;
 			actor->ParameterInfo = FParameter(param.Name, UTypePtr::New(param.Type));
 			actor->Index = idx;
 			blocks->Add(actor);
+
 			// Attach to self
-			//actor->AttachToActor(this, attachRules);
-			actor->AttachToComponent(GetRootComponent(), attachRules);
+			actor->AttachToActor(this, attachRules);
+
 			actor->SetActorRelativeLocation(FVector(100 * -idx + 50, yOff * 100, 0.5 * extent.Z));
 			actor->SetupHUD(); 
 			// Iterate index

@@ -17,8 +17,6 @@ class HONOURSPROJ_API ABlockFunctionConstant : public ABlockFunction
 {
 	GENERATED_BODY()
 public:
-	ABlockFunctionConstant() { SpawnConnectors(); };
-
 	UPROPERTY(EditAnywhere)
 		int Value = 5;
 

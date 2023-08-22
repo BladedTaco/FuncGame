@@ -18,8 +18,6 @@ private:
 		bool ConcreteOutputs;
 
 public:
-	ABlockFunctionGreaterThan() { SpawnConnectors(); };
-
 	virtual Arr<VStarArray, VStarArrayReturn> GetInnerFunc() override;
 	virtual void SetFunctionTypes() override;
 };

@@ -18,8 +18,6 @@ public:
 	UPROPERTY(EditAnywhere)
 		bool IsNothing = false;
 public:
-	ABlockFunctionMaybe() { SpawnConnectors(); };
-
 	virtual Arr<VStarArray, VStarArrayReturn> GetInnerFunc() override;
 	virtual void SetFunctionTypes() override;
 };

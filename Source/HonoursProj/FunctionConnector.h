@@ -9,6 +9,7 @@
 #include "Types/Type.h"
 #include "BlockFunction.h"
 
+#include "TimerManager.h"
 
 #include "HUD/AutoScalingHUD.h"
 #include "HUD/ParameterHUD.h"
@@ -30,6 +31,8 @@ protected:
 	virtual UType* ResolveType_Impl() PURE_VIRTUAL(AFunctionConnector::ResolveType_Impl, return NULL;);
 	virtual VStar GetValue_Impl() PURE_VIRTUAL(AFunctionConnector::GetValue_Impl, return VStar(););
 
+	inline static FTimerHandle SpawnAllReprTimerHandle = FTimerHandle();
+
 public:
 	// Parameter HUD
 	//UPROPERTY(EditAnywhere)
@@ -44,6 +47,7 @@ public:
 public:
 	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void BeginDestroy() override;
+	virtual void PostLoad() override;
 
 	// Sets default values for this actor's properties
 	AFunctionConnector();

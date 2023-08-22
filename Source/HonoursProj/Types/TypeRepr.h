@@ -14,7 +14,7 @@ class UBoxComponent;
 class VStar;
 
 
-UCLASS( Blueprintable, ClassGroup=(Custom) )
+UCLASS( Blueprintable, Transient, DefaultToInstanced, ClassGroup=(Custom) )
 class ATypeRepr : public AActor
 {
 	GENERATED_BODY()

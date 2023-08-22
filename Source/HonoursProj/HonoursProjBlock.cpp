@@ -52,8 +52,13 @@ AHonoursProjBlock::AHonoursProjBlock() {
 	SetActorTickEnabled(true);
 }
 
+
+
 void AHonoursProjBlock::EndPlay(EEndPlayReason::Type EndPlayReason) {
-	if (HUDComponent) HUDComponent->DestroyComponent(false);
+	if (HUDComponent) {
+		HUDComponent->DestroyComponent(false);
+		HUDComponent = NULL;
+	}
 	Super::EndPlay(EndPlayReason);
 }
 

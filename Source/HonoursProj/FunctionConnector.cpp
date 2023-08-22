@@ -20,6 +20,13 @@
 
 #include "HUD/ParameterHUD.h"
 
+
+#if WITH_EDITOR
+#include "Editor.h"
+#include "Kismet2/KismetEditorUtilities.h"
+#include "Kismet2/CompilerResultsLog.h"
+#endif
+
 #include "MyUtils.h"
 
 
@@ -86,6 +93,17 @@ void AFunctionConnector::BeginPlay() {
 
 	ResolveType();
 	GetValue();
+}
+
+void AFunctionConnector::PostLoad() {
+	Super::PostLoad();
+
+	// Dispatch Delegate on 0.5s delay, without looping
+	GetWorld()->GetTimerManager().SetTimer(
+		AFunctionConnector::SpawnAllReprTimerHandle,
+		FTimerDelegate::CreateUFunction(this, FName("SpawnAllRepr")), 
+		0.5f, false
+	);
 }
 
 void AFunctionConnector::OnConstruction(const FTransform& Transform) {

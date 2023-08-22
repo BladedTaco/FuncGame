@@ -47,6 +47,11 @@ void ATypeRepr::UpdateValue(VStar value) {
 	// Get the Type
 	EType type = value.Type()->GetType();
 
+	if (type != Type) {
+		UE_LOG(LogTemp, Warning, TEXT("Type Mismatch on Update between %d and %d"), type, Type);
+		return;
+	}
+
 	// Base Types
 	if (IsETypeBase(type)
 		//|| type == EType::NUMBER

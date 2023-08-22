@@ -63,23 +63,12 @@ void FitActorToPlane(AActor* Actor, FVector ActorOrigin, FVector ActorRange, USt
 	PlaneScale /= PlaneScale.GetAbsMin();
 	PlaneScale.Z = 1.0f;
 
-	UE_LOG(LogTemp, Warning, TEXT("PS0 %f %f %f"), ActorOrigin.X, ActorOrigin.Y, ActorOrigin.Z);
-	UE_LOG(LogTemp, Warning, TEXT("PS %f %f %f"), ActorRange.X, ActorRange.Y, ActorRange.Z);
-	UE_LOG(LogTemp, Warning, TEXT("PS %f %f %f"), PlaneRange.X, PlaneRange.Y, PlaneRange.Z);
-
-
 	// Rescale the Actor to be contained by the Plane
 	FVector scale = (PlaneRange * PlaneScale) / ActorRange;
 	scale.Z = scale.GetAbsMax();
 	scale = FVector(scale.GetAbsMin());
-	
-
-	UE_LOG(LogTemp, Warning, TEXT("PS1 %f %f %f"), PlaneScale.X, PlaneScale.Y, PlaneScale.Z);
 
 	scale /= PlaneScale;
-
-	UE_LOG(LogTemp, Warning, TEXT("PS2 %f %f %f"), scale.X, scale.Y, scale.Z);
-
 
 	Actor->SetActorScale3D(scale);
 

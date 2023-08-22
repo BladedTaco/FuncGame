@@ -113,6 +113,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void BeginDestroy() override;
+	virtual void PostInitializeComponents() override;
+	virtual void PostInitProperties() override;
+	virtual void PostLoad() override;
 
 	void DestroyConnectors(AActor* deletedActor);
 
