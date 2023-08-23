@@ -82,7 +82,7 @@ public:
 	UFUNCTION(Category = "Functions", BlueprintCallable, CallInEditor)
 		void SpawnAllRepr();
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Transient, Instanced)
 		ATypeRepr* TypeRepr;
 
 public:
