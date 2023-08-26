@@ -302,24 +302,29 @@ void ABlockFunction::Tick(float DeltaTime) {
 		//// Aggregate Validity
 		//Valid = true;
 
-		// For inputs
-		for (auto input : InputBlocks) {
-			//if (input->connectedTo) {
-			//	input->HUD.Instance->Type = input->ResolveType()->ToString();
-			//} else {
-			//	input->HUD.Instance->Type = Inputs[input->Index].Type->ToString();
-			//}
-
-			input->HUD.Inst()->Type = input->ParameterInfo.Type->ToString();
-
-			//Valid &= Inputs[input->Index].Type->Supercedes(input->ParameterInfo.Type);
-			//input->HUD.Instance->Type = Inputs[input->Index].Type->ToString();
+		for (auto connector : GetConnectors()) {
+			connector->HUD.Inst()->Type = connector->ResolveType()->ToString();
 		}
-		// For Outputs
-		for (auto output : OutputBlocks) {
-			//output->HUD.Instance->Type = output->ResolveType()->ToString();
-			output->HUD.Inst()->Type = Outputs[output->Index].Type->ToString();
-		}
+
+		//// For inputs
+		//for (auto input : InputBlocks) {
+		//	//if (input->connectedTo) {
+		//	//	input->HUD.Instance->Type = input->ResolveType()->ToString();
+		//	//} else {
+		//	//	input->HUD.Instance->Type = Inputs[input->Index].Type->ToString();
+		//	//}
+
+		//	input->HUD.Inst()->Type = input->ParameterInfo.Type->ToString();
+
+		//	//Valid &= Inputs[input->Index].Type->Supercedes(input->ParameterInfo.Type);
+		//	//input->HUD.Instance->Type = Inputs[input->Index].Type->ToString();
+		//}
+		//// For Outputs
+		//for (auto output : OutputBlocks) {
+		//	//output->HUD.Instance->Type = output->ResolveType()->ToString();
+		//	output->ResolveType();
+		//	output->HUD.Inst()->Type = Outputs[output->Index].Type->ToString();
+		//}
 
 
 
@@ -331,6 +336,12 @@ void ABlockFunction::Tick(float DeltaTime) {
 	if (IsStatus(EPropagable::GETVALUE)) {
 		// Get Value
 		GetValue();
+
+
+		for (auto connector : GetConnectors()) {
+			connector->GetValue();
+		}
+
 		// Remove from Status
 		Status ^= EPropagable::GETVALUE;
 	}

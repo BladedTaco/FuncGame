@@ -37,7 +37,7 @@ public:
 	virtual bool UnifyWith(UType* concreteType);
 
 
-	virtual FColor GetColour() { return FColor::Black; }
+	virtual FColor GetColour() const { return FColor(255U, 255U, 255U, 100U); }
 
 
 	//~UType() {
@@ -60,6 +60,8 @@ private:
 	UPROPERTY(VisibleAnywhere, Instanced)
 		TArray<UType*> Templates = {};
 
+	UPROPERTY(VisibleAnywhere)
+		FColor TypeColour = FColor(255U, 255U, 255U, 100U);
 public:
 	UFUNCTION(BlueprintCallable)
 		bool Terminal() const;
@@ -70,6 +72,8 @@ public:
 	static UTypeConst* New(ETypeData InType, TArray<UType*> InTemplates);
 	static UTypeConst* New(ETypeBase InType);
 	virtual UType* DeepCopy(TMap<UType*, UType*>& ptrMap) const override;
+
+	virtual FColor GetColour() const override { return TypeColour; }
 
 	UFUNCTION(BlueprintCallable)
 		static UTypeConst* MakeConst(const UType* InType);
@@ -96,7 +100,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 		UType* Get();
 
-	virtual FColor GetColour() override;
+	virtual FColor GetColour() const override;
 
 
 	virtual EType GetType() const override;
@@ -139,7 +143,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void ResetEvidence();
 
-	virtual FColor GetColour() override;
+	virtual FColor GetColour() const override;
 
 	virtual EType GetType() const override;
 	virtual TArray<UType*> GetTemplates() const override;

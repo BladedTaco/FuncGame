@@ -177,7 +177,11 @@ UTypeConst* UTypeConst::New(ETypeBase InType) {
 // Recursive Deep Copying
 UType* UTypeConst::DeepCopy(TMap<UType*, UType*>& ptrMap) const {
 	// Simply copy Type when terminal
-	if (Terminal()) { return New(( ETypeBase )Type); }
+	if (Terminal()) { 
+		auto out = New(( ETypeBase )Type); 
+		out->TypeColour = GetColour();
+		return out;
+	}
 
 	// Create Copy and pass InType
 	UTypeConst* out = New(( ETypeData )Type, {});
@@ -191,9 +195,10 @@ UType* UTypeConst::DeepCopy(TMap<UType*, UType*>& ptrMap) const {
 
 // Recursively Turn any InType into a constant
 UTypeConst* UTypeConst::MakeConst(const UType* InType) {
-	// Initialize a new TypeConst and give it its InType after
+	// Initialize a new TypeConst and give it its InType and colour after
 	UTypeConst* out = UTypeConst::New(ETypeBase::NONE);
 	out->Type = InType->GetType();
+	out->TypeColour = InType->GetColour();
 
 	// Recursively Get the InType of all InTemplates
 	Algo::Transform(InType->GetTemplates(), out->Templates, &UTypeConst::MakeConst);
@@ -223,6 +228,11 @@ bool UTypeConst::RestrictTo(UType* other) {
 			return false;
 		}
 	}
+
+	// Copy Colours
+	TypeColour = other->GetColour();
+
+	// return success
 	return true;
 	//Algo::CompareByPredicate(Templates, other->GetTemplates(GetType()), [](UType* me, UType* bound) {
 
@@ -305,7 +315,7 @@ UType* UTypePtr::Get() {
 	return Type;
 }
 
-FColor UTypePtr::GetColour() {
+FColor UTypePtr::GetColour() const {
 	if (Type) {
 		return Type->GetColour();
 	}
@@ -470,7 +480,7 @@ void UTypeVar::ResetEvidence() {
 	Evidence = {};
 }
 
-FColor UTypeVar::GetColour() {
+FColor UTypeVar::GetColour() const {
 	return TypeColour;
 }
 
