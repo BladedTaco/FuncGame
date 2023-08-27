@@ -40,7 +40,7 @@ AHonoursProjBlock* AFunctionOutput::HandleRClick(UPrimitiveComponent* ClickedCom
 	return this;
 }
 
-void AFunctionOutput::EndPlay(const EEndPlayReason::Type EndPlayReason) {	
+void AFunctionOutput::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 	// Remove Connected to if it exists
 	auto copy = connectedTo;
 	for (auto inputBlock : copy) {

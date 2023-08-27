@@ -30,7 +30,8 @@ AHonoursProjBlock* AFunctionInput::HandleClick(UPrimitiveComponent* ClickedCompo
 
 			// Connect input to output
 			connectedTo = other;
-			ConnectMesh->SetVisibility(true); 
+			ConnectMesh->SetVisibility(true);
+			ConnectMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 
 			// Connect Output back
 			if (!other->connectedTo.Contains(this)) {
@@ -39,6 +40,7 @@ AHonoursProjBlock* AFunctionInput::HandleClick(UPrimitiveComponent* ClickedCompo
 		} else {
 			//UE_LOG(LogTemp, Warning, TEXT("NO OVERLAP"));
 			ConnectMesh->SetVisibility(false);
+			ConnectMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		}
 	}
 	// Handle gaining active
@@ -57,6 +59,13 @@ AHonoursProjBlock* AFunctionInput::HandleRClick(UPrimitiveComponent* ClickedComp
 	ConnectMesh->SetVisibility(false);
 	// Return self
 	return this;
+}
+
+void AFunctionInput::BeginPlay() {
+	Super::BeginPlay();
+
+	// Make ConnectMesh Raycast Detectable
+	ConnectMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 }
 
 void AFunctionInput::EndPlay(const EEndPlayReason::Type EndPlayReason) {

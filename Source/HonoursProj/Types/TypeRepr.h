@@ -51,7 +51,10 @@ public:
 	// Create Full Representation from UType
 	static ATypeRepr* CreateRepr(UType* Type, UWorld* World);
 
+	virtual void BeginPlay() override;
 	virtual void BeginDestroy() override;
+
+
 	void DestroyChildren();
 
 	ATypeRepr* UpdateRepr(UType* newType);

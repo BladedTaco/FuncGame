@@ -38,7 +38,6 @@ ATypeRepr::ATypeRepr()
 	ChildBoundingPlanesParent->SetComponentTickEnabled(false);
 	UpdateComponentTransforms();
 
-	SetActorEnableCollision(false);
 }
 
 void ATypeRepr::UpdateValue(VStar value) {
@@ -209,6 +208,21 @@ ATypeRepr* ATypeRepr::CreateRepr(UType* Type, UWorld* World) {
 	}
 
 	return me;
+}
+
+void ATypeRepr::BeginPlay() {
+	Super::BeginPlay();
+
+	// Disable Collision for all Meshes
+	TArray<UStaticMeshComponent*> Meshes;
+	GetComponents<UStaticMeshComponent>(Meshes);
+	for (auto mesh : Meshes) {
+		mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		mesh->SetCollisionResponseToAllChannels(ECR_Ignore);
+	}
+
+	// Set own Collision to disabled
+	SetActorEnableCollision(false);
 }
 
 void ATypeRepr::BeginDestroy() {

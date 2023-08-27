@@ -23,6 +23,7 @@ public:
 	virtual AHonoursProjBlock* HandleClick(UPrimitiveComponent* ClickedComponent) override;
 	virtual AHonoursProjBlock* HandleRClick(UPrimitiveComponent* ClickedComponent) override;
 
+	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	virtual VStar GetValue_Impl() override;
