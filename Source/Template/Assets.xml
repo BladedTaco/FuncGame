@@ -1,14 +1,21 @@
 <root>
     <ResourceType Name='Material'>
-        <Object Name="White" Type="UMaterialInstance" Location="/Game/Puzzle/Meshes/WhiteMaterial.WhiteMaterial"/>
-        <Object Name="Blue" Type="UMaterialInstance" Location="/Game/Puzzle/Meshes/BlueMaterial.BlueMaterial"/>
-        <Object Name="Orange" Type="UMaterialInstance" Location="/Game/Puzzle/Meshes/OrangeMaterial.OrangeMaterial"/>
-        <Object Name="Grey" Type="UMaterialInstance" Location="/Game/Puzzle/Meshes/GreyMaterial.GreyMaterial"/>
-        <Object Name="Pink" Type="UMaterialInstance" Location="/Game/Puzzle/Meshes/PinkMaterial.PinkMaterial"/>
-        <Object Name="Red" Type="UMaterialInstance" Location="/Game/Puzzle/Meshes/RedMaterial.RedMaterial"/>
+        <Object Name="Base" Type="UMaterial" Location="/Game/MyContent/Materials/BaseMaterial.BaseMaterial"/>
+        <Object Name="Black" Type="UMaterialInstance" Location="/Game/MyContent/Materials/BlackMaterial.BlackMaterial"/>
+        <Object Name="Brown" Type="UMaterialInstance" Location="/Game/MyContent/Materials/BrownMaterial.BrownMaterial"/>
+        <Object Name="Green" Type="UMaterialInstance" Location="/Game/MyContent/Materials/GreenMaterial.GreenMaterial"/>
+        <Object Name="Purple" Type="UMaterialInstance" Location="/Game/MyContent/Materials/PurpleMaterial.PurpleMaterial"/>
+        <Object Name="DarkGrey" Type="UMaterialInstance" Location="/Game/MyContent/Materials/DarkGreyMaterial.DarkGreyMaterial"/>
+        <Object Name="White" Type="UMaterialInstance" Location="/Game/MyContent/Materials/WhiteMaterial.WhiteMaterial"/>
+        <Object Name="Blue" Type="UMaterialInstance" Location="/Game/MyContent/Materials/BlueMaterial.BlueMaterial"/>
+        <Object Name="Orange" Type="UMaterialInstance" Location="/Game/MyContent/Materials/OrangeMaterial.OrangeMaterial"/>
+        <Object Name="Grey" Type="UMaterialInstance" Location="/Game/MyContent/Materials/GreyMaterial.GreyMaterial"/>
+        <Object Name="Pink" Type="UMaterialInstance" Location="/Game/MyContent/Materials/PinkMaterial.PinkMaterial"/>
+        <Object Name="Red" Type="UMaterialInstance" Location="/Game/MyContent/Materials/RedMaterial.RedMaterial"/>
+        <Object Name="Gold" Type="UMaterialInstance" Location="/Game/MyContent/Materials/GoldMaterial.GoldMaterial"/>
     </ResourceType>
     <ResourceType Name='Mesh'>    
-        <Object Name="PuzzleCube" Type="UStaticMesh" Location="/Game/Puzzle/Meshes/PuzzleCube.PuzzleCube"/>
+        <Object Name="PuzzleCube" Type="UStaticMesh" Location="/Game/MyContent/Meshes/PuzzleCube.PuzzleCube"/>
         <Object Name="Cylinder" Type="UStaticMesh" Location="/Game/MyContent/Meshes/Cylinder.Cylinder"/>
 	</ResourceType>
 	<ResourceType Name='Data'>
@@ -16,6 +23,9 @@
     </ResourceType>
 	<ResourceType Name='Icon'>
         <Object Name="Percentage" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/percent.percent'"/>
+        <Object Name="Counter" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Functions/Counter.Counter'"/>
+        <Object Name="Dice" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/d20.d20'"/>
+        <Object Name="Ordinal" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/ordinal.ordinal'"/>
     </ResourceType>
 	<ResourceType Name='HUD'>
         <Class Name="Function" Type="UUserWidget" Location="/Game/MyContent/Blueprints/HUD_Function"/>

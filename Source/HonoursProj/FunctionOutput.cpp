@@ -29,21 +29,29 @@ AHonoursProjBlock* AFunctionOutput::HandleClick(UPrimitiveComponent* ClickedComp
 }
 
 AHonoursProjBlock* AFunctionOutput::HandleRClick(UPrimitiveComponent* ClickedComponent) {
-	auto copy = connectedTo;
 	// Proprogate
 	Function->Propagate({ EPropagable::DIRTY });
 	// Break all inputs connected to this output
-	for (auto inputBlock : copy) {
+	for (auto inputBlock : GetConnectedInputs()) {
 		inputBlock->HandleRClick(ClickedComponent);
 	}
+	// Empty Connections
 	connectedTo.Empty();
 	return this;
 }
 
+
+void AFunctionOutput::BeginPlay() {
+	Super::BeginPlay();
+
+	// Filter Inputs
+	GetConnectedInputs();
+}
+
+
 void AFunctionOutput::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 	// Remove Connected to if it exists
-	auto copy = connectedTo;
-	for (auto inputBlock : copy) {
+	for (auto inputBlock : GetConnectedInputs()) {
 		if (IsValid(inputBlock)) {
 			inputBlock->HandleRClick(NULL);
 		}
@@ -68,6 +76,19 @@ UType* AFunctionOutput::ResolveType_Impl() {
 
 	// Return the arrow with applied type
 	return arrow;
+}
+
+const TArray<AFunctionConnector*> AFunctionOutput::GetConnections() {
+	return (TArray<AFunctionConnector*>)GetConnectedInputs();
+}
+
+const TArray<AFunctionInput*> AFunctionOutput::GetConnectedInputs() {
+	// Filter out Invalid ConnectedTo's
+	connectedTo = connectedTo.FilterByPredicate([](AFunctionInput* input) {
+		return IsValid(input);
+	});
+	// Return filtered connectedTo
+	return connectedTo;
 }
 
 VStar AFunctionOutput::GetValue_Impl() {

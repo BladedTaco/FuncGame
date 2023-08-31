@@ -9,7 +9,7 @@
 <#@ import namespace="System.Diagnostics" #>
 <#@ output extension=".gen.h" #>
 
-<#@ include file="C:\Users\v2tac\Desktop\UNI\Semester 8\FIT444X - Honours Thesis\Unreal\HonoursProj\packages\T4.FileManager.VisualStudio.3.1.3\content\T4.FileManager.VisualStudio19.ttinclude" #>
+<#@ include file="C:\Users\v2tac\Desktop\UNI\Semester 8\FIT444X - Honours Thesis\Unreal\HonoursProj 4.27\packages\T4.FileManager.VisualStudio.3.1.3\content\T4.FileManager.VisualStudio19.ttinclude" #>
 
 <#
     string ProjectDir = Host.ResolveParameterValue(null, null, "dir");
@@ -189,7 +189,25 @@ public class PP {
             } else if (PP.srcFile.IsMatch(line) && validOutput) {
                 validOutput = false;
                 Match match = PP.srcFile.Match(line);    
-                yield return $"#include {match.Groups["file"].Value}"; 
+                
+                string OutputPath;
+                if (match.Groups["file"].Value.StartsWith("<")) {
+                    OutputPath = match.Groups["file"].Value;
+                } else {
+                    int MatchLength = 0;
+                    string fullPath = Path.GetFullPath(Path.Combine(ProjectDir, "Source", "HonoursProj"));
+                    string filePath = Path.GetFullPath(match.Groups["file"].Value.Replace("\"", ""));
+
+                    if (filePath.StartsWith(fullPath)) {
+                        MatchLength = fullPath.Length;
+                    } else {
+                        while (fullPath[MatchLength] == filePath[MatchLength]) { MatchLength++; }
+                    }
+
+                    OutputPath = "\"" + filePath.Remove(0, MatchLength + 1) + "\"";
+                }
+
+                yield return $"#include {OutputPath}"; 
             // Else Write line from original file
             } else if (validOutput) {
                 // If the line is not empty

@@ -34,7 +34,7 @@ AHonoursProjBlock* AFunctionInput::HandleClick(UPrimitiveComponent* ClickedCompo
 			ConnectMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 
 			// Connect Output back
-			if (!other->connectedTo.Contains(this)) {
+			if (!other->GetConnectedInputs().Contains(this)) {
 				other->connectedTo.Add(this);
 			}
 		} else {
@@ -83,10 +83,21 @@ UType* AFunctionInput::ResolveType_Impl() {
 	return ParameterInfo.Type;
 }
 
+const TArray<AFunctionConnector*> AFunctionInput::GetConnections() {
+	return (TArray<AFunctionConnector*>)GetConnectedOutputs();
+}
+
+const TArray<AFunctionOutput*> AFunctionInput::GetConnectedOutputs() {
+	// Return connectedTo when Valid
+	if (IsValid(connectedTo)) return { connectedTo };
+	// Return Nothing
+	return {};
+}
+
 VStar AFunctionInput::GetValue_Impl() {
 	UType* type = ResolveType();
 	// Handle no connection
-	if (!connectedTo) { return VStar(ResolveType());  }
+	if (!connectedTo) return VStar(ResolveType()); 
 
 	// Return value from connection
 	return connectedTo->GetValue();

@@ -30,6 +30,13 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine.h"
 
+#include "AssetLoader_gen.h"
+
+// Set Function Icon Mesh
+ABlockFunctionCounter::ABlockFunctionCounter() {
+	FunctionIcon->SetStaticMesh(Assets()->Icon.Counter.Get());
+}
+
 void ABlockFunctionCounter::SetFunctionTypes() {
 
 	FunctionName = FString(TEXT("Counter"));
@@ -39,6 +46,7 @@ void ABlockFunctionCounter::SetFunctionTypes() {
 	};
 
 }
+
 
 Arr<VStarArray, VStarArrayReturn> ABlockFunctionCounter::GetInnerFunc() {
 	return Arr<VStarArray, VStarArrayReturn>([this](VStarArray values) -> VStarArrayReturn {

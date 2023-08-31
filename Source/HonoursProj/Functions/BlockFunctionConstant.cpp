@@ -21,7 +21,13 @@
 
 #include "MyUtils.h"
 
+#include "AssetLoader_gen.h"
 
+
+// Set Function Icon Mesh
+ABlockFunctionConstant::ABlockFunctionConstant() {
+	FunctionIcon->SetStaticMesh(Assets()->Icon.Dice.Get());
+}
 
 void ABlockFunctionConstant::SetFunctionTypes() {
 

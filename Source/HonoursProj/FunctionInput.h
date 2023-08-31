@@ -8,6 +8,7 @@
 #include "FunctionConnector.h"
 #include "FunctionInput.generated.h"
 
+class AFunctionOutput;
 
 UCLASS()
 class HONOURSPROJ_API AFunctionInput : public AFunctionConnector
@@ -18,7 +19,7 @@ public:
 	void Tick(float DeltaSeconds);
 
 	UPROPERTY(VisibleAnywhere)
-	class AFunctionOutput* connectedTo;
+	AFunctionOutput* connectedTo;
 
 	virtual AHonoursProjBlock* HandleClick(UPrimitiveComponent* ClickedComponent) override;
 	virtual AHonoursProjBlock* HandleRClick(UPrimitiveComponent* ClickedComponent) override;
@@ -28,4 +29,9 @@ public:
 
 	virtual VStar GetValue_Impl() override;
 	virtual UType* ResolveType_Impl() override;
+
+
+
+	virtual const TArray<AFunctionConnector*> GetConnections() override;
+	const TArray<AFunctionOutput*> GetConnectedOutputs();
 };

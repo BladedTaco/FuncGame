@@ -51,6 +51,7 @@ public:
 	// Create Full Representation from UType
 	static ATypeRepr* CreateRepr(UType* Type, UWorld* World);
 
+	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void BeginPlay() override;
 	virtual void BeginDestroy() override;
 
@@ -59,4 +60,5 @@ public:
 
 	ATypeRepr* UpdateRepr(UType* newType);
 
+	void UpdateVisibility(bool NewVisibility);
 };

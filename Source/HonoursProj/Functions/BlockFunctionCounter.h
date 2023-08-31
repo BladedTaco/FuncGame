@@ -22,6 +22,8 @@ public:
 	UPROPERTY(EditAnywhere)
 		int MaxValue = 10.0f;
 public:
+	ABlockFunctionCounter();
+
 	virtual Arr<VStarArray, VStarArrayReturn> GetInnerFunc() override;
 	virtual void SetFunctionTypes() override;
 

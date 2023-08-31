@@ -21,7 +21,7 @@ class ATypeRepr;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class HONOURSPROJ_API AFunctionConnector : public AHonoursProjBlock {
 	GENERATED_BODY()
 
@@ -68,6 +68,7 @@ public:
 
 	void SetupHUD();
 
+	virtual const TArray<AFunctionConnector*> GetConnections() PURE_VIRTUAL(AFunctionConnector::GetConnections, return {};);
 
 public:
 	UPROPERTY(Category = "Functions", EditAnywhere, BlueprintReadWrite, Transient, NonTransactional)
@@ -84,6 +85,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Transient, Instanced)
 		ATypeRepr* TypeRepr;
+
+	UPROPERTY(VisibleAnywhere)
+		bool ConnectorIconDisplay = true;
 
 public:
 	UPROPERTY(VisibleAnywhere)

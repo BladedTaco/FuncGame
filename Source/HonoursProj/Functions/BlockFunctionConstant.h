@@ -20,6 +20,7 @@ public:
 	UPROPERTY(EditAnywhere)
 		int Value = 5;
 
+	ABlockFunctionConstant();
 
 	virtual Arr<VStarArray, VStarArrayReturn> GetInnerFunc() override;
 	virtual void SetFunctionTypes() override;

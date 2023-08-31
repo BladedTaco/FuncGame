@@ -16,6 +16,11 @@
 #include "MyUtils.h"
 #include <Components/TextRenderComponent.h>
 
+#if WITH_EDITOR
+#include "Editor.h"
+#endif
+
+
 // Sets default values for this component's properties
 ATypeRepr::ATypeRepr()
 {
@@ -90,7 +95,7 @@ void ATypeRepr::UpdateText(FString text) {
 	// Set all text components to given text
 	for (auto plane : GetChildBoundingPlanes()) {
 		if (auto textComp = Cast<UTextRenderComponent>(plane->GetChildComponent(0))) {
-			textComp->SetText(text);
+			textComp->SetText(FText::FromString(text));
 		}
 	}
 
@@ -122,13 +127,21 @@ TArray<UStaticMeshComponent*> ATypeRepr::GetChildBoundingPlanes() {
 }
 
 TArray<ATypeRepr*> ATypeRepr::GetChildTypes() {
+	// Output Array
 	TArray<ATypeRepr*> typeReprs;
+
+	// For each Child Slot
 	for (auto* plane : GetChildBoundingPlanes()) {
-		auto repr = Cast<ATypeRepr>(plane->GetAttachChildren()[0]->GetOwner());
-		if (repr) {
+		// Get its children
+		auto& children = plane->GetAttachChildren();
+		if (children.Num() == 0) continue; // skipping empty child-trees
+		// Add attached TypeReprs
+		auto repr = Cast<ATypeRepr>(children[0]->GetOwner());
+		if (repr && repr != this) {
 			typeReprs.Add(repr);
 		}
 	}
+	// Return Array
 	return typeReprs;
 }
 
@@ -180,7 +193,9 @@ ATypeRepr* ATypeRepr::CreateRepr(UType* Type, UWorld* World) {
 		// Handle TypeVar Colours
 		if (Type->GetType() == EType::ANY) {
 			FColor col = Type->GetColour();
-			for (auto* comp : me->GetComponentsByClass(UStaticMeshComponent::StaticClass())) {
+			TArray<UStaticMeshComponent*> MeshComps;
+			me->GetComponents<UStaticMeshComponent>(MeshComps);
+			for (auto* comp : MeshComps) {
 				Cast<UStaticMeshComponent>(comp)->SetVectorParameterValueOnMaterials("DiffuseColor", FVector(col.ReinterpretAsLinear()));
 			}
 		}	
@@ -208,6 +223,12 @@ ATypeRepr* ATypeRepr::CreateRepr(UType* Type, UWorld* World) {
 	}
 
 	return me;
+}
+
+void ATypeRepr::OnConstruction(const FTransform& Transform) {
+#if WITH_EDITOR
+	GEngine->OnLevelActorDetached().AddLambda([](AActor* me, const AActor* attach) { me->Destroy(); });
+#endif
 }
 
 void ATypeRepr::BeginPlay() {
@@ -252,4 +273,16 @@ ATypeRepr* ATypeRepr::UpdateRepr(UType* newType) {
 	// Different Types, for now just recreate
 	return CreateRepr(newType, GetWorld());
 	
+}
+
+void ATypeRepr::UpdateVisibility(bool NewVisibility) {
+	// Make Hidden in Game
+	FVector newLoc = GetActorLocation();
+	newLoc.Z = FMath::Abs(newLoc.Z) * (NewVisibility ? 1 : -1);
+	SetActorLocation(newLoc);
+	
+	// Do the same for all Child Types
+	for (auto& child : GetChildTypes()) {
+		child->UpdateVisibility(NewVisibility);
+	}
 }

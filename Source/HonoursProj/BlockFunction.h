@@ -41,7 +41,7 @@ public:
 
 UENUM(BlueprintType, meta = (Bitflags, UseEnumValuesAsMaskValuesInEditor = "true"))
 enum class EPropagable : uint8 {
-	NONE		= 0				UMETA(Hidden),
+	NONE		= 0					UMETA(Hidden),
 	DIRTY		= 1 << 0,
 	VALID		= 1 << 1,
 	GETVALUE	= 1 << 2,
@@ -102,8 +102,17 @@ public:
 	UPROPERTY(VisibleAnywhere, Instanced)
 		TArray<class AFunctionOutput*> OutputBlocks;
 
-	// Block HUD
+	// Function Representations
+	UPROPERTY(EditAnywhere)
+		bool FunctionIconDisplay = true;
+	UPROPERTY(EditAnywhere)
+		bool ConnectorIconDisplay = true;
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* FunctionIcon;
 	THUD<UFunctionHUD> HUD;
+
+	UFUNCTION(BlueprintCallable)
+		void UpdateDisplayType();
 
 	UPROPERTY(VisibleAnywhere)
 		FString FunctionName;

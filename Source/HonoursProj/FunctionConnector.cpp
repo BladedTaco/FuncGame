@@ -109,6 +109,17 @@ void AFunctionConnector::PostLoad() {
 void AFunctionConnector::OnConstruction(const FTransform& Transform) {
 	Super::OnConstruction(Transform);
 
+#if WITH_EDITOR
+	GEngine->OnLevelActorDetached().AddLambda([](AActor* me, const AActor* attach) { 
+		TArray<AActor*> actors;
+		me->GetAttachedActors(actors);
+		for (auto* actor : actors) {
+			actor->Destroy();
+		}
+		me->Destroy(); 
+	});
+#endif
+
 	if (!ParameterInfo.Type) {
 		ParameterInfo.Type = UTypeConst::New(ETypeBase::NONE);
 	}
@@ -153,7 +164,11 @@ UType* AFunctionConnector::ResolveType() {
 }
 
 VStar AFunctionConnector::GetValue() {
-	VStar value = GetValue_Impl();
+	VStar value;
+	if (Function->IsStatus(EPropagable::VALID)) {
+		value = GetValue_Impl();
+	}
+
 	TypeRepr->UpdateValue(value);
 	return value;
 }
@@ -268,6 +283,8 @@ void AFunctionConnector::SpawnRepr(UType* Type) {
 	// Fit to Plane and Move Up
 	FitActorToPlane(TypeRepr, TypeRepr->BoundingBox, GetBlockMesh());
 	TypeRepr->AddActorLocalOffset(FVector::UpVector * 1000);
+
+	if (!ConnectorIconDisplay) TypeRepr->UpdateVisibility(false);
 }
 
 void AFunctionConnector::SpawnAllRepr() {

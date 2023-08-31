@@ -5,7 +5,7 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".gen.h" #>
 
-<#@ include file="C:\Users\v2tac\Desktop\UNI\Semester 8\FIT444X - Honours Thesis\Unreal\HonoursProj\packages\T4.FileManager.VisualStudio.3.1.3\content\T4.FileManager.VisualStudio19.ttinclude" #>
+<#@ include file="C:\Users\v2tac\Desktop\UNI\Semester 8\FIT444X - Honours Thesis\Unreal\HonoursProj 4.27\packages\T4.FileManager.VisualStudio.3.1.3\content\T4.FileManager.VisualStudio19.ttinclude" #>
 
 
 <# 

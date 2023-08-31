@@ -23,6 +23,18 @@
 
 #include "MyUtils.h"
 
+#include "AssetLoader_gen.h"
+
+
+// Set Function Icon Mesh
+ABlockFunctionGreaterThan::ABlockFunctionGreaterThan() {
+	FunctionIcon->SetStaticMesh(Assets()->Icon.Ordinal.Get());
+	FunctionIcon->SetMaterial(0, Assets()->Material.DarkGrey.Get());
+	FunctionIcon->SetMaterial(1, Assets()->Material.DarkGrey.Get());
+	FunctionIcon->SetMaterial(2, Assets()->Material.White.Get());
+}
+
+
 void ABlockFunctionGreaterThan::SetFunctionTypes() {
 
 	FunctionName = FString(TEXT("Greater Than"));

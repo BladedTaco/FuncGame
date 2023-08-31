@@ -14,19 +14,33 @@
 
 
 struct FResource_Material {
+		ConstructorHelpers::FObjectFinderOptional<UMaterial> Base;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Black;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Brown;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Green;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Purple;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> DarkGrey;
 		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> White;
 		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Blue;
 		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Orange;
 		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Grey;
 		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Pink;
 		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Red;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Gold;
 		FResource_Material()
-		:	White(TEXT("/Game/Puzzle/Meshes/WhiteMaterial.WhiteMaterial"))
-		,	Blue(TEXT("/Game/Puzzle/Meshes/BlueMaterial.BlueMaterial"))
-		,	Orange(TEXT("/Game/Puzzle/Meshes/OrangeMaterial.OrangeMaterial"))
-		,	Grey(TEXT("/Game/Puzzle/Meshes/GreyMaterial.GreyMaterial"))
-		,	Pink(TEXT("/Game/Puzzle/Meshes/PinkMaterial.PinkMaterial"))
-		,	Red(TEXT("/Game/Puzzle/Meshes/RedMaterial.RedMaterial"))
+		:	Base(TEXT("/Game/MyContent/Materials/BaseMaterial.BaseMaterial"))
+		,	Black(TEXT("/Game/MyContent/Materials/BlackMaterial.BlackMaterial"))
+		,	Brown(TEXT("/Game/MyContent/Materials/BrownMaterial.BrownMaterial"))
+		,	Green(TEXT("/Game/MyContent/Materials/GreenMaterial.GreenMaterial"))
+		,	Purple(TEXT("/Game/MyContent/Materials/PurpleMaterial.PurpleMaterial"))
+		,	DarkGrey(TEXT("/Game/MyContent/Materials/DarkGreyMaterial.DarkGreyMaterial"))
+		,	White(TEXT("/Game/MyContent/Materials/WhiteMaterial.WhiteMaterial"))
+		,	Blue(TEXT("/Game/MyContent/Materials/BlueMaterial.BlueMaterial"))
+		,	Orange(TEXT("/Game/MyContent/Materials/OrangeMaterial.OrangeMaterial"))
+		,	Grey(TEXT("/Game/MyContent/Materials/GreyMaterial.GreyMaterial"))
+		,	Pink(TEXT("/Game/MyContent/Materials/PinkMaterial.PinkMaterial"))
+		,	Red(TEXT("/Game/MyContent/Materials/RedMaterial.RedMaterial"))
+		,	Gold(TEXT("/Game/MyContent/Materials/GoldMaterial.GoldMaterial"))
 		{}
 };
 
@@ -34,7 +48,7 @@ struct FResource_Mesh {
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> PuzzleCube;
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Cylinder;
 		FResource_Mesh()
-		:	PuzzleCube(TEXT("/Game/Puzzle/Meshes/PuzzleCube.PuzzleCube"))
+		:	PuzzleCube(TEXT("/Game/MyContent/Meshes/PuzzleCube.PuzzleCube"))
 		,	Cylinder(TEXT("/Game/MyContent/Meshes/Cylinder.Cylinder"))
 		{}
 };
@@ -48,8 +62,14 @@ struct FResource_Data {
 
 struct FResource_Icon {
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Percentage;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Counter;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Dice;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Ordinal;
 		FResource_Icon()
 		:	Percentage(TEXT("StaticMesh'/Game/MyContent/Meshes/percent.percent'"))
+		,	Counter(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/Counter.Counter'"))
+		,	Dice(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/d20.d20'"))
+		,	Ordinal(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/ordinal.ordinal'"))
 		{}
 };
 

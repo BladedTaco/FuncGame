@@ -23,6 +23,7 @@
 
 #include "MyUtils.h"
 
+#include "Types/TypeRepr.h"
 #include "HUD/AutoScalingHUD.h"
 
 #include "Engine.h"
@@ -41,6 +42,7 @@ TArray<AFunctionConnector*> ABlockFunction::GetConnectors() {
 ABlockFunction::ABlockFunction() {
 	ErrorMaterial = Assets()->Material.Red.Get();
 
+	// Setup HUD
 	HUD.UpdateComponent(GetHUDComponent());
 	HUD.Component->SetRelativeLocation(FVector::UpVector * 200.0f);
 	HUD.Component->SetWorldRotation(FRotator(90, 0, 180));
@@ -51,10 +53,19 @@ ABlockFunction::ABlockFunction() {
 	HUD.Component->SetWidgetClass(Assets()->HUD.Function.Class);
 	//HUD.Component->RegisterComponent();
 
+	// Setup Icon
+	FunctionIcon = CreateDefaultSubobject<UStaticMeshComponent>("FunctionIcon");
+	FunctionIcon->SetRelativeLocation(FVector::UpVector * 200.0f);
+	FunctionIcon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	FunctionIcon->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	FunctionIcon->SetupAttachment(RootComponent);
+
+	// Clear Type System Info
 	TypeVars = {};
 	Inputs = {};
 	Outputs = {};
 
+	// Clear Inputs/Outputs
 	InputBlocks = {};
 	OutputBlocks = {};
 }
@@ -81,11 +92,24 @@ void ABlockFunction::OnConstruction(const FTransform& Transform) {
 	Super::OnConstruction(Transform);
 	/*HUD.Component->InitWidget();
 	HUD.Component->UpdateWidget();*/
+
+	// Configure HUD
 	HUD.UpdateComponent(GetHUDComponent());
 	if (HUD.Component.IsValid()) {
 		HUD.Component->SizeToBounds(GetBlockMesh());
 	}
 
+	// Delete Unrefrenced Connectors
+	TArray<AActor*> actors;
+	GetAttachedActors(actors);
+	for (auto actor : actors) {
+		if (!InputBlocks.Contains(actor) && !OutputBlocks.Contains(actor)) {
+			actor->Destroy();
+		}
+	}
+
+
+	// Delete Existing Connectors
 	ConnectorsSpawned = InputBlocks.Num() + OutputBlocks.Num() > 0;
 
 	for (auto connector : GetConnectors()) {
@@ -97,6 +121,21 @@ void ABlockFunction::OnConstruction(const FTransform& Transform) {
 			InputBlocks = {};
 			OutputBlocks = {};
 		}
+	}
+	
+	// Resize Icon
+	if (FunctionIcon) {
+		// Get Icon and Block Bounds
+		FVector imin, imax, bmin, bmax;
+		FunctionIcon->GetLocalBounds(imin, imax);
+		GetBlockMesh()->GetLocalBounds(bmin, bmax);
+
+		// Set Scale as n% of block size
+		FVector scale = ((bmax - bmin) / (imax - imin)) * 0.4;
+		scale.Z = scale.GetAbsMax(); // ignoring z scale
+		
+		// Scale the Icon
+		FunctionIcon->SetRelativeScale3D(FVector(scale.GetAbsMin()));
 	}
 
 	//SpawnConnectors();
@@ -212,7 +251,7 @@ void ABlockFunction::SpawnConnectors() {
 			// Attach to self
 			actor->AttachToActor(this, attachRules);
 
-			actor->SetActorRelativeLocation(FVector(100 * -idx + 50, yOff * 100, 0.5 * extent.Z));
+			actor->SetActorLocation(FVector(100 * -idx + 50, yOff * 100, 0.5 * extent.Z));
 			actor->SetupHUD(); 
 			// Iterate index
 			idx += 1;
@@ -243,7 +282,7 @@ void ABlockFunction::Propagate(MaskedBitFlags<EPropagable> Values, bool Origin) 
 
 	// Propogate
 	for (auto block : OutputBlocks) {
-		for (auto to : block->connectedTo) {
+		for (auto to : block->GetConnectedInputs()) {
 			to->Function->Propagate(Values, false);
 		}
 	}
@@ -251,9 +290,8 @@ void ABlockFunction::Propagate(MaskedBitFlags<EPropagable> Values, bool Origin) 
 
 void ABlockFunction::PropagateToEnds(MaskedBitFlags<EPropagable> Values) {
 	// If all Outputs are Unconnected
-	if (Algo::AllOf(OutputBlocks, [](const AFunctionOutput* output) {
-		return output->connectedTo.Num() == 0;
-
+	if (Algo::AllOf(OutputBlocks, [](AFunctionOutput* output) {
+		return output->GetConnectedInputs().Num() == 0;
 	// Update Status
 	})) {
 		Status = Values.Apply(Status);
@@ -261,10 +299,25 @@ void ABlockFunction::PropagateToEnds(MaskedBitFlags<EPropagable> Values) {
 	// Propogate
 	} else {
 		for (auto block : OutputBlocks) {
-			for (auto to : block->connectedTo) {
+			for (auto to : block->GetConnectedInputs()) {
 				to->Function->PropagateToEnds(Values);
 			}
 		}
+	}
+}
+
+// Updates to either Text or Icon Display
+void ABlockFunction::UpdateDisplayType() {
+	// Use either HUD or Icon
+	HUD.Component->SetVisibility(!FunctionIconDisplay);
+	if (IsValid(FunctionIcon)) FunctionIcon->SetVisibility(FunctionIconDisplay);
+	
+	// For Connectors
+	for (auto& connector : GetConnectors()) {
+		connector->ConnectorIconDisplay = ConnectorIconDisplay;
+		// Use either HUD or Icon
+		connector->HUD.Component->SetVisibility(!ConnectorIconDisplay);
+		if (IsValid(connector->TypeRepr)) connector->TypeRepr->UpdateVisibility(ConnectorIconDisplay);
 	}
 }
 
@@ -272,10 +325,17 @@ void ABlockFunction::PropagateToEnds(MaskedBitFlags<EPropagable> Values) {
 void ABlockFunction::BeginPlay() {
 	Super::BeginPlay();
 
+	// Queue Recompile HUD
 	HUD.UpdateComponent(GetHUDComponent());
 
+	// Spawn all Connectors
 	SpawnConnectors();
-	
+
+
+	// Set Visiblity
+	FTimerHandle TimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ABlockFunction::UpdateDisplayType, 1, true);
+
 }
 
 void ABlockFunction::Tick(float DeltaTime) {
