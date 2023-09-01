@@ -104,6 +104,15 @@ void AFunctionConnector::PostLoad() {
 		FTimerDelegate::CreateUFunction(this, FName("SpawnAllRepr")), 
 		0.5f, false
 	);
+
+
+	if (Function) {
+		FVector min, max, extent;
+		Function->GetBlockMesh()->GetLocalBounds(min, max);
+		FVector newLoc = GetActorLocation();
+		newLoc.Z = Function->GetActorLocation().Z + extent.Z / 2;
+		SetActorLocation(newLoc);
+	}
 }
 
 void AFunctionConnector::OnConstruction(const FTransform& Transform) {

@@ -14,7 +14,7 @@
 #include "Maybe_gen.h"
 
 #include "MyUtils.h"
-#include <Components/TextRenderComponent.h>
+#include "HUD/TextHUD.h"
 
 #if WITH_EDITOR
 #include "Editor.h"
@@ -94,8 +94,8 @@ void ATypeRepr::UpdateValue(VStar value) {
 void ATypeRepr::UpdateText(FString text) {
 	// Set all text components to given text
 	for (auto plane : GetChildBoundingPlanes()) {
-		if (auto textComp = Cast<UTextRenderComponent>(plane->GetChildComponent(0))) {
-			textComp->SetText(FText::FromString(text));
+		if (auto textComp = Cast<UTextWidget>(plane->GetChildComponent(0))) {
+			textComp->SetText(text);
 		}
 	}
 

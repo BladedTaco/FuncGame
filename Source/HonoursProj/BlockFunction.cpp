@@ -190,17 +190,31 @@ void ABlockFunction::SpawnConnectors() {
 	HUD.UpdateInEditor(Assets()->HUD.Parameter.Class);
 
 
+	// Get Length from block center to top
+	FVector lower, upper, extent;
+	GetBlockMesh()->GetLocalBounds(lower, upper);
+	extent = (upper - lower) * GetBlockMesh()->GetComponentScale();
+
+
 	// Call once
 	if (ConnectorsSpawned || HasAnyFlags(RF_Transient)) {
 		FParameter p;
 		for (auto param : GetConnectors()) {
+			// Give Function
 			param->Function = this;
+			// Take Store Referece to Connector
 			if (param->IsA<AFunctionInput>()) {
 				p = Inputs[param->Index];
 			} else {
 				p = Outputs[param->Index];
 			}
+			// Pass Parmater Info
 			param->ParameterInfo = FParameter(p.Name, UTypePtr::New(p.Type));
+
+			// Ensure proper Z position
+			FVector newLoc = param->GetActorLocation();
+			newLoc.Z = GetActorLocation().Z + 0.5 * extent.Z;
+			param->SetActorLocation(newLoc);
 		}
 		return;
 	}
@@ -217,12 +231,6 @@ void ABlockFunction::SpawnConnectors() {
 		EAttachmentRule::KeepRelative,
 		false
 	);
-
-	// Get Length from block center to top
-	FVector lower, upper, extent;
-	GetBlockMesh()->GetLocalBounds(lower, upper);
-	extent = (upper - lower) * GetBlockMesh()->GetComponentScale();
-
 
 	int idx;
 	FString name;
@@ -364,6 +372,7 @@ void ABlockFunction::Tick(float DeltaTime) {
 
 		for (auto connector : GetConnectors()) {
 			connector->HUD.Inst()->Type = connector->ResolveType()->ToString();
+			connector->HUD.Inst()->ForceLayoutPrepass();
 		}
 
 		//// For inputs

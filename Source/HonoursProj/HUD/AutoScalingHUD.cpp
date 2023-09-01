@@ -60,9 +60,14 @@ void UAutoScalingHUD::SizeToBounds(UStaticMeshComponent* Mesh) {
 	FVector min, max;
 	Mesh->GetLocalBounds(min, max);
 	FVector2D HUDSize = FVector2D((max - min) * Mesh->GetComponentScale());
-	//UE_LOG(LogTemp, Warning, TEXT("HUDSize, %f %f"), HUDSize.X, HUDSize.Y);
-	// Set Size
-	TargetSize = HUDSize;
+
+	// Set Aspect Ratio
+	TargetSize = HUDSize * (1024 / HUDSize.GetMin());
+	
+	// Scale Component
+	FVector2D Scale = (HUDSize / GetCurrentDrawSize()) / HUDSize.GetSafeNormal();
+	Scale = FVector2D(Scale.GetMin());
+	SetWorldScale3D(FVector(1.0f, Scale.Y, Scale.X));
 
 	// Update Size on Next opportunity
 	UpdateSize = true;
