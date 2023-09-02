@@ -105,14 +105,16 @@ void AFunctionConnector::PostLoad() {
 		0.5f, false
 	);
 
-
-	if (Function) {
-		FVector min, max, extent;
-		Function->GetBlockMesh()->GetLocalBounds(min, max);
-		FVector newLoc = GetActorLocation();
-		newLoc.Z = Function->GetActorLocation().Z + extent.Z / 2;
-		SetActorLocation(newLoc);
-	}
+	// Next tick, align connectors
+	GetWorld()->GetTimerManager().SetTimerForNextTick([this]() {
+		if (IsValid(this->Function)) {
+			FVector min, max, extent;
+			this->Function->GetBlockMesh()->GetLocalBounds(min, max);
+			FVector newLoc = this->GetActorLocation();
+			newLoc.Z = this->Function->GetActorLocation().Z + extent.Z;
+			this->SetActorLocation(newLoc);
+		}
+	});
 }
 
 void AFunctionConnector::OnConstruction(const FTransform& Transform) {

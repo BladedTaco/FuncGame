@@ -53,18 +53,19 @@ void FTypeProperty::CustomizeHeader(TSharedRef<IPropertyHandle> StructPropertyHa
 			StructPropertyHandle->GetValue(obj);
 
 
-			if (obj) {
-				UFunction* f = obj->FindFunction("UToString");
-				Params params = {};
-				obj->ProcessEvent(f, &params);
+			if (obj && IsValid(obj)) {
+				if (UFunction* f = obj->FindFunction("UToString")) {
+					Params params = {};
+					obj->ProcessEvent(f, &params);
 
-				TypeName = params.RetVal;
-				TypeType = obj->GetClass()->GetFName().ToString();
+					TypeName = params.RetVal;
+					TypeType = obj->GetClass()->GetFName().ToString();
 
-				//if (auto typ = Cast<UType>(obj)) {
-				//	TypeName = typ->ToString();
-				//	TypeType = typ->GetClass()->GetFName().ToString();
-				//}
+					//if (auto typ = Cast<UType>(obj)) {
+					//	TypeName = typ->ToString();
+					//	TypeType = typ->GetClass()->GetFName().ToString();
+					//}
+				}
 			}
 		}
 	};

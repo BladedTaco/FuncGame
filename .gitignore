@@ -1,5 +1,7 @@
 # HTML export binaries
 HTML/Package
+# Temporary Files
+Source/Generated/
 
 Binaries
 DerivedDataCache
