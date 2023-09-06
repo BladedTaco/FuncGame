@@ -16,6 +16,7 @@
     </ResourceType>
     <ResourceType Name='Mesh'>    
         <Object Name="PuzzleCube" Type="UStaticMesh" Location="/Game/MyContent/Meshes/PuzzleCube.PuzzleCube"/>
+        <Object Name="OffsetCylinder" Type="UStaticMesh" Location="/Game/MyContent/Meshes/offsetCylinder.OffsetCylinder"/>
         <Object Name="Cylinder" Type="UStaticMesh" Location="/Game/MyContent/Meshes/Cylinder.Cylinder"/>
 	</ResourceType>
 	<ResourceType Name='Data'>

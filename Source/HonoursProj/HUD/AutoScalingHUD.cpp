@@ -6,6 +6,10 @@
 #include "Components/StaticMeshComponent.h"
 #include "Blueprint/WidgetTree.h"
 
+#include "MyUtils.h"
+#include "Kismet/GameplayStatics.h"
+#include "Rendering/SlateRenderer.h"
+
 #if WITH_EDITOR
 #include "Editor.h"
 #include "Kismet2/KismetEditorUtilities.h"
@@ -54,24 +58,51 @@ UAutoScalingHUD::UAutoScalingHUD() {
 	
 }
 
+void UAutoScalingHUD::InvalidateAllWidgets() {
+	for (auto HUD : UAutoScalingHUD::AllHUDs) {
+		if (IsValid(HUD) && IsValid(HUD->LastBounds)) {
+			HUD->SizeToBounds(HUD->LastBounds);
+		}
+	}
+}
+
 void UAutoScalingHUD::SizeToBounds(UStaticMeshComponent* Mesh) {
+	LastBounds = Mesh;
+
+
+	//FSlateApplicationBase::Get().GetRenderer()->GetFontAtlasProvider()->
+	//	->DestroyCachedFastPathElementData(CachedElementData);
 
 	// Get Size
 	FVector min, max;
 	Mesh->GetLocalBounds(min, max);
 	FVector2D HUDSize = FVector2D((max - min) * Mesh->GetComponentScale());
+	
+	FVector MidPos = GetOwner()->GetActorLocation();
+	auto controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	FVector2D minPos, maxPos;
+	UGameplayStatics::ProjectWorldToScreen(controller, MidPos + min, minPos);
+	UGameplayStatics::ProjectWorldToScreen(controller, MidPos + max, maxPos);
+
+	int MaxSize = (maxPos - minPos).GetMax();
+	
+	MaxSize = FMath::Clamp(MaxSize, 50, 1000);
 
 	// Set Aspect Ratio
-	TargetSize = HUDSize * (1024 / HUDSize.GetMin());
-	
+	//TargetSize = HUDSize * (50 / HUDSize.GetMin());
+	TargetSize = HUDSize * (MaxSize / HUDSize.GetMax());
+
 	// Scale Component
 	FVector2D Scale = (HUDSize / GetCurrentDrawSize()) / HUDSize.GetSafeNormal();
 	Scale = FVector2D(Scale.GetMin());
 	SetWorldScale3D(FVector(1.0f, Scale.Y, Scale.X));
 
 	// Update Size on Next opportunity
-	UpdateSize = true;
+	//UpdateSize = true;
 	SetDrawAtDesiredSize(false);
+
+
+	SetDrawSize(FVector2D(TargetSize.Y, TargetSize.X));
 
 }
 
@@ -91,6 +122,8 @@ void UAutoScalingHUD::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 }
 
 void UAutoScalingHUD::OnComponentCreated() {
+	UAutoScalingHUD::AllHUDs.Add(this);
+
 	InitWidget();
 	UpdateWidget();
 
@@ -99,6 +132,8 @@ void UAutoScalingHUD::OnComponentCreated() {
 }
 
 void UAutoScalingHUD::DestroyComponent(bool bPromoteChildren) {
+	UAutoScalingHUD::AllHUDs.Remove(this);
+
 	if (auto widget = GetUserWidgetObject()) {
 		widget->ReleaseSlateResources(true);
 		widget->RemoveFromParent();

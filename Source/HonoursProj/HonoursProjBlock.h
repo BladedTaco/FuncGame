@@ -20,11 +20,6 @@ class AHonoursProjBlock : public AActor
 	UPROPERTY(Category = Block, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* BlockMesh;
 
-protected:
-	/** HUD component for the clickable block */
-	UPROPERTY(Category = Block, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		class UAutoScalingHUD* HUDComponent;
-
 public:
 	AHonoursProjBlock();
 
@@ -54,10 +49,7 @@ public:
 	FORCEINLINE class USceneComponent* GetDummyRoot() const { return DummyRoot; }
 	/** Returns BlockMesh subobject **/
 	FORCEINLINE class UStaticMeshComponent* GetBlockMesh() const { return BlockMesh; }
-	/** Returns BlockMesh subobject **/
-	FORCEINLINE class UAutoScalingHUD* GetHUDComponent() const { return HUDComponent; }
 
-	virtual void EndPlay(EEndPlayReason::Type EndPlayReason) override;
 	virtual void Tick(float DeltaSeconds) override;
 	virtual AHonoursProjBlock* HandleClick(UPrimitiveComponent* ClickedComponent);
 	virtual AHonoursProjBlock* HandleRClick(UPrimitiveComponent* ClickedComponent);

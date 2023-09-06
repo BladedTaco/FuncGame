@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "HonoursProjBlock.h"
+#include "HUDBlock.h"
 
 #include "Types/Types_gen.h"
 #include "Types/Type.h"
@@ -22,7 +22,7 @@ class ATypeRepr;
  * 
  */
 UCLASS(Abstract)
-class HONOURSPROJ_API AFunctionConnector : public AHonoursProjBlock {
+class HONOURSPROJ_API AFunctionConnector : public AHUDBlock {
 	GENERATED_BODY()
 
 

@@ -20,6 +20,11 @@ private:
 	UPROPERTY(VisibleAnywhere)
 		bool UpdateSize = false;
 
+
+	inline static TArray<UAutoScalingHUD*> AllHUDs = {};
+
+	class UStaticMeshComponent* LastBounds;
+
 public:
 	virtual bool ShouldActivate() const override { return true;  }
 
@@ -29,7 +34,11 @@ public:
 	UPROPERTY(EditAnywhere)
 		FVector2D TargetSize = FVector2D(512, 512);
 
+public:
+
 	UAutoScalingHUD();
+
+	static void InvalidateAllWidgets();
 
 	void SizeToBounds(class UStaticMeshComponent* Mesh);
 

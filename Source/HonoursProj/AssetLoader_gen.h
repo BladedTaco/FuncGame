@@ -46,9 +46,11 @@ struct FResource_Material {
 
 struct FResource_Mesh {
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> PuzzleCube;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> OffsetCylinder;
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Cylinder;
 		FResource_Mesh()
 		:	PuzzleCube(TEXT("/Game/MyContent/Meshes/PuzzleCube.PuzzleCube"))
+		,	OffsetCylinder(TEXT("/Game/MyContent/Meshes/offsetCylinder.OffsetCylinder"))
 		,	Cylinder(TEXT("/Game/MyContent/Meshes/Cylinder.Cylinder"))
 		{}
 };

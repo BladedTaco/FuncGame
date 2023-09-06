@@ -22,6 +22,9 @@
 #include "Camera/CameraActor.h"
 #include "Engine/GameViewportClient.h"
 
+#include "Blueprint/WidgetBlueprintLibrary.h"
+#include "HUD/AutoScalingHUD.h"
+
 AHonoursProjPawn::AHonoursProjPawn(const FObjectInitializer& ObjectInitializer) 
 	: Super(ObjectInitializer)
 {
@@ -99,6 +102,10 @@ void AHonoursProjPawn::RemoveInactive() {
 	SelectedBlocks.RemoveAll([](AHonoursProjBlock* block) {
 		return !(block && IsValid(block) && block->bIsActive);
 	});
+}
+
+UCameraComponent* AHonoursProjPawn::GetCamera() {
+	return MainCamera;
 }
 
 void AHonoursProjPawn::OnLClickPress() {
@@ -351,6 +358,7 @@ void AHonoursProjPawn::OnScroll(float axis) {
 
 	if (MainCamera) {
 		MainCamera->SetOrthoWidth(MainCamera->OrthoWidth * (100 - 10*axis)/100 );
+		UAutoScalingHUD::InvalidateAllWidgets();
 	}
 
 

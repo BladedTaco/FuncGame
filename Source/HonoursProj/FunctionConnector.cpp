@@ -166,6 +166,8 @@ void AFunctionConnector::Tick(float DeltaSeconds) {
 		mouse.Z = me.Z = ConnectMesh->GetComponentLocation().Z;
 		ConnectMesh->SetWorldTransform(Connect(me, mouse));
 	}
+
+	SetupHUD();
 }
 
 UType* AFunctionConnector::ResolveType() {

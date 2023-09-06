@@ -24,6 +24,8 @@ public:
 
 	void RemoveInactive();
 
+	UCameraComponent* GetCamera();
+
 protected:
 	void TraceForBlock(const FVector& Start, const FVector& End, bool bDrawDebugHelpers);
 

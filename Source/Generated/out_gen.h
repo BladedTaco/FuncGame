@@ -1265,7 +1265,8 @@ inline FString IBool::Show::_show(const VStar& me) const {
 
 	
 	
-	return a ? FString(TEXT("✓")) : FString(TEXT("X"));
+	
+	return a ? FString(TEXT("O")) : FString(TEXT("X"));
 }
 
 

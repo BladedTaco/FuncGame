@@ -20,9 +20,14 @@ FVector MousePosWorld(UWorld* WorldContext) {
 
 
 FVector MousePosScreen(UWorld* WorldContext) {
-	float mouseX, mouseY;
-	WorldContext->GetFirstPlayerController()->GetMousePosition(mouseX, mouseY);
-	return FVector(-mouseY, mouseX, 0);
+	if (!WorldContext || !IsValid(WorldContext)) return FVector::ZeroVector;
+
+	if (auto PC = WorldContext->GetFirstPlayerController()) {
+		float mouseX, mouseY;
+		PC->GetMousePosition(mouseX, mouseY);
+		return FVector(-mouseY, mouseX, 0);
+	}
+	return FVector::ZeroVector;
 }
 
 void FitActorToPlane(AActor* Actor, UStaticMeshComponent* Plane) {

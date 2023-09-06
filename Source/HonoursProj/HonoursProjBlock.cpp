@@ -35,11 +35,6 @@ AHonoursProjBlock::AHonoursProjBlock() {
 	BlockMesh->SetMaterial(0, UnlitMaterial);
 	BlockMesh->SetupAttachment(DummyRoot);
 
-	// Create Empty HUD
-	HUDComponent = Cast< UAutoScalingHUD >(
-		CreateDefaultSubobject(TEXT("HUD"), UWidgetComponent::StaticClass(), Assets()->HUD.ASH.Class.Get(), true, false)
-	);
-
 
 	//FOutputDeviceNull OutputDeviceNull;
 	//HUDComponent->CallFunctionByNameWithArguments(TEXT("UpdateWidgetRender"), OutputDeviceNull, nullptr, true);
@@ -54,13 +49,6 @@ AHonoursProjBlock::AHonoursProjBlock() {
 
 
 
-void AHonoursProjBlock::EndPlay(EEndPlayReason::Type EndPlayReason) {
-	if (HUDComponent) {
-		HUDComponent->DestroyComponent(false);
-		HUDComponent = NULL;
-	}
-	Super::EndPlay(EndPlayReason);
-}
 
 void AHonoursProjBlock::Tick(float DeltaSeconds) {
 	if (bIsActive) {

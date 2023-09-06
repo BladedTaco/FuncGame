@@ -26,6 +26,8 @@ public class HonoursProj : ModuleRules
             "InputCore",
 			"HeadMountedDisplay",
             "UMG", 
+            "LevelSequence",
+            "MovieScene",
 			"Slate", 
 			"SlateCore"
 		});

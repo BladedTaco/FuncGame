@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "HonoursProjBlock.h"
+#include "HUDBlock.h"
 
 #include "Types/Types_gen.h"
 #include "Types/Type.h"
@@ -53,7 +53,7 @@ ENUM_CLASS_FLAGS(EPropagable);
  * 
  */
 UCLASS(Abstract)
-class HONOURSPROJ_API ABlockFunction : public AHonoursProjBlock {
+class HONOURSPROJ_API ABlockFunction : public AHUDBlock {
 	GENERATED_BODY()
 
 protected:
