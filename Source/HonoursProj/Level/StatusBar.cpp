@@ -61,7 +61,7 @@ UStatusBarComponent::UStatusBarComponent()
 
 // Returns the Percentge of the Value
 float UStatusBarComponent::GetPercentage() {
-	return CurrentValue / MaxValue;
+	return (float)CurrentValue / MaxValue;
 }
 
 // Called when the game starts

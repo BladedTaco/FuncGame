@@ -42,11 +42,6 @@ AHonoursProjBlock* APartyMember::HandleClick(UPrimitiveComponent* ClickedCompone
 	newLoc.Z = (GetActorLocation() + CameraStartPosition.GetLocation()).Z;
 	camera->SetActorLocation(newLoc);
 
-	// Move Board
-	FVector boardLoc = Board->GetActorLocation();
-	boardLoc.Z = newLoc.Z - 100;
-	Board->SetActorLocation(boardLoc);
-
 	// Dont Fire Release Events
 	return nullptr;
 }

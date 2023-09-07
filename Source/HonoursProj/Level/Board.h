@@ -7,6 +7,7 @@
 #include "Board.generated.h"
 
 class UStaticMeshComponent;
+class UBoxComponent;
 
 UCLASS(BlueprintType)
 class HONOURSPROJ_API ABoard : public AActor
@@ -28,4 +29,26 @@ public:
 public:
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* BoardMesh;
+
+	UPROPERTY(EditAnywhere)
+	UBoxComponent* MapBounds;
+
+	UPROPERTY(EditAnywhere)
+	AActor* TestActor;
+
+
+	UPROPERTY(EditAnywhere)
+	int Width;
+
+	UPROPERTY(EditAnywhere)
+	int Height;
+
+	UPROPERTY(VisibleAnywhere)
+	TArray<FVector> Positions;
+
+	UFUNCTION(BlueprintCallable)
+	FVector GetPosition(int X, int Y);
+
+	UPROPERTY(VisibleAnywhere)
+	int index = 0;
 };
