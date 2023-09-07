@@ -45,7 +45,7 @@ public:
 	int MaxValue;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Interp)
-	int CurrentValue;
+	float CurrentValue;
 
 
 	// Status Groups
