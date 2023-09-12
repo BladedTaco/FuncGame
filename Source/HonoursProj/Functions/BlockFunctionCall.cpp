@@ -32,6 +32,11 @@
 #include "Algo/AllOf.h"
 #include "Kismet/GameplayStatics.h"
 
+#include "AssetLoader_gen.h"
+
+ABlockFunctionCall::ABlockFunctionCall() {
+	FunctionIcon->SetStaticMesh(Assets()->Icon.Call.Get());
+}
 
 void ABlockFunctionCall::SetFunctionTypes() {
 	FunctionName = FString(TEXT("Call"));

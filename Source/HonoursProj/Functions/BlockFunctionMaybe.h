@@ -15,6 +15,8 @@ class HONOURSPROJ_API ABlockFunctionMaybe : public ABlockFunction
 	GENERATED_BODY()
 
 public:
+	ABlockFunctionMaybe();
+
 	UPROPERTY(EditAnywhere)
 		bool IsNothing = false;
 public:

@@ -15,6 +15,8 @@ class HONOURSPROJ_API ABlockFunctionCall : public ABlockFunction
 	GENERATED_BODY()
 
 public:
+	ABlockFunctionCall();
+
 	virtual Arr<VStarArray, VStarArrayReturn> GetInnerFunc() override;
 	virtual void SetFunctionTypes() override;
 };

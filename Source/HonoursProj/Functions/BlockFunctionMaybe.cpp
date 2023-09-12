@@ -21,7 +21,11 @@
 
 
 #include "MyUtils.h"
+#include "AssetLoader_gen.h"
 
+ABlockFunctionMaybe::ABlockFunctionMaybe() {
+	FunctionIcon->SetStaticMesh(Assets()->Icon.Maybe.Get());
+}
 
 void ABlockFunctionMaybe::SetFunctionTypes() {
 

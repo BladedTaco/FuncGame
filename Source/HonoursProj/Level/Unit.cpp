@@ -1,6 +1,7 @@
 #include "Level/Unit.h"
 
 #include "StatusBar.h"
+#include "Board.h"
 
 #include "AssetLoader_gen.h"
 #include "Components/StaticMeshComponent.h"
@@ -82,4 +83,21 @@ AHonoursProjBlock* AUnit::HandleClick(UPrimitiveComponent* ClickedComponent) {
 // Right Click is Left Click
 AHonoursProjBlock* AUnit::HandleRClick(UPrimitiveComponent* ClickedComponent) {
 	return HandleClick(ClickedComponent);
+}
+
+bool AUnit::TrySetPosition(int X, int Y) {
+	// Fail on no board
+	if (!IsValid(Board)) return false;
+
+	// Get Position from Board
+	FVector NewPos = Board->GetPosition(X, Y);
+	
+	// Fail on invalid position
+	if (NewPos == FVector::ZeroVector) return false;
+
+	// Set Position
+	TokenActor->SetActorLocation(NewPos);
+
+	// Return Success
+	return true;
 }

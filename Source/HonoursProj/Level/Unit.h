@@ -33,7 +33,10 @@ public:
 	virtual AHonoursProjBlock* HandleClick(UPrimitiveComponent* ClickedComponent) override;
 	virtual AHonoursProjBlock* HandleRClick(UPrimitiveComponent* ClickedComponent) override;
 
+	bool TrySetPosition(int X, int Y);
+
 public:
+	// Configurables
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* IconMesh;
 
@@ -44,6 +47,7 @@ public:
 	FString Name;
 
 
+	//Status Bars
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UStatusBarComponent* Health;
 
@@ -53,7 +57,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UStatusBarComponent* Stamina;
 
-
+	// Board
 	UPROPERTY(EditAnywhere)
 	ABoard* Board;
+
+	UPROPERTY(VisibleAnywhere)
+	FVector2D Position;
 };

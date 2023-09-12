@@ -27,6 +27,8 @@
         <Object Name="Counter" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Functions/Counter.Counter'"/>
         <Object Name="Dice" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/d20.d20'"/>
         <Object Name="Ordinal" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/ordinal.ordinal'"/>
+        <Object Name="Maybe" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/maybe.maybe'"/>
+        <Object Name="Call" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Functions/Call.Call'"/>
     </ResourceType>
 	<ResourceType Name='HUD'>
         <Class Name="Function" Type="UUserWidget" Location="/Game/MyContent/Blueprints/HUD_Function"/>

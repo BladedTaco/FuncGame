@@ -67,11 +67,15 @@ struct FResource_Icon {
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Counter;
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Dice;
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Ordinal;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Maybe;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Call;
 		FResource_Icon()
 		:	Percentage(TEXT("StaticMesh'/Game/MyContent/Meshes/percent.percent'"))
 		,	Counter(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/Counter.Counter'"))
 		,	Dice(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/d20.d20'"))
 		,	Ordinal(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/ordinal.ordinal'"))
+		,	Maybe(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/maybe.maybe'"))
+		,	Call(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/Call.Call'"))
 		{}
 };
 
