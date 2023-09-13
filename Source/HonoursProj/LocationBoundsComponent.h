@@ -42,7 +42,7 @@ public:
 	ESpaceType SpaceType;
 
 	UPROPERTY(EditAnywhere, Meta = (Bitmask, BitmaskEnum = "EAxisFlags"))
-	EAxisFlags AxisLimits = EAxisFlags::XYZ;
+	EAxisFlags AxisLimits = EAxisFlags::None;
 
 	UPROPERTY(EditAnywhere, meta = (ClampMin="-100", ClampMax="100"))
 	int BoundPriority = 0;
@@ -53,6 +53,8 @@ public:
 	void SetBounds(FVector LocalMinimum, FVector LocalMaximum);
 	void SetBounds(UBoxComponent* Bounds, FVector Offset = FVector::ZeroVector);
 	void SetBounds(ULocationBoundsComponent* CopyFrom);
+
+	void SetAxisLimits(EAxisFlags InLimits);
 
 protected:
 	UPROPERTY(EditAnywhere)

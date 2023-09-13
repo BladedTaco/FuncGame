@@ -20,6 +20,7 @@
 
 #include "Algo/AllOf.h"
 #include "Algo/Partition.h"
+#include "Algo/MaxElement.h"
 
 #include "MyUtils.h"
 
@@ -27,6 +28,8 @@
 #include "HUD/AutoScalingHUD.h"
 
 #include "Engine.h"
+
+#include "LocationBoundsComponent.h"
 
 TArray<AFunctionConnector*> ABlockFunction::GetConnectors() {
 	TArray<AFunctionConnector*> connectors;
@@ -42,6 +45,13 @@ TArray<AFunctionConnector*> ABlockFunction::GetConnectors() {
 ABlockFunction::ABlockFunction() {
 	ErrorMaterial = Assets()->Material.Red.Get();
 
+	GetBlockMesh()->SetRenderCustomDepth(true);
+	GetBlockMesh()->SetCustomDepthStencilValue(1);
+
+	// Setup Bounds
+	BoundsComponent = CreateDefaultSubobject< ULocationBoundsComponent>("BoundsComponent");
+	//BoundsComponent->RegisterComponent();
+
 	// Setup HUD
 	HUD.UpdateComponent(GetHUDComponent());
 	HUD.Component->SetRelativeLocation(FVector::UpVector * 200.0f);
@@ -55,6 +65,8 @@ ABlockFunction::ABlockFunction() {
 
 	// Setup Icon
 	FunctionIcon = CreateDefaultSubobject<UStaticMeshComponent>("FunctionIcon");
+	FunctionIcon->SetRenderCustomDepth(true);
+	FunctionIcon->SetCustomDepthStencilValue(2);
 	FunctionIcon->SetRelativeLocation(FVector::UpVector * 200.0f);
 	FunctionIcon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	FunctionIcon->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
@@ -332,6 +344,23 @@ void ABlockFunction::UpdateDisplayType() {
 // Called when the game starts or when spawned
 void ABlockFunction::BeginPlay() {
 	Super::BeginPlay();
+
+	// Update Bounds
+	TArray<AActor*> OverlappingActors;
+	GetOverlappingActors(OverlappingActors);
+	AActor** MaxActor = Algo::MaxElement(OverlappingActors, [](AActor* A, AActor* B) {
+		FVector _, AExtent, BExtent;
+		A->GetActorBounds(false, _, AExtent);
+		B->GetActorBounds(false, _, BExtent);
+		return AExtent.Size() < BExtent.Size();
+	});
+
+	if (MaxActor && !CanvasBoundsActor) CanvasBoundsActor = *MaxActor;
+
+	if (CanvasBoundsActor) {
+		BoundsComponent->SetBounds(CanvasBoundsActor);
+		BoundsComponent->SetAxisLimits(EAxisFlags::XY);
+	}
 
 	// Queue Recompile HUD
 	HUD.UpdateComponent(GetHUDComponent());

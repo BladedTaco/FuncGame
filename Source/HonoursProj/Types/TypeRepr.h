@@ -44,12 +44,13 @@ public:
 	TArray<UStaticMeshComponent*> GetChildBoundingPlanes();
 	TArray<ATypeRepr*> GetChildTypes();
 
+	void UpdateStencilValue(int32 InValue);
 
 	// Get ATypeRepr subclass from EType
 	static UClass* GetRepr(EType Type);
 
 	// Create Full Representation from UType
-	static ATypeRepr* CreateRepr(UType* Type, UWorld* World);
+	static ATypeRepr* CreateRepr(UType* Type, UWorld* World, int32 StencilValue = 255);
 
 	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void BeginPlay() override;

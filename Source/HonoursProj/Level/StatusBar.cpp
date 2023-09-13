@@ -41,7 +41,7 @@ UStatusBarComponent::UStatusBarComponent()
 		mesh->SetWorldRotation(FQuat(FVector::ForwardVector, PI / 2));
 		mesh->SetupAttachment(this);
 		mesh->SetRelativeLocation(FVector::LeftVector * 500);
-		mesh->RegisterComponent();
+		//mesh->RegisterComponent();
 	}
 
 	// Create Bar Material

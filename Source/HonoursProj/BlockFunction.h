@@ -20,6 +20,8 @@
 
 #include "BlockFunction.generated.h"
 
+class ULocationBoundsComponent;
+
 USTRUCT(BlueprintType)
 struct FParameter {
 	GENERATED_BODY()
@@ -80,6 +82,12 @@ public:
 	void PropagateToEnds(MaskedBitFlags<EPropagable> Values);
 
 	inline bool IsStatus(EPropagable InTest) const { return EnumHasAllFlags(Status, InTest); }
+
+	// Components
+	UPROPERTY(EditAnywhere)
+	ULocationBoundsComponent* BoundsComponent;
+	UPROPERTY(EditAnywhere)
+	AActor* CanvasBoundsActor;
 
 	// Materials
 	UPROPERTY(EditAnywhere, Category = BlockMaterials)

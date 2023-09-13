@@ -20,6 +20,8 @@ ULocationBoundsComponent::ULocationBoundsComponent()
 }
 
 void ULocationBoundsComponent::SetBounds(AActor* ActorBounds, FVector Offset) {
+	if (!IsValid(ActorBounds)) return;
+
 	// Get Vectors
 	FVector Origin, BoxExtent;
 	ActorBounds->GetActorBounds(false, Origin, BoxExtent);
@@ -64,6 +66,10 @@ void ULocationBoundsComponent::SetBounds(ULocationBoundsComponent* CopyFrom) {
 	MinPosition = CopyFrom->MinPosition;
 	MaxPosition = CopyFrom->MaxPosition;
 	SpaceType = CopyFrom->SpaceType;
+}
+
+void ULocationBoundsComponent::SetAxisLimits(EAxisFlags InLimits) {
+	AxisLimits = InLimits;
 }
 
 

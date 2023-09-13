@@ -145,6 +145,15 @@ TArray<ATypeRepr*> ATypeRepr::GetChildTypes() {
 	return typeReprs;
 }
 
+void ATypeRepr::UpdateStencilValue(int32 InValue) {
+	// Set Stencil Value
+	TArray<UStaticMeshComponent*> Meshes;
+	GetComponents<UStaticMeshComponent>(Meshes);
+	for (auto mesh : Meshes) {
+		mesh->SetCustomDepthStencilValue(InValue);
+	}
+}
+
 UClass* ATypeRepr::GetRepr(EType Type) {
 	// If the ClassMap is Empty
 	if (ATypeRepr::ClassMap.Num() == 0) {
@@ -177,9 +186,10 @@ UClass* ATypeRepr::GetRepr(EType Type) {
 	return out;
 }
 
-ATypeRepr* ATypeRepr::CreateRepr(UType* Type, UWorld* World) {
+ATypeRepr* ATypeRepr::CreateRepr(UType* Type, UWorld* World, int32 StencilValue) {
 	auto me = World->SpawnActor<ATypeRepr>(GetRepr(Type->GetType()));
 	me->FullType = UTypeConst::MakeConst(Type);
+	me->UpdateStencilValue(StencilValue);
 
 	auto templates = Type->GetTemplates();
 	auto planes = me->GetChildBoundingPlanes();
@@ -217,7 +227,7 @@ ATypeRepr* ATypeRepr::CreateRepr(UType* Type, UWorld* World) {
 	// For Each Template/Plane Pair
 	for (int idx = templates.Num(); idx --> 0;) {
 		// Create Specialized TypeRepr, and Fit it to Plane.
-		auto repr = CreateRepr(templates[idx], World);
+		auto repr = CreateRepr(templates[idx], World, StencilValue - 1);
 		FitActorToPlane(repr, repr->BoundingBox, planes[idx]);
 		planes[idx]->SetVisibility(false);
 	}
@@ -240,7 +250,11 @@ void ATypeRepr::BeginPlay() {
 	for (auto mesh : Meshes) {
 		mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		mesh->SetCollisionResponseToAllChannels(ECR_Ignore);
+		mesh->SetRenderCustomDepth(true);
+		mesh->SetCustomDepthStencilValue(255);
 	}
+
+	
 
 	// Set own Collision to disabled
 	SetActorEnableCollision(false);
