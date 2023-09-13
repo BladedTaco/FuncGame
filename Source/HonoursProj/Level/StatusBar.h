@@ -5,6 +5,9 @@
 #include "StatusBar.generated.h"
 
 class UMaterialInstanceDynamic;
+class UMaterialInstance;
+class UMaterial;
+class UStaticMesh;
 
 // The Type of an FStatusBar
 UENUM(BlueprintType)
@@ -31,14 +34,20 @@ public:
 	};
 
 	// Child Components
+	UPROPERTY(VisibleAnywhere)
+	UStaticMesh* OffsetCylinderMesh;
+
+	UPROPERTY(VisibleAnywhere)
+	UMaterialInstance* BlackMaterial;
+
+	UPROPERTY(VisibleAnywhere)
+	UMaterial* BaseMaterial;
+
 	UPROPERTY(VisibleAnywhere, Instanced)
 	UStaticMeshComponent* BarMesh;
 
 	UPROPERTY(VisibleAnywhere, Instanced)
 	UStaticMeshComponent* BackingMesh;
-
-
-	UMaterialInstanceDynamic* BarMaterial;
 
 	// Value
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -83,4 +92,6 @@ private:
 		
 	UPROPERTY(VisibleAnywhere)
 	int LastValue;
+
+	void SetBarMaterial();
 };

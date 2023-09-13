@@ -26,17 +26,17 @@ AUnit::AUnit()
 	Mana = CreateDefaultSubobject<UStatusBarComponent>("ManaBar");
 	Stamina = CreateDefaultSubobject<UStatusBarComponent>("StaminaBar");
 
-	// Setup Attachments
-	Health->SetupAttachment(RootComponent);
-	Mana->SetupAttachment(RootComponent);
-	Stamina->SetupAttachment(RootComponent);
-
 	// Configure Bars
 	Health->Configure(EStatusType::HEALTH, 100);
 	Health->SetRelativeLocation(FVector::ForwardVector * -35);
 	Mana->Configure(EStatusType::MANA, 100);
 	Stamina->Configure(EStatusType::STAMINA, 100);
 	Stamina->SetRelativeLocation(FVector::ForwardVector * 35);
+
+	// Setup Attachments
+	Health->SetupAttachment(RootComponent);
+	Mana->SetupAttachment(RootComponent);
+	Stamina->SetupAttachment(RootComponent);
 
 	// Scale Block Mesh
 	FVector min, max;
@@ -53,6 +53,7 @@ void AUnit::BeginPlay()
 	// Create Token
 	TokenActor = GetWorld()->SpawnActor<AStaticMeshActor>();
 	TokenActor->GetStaticMeshComponent()->SetStaticMesh(IconMesh->GetStaticMesh());
+	TokenActor->GetStaticMeshComponent()->SetMobility(EComponentMobility::Movable);
 
 	// Disable Collision for all Meshes
 	TArray<UStaticMeshComponent*> Meshes;

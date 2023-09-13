@@ -3,14 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-
-#include "PartyMember.h"
-
+#include "Unit.h"
 #include "Boss.generated.h"
 
 
-UCLASS()
+UCLASS(Blueprintable, BlueprintType, Abstract)
 class HONOURSPROJ_API ABoss : public AUnit
 {
 	GENERATED_BODY()
