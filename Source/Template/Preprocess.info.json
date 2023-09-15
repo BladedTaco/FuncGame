@@ -1,3 +1,11 @@
 {
-  "FilesToGenerate": []
+  "FilesToGenerate": [
+    {
+      "Filename": "Bool_gen.h",
+      "ProcessFile": false,
+      "Project": null,
+      "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types",
+      "Properties": {}
+    }
+  ]
 }

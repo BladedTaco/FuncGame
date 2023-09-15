@@ -368,6 +368,10 @@ void ABlockFunction::BeginPlay() {
 	// Spawn all Connectors
 	SpawnConnectors();
 
+	FTimerHandle t;
+	GetWorld()->GetTimerManager().SetTimer(t, FTimerDelegate::CreateLambda([this]() {
+		HUD.Component->SizeToBounds(GetBlockMesh());
+	}), 0.5f, true);
 
 	// Set Visiblity
 	FTimerHandle TimerHandle;

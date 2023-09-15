@@ -5,6 +5,7 @@
 #include "Algo/Transform.h"
 
 #include "MyUtils.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Determine the intersection of two types
@@ -370,9 +371,17 @@ bool UTypePtr::Valid() const {
 
 
 // New Type Var
-UTypeVar* UTypeVar::New(ETypeClass InType) {
+UTypeVar* UTypeVar::New(ETypeClass InType, bool bAssignColour) {
+	// Create TypeVar
 	UTypeVar* out = NewObject<UTypeVar>();
 	out->Type = InType;
+
+	// If Assigning Colour
+	if (bAssignColour) {
+		out->GetColourGroup()->NewColour(out->ColourIndex);
+	}
+
+	// Return TypeVar
 	return out;
 }
 
@@ -380,8 +389,8 @@ UTypeVar* UTypeVar::New(ETypeClass InType) {
 UType* UTypeVar::DeepCopy(TMap<UType*, UType*>& ptrMap) const {
 	//// Simply copy InType, Evidence is not copied
 	//return New(Type);
-	UTypeVar* out = New(Type);
-	out->TypeColour = TypeColour;
+	UTypeVar* out = New(Type, false);
+	GetColourGroup()->CopyColour(ColourIndex, out->ColourIndex);
 	// Apply all evidence as copy
 	for (const auto &t : Evidence) {
 		out->ApplyEvidence(t->DeepCopy(ptrMap));
@@ -408,6 +417,17 @@ bool UTypeVar::UnifyWith(UType* concreteType) {
 	return success;
 }
 
+UColourGroup* UTypeVar::GetColourGroup() const {
+	// Get Game Instance
+	if (auto Inst = Cast<UHonoursProjGameInstance>(UGameplayStatics::GetGameInstance(this))) {
+		// Return Colour Group
+		return Inst->TypeVarColourGroup();
+	}
+
+	// No Instance
+	return NULL;
+}
+
 
 // Try to return Instances Type, Else return own Type
 EType UTypeVar::GetType() const {
@@ -423,6 +443,12 @@ TArray<UType*> UTypeVar::GetTemplates() const {
 		return Instance->GetTemplates();
 	}
 	return {};
+}
+
+void UTypeVar::BeginDestroy() {
+	Super::BeginDestroy();
+
+	GetColourGroup()->FreeColour(ColourIndex);
 }
 
 bool UTypeVar::ApplyEvidence(UType* InType) {
@@ -481,7 +507,7 @@ void UTypeVar::ResetEvidence() {
 }
 
 FColor UTypeVar::GetColour() const {
-	return TypeColour;
+	return GetColourGroup()->GetColour(ColourIndex);
 }
 
 

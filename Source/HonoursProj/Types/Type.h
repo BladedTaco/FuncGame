@@ -6,8 +6,10 @@
 #include "UObject/Interface.h"
 
 #include "Types_gen.h"
+#include "HonoursProjGameInstance.h"
 
 #include "Type.generated.h"
+
 
 // This class does not need to be modified.
 UCLASS()
@@ -37,7 +39,7 @@ public:
 	virtual bool UnifyWith(UType* concreteType);
 
 
-	virtual FColor GetColour() const { return FColor(255U, 255U, 255U, 100U); }
+	virtual FColor GetColour() const { return FColor::Black; }
 
 
 	//~UType() {
@@ -61,7 +63,7 @@ private:
 		TArray<UType*> Templates = {};
 
 	UPROPERTY(VisibleAnywhere)
-		FColor TypeColour = FColor(255U, 255U, 255U, 100U);
+		FColor TypeColour = FColor::Black;
 public:
 	UFUNCTION(BlueprintCallable)
 		bool Terminal() const;
@@ -129,10 +131,10 @@ private:
 
 
 	UPROPERTY(VisibleAnywhere)
-	FColor TypeColour;
+	int ColourIndex;
 
 public:
-	UTypeVar() { TypeColour = FColor::MakeRandomColor(); }
+	virtual void BeginDestroy() override;
 
 	UFUNCTION(BlueprintCallable)
 		bool ApplyEvidence(UType* InType);
@@ -148,10 +150,13 @@ public:
 	virtual EType GetType() const override;
 	virtual TArray<UType*> GetTemplates() const override;
 
-	static UTypeVar* New(ETypeClass InType);
+	static UTypeVar* New(ETypeClass InType, bool bAssignColour = true);
 	virtual UType* DeepCopy(TMap<UType*, UType*>& ptrMap) const override;
 
 	virtual FString ToString() const override;
 
 	virtual bool UnifyWith(UType* concreteType) override;
+
+private:
+	UColourGroup* GetColourGroup() const;
 };

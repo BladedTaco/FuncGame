@@ -1,19 +1,17 @@
-#line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\Generated\\out_pre.h"
+#line 1 "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\Generated\\out_pre.h"
 #pragma once
 
-#line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Types/Show.h"
+#line 1 "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Types/Show.h"
 #pragma once
 
-#line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\MacroUtils.h"
-
-
-#pragma once
-#line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\LoopMacros.h"
+#line 1 "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\MacroUtils.h"
 
 
 #pragma once
+#line 1 "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\LoopMacros.h"
 
 
+#pragma once
 
 
 
@@ -218,7 +216,9 @@
 
 
 
-#line 5 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\MacroUtils.h"
+
+
+#line 5 "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\MacroUtils.h"
 
 
 
@@ -405,9 +405,9 @@
 
 
 
-#line 4 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Types/Show.h"
+#line 4 "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Types/Show.h"
 
-#line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Functional/Prelude.h"
+#line 1 "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Functional/Prelude.h"
 
 
 #pragma once
@@ -419,7 +419,7 @@
 
 include <functional>
 include "Functional/curry_gen.h"
-#line 13 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Functional/Prelude.h"
+#line 13 "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Functional/Prelude.h"
 
 
 
@@ -561,11 +561,11 @@ namespace Prelude {
 		return MakeTuple(tup.template Get<1>(), tup.template Get<0>());
 	});
 };
-#line 6 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Types/Show.h"
-#line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Functional/Typeclass.h"
+#line 6 "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Types/Show.h"
+#line 1 "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Functional/Typeclass.h"
 #pragma once
 
-#line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Preprocess/Include.h"
+#line 1 "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Preprocess/Include.h"
 #pragma once
 
 
@@ -581,14 +581,14 @@ namespace Prelude {
 
 
 
-#line 17 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Preprocess/Include.h"
+#line 17 "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Preprocess/Include.h"
 
 
 
 
 
 
-#line 4 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Functional/Typeclass.h"
+#line 4 "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Functional/Typeclass.h"
 
 
 
@@ -690,9 +690,9 @@ namespace Prelude {
 
 
 
-#line 7 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Types/Show.h"
+#line 7 "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Types/Show.h"
 
-#line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Types/Unpack.h"
+#line 1 "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Types/Unpack.h"
 #pragma once
 
 
@@ -718,9 +718,9 @@ include "Types_gen.h"
 include "Templates/EnableIf.h"
 include "Templates/Tuple.h"
 
-#line 27 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Types/Unpack.h"
+#line 27 "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Types/Unpack.h"
 
-#line 1 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\FDecl.h"
+#line 1 "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\FDecl.h"
 #pragma once
 
 
@@ -774,7 +774,7 @@ private:
 public:
 	const Typeclass* GetTypeclass() const { return _GetTypeclass(); };
 };
-#line 29 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Types/Unpack.h"
+#line 29 "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Types/Unpack.h"
 
 
 
@@ -1111,7 +1111,7 @@ FromType() {
 	return UTypeConst::New(ETypeData::FUNC, { FromType<From>(), FromType<To>() });
 };
 
-#line 9 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Types/Show.h"
+#line 9 "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27/Source/HonoursProj\\Types/Show.h"
 
 
 
@@ -1197,7 +1197,7 @@ private:
 
 
 
-#line 4 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\Generated\\out_pre.h"
+#line 4 "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\Generated\\out_pre.h"
 
 
 
@@ -1209,7 +1209,7 @@ private:
 
 include "Types/VStar.h"
 
-#line 16 "C:\\Users\\v2tac\\Desktop\\UNI\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\Generated\\out_pre.h"
+#line 16 "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\Generated\\out_pre.h"
 
 
 
@@ -1265,8 +1265,8 @@ inline FString IBool::Show::_show(const VStar& me) const {
 
 	
 	
+	return a ? FString(TEXT("✓")) : FString(TEXT("X"));
 	
-	return a ? FString(TEXT("O")) : FString(TEXT("X"));
 }
 
 
