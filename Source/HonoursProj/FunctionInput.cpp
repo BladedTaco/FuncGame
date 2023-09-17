@@ -12,6 +12,7 @@ void AFunctionInput::Tick(float DeltaSeconds) {
 		me.Z = target.Z = ConnectMesh->GetComponentLocation().Z;
 		ConnectMesh->SetWorldTransform(Connect(me, target));
 		ConnectMesh->SetVisibility(true);
+		ConnectMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	} 
 	AFunctionConnector::Tick(DeltaSeconds);
 }
@@ -57,6 +58,7 @@ AHonoursProjBlock* AFunctionInput::HandleRClick(UPrimitiveComponent* ClickedComp
 	}
 	// Make ConnectMesh Invisible
 	ConnectMesh->SetVisibility(false);
+	ConnectMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	// Return self
 	return this;
 }
@@ -78,6 +80,7 @@ void AFunctionInput::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 
 UType* AFunctionInput::ResolveType_Impl() {
 	if (connectedTo && IsValid(connectedTo)) {
+		// TODO, this affects ParameterInfo
 		return connectedTo->ResolveType();
 	}
 	return ParameterInfo.Type;

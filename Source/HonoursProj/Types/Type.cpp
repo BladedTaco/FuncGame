@@ -6,6 +6,7 @@
 
 #include "MyUtils.h"
 #include "Kismet/GameplayStatics.h"
+#include "Engine/World.h"
 
 
 // Determine the intersection of two types
@@ -18,6 +19,14 @@ EType Intersection(EType a, EType b) {
 	return EType::NONE;
 }
 
+
+UType::UType() {
+	// Initialized Shared Colour Group
+	if (!UType::SharedColourGroup) {
+		UType::SharedColourGroup = NewObject<UColourGroup>();
+	}
+	ColourGroup = UType::SharedColourGroup;
+}
 
 // Test Compatibility
 bool UType::Supercedes(const UType* other) const {
@@ -98,18 +107,57 @@ FString UType::ToString() const {
 	return type;
 }
 
+
 bool UType::UnifyWith(UType* concreteType) {
+
+#if 0 // For Debugging
+	if (
+		RecursiveCopy()->UnifyWith_Impl(concreteType->RecursiveCopy())
+		!=
+		VolatileConst()->UnifyWith_Impl(concreteType->VolatileConst())
+	) {
+		UE_LOG(LogTemp, Warning, TEXT("INVALIKD \n%s \n%s \n%s \n%s"),
+			*RecursiveCopy()->ToString(),
+			*VolatileConst()->ToString(),
+			*concreteType->RecursiveCopy()->ToString(),
+			*concreteType->VolatileConst()->ToString()
+		);
+		auto a = VolatileConst();
+		auto b = concreteType->VolatileConst();
+		a->UnifyWith_Impl(b);
+	}
+#endif
+
+	// If Copies are Unifiable
+	if (VolatileConst()->UnifyWith_Impl(concreteType->VolatileConst())) {
+		// Unify Both Types
+		return UnifyWith_Impl(concreteType);
+	}
+	return false;
+}
+
+
+bool UType::UnifyWith_Impl(UType* concreteType) {
 	// Get Type Intersection
 	EType inter = Intersection(GetType(), concreteType->GetType());
 	if (inter == EType::NONE) return false;
 
 	//if (!Supercedes(concreteType)) return false;
 	auto otherTemplates = concreteType->GetTemplates(inter);
-	if (otherTemplates.Num() == 0) return true;
+	auto myTemplates = GetTemplates(inter);
+	if (otherTemplates.Num() == 0 || myTemplates.Num() == 0) return true;
 
-	return Algo::CompareByPredicate(GetTemplates(), otherTemplates, [](UType* a, UType* b) {
-		return a->UnifyWith(b);
+	// Unify Colours
+	GetColourGroup()->Unify(GetColourIndex(), concreteType->GetColourIndex());
+
+	// Compare TEmpaltes
+	return Algo::CompareByPredicate(myTemplates, otherTemplates, [](UType* a, UType* b) {
+		return a->UnifyWith_Impl(b);
 	});
+}
+
+FColor UType::GetColour() const {
+	return GetColourGroup()->GetColour(GetColourIndex());
 }
 
 // Get Templates as Typeclass
@@ -141,7 +189,7 @@ TArray<UType*> UType::GetTemplates(ETypeData As) const {
 	switch (As) {
 	case ETypeData::FUNC: 
 		if (templates.Num() == 1) {
-			return { UTypeVar::New(ETypeClass::ANY) , templates[0] };
+			return { UTypeVar::New(ETypeClass::ANY, false) , templates[0] };
 		}
 	default:
 		return templates;
@@ -158,6 +206,18 @@ TArray<UType*> UType::GetTemplates(EType As) const {
 	}
 	return GetTemplates();
 }
+
+
+UColourGroup* UType::GetColourGroup() const {
+	//// Get Game Instance
+	//if (auto Inst = Cast<UHonoursProjGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))) {
+	//	// Return Colour Group
+	//	return Inst->TypeVarColourGroup();
+	//}
+	return ColourGroup;
+}
+
+
 
 ////// TYPE CONSTANT
 
@@ -180,7 +240,7 @@ UType* UTypeConst::DeepCopy(TMap<UType*, UType*>& ptrMap) const {
 	// Simply copy Type when terminal
 	if (Terminal()) { 
 		auto out = New(( ETypeBase )Type); 
-		out->TypeColour = GetColour();
+		GetColourGroup()->ReferenceColour(ColourPtr, out->ColourPtr);
 		return out;
 	}
 
@@ -194,12 +254,23 @@ UType* UTypeConst::DeepCopy(TMap<UType*, UType*>& ptrMap) const {
 	return out;
 }
 
+int UTypeConst::GetColourIndex() const {
+	return ColourPtr.IsValid() ? *ColourPtr : -1;
+}
+
+TSharedPtr<int> UTypeConst::ShareColour() const {
+	return ColourPtr;
+}
+
 // Recursively Turn any InType into a constant
 UTypeConst* UTypeConst::MakeConst(const UType* InType) {
 	// Initialize a new TypeConst and give it its InType and colour after
 	UTypeConst* out = UTypeConst::New(ETypeBase::NONE);
 	out->Type = InType->GetType();
-	out->TypeColour = InType->GetColour();
+	out->Templates.Empty();
+
+	// Const References Colour Only, rather than copying
+	out->GetColourGroup()->ReferenceColour(InType->ShareColour(), out->ColourPtr);
 
 	// Recursively Get the InType of all InTemplates
 	Algo::Transform(InType->GetTemplates(), out->Templates, &UTypeConst::MakeConst);
@@ -217,7 +288,11 @@ bool UTypeConst::RestrictTo(UType* other) {
 
 	// For each Template pair
 	auto otherTemplates = other->GetTemplates(GetType());
-	if (otherTemplates.Num() == 0) return true;
+	if (otherTemplates.Num() == 0) {
+		// Copy Colours
+		ColourPtr = other->ShareColour();
+		return true;
+	}
 
 	for (int i = Templates.Num() - 1; i >= 0; i--) {
 		// Get Template as Const Type
@@ -231,7 +306,7 @@ bool UTypeConst::RestrictTo(UType* other) {
 	}
 
 	// Copy Colours
-	TypeColour = other->GetColour();
+	ColourPtr = other->ShareColour();
 
 	// return success
 	return true;
@@ -240,6 +315,15 @@ bool UTypeConst::RestrictTo(UType* other) {
 	//})
 }
 
+
+void UTypeConst::BeginDestroy() {
+	Super::BeginDestroy();
+
+	//if (ColourPtr.IsValid()) {
+	//	auto ref = ColourPtr.ToSharedRef();
+	//	GetColourGroup()->FreeColour(MoveTemp(ref));
+	//}
+}
 
 // If there are no InTemplates
 bool UTypeConst::Terminal() const {
@@ -300,15 +384,18 @@ UType* UTypePtr::DeepCopy(TMap<UType*, UType*>& ptrMap) const {
 	return out;
 }
 
-bool UTypePtr::UnifyWith(UType* concreteType) {
-	if (!Get()->UnifyWith(concreteType)) return false;
+bool UTypePtr::UnifyWith_Impl(UType* concreteType) {
+	if (!Get()->UnifyWith_Impl(concreteType)) return false;
+
+	// Unify Colours
+	GetColourGroup()->Unify(GetColourIndex(), concreteType->GetColourIndex());
 
 	auto otherTemplates = concreteType->GetTemplates(GetType());
 	auto myTemplates = UType::GetTemplates(GetType());
 	return myTemplates.Num() == 0
 		|| otherTemplates.Num() == 0
 		|| Algo::CompareByPredicate(myTemplates, otherTemplates, [](UType* me, UType* other) {
-			return me->UnifyWith(other);
+			return me->UnifyWith_Impl(other);
 		});
 }
 
@@ -316,11 +403,15 @@ UType* UTypePtr::Get() {
 	return Type;
 }
 
-FColor UTypePtr::GetColour() const {
+int UTypePtr::GetColourIndex() const {
 	if (Type) {
-		return Type->GetColour();
+		return Type->GetColourIndex();
 	}
-	return UType::GetColour();
+	return -1;
+}
+
+TSharedPtr<int> UTypePtr::ShareColour() const {
+	return Type ? Type->ShareColour() : TSharedPtr<int>();
 }
 
 // Return TypeVars Type
@@ -390,7 +481,7 @@ UType* UTypeVar::DeepCopy(TMap<UType*, UType*>& ptrMap) const {
 	//// Simply copy InType, Evidence is not copied
 	//return New(Type);
 	UTypeVar* out = New(Type, false);
-	GetColourGroup()->CopyColour(ColourIndex, out->ColourIndex);
+	GetColourGroup()->DuplicateColour(ColourIndex, out->ColourIndex);
 	// Apply all evidence as copy
 	for (const auto &t : Evidence) {
 		out->ApplyEvidence(t->DeepCopy(ptrMap));
@@ -403,31 +494,22 @@ FString UTypeVar::ToString() const {
 	return UType::ToString();
 }
 
-bool UTypeVar::UnifyWith(UType* concreteType) {
+bool UTypeVar::UnifyWith_Impl(UType* concreteType) {
 	bool success = ApplyEvidence(concreteType);
 	
+	// Unify Colours
+	GetColourGroup()->Unify(GetColourIndex(), concreteType->GetColourIndex());
+
 	ReapplyEvidence();
 
 	for (auto& evidence : Evidence) {
-		evidence->UnifyWith(Instance);
+		evidence->UnifyWith_Impl(Instance);
 	}
 
 	ReapplyEvidence();
 
 	return success;
 }
-
-UColourGroup* UTypeVar::GetColourGroup() const {
-	// Get Game Instance
-	if (auto Inst = Cast<UHonoursProjGameInstance>(UGameplayStatics::GetGameInstance(this))) {
-		// Return Colour Group
-		return Inst->TypeVarColourGroup();
-	}
-
-	// No Instance
-	return NULL;
-}
-
 
 // Try to return Instances Type, Else return own Type
 EType UTypeVar::GetType() const {
@@ -448,15 +530,15 @@ TArray<UType*> UTypeVar::GetTemplates() const {
 void UTypeVar::BeginDestroy() {
 	Super::BeginDestroy();
 
-	GetColourGroup()->FreeColour(ColourIndex);
+	GetColourGroup()->FreeColour(MoveTemp(ColourIndex));
 }
 
 bool UTypeVar::ApplyEvidence(UType* InType) {
-	UTypeConst* ConstIn = UTypeConst::MakeConst(InType);
+	UTypeConst* ConstIn = InType->VolatileConst();
 
 	if (Instance && IsValid(Instance)) {
 		// try to apply bound to copy, returning on failure
-		auto copyInst = Cast<UTypeConst>(Instance->RecursiveCopy());
+		auto copyInst = Cast<UTypeConst>(Instance->VolatileConst());
 		if (!copyInst->RestrictTo(ConstIn)) return false;
 
 		// Copy back to original instance on success
@@ -465,6 +547,8 @@ bool UTypeVar::ApplyEvidence(UType* InType) {
 		// Instance becomes InType as UTypeConst
 		Instance = ConstIn;
 	}
+	GetColourGroup()->Unify(Instance->GetColourIndex(), InType->GetColourIndex());
+
 	// Add Evidence and Return Success
 	Evidence.Add(InType);
 	return true;
@@ -502,12 +586,19 @@ void UTypeVar::ReapplyEvidence() {
 }
 
 void UTypeVar::ResetEvidence() {
+	GetColourGroup()->Split(*ColourIndex);
 	Instance = NULL;
 	Evidence = {};
 }
 
-FColor UTypeVar::GetColour() const {
-	return GetColourGroup()->GetColour(ColourIndex);
+int UTypeVar::GetColourIndex() const {
+	return IsValid(Instance) ? Instance->GetColourIndex() : *ColourIndex;
+}
+
+TSharedPtr<int> UTypeVar::ShareColour() const {
+	return IsValid(Instance) ? Instance->ShareColour() : ColourIndex;
+
+	//return ColourIndex;
 }
 
 
@@ -537,4 +628,8 @@ bool UType::EqualTo(const UType* other) const {
 UType* UType::RecursiveCopy() {
 	TMap<UType*, UType*> map = {};
 	return DeepCopy(map);
+}
+
+UTypeConst* UType::VolatileConst() {
+	return UTypeConst::MakeConst(this);
 }

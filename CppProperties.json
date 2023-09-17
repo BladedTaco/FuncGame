@@ -9,6 +9,7 @@
         "${env.INCLUDE}",
         "${workspaceRoot}\\**"
       ],
+      "cppStandard": "c++17",
       "compilerSwitches": "/std:c++17",
       "defines": [
         "WIN32",

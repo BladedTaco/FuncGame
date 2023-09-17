@@ -191,6 +191,7 @@ AHonoursProjBlock* AFunctionConnector::HandleClick(UPrimitiveComponent* ClickedC
 	bIsActive = !bIsActive;
 	if (bIsActive) {
 		ConnectMesh->SetVisibility(true);
+		ConnectMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 		clickOffset = MousePosWorld(GetWorld()) - GetActorLocation();
 
 		// Get All connectable actors
@@ -208,7 +209,7 @@ AHonoursProjBlock* AFunctionConnector::HandleClick(UPrimitiveComponent* ClickedC
 
 			// Get other and its type
 			auto other = Cast<AFunctionConnector>(act);
-			UType* otherType = other->ResolveType()->RecursiveCopy();
+			UType* otherType = other->ResolveType()->VolatileConst();
 
 			// Skip Shared Connectors
 			if (other->Function == Function) {
@@ -226,7 +227,7 @@ AHonoursProjBlock* AFunctionConnector::HandleClick(UPrimitiveComponent* ClickedC
 			
 			//bool applicable = myType->Supercedes(otherType) || otherType->Supercedes(myType);
 
-			bool applicable = myType->RecursiveCopy()->UnifyWith(otherType);
+			bool applicable = myType->VolatileConst()->UnifyWith(otherType);
 
 
 			//UE_LOG(LogTemp, Warning, TEXT("SUPERCEDES? %d"), applicable);

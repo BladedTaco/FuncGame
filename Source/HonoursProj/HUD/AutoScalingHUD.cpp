@@ -143,8 +143,13 @@ void UAutoScalingHUD::DestroyComponent(bool bPromoteChildren) {
 
 void UAutoScalingHUD::BeginDestroy() {
 	if (auto widget = GetUserWidgetObject()) {
-		widget->ReleaseSlateResources(true);
 		SetWidget(nullptr);
+		GetSlateWindow()->RequestDestroyWindow();
+		RemoveWidgetFromScreen();
+		widget->ReleaseSlateResources(true);
+		widget->RemoveFromViewport();
+		widget->RemoveFromRoot();
+		//widget->Destruct();
 	}
 	Super::BeginDestroy();
 }

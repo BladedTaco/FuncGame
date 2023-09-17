@@ -13,16 +13,21 @@ class UColourGroup : public UObject
 	GENERATED_BODY()
 
 public:
+	UColourGroup();
+
 	// Adding / Removing Colours
-	void NewColour(int& Index);
-	void FreeColour(int& Index);
-	bool CopyColour(int Source, int& Dest);
+	void NewColour(TSharedRef<int> Index);
+	void FreeColour(TSharedRef<int>&& Index);
+	bool ReferenceColour(TSharedRef<int> Source, TSharedRef<int>& Dest);
+	bool ReferenceColour(TSharedPtr<int> Source, TSharedPtr<int>& Dest);
+	bool DuplicateColour(TSharedRef<int> Source, TSharedRef<int> Dest);
+	bool DuplicateColour(TSharedPtr<int> Source, TSharedPtr<int>& Dest);
 
 	// Handling Colours
 	FColor GetColour(int Index);
 	void Unify(int A, int B);
 	void Split(int A, int B);
-
+	void Split(int A);
 
 private:
 	UPROPERTY(VisibleAnywhere)

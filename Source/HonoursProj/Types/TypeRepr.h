@@ -52,6 +52,8 @@ public:
 	// Create Full Representation from UType
 	static ATypeRepr* CreateRepr(UType* Type, UWorld* World, int32 StencilValue = 255);
 
+	void SetColour(UType* ColourType);
+
 	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void BeginPlay() override;
 	virtual void BeginDestroy() override;

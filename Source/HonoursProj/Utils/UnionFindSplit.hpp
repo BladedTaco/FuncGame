@@ -3,25 +3,23 @@
 #include "CoreMinimal.h"
 #include "Algo/Reverse.h"
 #include "Templates/Tuple.h"
+#include "Templates/SharedPointer.h"
 
 
 
 // A single Node with an Object Pointer and a reference to an Index
 template <typename T>
 struct Node {
-	int* Index;
+	TWeakPtr<int> Index;
 	T Object;
 	int Parent;
-	Node(int Idx, int& InIndex, T InObject)
-		: Index(&InIndex)
+	Node(int Idx, TSharedRef<int> InIndex, T InObject)
+		: Index(InIndex)
 		, Object(InObject)
 		, Parent(Idx) // Points to Self
 	{
 		// Update Index
-		InIndex = Idx;
-	}
-	~Node() {
-		*Index = -1;
+		*Index.Pin() = Idx;
 	}
 };
 
@@ -35,17 +33,21 @@ Parent Index is positive for parent, negative for Object
 template <typename T>
 class UnionFindSplit {
 public:
+	UnionFindSplit() { Nodes = {}; }
+
 	// Element Adding/Deletion
-	void Add(int& Index, T Object);
-	T Remove(int& Index);
+	void Add(TSharedRef<int> Index, T Object);
+	T Remove(TSharedRef<int>&& Index);
 
 	// Query
 	inline int Num() const { return Nodes.Num(); }
+	bool Contains(TFunction<bool(const T&)> Predicate) const;
 
 	// Set Operations
 	T* Find(int Index);
 	void Union(int A, int B);
 	void Split(int A, int B);
+	void Split(int A);
 	
 private:
 	Node<T>* FindNode(int Index);
@@ -57,9 +59,19 @@ private:
 	TArray<Node<T>> Nodes;
 };
 
+template<typename T>
+inline bool UnionFindSplit<T>::Contains(TFunction<bool(const T&)> Predicate) const {
+	for (const Node<T>& Node : Nodes) {
+		if (Predicate(Node.Object)) return true;
+	}
+	return false;
+}
+
 // Add an Element to the Set
 template<typename T>
-inline void UnionFindSplit<T>::Add(int& Index, T Object) {
+inline void UnionFindSplit<T>::Add(TSharedRef<int> Index, T Object) {
+	UE_LOG(LogTemp, Warning, TEXT("Colours: %d"), Nodes.Num());
+
 	// Create and Add the Node
 	Node<T> Item = { Nodes.Num(), Index, Object };
 	Nodes.Add(Item);
@@ -67,30 +79,53 @@ inline void UnionFindSplit<T>::Add(int& Index, T Object) {
 
 // Removes a Node, Replacing it with a random direct Child
 template<typename T>
-inline T UnionFindSplit<T>::Remove(int& Index) {
+inline T UnionFindSplit<T>::Remove(TSharedRef<int>&& Index) {
+	int Idx = *Index;
 	// Check for a Node to Replace the Node.
-	Node<T>* Replacement = Nodes.FindByPredicate([Index](const Node<T>& Item) {
-		return Item.Parent == Index && *Item.Index != Index;
+	Node<T>* Replacement = Nodes.FindByPredicate([Idx](const Node<T>& Item) {
+		return Item.Parent == Idx && Item.Index.IsValid() && *Item.Index.Pin() != Idx;
 	});
 
 	// When the Node needs to be replaced Parent-Wise
 	if (Replacement) {
 		// Replace Parents
 		for (Node<T>& Item : Nodes) {
-			if (Item.Parent == Index) Item.Parent = *Replacement->Index;
+			if (Item.Parent == *Index) Item.Parent = *Replacement->Index.Pin();
 		}
 	}
 
-	// Shift down Greater Elements
+
+	// Shift down Greater Elements, and Stale Elements
 	for (Node<T>& Item : Nodes) {
 		// Shift Indices
-		if (*Item.Index > Index) *Item.Index -= 1;
-		if (Item.Parent > Index) Item.Parent -= 1;
+		if (Item.Index.IsValid() && *Item.Index.Pin() > Idx) *Item.Index.Pin() -= 1;
+		if (Item.Parent > Idx)  Item.Parent -= 1;
 	}
 
+	//int Shift = 0;
+	//// Shift down Greater Elements, and Stale Elements
+	//for (Node<T>& Item : Nodes) {
+	//	if (!Item.Index.IsValid() || *Item.Index.Pin() == Idx) {
+	//		Shift++;
+	//		continue;
+	//	}
+	//	// Shift Indices
+	//	*Item.Index.Pin() -= Shift;
+	//	Item.Parent -= Shift;
+	//}
+
+	//// Remove Stale Nodes
+	//Nodes = Nodes.FilterByPredicate([](const Node<T>& Node) {
+	//	return Node.Index.IsValid();
+	//});
+	//Idx -= Shift - 1;
+
 	// Remove Indexes Node and Clear Index
-	T Object = Nodes[Index].Object;
-	Nodes.RemoveAt(Index);
+	T Object = Nodes[Idx].Object;
+	Nodes.RemoveAt(Idx);
+
+	// Reset Index
+	*Index = -1;
 
 	return Object;
 
@@ -169,8 +204,10 @@ inline T* UnionFindSplit<T>::Find(int Index) {
 // Unifies two sets
 template<typename T>
 inline void UnionFindSplit<T>::Union(int A, int B) {
+	Node<T>* ANode = FindNode(A);
+	Node<T>* BNode = FindNode(B);
 	// Unify Parents
-	FindNode(A)->Parent = FindNode(B)->Parent;
+	if (ANode && BNode)	FindNode(A)->Parent = FindNode(B)->Parent;
 }
 
 // Splits below the common ancestor; A prioritized for detach.
@@ -186,4 +223,28 @@ inline void UnionFindSplit<T>::Split(int A, int B) {
 	// Redirect first valid child to itself
 	int Child = AChild == -1 ? BChild : AChild;
 	Nodes[Child].Parent = Child;
+}
+
+template<typename T>
+inline void UnionFindSplit<T>::Split(int A) {
+	if (!Nodes.IsValidIndex(A)) return;
+
+	// Get ReplaceParent
+	int ReplaceParent = Nodes[A].Parent;
+	if (ReplaceParent == A) {
+		for (int i = Nodes.Num(); i --> 0;) {
+			if (i != A && Nodes[i].Parent == A) {
+				ReplaceParent = i;
+				break;
+			}
+		}
+	}
+
+	// Apply ReplaceParent
+	for (Node<T>& Node : Nodes) {
+		if (Node.Parent == A) {
+			Node.Parent = ReplaceParent;
+		}
+	}
+	Nodes[A].Parent = A;
 }

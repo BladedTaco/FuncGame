@@ -1,34 +1,77 @@
 #include "Utils/ColourGroup.h"
 
+UColourGroup::UColourGroup() {
+	ColourStack = {};
+	ColourSet = {};
+}
+
 // Registers a New Colour
-void UColourGroup::NewColour(int& Index) {
+void UColourGroup::NewColour(TSharedRef<int> Index) {
 	ColourSet.Add(Index, NextColour());
 }
 
 // Frees up a Colour
-void UColourGroup::FreeColour(int& Index) {
+void UColourGroup::FreeColour(TSharedRef<int>&& Index) {
 	// Valid Indices Only
-	if (Index < 0) return;
+	if (*Index < 0) return;
+	
+	// Pop from Set
+	FColor Popped = ColourSet.Remove(MoveTemp(Index));
+	// If No longer in Set
+	if (ColourSet.Contains([Popped](const FColor& Colour) { return Colour == Popped; })) return;
 
-	// Remove from Set and Push to Stack
-	ColourStack.Add(ColourSet.Remove(Index));
+	// Push to Stack for Re-use
+	ColourStack.Add(Popped);
 }
 
-bool UColourGroup::CopyColour(int Source, int& Dest) {
+bool UColourGroup::ReferenceColour(TSharedRef<int> Source, TSharedRef<int>& Dest) {
+	// Simply Copy Index Pointer
+	*Dest = *Source;
+	Dest = Source;
+
+	return true;
+
+	//// Find Colour
+	//FColor* Colour = ColourSet.Find(*Source);
+
+	//// Return Failure
+	//if (!Colour) return false;
+
+	//FColor Copy = *Colour;
+	//Copy = FLinearColor::LerpUsingHSV(Copy, FColor::Black, 0.8).ToFColor(true);
+	//// Add and Unify
+	//ColourSet.Add(Dest, Copy);
+	//ColourSet.Union(*Dest, *Source);
+
+	//// Return Success
+	//return true;
+}
+
+bool UColourGroup::ReferenceColour(TSharedPtr<int> Source, TSharedPtr<int>& Dest) {
+	if (!Source.IsValid()) return false;
+	if (Dest.IsValid()) *Dest = *Source;
+	Dest = Source;
+	return true;
+}
+
+bool UColourGroup::DuplicateColour(TSharedRef<int> Source, TSharedRef<int> Dest) {
 	// Find Colour
-	FColor* Colour = ColourSet.Find(Source);
+	FColor* Colour = ColourSet.Find(*Source);
 
 	// Return Failure
 	if (!Colour) return false;
 
-	FColor Copy = *Colour;
-	Copy = FLinearColor::LerpUsingHSV(Copy, FColor::Black, 0.8).ToFColor(true);
-	// Add and Unify
-	ColourSet.Add(Dest, Copy);
-	ColourSet.Union(Dest, Source);
+	// Add Copy
+	ColourSet.Add(Dest, *Colour);
 
 	// Return Success
 	return true;
+}
+
+bool UColourGroup::DuplicateColour(TSharedPtr<int> Source, TSharedPtr<int>& Dest) {
+	if (!Source.IsValid()) return false;
+	if (!Dest.IsValid()) Dest = MakeShareable(new int(-1));
+	return DuplicateColour(Source.ToSharedRef(), Dest.ToSharedRef());
 }
 
 // Returns the Colour at the Index, or Black if it doesn't exist
@@ -45,6 +88,10 @@ void UColourGroup::Unify(int A, int B) {
 // Makes A and B Different Colours
 void UColourGroup::Split(int A, int B) {
 	ColourSet.Split(A, B);
+}
+
+void UColourGroup::Split(int A) {
+	ColourSet.Split(A);
 }
 
 // Generates the Next Colour in the Sequence, or Pops from Returned Stack

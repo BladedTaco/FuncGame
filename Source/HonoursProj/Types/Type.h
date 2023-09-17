@@ -8,8 +8,11 @@
 #include "Types_gen.h"
 #include "HonoursProjGameInstance.h"
 
+#include "Utils/ColourGroup.h"
+
 #include "Type.generated.h"
 
+class UTypeConst;
 
 // This class does not need to be modified.
 UCLASS()
@@ -23,10 +26,17 @@ public:
 	virtual TArray<UType*> GetTemplates(ETypeData As) const;
 	virtual TArray<UType*> GetTemplates(EType As) const;
 
-	UType* RecursiveCopy();
 	virtual UType* DeepCopy(TMap<UType*, UType*>& ptrMap) const PURE_VIRTUAL(UType::DeepCopy, return NULL; );
 
+	UTypeConst* VolatileConst();
+
+	virtual void ResetColour() PURE_VIRTUAL(UType::ResetColour, return; );
+
+private:
+	UType* RecursiveCopy();
 public:
+	UType();
+
 	bool Supercedes(const UType* other) const;
 
 	virtual FString ToString() const;
@@ -36,11 +46,21 @@ public:
 
 	bool EqualTo(const UType* other) const;
 
-	virtual bool UnifyWith(UType* concreteType);
+	bool UnifyWith(UType* concreteType);
+	virtual bool UnifyWith_Impl(UType* concreteType);
 
 
-	virtual FColor GetColour() const { return FColor::Black; }
+	virtual int GetColourIndex() const PURE_VIRTUAL(UType::GetColourIndex, return -1; );
+	virtual TSharedPtr<int> ShareColour() const PURE_VIRTUAL(UType::ShareColour, return {}; );
+	FColor GetColour() const;
 
+protected:
+	inline static UColourGroup* SharedColourGroup = NULL;
+
+	UPROPERTY(EditAnywhere)
+	UColourGroup* ColourGroup;
+
+	UColourGroup* GetColourGroup() const;
 
 	//~UType() {
 	//	UE_LOG(LogTemp, Warning, TEXT("Type Destroyed"));
@@ -62,9 +82,10 @@ private:
 	UPROPERTY(VisibleAnywhere, Instanced)
 		TArray<UType*> Templates = {};
 
-	UPROPERTY(VisibleAnywhere)
-		FColor TypeColour = FColor::Black;
+	TSharedPtr<int> ColourPtr;
 public:
+	virtual void BeginDestroy() override;
+
 	UFUNCTION(BlueprintCallable)
 		bool Terminal() const;
 
@@ -75,7 +96,11 @@ public:
 	static UTypeConst* New(ETypeBase InType);
 	virtual UType* DeepCopy(TMap<UType*, UType*>& ptrMap) const override;
 
-	virtual FColor GetColour() const override { return TypeColour; }
+	virtual int GetColourIndex() const override;
+	TSharedPtr<int> ShareColour() const override;
+
+	virtual void ResetColour() override { GetColourGroup()->Split(GetColourIndex()); ColourPtr.Reset(); }
+
 
 	UFUNCTION(BlueprintCallable)
 		static UTypeConst* MakeConst(const UType* InType);
@@ -102,7 +127,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		UType* Get();
 
-	virtual FColor GetColour() const override;
+	virtual int GetColourIndex() const override;
+	TSharedPtr<int> ShareColour() const override;
+	virtual void ResetColour() override { Get()->ResetColour(); }
 
 
 	virtual EType GetType() const override;
@@ -113,7 +140,7 @@ public:
 
 	virtual UType* DeepCopy(TMap<UType*, UType*>& ptrMap) const override;
 
-	virtual bool UnifyWith(UType* concreteType) override;
+	virtual bool UnifyWith_Impl(UType* concreteType) override;
 };
 
 // A Class That has an ETypeClass EType that gets resolved into an ETypeData or ETypeBase EType
@@ -129,9 +156,7 @@ private:
 	UPROPERTY(EditAnywhere, Instanced)
 		UTypeConst* Instance = NULL;
 
-
-	UPROPERTY(VisibleAnywhere)
-	int ColourIndex;
+	TSharedRef<int> ColourIndex = MakeShareable(new int(-1));
 
 public:
 	virtual void BeginDestroy() override;
@@ -145,7 +170,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void ResetEvidence();
 
-	virtual FColor GetColour() const override;
+	virtual int GetColourIndex() const override;
+	TSharedPtr<int> ShareColour() const override;
+	virtual void ResetColour() override { GetColourGroup()->Split(GetColourIndex()); if (IsValid(Instance)) { Instance->ResetColour(); } }
+
+
 
 	virtual EType GetType() const override;
 	virtual TArray<UType*> GetTemplates() const override;
@@ -155,8 +184,5 @@ public:
 
 	virtual FString ToString() const override;
 
-	virtual bool UnifyWith(UType* concreteType) override;
-
-private:
-	UColourGroup* GetColourGroup() const;
+	virtual bool UnifyWith_Impl(UType* concreteType) override;
 };

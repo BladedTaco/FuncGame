@@ -13,6 +13,7 @@ AHonoursProjBlock* AFunctionOutput::HandleClick(UPrimitiveComponent* ClickedComp
 	if (bIsActive) {
 		// Hide connection mesh
 		ConnectMesh->SetVisibility(false);
+		ConnectMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 		// Get other, and make them handle the click
 		if (auto other = Cast<AFunctionInput>(ClickedComponent->GetOwner())) {
@@ -60,6 +61,7 @@ void AFunctionOutput::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 }
 
 UType* AFunctionOutput::ResolveType_Impl() {
+	// TODO, chekc if this needs DeepCopy
 	TMap<UType*, UType*> ptrMap = {};
 	// Copy Owners OutputArrow
 	UType* arrow = Function->ResolveType()->DeepCopy(ptrMap);
@@ -72,7 +74,9 @@ UType* AFunctionOutput::ResolveType_Impl() {
 	}
 	// Apply the Outputs Type to the TypeVar
 	//Cast<UTypeVar>(arrowPtr->Get())->ApplyEvidence(ParameterInfo.Type);
-	Cast<UTypeVar>(arrowPtr->Get())->ApplyEvidence(Function->Outputs[Index].Type->DeepCopy(ptrMap));
+	auto TVar = Cast<UTypeVar>(arrowPtr->Get());
+	TVar->ResetColour();
+	TVar->ApplyEvidence(Function->Outputs[Index].Type->DeepCopy(ptrMap));
 
 	// Return the arrow with applied type
 	return arrow;

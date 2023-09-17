@@ -188,7 +188,7 @@ UClass* ATypeRepr::GetRepr(EType Type) {
 
 ATypeRepr* ATypeRepr::CreateRepr(UType* Type, UWorld* World, int32 StencilValue) {
 	auto me = World->SpawnActor<ATypeRepr>(GetRepr(Type->GetType()));
-	me->FullType = UTypeConst::MakeConst(Type);
+	me->FullType = Type->VolatileConst();
 	me->UpdateStencilValue(StencilValue);
 
 	auto templates = Type->GetTemplates();
@@ -200,16 +200,7 @@ ATypeRepr* ATypeRepr::CreateRepr(UType* Type, UWorld* World, int32 StencilValue)
 			planes[0]->SetVisibility(false);
 		}
 
-		// Handle TypeVar Colours
-		if (Type->GetType() == EType::ANY) {
-			FColor col = Type->GetColour();
-			TArray<UStaticMeshComponent*> MeshComps;
-			me->GetComponents<UStaticMeshComponent>(MeshComps);
-			for (auto* comp : MeshComps) {
-				Cast<UStaticMeshComponent>(comp)->SetVectorParameterValueOnMaterials("DiffuseColor", FVector(col.ReinterpretAsLinear()));
-			}
-		}	
-
+		me->SetColour(Type);
 		return me;
 	}
 	// MisMatch, Invalid Representation
@@ -235,6 +226,18 @@ ATypeRepr* ATypeRepr::CreateRepr(UType* Type, UWorld* World, int32 StencilValue)
 	return me;
 }
 
+void ATypeRepr::SetColour(UType* ColourType) {
+	// Handle TypeVar Colours
+	if (ColourType->GetType() == EType::ANY) {
+		FColor col = ColourType->GetColour();
+		TArray<UStaticMeshComponent*> MeshComps;
+		GetComponents<UStaticMeshComponent>(MeshComps);
+		for (auto* comp : MeshComps) {
+			Cast<UStaticMeshComponent>(comp)->SetVectorParameterValueOnMaterials("DiffuseColor", FVector(col.ReinterpretAsLinear()));
+		}
+	}
+}
+
 void ATypeRepr::OnConstruction(const FTransform& Transform) {
 #if WITH_EDITOR
 	GEngine->OnLevelActorDetached().AddLambda([](AActor* me, const AActor* attach) { me->Destroy(); });
@@ -254,7 +257,12 @@ void ATypeRepr::BeginPlay() {
 		mesh->SetCustomDepthStencilValue(255);
 	}
 
-	
+	//FTimerHandle timer;
+	//GetWorld()->GetTimerManager().SetTimer(timer, FTimerDelegate::CreateLambda([this]() {
+	//	if (IsValid(this) && IsValid(FullType)) {
+	//		this->SetColour(FullType);
+	//	}
+	//}), 1.0f, true);
 
 	// Set own Collision to disabled
 	SetActorEnableCollision(false);
@@ -279,6 +287,7 @@ void ATypeRepr::DestroyChildren() {
 
 ATypeRepr* ATypeRepr::UpdateRepr(UType* newType) {
 	// Equal Types means no Change
+	SetColour(newType);
 	if (FullType && newType && FullType->EqualTo(newType)) return this;
 	
 	DestroyChildren();

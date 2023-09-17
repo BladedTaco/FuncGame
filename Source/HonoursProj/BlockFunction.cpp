@@ -469,7 +469,8 @@ UType* ABlockFunction::ResolveTypesWithPartial(int output, const TArray<VStar>& 
 	// DeepCopy TypeVars and use in ptrMap
 	TMap<UType*, UType*> ptrMap;
 	for (UTypeVar* var : TypeVars) {
-		ptrMap.Add(var, var->RecursiveCopy());
+		//ptrMap.Add(var, var->RecursiveCopy());
+		ptrMap.Add(var, var->DeepCopy(ptrMap));
 	}
 
 	// Get Original Output Type
@@ -491,12 +492,17 @@ UType* ABlockFunction::ResolveTypesWithPartial(int output, const TArray<VStar>& 
 // Resolve Type Signature
 UType* ABlockFunction::ResolveType() {
 	// Intiialize Output Arrow Terminal TypeVar
-	UType* outArrow = UTypeVar::New(ETypeClass::ANY);
+	UType* outArrow = UTypeVar::New(ETypeClass::ANY, false);
 
 	// Reset All TypeVars
 	for (auto& typevar : TypeVars) {
 		if (!typevar) return NULL;
 		typevar->ResetEvidence();
+	}
+
+	// Reset All Inputs
+	for (auto& connector : GetConnectors()) {
+		connector->ParameterInfo.Type->ResetColour();
 	}
 
 	// Apply Evidence
