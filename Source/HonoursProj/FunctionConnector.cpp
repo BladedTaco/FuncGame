@@ -81,6 +81,7 @@ void AFunctionConnector::SetupHUD() {
 	if (ParameterInfo.Type && HUD.Inst().IsValid()) {
 		HUD.Instance->Name = ParameterInfo.Name;
 		HUD.Instance->Type = ParameterInfo.Type->ToString();
+		SpawnRepr(ParameterInfo.Type);
 	}
 }
 

@@ -521,8 +521,19 @@ UType* ABlockFunction::ResolveType() {
 		}
 	}
 
+
+
 	// Update Status on Valid
 	if (Valid) {
+
+		// Update Repr
+		for (int idx = InputBlocks.Num(); idx-- > 0;) {
+			AFunctionInput* input = InputBlocks[idx];
+
+			input->SpawnRepr(Inputs[idx].Type);
+		}
+
+
 		Status |= EPropagable::VALID;
 	// Propagate on invalid
 	} else {

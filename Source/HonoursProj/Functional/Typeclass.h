@@ -99,6 +99,17 @@ const auto NAME() const { return curry([this]PARAMS{ return this->_##NAME ARGS; 
 private:	\
 virtual RETURN _##NAME PARAMS const
 
-// TypeclassVirtual(Return Type, Name, (Type, ArgName)...) { implementation }
+// TypeclassVirtual(Return Type, Name, ArgName...) { implementation }
 #define TypeclassVirtual(RETURN, NAME, ...) \
 TypeclassVirtual_Inner(RETURN, NAME, ( MAP_LIST(AS_VSTAR, __VA_ARGS__) ), (  __VA_ARGS__ ))
+
+
+
+#define TypeclassVirtual_Inner(RETURN, NAME, PARAMS, ARGS)	\
+private:	\
+virtual RETURN _##NAME PARAMS const
+
+// TypeclassVirtual(Return Type, Name, ArgName...) { implementation }
+#define TypeclassVirtualOverride(RETURN, NAME, ...) \
+private:                                            \
+	virtual RETURN _##NAME ( MAP_LIST(AS_VSTAR, __VA_ARGS__) ) const override

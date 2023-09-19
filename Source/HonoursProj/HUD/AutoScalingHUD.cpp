@@ -67,6 +67,8 @@ void UAutoScalingHUD::InvalidateAllWidgets() {
 }
 
 void UAutoScalingHUD::SizeToBounds(UStaticMeshComponent* Mesh) {
+	if (!IsValid(this) || !IsValid(GetOwner()) || !IsValid(Mesh)) return;
+
 	LastBounds = Mesh;
 
 
