@@ -48,11 +48,19 @@ class Functor;
 
 class IFunc : public virtual ITypeclass {
 private:
-	virtual const Typeclass* _GetTypeclass() const override;
+	virtual const TSharedPtr<Typeclass> _GetTypeclass() const override;
 public:
 	class Functor;
-
 	static const Functor FunctorInst;
+	class Applicative;
+	static const Applicative ApplicativeInst;
+	class Monad;
+	static const Monad MonadInst;
+
+	class Semigroup;
+	static const Semigroup SemigroupInst;
+	class Monoid;
+	static const Monoid MonoidInst;
 
 	class Show;
 	static const Show ShowInst;

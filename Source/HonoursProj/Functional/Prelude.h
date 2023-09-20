@@ -151,3 +151,22 @@ namespace Prelude {
 		return MakeTuple(tup.template Get<1>(), tup.template Get<0>());
 	});
 };
+
+// Prelude functions with Type Erasure
+namespace PreludeV {
+	// Constant a b = a
+	auto constant = curry([](VStar a, VStar b) -> VStar {
+		return a;
+	});
+
+	// compose f g = \ x -> f (g x)
+	auto compose = curry([](VStar f, VStar g, VStar x) -> VStar {
+		ArrV _f = f.ResolveToUnsafe<ArrV>();
+		ArrV _g = g.ResolveToUnsafe<ArrV>();
+
+		return _f(_g(x));
+	});
+
+	auto id = curry([](VStar a) -> VStar { return a; });
+
+};

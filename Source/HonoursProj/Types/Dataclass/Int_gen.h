@@ -10,8 +10,8 @@
 template <typename A>
 class INumber : public virtual ITypeclass {
 private:
-	virtual const Typeclass* _GetTypeclass() const override {
-		return &INumber<A>::Instances;
+	virtual const TSharedPtr<Typeclass> _GetTypeclass() const override {
+		return NoopPtr(&INumber<A>::Instances);
 	}
 public:
 	class Ordinal : public virtual IOrdinal {
@@ -54,8 +54,8 @@ private:
 	VStar _value;
 	friend class ::Ordinal<NumberV>;
 	const Typeclass* Instances;
-	virtual const Typeclass* _GetTypeclass() const override {
-		return Instances;
+	virtual const TSharedPtr<Typeclass> _GetTypeclass() const override {
+		return NoopPtr(Instances);
 	}
 public:
 	template <typename T>

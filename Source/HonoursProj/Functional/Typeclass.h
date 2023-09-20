@@ -103,13 +103,40 @@ virtual RETURN _##NAME PARAMS const
 #define TypeclassVirtual(RETURN, NAME, ...) \
 TypeclassVirtual_Inner(RETURN, NAME, ( MAP_LIST(AS_VSTAR, __VA_ARGS__) ), (  __VA_ARGS__ ))
 
+#define TypeclassVirtualT1(RETURN, NAME, T1, ...) \
+TypeclassVirtual_Inner(RETURN, NAME,  ( const Typeclass* T1, MAP_LIST(AS_VSTAR, __VA_ARGS__) ), (  __VA_ARGS__ ))
 
-
-#define TypeclassVirtual_Inner(RETURN, NAME, PARAMS, ARGS)	\
-private:	\
-virtual RETURN _##NAME PARAMS const
 
 // TypeclassVirtual(Return Type, Name, ArgName...) { implementation }
 #define TypeclassVirtualOverride(RETURN, NAME, ...) \
 private:                                            \
 	virtual RETURN _##NAME ( MAP_LIST(AS_VSTAR, __VA_ARGS__) ) const override
+
+#define TypeclassInst(DATATYPE, TYPECLASS) $.TYPECLASS = &I##DATATYPE::TYPECLASS##Inst
+#define TypeclassInstAs(DATATYPE, TYPECLASS, AS) $.AS = &I##DATATYPE::TYPECLASS##Inst
+
+//
+//
+//// TypeclassVirtual_Inner(Return Type, Name, ((VStar ArgName)...), (Argname...) ) { implementation }
+//#define TypeclassVirtualTemplated_Inner(TEMPS, RETURN, NAME, PARAMS, ARGS)	\
+//public:		\
+//template <typename TEMPS>	\
+//const auto NAME(TEMPS) const { return curry([this]PARAMS{ return this->_##NAME<TEMPS> ARGS; }); };	\
+//private:	\
+//template <typename TEMPS>	\
+//virtual RETURN _##NAME PARAMS const
+//
+//// TypeclassVirtual(Return Type, Name, ArgName...) { implementation }
+//#define TypeclassVirtualTemplated(TEMP, RETURN, NAME, ...) \
+//TypeclassVirtualTemplated_Inner(TEMP, RETURN, NAME, ( MAP_LIST(AS_VSTAR, __VA_ARGS__) ), (  __VA_ARGS__ ))
+//
+//
+//class Q {
+//public:		
+//	const auto q(class Typeclass* tc) const { return curry([this](){ return this->_q(); }); };	
+//private:	
+//	virtual int _q() const {
+//		
+//	}
+//
+//};

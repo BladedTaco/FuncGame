@@ -20,11 +20,14 @@ class HONOURSPROJ_API UType : public UObject
 {
 	GENERATED_BODY()
 public:
+
 	virtual EType GetType() const PURE_VIRTUAL(UType::GetType, return EType::ANY;);
 	virtual TArray<UType*> GetTemplates() const PURE_VIRTUAL(UType::GetTemplates, return {}; );
 	virtual TArray<UType*> GetTemplates(ETypeClass As) const;
 	virtual TArray<UType*> GetTemplates(ETypeData As) const;
 	virtual TArray<UType*> GetTemplates(EType As) const;
+
+	TArray<UType*> GetTypeTemplates() const { return GetTemplates(GetType()); }
 
 	virtual UType* DeepCopy(TMap<UType*, UType*>& ptrMap) const PURE_VIRTUAL(UType::DeepCopy, return NULL; );
 

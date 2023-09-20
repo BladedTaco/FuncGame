@@ -8,8 +8,8 @@
 #include "Types/VStar.h"
 class IBool : public virtual ITypeclass {
 private:
-	virtual const Typeclass* _GetTypeclass() const override {
-		return &IBool::Instances;
+	virtual const TSharedPtr<Typeclass> _GetTypeclass() const override {
+		return NoopPtr(&IBool::Instances);
 	}
 public:
 	class Show : public virtual IShow {

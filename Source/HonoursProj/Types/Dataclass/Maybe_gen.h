@@ -9,8 +9,8 @@
 #include "Misc/Optional.h"
 class IMaybe : public virtual ITypeclass {
 private:
-	virtual const Typeclass* _GetTypeclass() const override {
-		return &IMaybe::Instances;
+	virtual const TSharedPtr<Typeclass> _GetTypeclass() const override {
+		return NoopPtr(&IMaybe::Instances);
 	}
 public:
 	class Functor : public virtual IFunctor {
