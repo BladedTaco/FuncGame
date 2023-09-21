@@ -1,8 +1,8 @@
 #include "VStar.h"
-
-#include "Maybe_gen.h"
-#include "Int_gen.h"
-#include "Functional/curry_gen.h"
+//
+//#include "Maybe_gen.h"
+//#include "Int_gen.h"
+//#include "Functional/curry_gen.h"
 
 //// Number<...>
 //template <typename T>

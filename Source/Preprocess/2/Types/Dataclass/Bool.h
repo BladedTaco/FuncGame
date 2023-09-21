@@ -1,16 +1,16 @@
 #pragma once
 
-#include "Types/Show.h"
-
-
-
 #ifndef PP__PREPROCESSING
 
 #include "Types/VStar.h"
+#include "Types/Dataclass/Int_gen.h"
+
 
 #else
 
 include "Types/VStar.h"
+include "Types/Dataclass/Int_gen.h"
+
 
 #endif
 
@@ -20,24 +20,24 @@ include "Types/VStar.h"
 #define InlineStaticConstStruct(T, NAME, ...) \
 static const inline T NAME = []{ T ${}; __VA_ARGS__; return $; }()
 
-#include "Types/Typeclass/Eq_gen.h"
-#include "Types/Typeclass/Ordinal_gen.h"
-#include "Types/Typeclass/Enum_gen.h"
-#include "Types/Typeclass/Bounded_gen.h"
-#include "Types/Typeclass/Show_gen.h"
-#include "Types/Typeclass/Read_gen.h"
+#include "Types/Typeclass/Eq.h"
+#include "Types/Typeclass/Ordinal.h"
+#include "Types/Typeclass/Enum.h"
+#include "Types/Typeclass/Bounded.h"
+#include "Types/Typeclass/Show.h"
+#include "Types/Typeclass/Read.h"
 
-EQ(Bool);
-ORDINAL(Bool);
-ENUM(Bool);
-BOUNDED(Bool);
-SHOW(Bool);
-READ(Bool);
+EQ(BASE_Bool);
+ORDINAL(BASE_Bool);
+ENUM(BASE_Bool);
+BOUNDED(BASE_Bool);
+SHOW(BASE_Bool);
+READ(BASE_Bool);
 
 class IBool : public virtual ITypeclass {
 private:
-	virtual const TSharedPtr<Typeclass> _GetTypeclass() const override {
-		return NoopPtr(&IBool::Instances);
+	virtual TSharedPtr<const Typeclass> _GetTypeclass() const override {
+		return NoopPtr(&Instances);
 	}
 public:
 	// IEQ();
@@ -97,15 +97,15 @@ inline ORD IBool::Ordinal::_ord( const VStar& a, const VStar& b) const {
 	return _a == _b ? ORD::EQ : _b ? ORD::LT : ORD::GT;
 }
 
-virtual VStar IBool::Enum::_toEnum(const VStar& integer) const {
+inline VStar IBool::Enum::_toEnum(const VStar& integer) const {
 	int a = integer.ResolveToUnsafe<Int>().get();
 	return Bool(a != 0);
 }	
 
-virtual Int IBool::Enum::_fromEnum(const VStar& value) const {
+inline Int IBool::Enum::_fromEnum(const VStar& value) const {
 	bool a = value.ResolveToUnsafe<Bool>().get();
 	return Int(a ? 1 : 0);
 }
 
-virtual VStar IBool::Bounded::_minBound() const { return Bool(false); }
-virtual VStar IBool::Bounded::_maxBound() const { return Bool(true); }
+inline VStar IBool::Bounded::_minBound() const { return Bool(false); }
+inline VStar IBool::Bounded::_maxBound() const { return Bool(true); }

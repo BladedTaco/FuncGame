@@ -18,32 +18,32 @@
 
 
 
-class IFunc : public virtual ITypeclass {
-private:
-	virtual const TSharedPtr<Typeclass> _GetTypeclass() const override;
-public:
-	class Functor;
-	static const Functor FunctorInst;
-	class Applicative;
-	static const Applicative ApplicativeInst;
-	class Monad;
-	static const Monad MonadInst;
+// class IFunc : public virtual ITypeclass {
+// private:
+// 	virtual TSharedPtr<const Typeclass> _GetTypeclass() const override;
+// public:
+// 	class Functor;
+// 	static const Functor FunctorInst;
+// 	class Applicative;
+// 	static const Applicative ApplicativeInst;
+// 	class Monad;
+// 	static const Monad MonadInst;
 
-	class Semigroup;
-	static const Semigroup SemigroupInst;
-	class Monoid;
-	static const Monoid MonoidInst;
+// 	class Semigroup;
+// 	static const Semigroup SemigroupInst;
+// 	class Monoid;
+// 	static const Monoid MonoidInst;
 
-	class Show;
-	static const Show ShowInst;
+// 	class Show;
+// 	static const Show ShowInst;
 
-public:
-	static const Typeclass Instances;
-};
+// public:
+// 	static const Typeclass Instances;
+// };
 
 
 class IFunc::Functor : public virtual IFunctor {
-private:
+protected:
 	virtual VStar _fmap(const VStar& f, const VStar& f_a) const override;
 public:
 	Functor() = default;
@@ -51,8 +51,9 @@ public:
 const IFunc::Functor IFunc::FunctorInst = {};
 
 
-class IFunc::Applicative : public virtual IApplicative {
+class IFunc::Applicative : public virtual IApplicative, public virtual IFunc::Functor {
 private:
+	using IFunc::Functor::_fmap;
 	virtual VStar _pure(const VStar& value) const override;						
 	virtual VStar _apply(const VStar& boxedFunc, const VStar& app) const override;
 public:
@@ -62,7 +63,7 @@ const IFunc::Applicative IFunc::ApplicativeInst = {};
 
 
 
-class IFunc::Monad : public virtual IMonad {
+class IFunc::Monad : public virtual IMonad, public virtual IFunc::Applicative {
 private:
 	virtual VStar _bind(const VStar& m_a, const VStar& a_to_mb) const override;
 public:
@@ -82,7 +83,7 @@ const IFunc::Semigroup IFunc::SemigroupInst = {};
 
 
 
-class IFunc::Monoid : public virtual IMonoid {
+class IFunc::Monoid : public virtual IMonoid, public virtual IFunc::Semigroup {
 private:
 	virtual VStar _mempty() const override;
 public:
@@ -107,8 +108,8 @@ const IFunc::Show IFunc::ShowInst = {};
 
 
 
-const TSharedPtr<Typeclass> IFunc::_GetTypeclass() const {
-	return NoopPtr(&IFunc::Instances);
+TSharedPtr<const Typeclass> IFunc::_GetTypeclass() const {
+	return NoopPtr(&Instances);
 }
 
 CppStaticConstStruct(Typeclass, IFunc::Instances,
@@ -148,11 +149,11 @@ inline VStar IFunc::Applicative::_pure(const VStar& value) const {
 }	
 
 inline VStar IFunc::Applicative::_apply(const VStar& boxedFunc, const VStar& app) const {
-	ArrV f = boxedFunc.ResolveToUnsafe<ArrV>();
+	ArrVV f = boxedFunc.ResolveToUnsafe<ArrVV>();
 	ArrV g = app.ResolveToUnsafe<ArrV>();
 
-	return curry([](const VStar &x) {
-		return f(x)(g(x))
+	return curry([f,g](const VStar &x) {
+		return f(x)(g(x));
 	});
 }
 
@@ -160,9 +161,9 @@ inline VStar IFunc::Applicative::_apply(const VStar& boxedFunc, const VStar& app
 inline  VStar IFunc::Monad::_bind(const VStar& m_a, const VStar& a_to_mb) const {
 	// f >>= k = \ r -> k (f r) r
 	ArrV f = m_a.ResolveToUnsafe<ArrV>();
-	ArrV g = a_to_mb.ResolveToUnsafe<ArrV>();
+	ArrVV g = a_to_mb.ResolveToUnsafe<ArrVV>();
 	
-	return curry([](const VStar &x) {
+	return curry([f,g](const VStar &x) {
 		return g(f(x))(x);
 	});
 }
@@ -172,7 +173,7 @@ inline VStar IFunc::Semigroup::_mappend( const VStar& left, const VStar& right) 
 	ArrV g = right.ResolveToUnsafe<ArrV>();
 
 	//\x -> f x <> g x
-	return curry([](const VStar &x) {
+	return curry([f,g](const VStar &x) {
 		VStar fx = f(x);
 		return fx.getTypeclass()->Semigroup->mappend()(fx)(g(x));
 	});
@@ -185,7 +186,7 @@ inline VStar IFunc::Semigroup::_mappend( const VStar& left, const VStar& right) 
 inline VStar IFunc::Monoid::_mempty() const {
     //\_ -> mempty
 	return curry([](const VStar &x) {
-		return x.getTypeclass()->Semigroup->mempty();
+		return x.getTypeclass()->Monoid->mempty();
 	});
 }
 

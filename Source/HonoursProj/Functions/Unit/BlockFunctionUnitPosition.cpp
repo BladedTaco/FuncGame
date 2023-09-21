@@ -3,7 +3,7 @@
 
 #include "Functions/Unit/BlockFunctionUnitPosition.h"
 
-#include "Types/Int_gen.h"
+#include "Types/Dataclass/BaseTypes.h"
 
 void ABlockFunctionUnitPosition::SetFunctionTypes() {
 
@@ -12,8 +12,8 @@ void ABlockFunctionUnitPosition::SetFunctionTypes() {
 	// Set Inputs and Outputs
 	Inputs = {};
 	Outputs = {
-		{"X", UTypeConst::New(ETypeData::NUMBER, { UTypeConst::New(ETypeBase::INT) }) },
-		{"Y", UTypeConst::New(ETypeData::NUMBER, { UTypeConst::New(ETypeBase::INT) }) }
+		{"X",  UTypeConst::New(ETypeBase::INT) },
+		{"Y",  UTypeConst::New(ETypeBase::INT) }
 	};
 }
 
@@ -22,8 +22,8 @@ Arr<VStarArray, VStarArrayReturn> ABlockFunctionUnitPosition::GetInnerFunc() {
 
 		FVector2D PositionVec = IsValid(Unit) ? Unit->Position : FVector2D(-1);
 
-		VStar XOut = VStar(NumberV(PositionVec.X));
-		VStar YOut = VStar(NumberV(PositionVec.Y));
+		VStar XOut = VStar(Int(PositionVec.X));
+		VStar YOut = VStar(Int(PositionVec.Y));
 
 		return { XOut, YOut };
 

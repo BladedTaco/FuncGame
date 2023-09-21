@@ -24,18 +24,18 @@
  
 
 
-// #include "Types/Typeclass/Functor_gen.h"
-// #include "Types/Typeclass/Foldable_gen.h"
-// #include "Types/Typeclass/Traversable_gen.h"
-// #include "Types/Typeclass/Applicative_gen.h"
-// #include "Types/Typeclass/Monad_gen.h"
-// #include "Types/Typeclass/Eq_gen.h"
-// #include "Types/Typeclass/Ordinal_gen.h"
-// #include "Types/Typeclass/Bounded_gen.h"
-// #include "Types/Typeclass/Semigroup_gen.h"
-// #include "Types/Typeclass/Monoid_gen.h"
-// #include "Types/Typeclass/Show_gen.h"
-// #include "Types/Typeclass/Read_gen.h"
+// #include "Types/Typeclass/Functor.h"
+// #include "Types/Typeclass/Foldable.h"
+// #include "Types/Typeclass/Traversable.h"
+// #include "Types/Typeclass/Applicative.h"
+// #include "Types/Typeclass/Monad.h"
+// #include "Types/Typeclass/Eq.h"
+// #include "Types/Typeclass/Ordinal.h"
+// #include "Types/Typeclass/Bounded.h"
+// #include "Types/Typeclass/Semigroup.h"
+// #include "Types/Typeclass/Monoid.h"
+// #include "Types/Typeclass/Show.h"
+// #include "Types/Typeclass/Read.h"
 
 // FUNCTOR(Tuple);
 

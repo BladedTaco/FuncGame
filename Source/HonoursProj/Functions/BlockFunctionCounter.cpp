@@ -14,11 +14,10 @@
 #include "Types/Types_gen.h"
 #include "Types/Type.h"
 
-#include "Types/Functor.h"
-#include "Types/Show.h"
-#include "Types/Maybe_gen.h"
-#include "Types/Func_gen.h"
-#include "Types/Int_gen.h"
+#include "Types/Typeclass/Functor.h"
+#include "Types/Typeclass/Show.h"
+#include "Types/Dataclass/Maybe_gen.h"
+#include "Types/Dataclass/BaseTypes.h"
 
 #include "MyUtils.h"
 
@@ -42,7 +41,7 @@ void ABlockFunctionCounter::SetFunctionTypes() {
 	FunctionName = FString(TEXT("Counter"));
 
 	Outputs = {
-		{"Counter", UTypeConst::New(ETypeData::NUMBER, { UTypeConst::New(ETypeBase::INT) }) }
+		{"Counter",  UTypeConst::New(ETypeBase::INT) }
 	};
 
 }
@@ -51,7 +50,7 @@ void ABlockFunctionCounter::SetFunctionTypes() {
 Arr<VStarArray, VStarArrayReturn> ABlockFunctionCounter::GetInnerFunc() {
 	return Arr<VStarArray, VStarArrayReturn>([this](VStarArray values) -> VStarArrayReturn {
 
-		VStar out = VStar(NumberV((int)CurrentValue));
+		VStar out = VStar(Int((int)CurrentValue));
 
 		// Show
 		const IShow* const show = out.getTypeclass()->Show;

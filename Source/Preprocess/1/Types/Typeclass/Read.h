@@ -9,9 +9,6 @@
 
 #include "Types/Unpack.h"
 
-//// Functor Instance Macro
-#define READ(INST)		 \
-PP__DIRECTIVE(Typeclass, Read, INST)
 
 // Functor Interface
 class IRead {

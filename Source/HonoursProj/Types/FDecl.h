@@ -49,6 +49,8 @@ typedef  List<VStar> ListV;
 typedef  Tuple<VStar, VStar> TupleV;
 
 typedef Func<VStar, VStar> ArrV;
+typedef Func<ArrV, VStar> ArrVV;
+typedef Func<ArrVV, VStar> ArrVVV;
 
 
 // Curried Function Shorthand as Arrow From -> To
@@ -93,14 +95,13 @@ struct Typeclass {
 	const ITraversable* Traversable;
 };
 
+
 // ITypeclass Interface
 class ITypeclass {
 private:
-	virtual const TSharedPtr<Typeclass> _GetTypeclass() const = 0;
+	virtual TSharedPtr<const Typeclass> _GetTypeclass() const = 0;
 public:
-	const TSharedPtr<Typeclass> GetTypeclass() const { return _GetTypeclass(); };
+	TSharedPtr<const Typeclass> GetTypeclass() const;
 };
 
-TSharedPtr<Typeclass> NoopPtr(Typeclass* InTypeclass) {
-	return TSharedPtr<Typeclass>(InTypeclass, [](Typeclass* _){});
-}
+TSharedPtr<const Typeclass> NoopPtr(const Typeclass* InTypeclass);

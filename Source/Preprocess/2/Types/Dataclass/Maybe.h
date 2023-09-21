@@ -1,8 +1,5 @@
 #pragma once
 
-#include "Types/Functor.h"
-#include "Types/Show.h"
- 
 #include "Types/FDecl.h"
 
  
@@ -17,18 +14,18 @@ include "Misc/Optional.h"
 #endif
 
 
-#include "Types/Typeclass/Functor_gen.h"
-#include "Types/Typeclass/Applicative_gen.h"
-#include "Types/Typeclass/Monad_gen.h"
-#include "Types/Typeclass/Semigroup_gen.h"
-#include "Types/Typeclass/Monoid_gen.h"
-#include "Types/Typeclass/Foldable_gen.h"
-#include "Types/Typeclass/Traversable_gen.h"
-#include "Types/Typeclass/Alternative_gen.h"
-#include "Types/Typeclass/Eq_gen.h"
-#include "Types/Typeclass/Ordinal_gen.h"
-#include "Types/Typeclass/Show_gen.h"
-#include "Types/Typeclass/Read_gen.h"
+#include "Types/Typeclass/Functor.h"
+#include "Types/Typeclass/Applicative.h"
+#include "Types/Typeclass/Monad.h"
+#include "Types/Typeclass/Semigroup.h"
+#include "Types/Typeclass/Monoid.h"
+#include "Types/Typeclass/Foldable.h"
+#include "Types/Typeclass/Traversable.h"
+#include "Types/Typeclass/Alternative.h"
+#include "Types/Typeclass/Eq.h"
+#include "Types/Typeclass/Ordinal.h"
+#include "Types/Typeclass/Show.h"
+#include "Types/Typeclass/Read.h"
 
 FUNCTOR(Maybe);
 APPLICATIVE(Maybe);
@@ -52,8 +49,8 @@ READ(Maybe);
 
 class IMaybe : public virtual ITypeclass {
 private:
-	virtual const TSharedPtr<Typeclass> _GetTypeclass() const override {
-		return NoopPtr(&IMaybe::Instances);
+	virtual TSharedPtr<const Typeclass> _GetTypeclass() const override {
+		return NoopPtr(&Instances);
 	}
 public:
 	IFUNCTOR(Maybe);
@@ -110,15 +107,15 @@ private:
 	friend class ::Functor<Maybe<A>>;
 	friend MaybeV;
 
-	virtual const TSharedPtr<Typeclass> _GetTypeclass() const override {
+	virtual TSharedPtr<const Typeclass> _GetTypeclass() const override {
         if (_isNothing) return IMaybe::_GetTypeclass();
 
 		// Copy
-        TSharedPtr<Typeclass> out = MakeShared();
+        TSharedPtr<Typeclass> out = MakeShareable(new Typeclass());
         *out = IEither::Instances;
 
 		// Change based on inner
-        const Typeclass* inner = _head.getTypeclass();
+        const Typeclass* inner = _value.getTypeclass();
         if (!inner->Semigroup) out->Semigroup = NULL;
         if (!inner->Monoid) out->Monoid = NULL;
         if (!inner->Ordinal) out->Ordinal = NULL;
@@ -266,7 +263,7 @@ inline VStar IMaybe::Applicative::_apply(const VStar& boxedFunc, const VStar& ap
 }
 
 inline  VStar IMaybe::Monad::_bind(const VStar& m_a, const VStar& a_to_mb) const {
-	MaybeV _ma = boxedFunc.ResolveToUnsafe<MaybeV>();
+	MaybeV _ma = m_a.ResolveToUnsafe<MaybeV>();
 
 	if (_ma._isNothing) return MaybeV::Nothing();
 
@@ -297,7 +294,7 @@ inline ORD IMaybe::Ordinal::_ord( const VStar& a, const VStar& b) const {
 	if (_a._isNothing || _b._isNothing) return ORD(_b._isNothing - _a._isNothing);
 
 	// Compare Justs
-	return _a.fromMaybe({}).getTypeclass()->Ordinal->ord()(_a.fromMaybe({}))(_b.fromMaybe({}));
+	return _a._value.getTypeclass()->Ordinal->ord()(_a._value)(_b._value);
 }
 
 
@@ -310,20 +307,23 @@ inline VStar IMaybe::Foldable::_foldr(const VStar& f, const VStar& initial, cons
     // right is apply transformation
 	ArrV g = f.ResolveToUnsafe<ArrV>();
 
-    return g(_ma._value)(initial);
+    return g(_ma._value).ResolveToUnsafe<ArrV>()(initial);
 }
 
-inline VStar IMaybe::Traversable::_traverse( const Typeclass* applic, const VStar& f, const VStar& foldable) const {
+inline VStar IMaybe::Traversable::_traverse( const VStar& applic, const VStar& f, const VStar& foldable) const {
     MaybeV _ma = foldable.ResolveToUnsafe<MaybeV>();
 
     // _  Nothing -> pure Nothing
     if (_ma._isNothing) {
-        return applic->Applicative->pure()(MaybeV::Nothing());
+        return applic.getTypeclass()->Applicative->pure()(MaybeV::Nothing());
     }
 
     // f (Just y) -> Just <$> f y
 	ArrV g = f.ResolveToUnsafe<ArrV>();
-    return _ma._value.getTypeclass()->Functor->fmap()(ArrV(MaybeV::Just))(g(_ma._value));
+
+	VStar h = VStar(curry([](const VStar& x) { return MaybeV::Just(x); }));
+
+    return _ma._value.getTypeclass()->Functor->fmap()(h)(g(_ma._value));
 }
 
 

@@ -1,11 +1,4 @@
-#pragma once
-
-#include "MacroUtils.h"
-
-#include "Functional/Prelude.h"
-#include "Functional/Typeclass.h"
-
-#include "Types/Unpack.h"
+﻿#pragma once
 
 //// Functor Instance Macro
 #define ENUM(INST)		 \
@@ -22,30 +15,4 @@ public:																PP__NEWLINE \
 }; 																	PP__NEWLINE \
 inline static const Enum EnumInst = {};
 
-// Functor Interface
-class IEnum {
-	// toEnum :: Int -> a
-	TypeclassVirtual(VStar, toEnum, integer) = 0;
-	// fromEnum :: a -> Int
-	TypeclassVirtual(Int, fromEnum, value) = 0;
-
-	// succ :: a -> a
-	TypeclassVirtual(VStar, succ, value) {
-		return toEnum()(fromEnum()(value).get() + 1);
-	}
-	// pred :: a -> a
-	TypeclassVirtual(VStar, pred, value) {
-		return toEnum()(fromEnum()(value).get() - 1);
-	}
-	// enumFrom :: a -> [a]
-	// TypeclassVirtual(ListV, enumFrom, start) { return n : enumFrom (succ n)	}
-	// enumFromThen :: a -> a -> [a]
-	// TypeclassVirtual(ListV, enumFromThen, start) { ... }
-	// enumFromTo :: a -> a -> [a]
-	// TypeclassVirtual(ListV, enumFromTo, start) { ...	}
-	// enumFromThenTo :: a -> a -> a -> [a]
-	// TypeclassVirtual(ListV, enumFromThenTo, start) { ...	}
-};
-
-
-
+#include "Enum_gen.h"

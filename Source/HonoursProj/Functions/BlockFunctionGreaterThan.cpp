@@ -16,10 +16,8 @@
 #include "Types/Types_gen.h"
 #include "Types/Type.h"
 
-#include "Types/Ord.h"
-#include "Types/Int_gen.h"
-
-#include "Types/Func_gen.h"
+#include "Types/Typeclass/Ordinal.h"
+#include "Types/Dataclass/BaseTypes.h"
 
 #include "MyUtils.h"
 
@@ -42,14 +40,14 @@ void ABlockFunctionGreaterThan::SetFunctionTypes() {
 
 
 	// Initialize Type Variables
-	UTypeVar* F = UTypeVar::New(ETypeClass::ANY);
+	UTypeVar* F = UTypeVar::New(ETypeClass::ORDINAL);
 	TypeVars = { F };
 
 
 	// Set Inputs and Outputs
 	Inputs = {
-		{"A", UTypeConst::New(ETypeData::NUMBER, { UTypePtr::New(F) })},
-		{"B", UTypeConst::New(ETypeData::NUMBER, { UTypePtr::New(F) })},
+		{"A", UTypePtr::New(F) },
+		{"B", UTypePtr::New(F) },
 	};
 	Outputs = {
 		{"A < B", UTypeConst::New(ETypeBase::BOOL)}

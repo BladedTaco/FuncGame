@@ -29,10 +29,18 @@ template <typename F>
 class Functor;
 class IFunc : public virtual ITypeclass {
 private:
-	virtual const Typeclass* _GetTypeclass() const override;
+	virtual TSharedPtr<const Typeclass> _GetTypeclass() const override;
 public:
 	class Functor;
 	static const Functor FunctorInst;
+	class Applicative;
+	static const Applicative ApplicativeInst;
+	class Monad;
+	static const Monad MonadInst;
+	class Semigroup;
+	static const Semigroup SemigroupInst;
+	class Monoid;
+	static const Monoid MonoidInst;
 	class Show;
 	static const Show ShowInst;
 public:
@@ -45,6 +53,12 @@ private:
 public:
 	Func(Function<To, From> f) {
 		_func = f;
+	}
+	Func(const Func<To, From>* f) {
+		_func = f->_func;
+	}
+	Func(const ArrV* f) {
+		_func = [f](From x) -> To { return To(f->operator()(x)); };
 	}
 	To operator()(const VStar& a) const {
 		return _func(a.ResolveToUnsafe<From>());
@@ -62,8 +76,33 @@ public:
 	Func(Function<To, From> f) {
 		_func = f;
 	}
+	Func(const Func<To, From>* f) {
+		_func = f->_func;
+	}
+	Func(const ArrV* f) {
+		_func = [f](From x) -> To { return f->operator()(x).ResolveToUnsafe<To>(); };
+	}
 	To operator()(From a) const {
 		return _func(a);
+	}
+};
+template <typename To>
+class Func<To, void> : public virtual IFunc {
+	using From = void;
+private:
+	Function<To, From> _func;
+public:
+	Func(Function<To, From> f) {
+		_func = f;
+	}
+	Func(const Func<To, From>* f) {
+		_func = f->_func;
+	}
+	Func(const ArrV* f) {
+		_func = [f](From x) -> To { return To(f->operator()(x)); };
+	}
+	To operator()() const {
+		return _func();
 	}
 };
 template <typename To>
@@ -74,6 +113,12 @@ private:
 public:
 	Func(Function<To, From> f) {
 		_func = f;
+	}
+	Func(const Func<To, From>* f) {
+		_func = f->_func;
+	}
+	Func(const ArrV* f) {
+		_func = [f](From x) -> To { return To(f->operator()(x)); };
 	}
 	To operator()(From a) const {
 		return _func(a);
@@ -89,6 +134,9 @@ public:
 	Func(Function<To, From> f) {
 		_func = f;
 	}
+	Func(const Func<To, From>* f) {
+		_func = f->_func;
+	}
 	To operator()(From a) const {
 		return _func(std::move(a));
 	}
@@ -96,6 +144,10 @@ public:
 		return _func(std::move(a));
 	}
 };
+template <typename To>
+inline Arr<void, To> _curry(Function<To> f) {
+	return Arr<void, To>(f);
+}
 template <typename First, typename To>
 inline Arr<First, To> _curry(Function<To, First> f) {
 	return Arr<First, To>(f);

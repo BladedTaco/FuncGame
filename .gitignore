@@ -80,3 +80,5 @@ DerivedDataCache/*
 
 # packages
 packages/*
+Source/Generated/out_pre.h
+Source/Generated/out_gen.h

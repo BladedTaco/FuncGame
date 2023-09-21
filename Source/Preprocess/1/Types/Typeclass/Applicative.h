@@ -5,24 +5,25 @@
 #include "Functional/Prelude.h"
 #include "Functional/Typeclass.h"
 
-#include "Types/Functor.h"
-
 #include "Types/Unpack.h"
-//
-//
-//// Functor Instance Macro
-#define APPLICATIVE(INST)		 \
-PP__DIRECTIVE(Typeclass, Applicative, INST)	
 
-#define IAPPLICATIVE() 																PP__NEWLINE \
-class Applicative : public virtual IApplicative {									PP__NEWLINE \
-private:																			PP__NEWLINE \
-	virtual VStar _pure(const VStar& value) const override;							PP__NEWLINE \
-	virtual VStar _apply(const VStar& boxedFunc, const VStar& app) const override;	PP__NEWLINE \
-public:																				PP__NEWLINE \
-	Applicative() = default;														PP__NEWLINE \
-}; 																					PP__NEWLINE \
-inline static const Applicative ApplicativeInst = {};
+
+
+
+#ifndef PP__PREPROCESSING
+
+#include "Types/Typeclass/Functor_gen.h"
+
+#else
+
+include "Types/Typeclass/Functor_gen.h"
+
+#endif
+
+
+//
+//
+;
 
 // Applicative Interface
 class IApplicative : public virtual IFunctor {
@@ -45,13 +46,13 @@ class IApplicative : public virtual IFunctor {
 	TypeclassVirtual(VStar, leftApply, discard, keep) {
 		// (<*) = liftA2 const
 
-		return liftA2()(Prelude::constant<VStar, VStar>)(discard)(keep);
+		return liftA2()(PreludeV::constant)(discard)(keep);
 	};
 	// (*>) :: f a -> f b -> f b 
 	TypeclassVirtual(VStar, rightApply, keep, discard) {
     	//a1 *> a2 = (id <$ a1) <*> a2
 
-		VStar f_a = map_replace_by()(Prelude::id<VStar>)(discard);
+		VStar f_a = map_replace_by()(PreludeV::id)(discard);
 		return apply()(f_a)(keep);
 	}
 }

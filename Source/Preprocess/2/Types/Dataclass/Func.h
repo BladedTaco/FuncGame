@@ -1,15 +1,12 @@
 #pragma once
 
 
-#include "Types/Functor.h"
+#include "Types/Typeclass/Functor.h"
+#include "Types/Typeclass/Applicative.h"
+#include "Types/Typeclass/Monad.h"
 
-
-#include "Types/Typeclass/Functor_gen.h"
-#include "Types/Typeclass/Applicative_gen.h"
-#include "Types/Typeclass/Monad_gen.h"
-
-#include "Types/Typeclass/Semigroup_gen.h"
-#include "Types/Typeclass/Monoid_gen.h"
+#include "Types/Typeclass/Semigroup.h"
+#include "Types/Typeclass/Monoid.h"
 
 FUNCTOR(Func);
 APPLICATIVE(Func);

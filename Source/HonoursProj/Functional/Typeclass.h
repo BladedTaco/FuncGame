@@ -85,6 +85,15 @@ FUNC_DEFN(TEMPLATES, v_##NAME, (													\
 //#define TYPECLASS_DEFN_FUNC(TEMPLATES, SIGNATURE, NAME)
 
 
+#define CurryReturn_Replace(N) const VStar&
+#define CurryReturn_Open(N) Arr<CurryReturn_Replace(N),
+#define CurryReturn_Close(N) > 
+
+/// CurryReturn(ReturnType, arguments...)
+#define CurryReturn(RETURN, ...) \
+NULLARY((LOOP3(CurryReturn_Open, BRACKET_LIST2(__VA_ARGS__))), (Arr<void,), __VA_ARGS__) \
+RETURN \
+NULLARY((LOOP3(CurryReturn_Close, BRACKET_LIST2(__VA_ARGS__))), (>), __VA_ARGS__)
 
 ////// TYPECLASS INTERFACING
 
@@ -92,10 +101,12 @@ FUNC_DEFN(TEMPLATES, v_##NAME, (													\
 #define AS_VSTAR(A) , const VStar& A
 
 
+
 // TypeclassVirtual_Inner(Return Type, Name, ((VStar ArgName)...), (Argname...) ) { implementation }
 #define TypeclassVirtual_Inner(RETURN, NAME, PARAMS, ARGS)	\
 public:		\
-const auto NAME() const { return curry([this]PARAMS{ return this->_##NAME ARGS; }); };	\
+const CurryReturn(RETURN, UNBRACKET PARAMS) \
+NAME() const { return curry([this]PARAMS -> RETURN { return this->_##NAME ARGS; }); };	\
 private:	\
 virtual RETURN _##NAME PARAMS const
 
@@ -103,8 +114,12 @@ virtual RETURN _##NAME PARAMS const
 #define TypeclassVirtual(RETURN, NAME, ...) \
 TypeclassVirtual_Inner(RETURN, NAME, ( MAP_LIST(AS_VSTAR, __VA_ARGS__) ), (  __VA_ARGS__ ))
 
-#define TypeclassVirtualT1(RETURN, NAME, T1, ...) \
-TypeclassVirtual_Inner(RETURN, NAME,  ( const Typeclass* T1, MAP_LIST(AS_VSTAR, __VA_ARGS__) ), (  __VA_ARGS__ ))
+// #define TypeclassVirtualT1_Loop(T1, ...)
+// #define TypeclassVirtualT1(RETURN, NAME, T1, ...) \
+// TypeclassVirtual_Inner(RETURN, NAME, \
+//  ( const Typeclass* T1 LOOP(AS_VSTAR, BRACKET_LIST(__VA_ARGS__)) ),\
+//   ( T1, ## __VA_ARGS__ )\
+// )
 
 
 // TypeclassVirtual(Return Type, Name, ArgName...) { implementation }
@@ -114,6 +129,46 @@ private:                                            \
 
 #define TypeclassInst(DATATYPE, TYPECLASS) $.TYPECLASS = &I##DATATYPE::TYPECLASS##Inst
 #define TypeclassInstAs(DATATYPE, TYPECLASS, AS) $.AS = &I##DATATYPE::TYPECLASS##Inst
+
+
+
+
+
+
+
+// TypeclassVirtual_Inner(Return Type, Name, ((VStar ArgName)...), (Argname...) ) { implementation }
+#define TypeclassVirtualDecl_Inner(RETURN, NAME, PARAMS, ARGS)	\
+public:		\
+const CurryReturn(RETURN, UNBRACKET PARAMS) \
+NAME() const;	\
+private:	\
+virtual RETURN _##NAME PARAMS const
+
+// TypeclassVirtual_Inner(Return Type, Name, ((VStar ArgName)...), (Argname...) ) { implementation }
+#define TypeclassVirtualImpl_Inner(CLS, RETURN, NAME, PARAMS, ARGS)	\
+const CurryReturn(RETURN, UNBRACKET PARAMS) \
+CLS::NAME() const { return curry([this]PARAMS->RETURN{ return this->_##NAME ARGS; }); };	\
+RETURN CLS::_##NAME PARAMS const
+
+// TypeclassVirtual_Inner(Return Type, Name, ((VStar ArgName)...), (Argname...) ) { implementation }
+#define TypeclassVirtualImplPure_Inner(CLS, RETURN, NAME, PARAMS, ARGS)	\
+const CurryReturn(RETURN, UNBRACKET PARAMS) \
+CLS::NAME() const { return curry([this]PARAMS->RETURN{ return this->_##NAME ARGS; }); }
+
+
+
+
+// TypeclassVirtual(Return Type, Name, ArgName...) { implementation }
+#define TypeclassVirtualDecl(RETURN, NAME, ...)\
+TypeclassVirtualDecl_Inner(RETURN, NAME, ( MAP_LIST(AS_VSTAR, __VA_ARGS__) ), (  __VA_ARGS__ ))
+
+// TypeclassVirtual(Return Type, Name, ArgName...) { implementation }
+#define TypeclassVirtualImpl(CLS, RETURN, NAME, ...)\
+TypeclassVirtualImpl_Inner(CLS, RETURN, NAME, ( MAP_LIST(AS_VSTAR, __VA_ARGS__) ), (  __VA_ARGS__ ))
+
+// TypeclassVirtual(Return Type, Name, ArgName...) { implementation }
+#define TypeclassVirtualImplPure(CLS, RETURN, NAME, ...)\
+TypeclassVirtualImplPure_Inner(CLS, RETURN, NAME, ( MAP_LIST(AS_VSTAR, __VA_ARGS__) ), (  __VA_ARGS__ ))
 
 //
 //
@@ -140,3 +195,8 @@ private:                                            \
 //	}
 //
 //};
+
+//#pragma warning(push)
+#pragma warning(disable: 4250)
+//warning disabled due to it causing an error despite being information
+//#pragma warning(pop)

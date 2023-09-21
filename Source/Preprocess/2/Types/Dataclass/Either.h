@@ -1,8 +1,5 @@
 #pragma once
 
-#include "Types/Show.h"
-
-
 
 #ifndef PP__PREPROCESSING
 
@@ -20,16 +17,16 @@ include "Types/VStar.h"
 #define InlineStaticConstStruct(T, NAME, ...) \
 static const inline T NAME = []{ T ${}; __VA_ARGS__; return $; }()
  
-#include "Types/Typeclass/Functor_gen.h"
-#include "Types/Typeclass/Applicative_gen.h"
-#include "Types/Typeclass/Monad_gen.h"
-#include "Types/Typeclass/Semigroup_gen.h"
-#include "Types/Typeclass/Foldable_gen.h"
-#include "Types/Typeclass/Traversable_gen.h"
-#include "Types/Typeclass/Eq_gen.h"
-#include "Types/Typeclass/Ordinal_gen.h"
-#include "Types/Typeclass/Show_gen.h"
-#include "Types/Typeclass/Read_gen.h"
+#include "Types/Typeclass/Functor.h"
+#include "Types/Typeclass/Applicative.h"
+#include "Types/Typeclass/Monad.h"
+#include "Types/Typeclass/Semigroup.h"
+#include "Types/Typeclass/Foldable.h"
+#include "Types/Typeclass/Traversable.h"
+#include "Types/Typeclass/Eq.h"
+#include "Types/Typeclass/Ordinal.h"
+#include "Types/Typeclass/Show.h"
+#include "Types/Typeclass/Read.h"
 
 FUNCTOR(Either);
 APPLICATIVE(Either);
@@ -47,8 +44,8 @@ READ(Either);
 
 class IEither : public virtual ITypeclass {
 private:
-	virtual const TSharedPtr<Typeclass> _GetTypeclass() const override {
-		return NoopPtr(&IEither::Instances);
+	virtual TSharedPtr<const Typeclass> _GetTypeclass() const override {
+		return NoopPtr(&Instances);
 	}
 public:
     IFUNCTOR();
@@ -103,7 +100,7 @@ private:
     Either(Left InLeft, bool ignored) : left(InLeft) {};
     Either(bool ignored, Right InLeft) : right(InRight) {};
 
-	virtual const TSharedPtr<Typeclass> _GetTypeclass() const override {
+	virtual TSharedPtr<const Typeclass> _GetTypeclass() const override {
         const Typeclass* inner = get().getTypeclass();
         TSharedPtr<Typeclass> out = MakeShared();
         *out = IEither::Instances;

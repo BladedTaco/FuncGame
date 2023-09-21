@@ -9,11 +9,13 @@
 
 #include <memory>
 #include <type_traits>
+#include "Templates/SharedPointer.h"
 
 #else
 
 include <memory>
 include <type_traits>
+include "Templates/SharedPointer.h"
 
 #endif
 
@@ -196,7 +198,7 @@ private:
 private:
 	shared_void_ptr storedValue;
 	UType* storedType;
-	const Typeclass* storedInstances;
+	TSharedPtr<const Typeclass> storedInstances;
 	//Instances insts;
 
 public:
@@ -295,7 +297,7 @@ public:
 		return storedType;
 	}
 
-	const Typeclass* const getTypeclass() const {
+	TSharedPtr<const Typeclass> const getTypeclass() const {
 		return storedInstances;
 	}
 
@@ -330,38 +332,38 @@ public:
 		return type->GetType() == EType::BOOL;
 	}
 
-	// NumberV
-	template <typename T>
-	typename std::enable_if_t< std::is_same_v<T, NumberV>, bool>
-	ValidCast(const UType* type) const {
-		return type->GetType() == EType::NUMBER;
-	}
+	//// NumberV
+	//template <typename T>
+	//typename std::enable_if_t< std::is_same_v<T, Num>, bool>
+	//ValidCast(const UType* type) const {
+	//	return type->GetType() == EType::NUM;
+	//}
 
-	// Number<...>
-	template <typename T>
-	typename std::enable_if_t<
-		is_instance_n<1, T, Number>
-		&& !std::is_same_v<T, NumberV>
-	, bool>
-	ValidCast(const UType* type) const {
-		using T_0 = extract<T, 0>;
-		// handle not a number
-		if (type->GetType() != EType::NUMBER) {
-			return false;
-		}
-		// Handle is a NumberV
-		else if (type->GetTemplates()[0]->GetType() == EType::NONE) {
+	//// Number<...>
+	//template <typename T>
+	//typename std::enable_if_t<
+	//	is_instance_n<1, T, Number>
+	//	&& !std::is_same_v<T, NumberV>
+	//, bool>
+	//ValidCast(const UType* type) const {
+	//	using T_0 = extract<T, 0>;
+	//	// handle not a number
+	//	if (type->GetType() != EType::NUMBER) {
+	//		return false;
+	//	}
+	//	// Handle is a NumberV
+	//	else if (type->GetTemplates()[0]->GetType() == EType::NONE) {
 
-			return true;
-			//return GetUnsafePtr<NumberV>()->template _value.ValidCast<T_0>();
-		}
-		// Handle is a Number<T>
-		else {
-			return ValidCast<T_0>(type->GetTemplates()[0]);
-		}
-		// Unreachable
-		return false;
-	}
+	//		return true;
+	//		//return GetUnsafePtr<NumberV>()->template _value.ValidCast<T_0>();
+	//	}
+	//	// Handle is a Number<T>
+	//	else {
+	//		return ValidCast<T_0>(type->GetTemplates()[0]);
+	//	}
+	//	// Unreachable
+	//	return false;
+	//}
 
 	// MaybeV
 	template <typename T>

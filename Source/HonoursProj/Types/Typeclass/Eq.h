@@ -1,11 +1,4 @@
-#pragma once
-
-#include "MacroUtils.h"
-
-#include "Functional/Prelude.h"
-#include "Functional/Typeclass.h"
-
-#include "Types/Unpack.h"
+﻿#pragma once
 
 //// Functor Instance Macro
 #define EQ(INST)		 \
@@ -21,12 +14,4 @@ public:																		PP__NEWLINE \
 }; 																			PP__NEWLINE \
 inline static const Eq EqInst = {};
 
-
-// Functor Interface
-class IEq {
-	TypeclassVirtual(Bool,  eq, a, b) = 0;
-	TypeclassVirtual(Bool, neq, a, b) { return Bool(!eq()(a)(b).get()); }
-};
-
-
-
+#include "Eq_gen.h"

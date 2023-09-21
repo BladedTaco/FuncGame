@@ -1,11 +1,4 @@
-#pragma once
-
-#include "MacroUtils.h"
-
-#include "Functional/Prelude.h"
-#include "Functional/Typeclass.h"
-
-#include "Types/Unpack.h"
+﻿#pragma once
 
 //// Functor Instance Macro
 #define BOUNDED(INST)		 \
@@ -22,11 +15,5 @@ public:												PP__NEWLINE \
 }; 													PP__NEWLINE \
 inline static const Bounded BoundedInst = {};
 
-// Functor Interface
-class IBounded {
-	TypeclassVirtual(VStar, minBound) = 0;
-	TypeclassVirtual(VStar, maxBound) = 0;
-};
 
-
-
+#include "Bounded_gen.h"

@@ -319,6 +319,12 @@ FromType() {
 	return UTypeConst::New(ETypeBase::NONE);
 };
 
+template <class T>
+typename std::enable_if_t< is_similar<T, void>, UTypeConst*>
+FromType() {
+	return UTypeConst::New(ETypeBase::NONE);
+};
+
 
 template <class T>
 typename std::enable_if_t< is_similar<T, Bool>, UTypeConst*>
@@ -327,7 +333,7 @@ FromType() {
 };
 
 template <class T>
-typename std::enable_if_t< is_similar<T, int>, UTypeConst*>
+typename std::enable_if_t< is_similar<T, Int>, UTypeConst*>
 FromType() {
 	return UTypeConst::New(ETypeBase::INT);
 };
@@ -339,13 +345,13 @@ FromType() {
 	return UTypeConst::New(ETypeBase::FLOAT);
 };
 
-
-template <class T>
-typename std::enable_if_t< is_instance_n<1, T, Number>, UTypeConst*>
-FromType() {
-	using T_0 = extract<T, 0>;
-	return UTypeConst::New(ETypeData::NUMBER, { FromType<T_0>() });
-};
+//
+//template <class T>
+//typename std::enable_if_t< is_instance_n<1, T, Num>, UTypeConst*>
+//FromType() {
+//	using T_0 = extract<T, 0>;
+//	return UTypeConst::New(ETypeData::NUMBER, { FromType<T_0>() });
+//};
 
 template <class T>
 typename std::enable_if_t< is_instance_n<1, T, Maybe>, UTypeConst*>

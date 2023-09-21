@@ -8,7 +8,7 @@
 #include "Types/Types_gen.h"
 #include "Types/Type.h"
 
-#include "Types/Func_gen.h"
+#include "Types/Dataclass/Func_gen.h"
 
 
 #include "Types/VStar.h"

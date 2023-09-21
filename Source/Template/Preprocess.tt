@@ -16,6 +16,8 @@
     string ProjectDir = Host.ResolveParameterValue(null, null, "dir");
     PP pp = new PP(ProjectDir);
 
+    bool SkipOldFiles = false;
+
     // Start Common File Header
     var fileManager = new T4FileManager(this);
     fileManager.StartHeader();
@@ -51,7 +53,7 @@
             FileInfo srcFileInfo = new FileInfo(filepath);
             FileInfo dstFileInfo = new FileInfo(Path.Combine(outputPath, outName));
 
-            if (dstFileInfo.Exists && srcFileInfo.LastWriteTimeUtc < dstFileInfo.LastWriteTimeUtc) {
+            if (SkipOldFiles && dstFileInfo.Exists && srcFileInfo.LastWriteTimeUtc < dstFileInfo.LastWriteTimeUtc) {
                 fileManager.MarkFileClean(outName, null, outputPath);
                 continue;
             }
@@ -226,6 +228,7 @@ public class PP {
         yield break;
     }
 
+    public List<string> BaseClasses = new List<string>();
     public List<string> TypeClasses = new List<string>();
     public List<string> DataClasses = new List<string>();
     public Dictionary<string, List<string>> Implementations = new Dictionary<string, List<string>>();
@@ -263,9 +266,18 @@ public class PP {
                 pp.TypeClasses.Add(cls);
                 pp.Implementations.Add(cls, new List<string>());
             }
-            // Add Dataclass if not yet added
-            if (!pp.DataClasses.Contains(inst)) {
-                pp.DataClasses.Add(inst);
+            // Check Dataclass or BaseClass
+            if (inst.StartsWith("BASE_")) {
+                inst = inst.Substring(5);
+                // Add BaseClass if not yet added
+                if (!pp.BaseClasses.Contains(inst)) {
+                    pp.BaseClasses.Add(inst);
+                }
+            } else {
+                // Add Dataclass if not yet added
+                if (!pp.DataClasses.Contains(inst)) {
+                    pp.DataClasses.Add(inst);
+                }
             }
             // Add Implementation
             pp.Implementations[cls].Add(inst);

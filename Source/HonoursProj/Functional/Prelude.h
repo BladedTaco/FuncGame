@@ -133,21 +133,21 @@ include "Functional/curry_gen.h"
 namespace Prelude {
 	// Constant a b = a
 	template <typename A, typename B>
-	auto constant = curry([](A a, B b) -> A {
+	inline auto constant = curry([](A a, B b) -> A {
 		return a;
 	});
 
 	// compose f g = \ x -> f (g x)
 	template <typename A, typename B, typename C>
-	auto compose = curry([](Arr<B, C> f, Arr<A, B> g, A x) -> C {
+	inline auto compose = curry([](Arr<B, C> f, Arr<A, B> g, A x) -> C {
 		return f(g(x));
 	});
 
 	template <typename A>
-	auto id = curry([](A a) -> A { return a; });
+	inline auto id = curry([](A a) -> A { return a; });
 
 	template <typename A, typename B>
-	auto swap = curry([](TTuple<A, B> tup) -> TTuple<B, A> {
+	inline auto swap = curry([](TTuple<A, B> tup) -> TTuple<B, A> {
 		return MakeTuple(tup.template Get<1>(), tup.template Get<0>());
 	});
 };
@@ -155,18 +155,18 @@ namespace Prelude {
 // Prelude functions with Type Erasure
 namespace PreludeV {
 	// Constant a b = a
-	auto constant = curry([](VStar a, VStar b) -> VStar {
+	inline auto constant = curry([](VStar a, VStar b) -> VStar {
 		return a;
 	});
 
 	// compose f g = \ x -> f (g x)
-	auto compose = curry([](VStar f, VStar g, VStar x) -> VStar {
+	inline auto compose = curry([](VStar f, VStar g, VStar x) -> VStar {
 		ArrV _f = f.ResolveToUnsafe<ArrV>();
 		ArrV _g = g.ResolveToUnsafe<ArrV>();
 
 		return _f(_g(x));
 	});
 
-	auto id = curry([](VStar a) -> VStar { return a; });
+	inline auto id = curry([](VStar a) -> VStar { return a; });
 
 };

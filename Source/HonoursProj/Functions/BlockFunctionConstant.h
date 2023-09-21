@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "BlockFunction.h"
 
-#include "Types/Int_gen.h"
+#include "Types/Dataclass/BaseTypes.h"
 
 #include "BlockFunctionConstant.generated.h"
 

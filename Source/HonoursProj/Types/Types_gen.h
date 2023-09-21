@@ -17,8 +17,8 @@ inline constexpr bool IsMember(IntType n) {
  enum class EType : uint8 { 
  ERROR = 0, 
  NONE, INT, FLOAT, BOOL, CHAR 
- , ANY, FUNCTOR, ORDINAL, SHOW 
- , FUNC, NUMBER, MAYBE 
+ , ANY, EQ, ORDINAL, ENUM, BOUNDED, SHOW, READ, FUNCTOR, APPLICATIVE, MONAD, SEMIGROUP, FOLDABLE, TRAVERSABLE, MONOID, NUM, ALTERNATIVE 
+ , EITHER, FUNC, LIST, MAYBE 
  
  }; 
  
@@ -40,46 +40,166 @@ inline constexpr bool IsMember(IntType n) {
  enum class ETypeClass : uint8 { 
  ERROR = 0, 
  ANY = (uint8)EType::ANY 
- , FUNCTOR = (uint8)EType::FUNCTOR 
+ , EQ = (uint8)EType::EQ 
  , ORDINAL = (uint8)EType::ORDINAL 
+ , ENUM = (uint8)EType::ENUM 
+ , BOUNDED = (uint8)EType::BOUNDED 
  , SHOW = (uint8)EType::SHOW 
+ , READ = (uint8)EType::READ 
+ , FUNCTOR = (uint8)EType::FUNCTOR 
+ , APPLICATIVE = (uint8)EType::APPLICATIVE 
+ , MONAD = (uint8)EType::MONAD 
+ , SEMIGROUP = (uint8)EType::SEMIGROUP 
+ , FOLDABLE = (uint8)EType::FOLDABLE 
+ , TRAVERSABLE = (uint8)EType::TRAVERSABLE 
+ , MONOID = (uint8)EType::MONOID 
+ , NUM = (uint8)EType::NUM 
+ , ALTERNATIVE = (uint8)EType::ALTERNATIVE 
  
  }; 
  template <typename IntType> 
  inline constexpr bool IsETypeClass(IntType from) { 
- return IsMember<IntType, ETypeClass, ETypeClass::ANY , ETypeClass::FUNCTOR , ETypeClass::ORDINAL , ETypeClass::SHOW>(from); 
+ return IsMember<IntType, ETypeClass, ETypeClass::ANY , ETypeClass::EQ , ETypeClass::ORDINAL , ETypeClass::ENUM , ETypeClass::BOUNDED , ETypeClass::SHOW , ETypeClass::READ , ETypeClass::FUNCTOR , ETypeClass::APPLICATIVE , ETypeClass::MONAD , ETypeClass::SEMIGROUP , ETypeClass::FOLDABLE , ETypeClass::TRAVERSABLE , ETypeClass::MONOID , ETypeClass::NUM , ETypeClass::ALTERNATIVE>(from); 
  } 
  UENUM(BlueprintType) 
  enum class ETypeData : uint8 { 
  ERROR = 0, 
- FUNC = (uint8)EType::FUNC 
- , NUMBER = (uint8)EType::NUMBER 
+ EITHER = (uint8)EType::EITHER 
+ , FUNC = (uint8)EType::FUNC 
+ , LIST = (uint8)EType::LIST 
  , MAYBE = (uint8)EType::MAYBE 
  
  }; 
  template <typename IntType> 
  inline constexpr bool IsETypeData(IntType from) { 
- return IsMember<IntType, ETypeData, ETypeData::FUNC , ETypeData::NUMBER , ETypeData::MAYBE>(from); 
+ return IsMember<IntType, ETypeData, ETypeData::EITHER , ETypeData::FUNC , ETypeData::LIST , ETypeData::MAYBE>(from); 
  }
 inline bool operator< (const EType lhs, const EType rhs) {
 	if (rhs == EType::ANY) { return lhs != EType::ANY; }
 	switch (rhs) { 
- case EType::FUNCTOR: 
+ case EType::EQ: 
  switch (lhs) { 
- case EType::FUNC: return true; 
+ case EType::BOOL: return true; 
+ case EType::EITHER: return true; 
+ case EType::INT: return true; 
+ case EType::LIST: return true; 
  case EType::MAYBE: return true; 
  default: return false; 
  } 
  break; 
  case EType::ORDINAL: 
  switch (lhs) { 
- case EType::NUMBER: return true; 
+ case EType::BOOL: return true; 
+ case EType::EITHER: return true; 
+ case EType::INT: return true; 
+ case EType::LIST: return true; 
+ case EType::MAYBE: return true; 
+ default: return false; 
+ } 
+ break; 
+ case EType::ENUM: 
+ switch (lhs) { 
+ case EType::BOOL: return true; 
+ case EType::INT: return true; 
+ default: return false; 
+ } 
+ break; 
+ case EType::BOUNDED: 
+ switch (lhs) { 
+ case EType::BOOL: return true; 
+ case EType::INT: return true; 
  default: return false; 
  } 
  break; 
  case EType::SHOW: 
  switch (lhs) { 
- case EType::NUMBER: return true; 
+ case EType::BOOL: return true; 
+ case EType::EITHER: return true; 
+ case EType::INT: return true; 
+ case EType::LIST: return true; 
+ case EType::MAYBE: return true; 
+ default: return false; 
+ } 
+ break; 
+ case EType::READ: 
+ switch (lhs) { 
+ case EType::BOOL: return true; 
+ case EType::EITHER: return true; 
+ case EType::INT: return true; 
+ case EType::LIST: return true; 
+ case EType::MAYBE: return true; 
+ default: return false; 
+ } 
+ break; 
+ case EType::FUNCTOR: 
+ switch (lhs) { 
+ case EType::EITHER: return true; 
+ case EType::FUNC: return true; 
+ case EType::LIST: return true; 
+ case EType::MAYBE: return true; 
+ default: return false; 
+ } 
+ break; 
+ case EType::APPLICATIVE: 
+ switch (lhs) { 
+ case EType::EITHER: return true; 
+ case EType::FUNC: return true; 
+ case EType::LIST: return true; 
+ case EType::MAYBE: return true; 
+ default: return false; 
+ } 
+ break; 
+ case EType::MONAD: 
+ switch (lhs) { 
+ case EType::EITHER: return true; 
+ case EType::FUNC: return true; 
+ case EType::LIST: return true; 
+ case EType::MAYBE: return true; 
+ default: return false; 
+ } 
+ break; 
+ case EType::SEMIGROUP: 
+ switch (lhs) { 
+ case EType::EITHER: return true; 
+ case EType::FUNC: return true; 
+ case EType::LIST: return true; 
+ case EType::MAYBE: return true; 
+ default: return false; 
+ } 
+ break; 
+ case EType::FOLDABLE: 
+ switch (lhs) { 
+ case EType::EITHER: return true; 
+ case EType::LIST: return true; 
+ case EType::MAYBE: return true; 
+ default: return false; 
+ } 
+ break; 
+ case EType::TRAVERSABLE: 
+ switch (lhs) { 
+ case EType::EITHER: return true; 
+ case EType::LIST: return true; 
+ case EType::MAYBE: return true; 
+ default: return false; 
+ } 
+ break; 
+ case EType::MONOID: 
+ switch (lhs) { 
+ case EType::FUNC: return true; 
+ case EType::LIST: return true; 
+ case EType::MAYBE: return true; 
+ default: return false; 
+ } 
+ break; 
+ case EType::NUM: 
+ switch (lhs) { 
+ case EType::INT: return true; 
+ default: return false; 
+ } 
+ break; 
+ case EType::ALTERNATIVE: 
+ switch (lhs) { 
+ case EType::LIST: return true; 
  case EType::MAYBE: return true; 
  default: return false; 
  } 

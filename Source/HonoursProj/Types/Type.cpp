@@ -73,15 +73,6 @@ FString UType::ToString() const {
 		}
 		return FString::Format(TEXT("({0} -> {1})"), { fromStr, toStr });
 	}
-	// Number
-	case EType::NUMBER: {
-		const UType* inner = GetTemplates()[0];
-		if (inner->GetType() == EType::ANY) {
-			return FString("Number");
-		} else {
-			return inner->ToString();
-		}
-	}
 	// Fallthrough
 	default: break;
 	}

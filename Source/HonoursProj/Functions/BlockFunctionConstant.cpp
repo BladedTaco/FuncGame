@@ -14,7 +14,7 @@
 #include "Types/Types_gen.h"
 #include "Types/Type.h"
 
-#include "Types/Int_gen.h"
+#include "Types/Dataclass/BaseTypes.h"
 
 #include "HUD/FunctionHUD.h"
 
@@ -36,14 +36,14 @@ void ABlockFunctionConstant::SetFunctionTypes() {
 	// Set Inputs and Outputs
 	Inputs = {};
 	Outputs = {
-		{"Out",  UTypeConst::New(ETypeData::NUMBER, {UTypeConst::New(ETypeBase::INT)})}
+		{"Out", UTypeConst::New(ETypeBase::INT) }
 	};
 }
 
 Arr<VStarArray, VStarArrayReturn> ABlockFunctionConstant::GetInnerFunc() {
 	return Arr<VStarArray, VStarArrayReturn>([this](VStarArray values) -> VStarArrayReturn {
 
-		VStar out = VStar(NumberV(Value));
+		VStar out = VStar(Int(Value));
 
 		//this->TextComponent->SetText(FText::Format(FText::FromString(FString("Val {0}")), this->Value));
 

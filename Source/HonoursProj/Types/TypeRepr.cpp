@@ -9,9 +9,10 @@
 #include "Algo/Compare.h"
 
 #include "VStar.h"
-#include "Show.h"
-#include "Int_gen.h"
-#include "Maybe_gen.h"
+#include "Typeclass/Show.h"
+#include "Types/Dataclass/Maybe_gen.h"
+
+#include "Types/Dataclass/BaseTypes.h"
 
 #include "MyUtils.h"
 #include "HUD/TextHUD.h"
@@ -65,15 +66,6 @@ void ATypeRepr::UpdateValue(VStar value) {
 
 	// Container Types
 	} else if (IsETypeData(type)) {
-		if (type == EType::NUMBER) {
-			if (auto number = value.ResolveToSafe<Number<int>>()) {
-				return UpdateText(number->GetTypeclass()->Show->show()(value));
-			}
-			if (auto number = value.ResolveToSafe<Number<float>>()) {
-				return UpdateText(number->GetTypeclass()->Show->show()(value));
-			}
-		}
-
 		// Maybe
 		if (type == EType::MAYBE) {
 			auto maybe = value.ResolveToSafe<MaybeV>();
@@ -166,7 +158,7 @@ UClass* ATypeRepr::GetRepr(EType Type) {
 			{ EType::CHAR	, *TypeRepr.Char.Class		},
 			{ EType::ANY	, *TypeRepr.Template.Class	},
 			{ EType::MAYBE	, *TypeRepr.Maybe.Class		},
-			{ EType::NUMBER	, *TypeRepr.Number.Class	},
+			{ EType::NUM	, *TypeRepr.Number.Class	},
 			{ EType::FUNCTOR, *TypeRepr.Functor.Class	},
 			{ EType::ORDINAL, *TypeRepr.Ordinal.Class	},
 			{ EType::SHOW	, *TypeRepr.Show.Class		},
@@ -205,15 +197,6 @@ ATypeRepr* ATypeRepr::CreateRepr(UType* Type, UWorld* World, int32 StencilValue)
 	}
 	// MisMatch, Invalid Representation
 	if (templates.Num() != planes.Num()) return nullptr;
-
-	if (Type->GetType() == EType::NUMBER) {
-		if (templates[0]->GetType() == EType::ANY) {
-			planes[0]->SetVisibility(false);
-			return me;
-		} else {
-			me->SetActorHiddenInGame(true);
-		}
-	}
 
 	// For Each Template/Plane Pair
 	for (int idx = templates.Num(); idx --> 0;) {

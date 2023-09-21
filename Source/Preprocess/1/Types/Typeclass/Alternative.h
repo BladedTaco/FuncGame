@@ -5,19 +5,25 @@
 #include "Functional/Prelude.h"
 #include "Functional/Typeclass.h"
 
-#include "Types/Typeclass/Applicative_gen.h"
-
 #include "Types/Unpack.h"
 
-//// Functor Instance Macro
-#define ALTERNATIVE(INST)		 \
-PP__DIRECTIVE(Typeclass, Alternative, INST)
 
 
+#ifndef PP__PREPROCESSING
+
+#include "Types/Typeclass/Applicative_gen.h"
+
+#else
+
+include "Types/Typeclass/Applicative_gen.h"
+
+#endif
+
+;
 
 // Functor Interface
-class IAlternative : IApplicative {
-	// TypeclassVirtual(VStar, )
+class IAlternative : public virtual IApplicative {
+    // TypeclassVirtual(VStar, )
 };
 
 /*

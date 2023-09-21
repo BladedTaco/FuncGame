@@ -8,13 +8,11 @@
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
 
-
-#include "Types/Functor.h"
-#include "Types/Maybe_gen.h"
-#include "Types/Ord.h"
-#include "Types/Int_gen.h"
+#include "Types/Typeclass/Functor.h"
+#include "Types/Dataclass/Maybe_gen.h"
+#include "Types/Typeclass/Ordinal.h"
+#include "Types/Dataclass/BaseTypes.h"
 #include "Types/Types_gen.h"
-#include "Types/Func_gen.h"
 
 #include "Types/Unpack.h"
 
@@ -152,58 +150,58 @@ void AHonoursProjPawn::OnLClickRelease() {
 
 
 
-	VStar q1 = VStar(NumberV(1.5f));
-	VStar q2 = VStar(NumberV(2.2f));
-	VStar q3 = VStar(NumberV(3.3f));
+	//VStar q1 = VStar(NumberV(1.5f));
+	//VStar q2 = VStar(NumberV(2.2f));
+	//VStar q3 = VStar(NumberV(3.3f));
 
 
-	const IOrdinal* const qo1 = q1.getTypeclass()->Ordinal;
+	//const IOrdinal* const qo1 = q1.getTypeclass()->Ordinal;
 
-	Number<float> q5 = *q1.ResolveToSafe<Number<float>>();
+	//Number<float> q5 = *q1.ResolveToSafe<Number<float>>();
 
-	float q6 = q5.get();
+	//float q6 = q5.get();
 
-	UE_LOG(LogTemp, Warning, TEXT("ORD VSTAR TESTS %f"), q6);
+	//UE_LOG(LogTemp, Warning, TEXT("ORD VSTAR TESTS %f"), q6);
 
-	ORD qor1 = qo1->ord()(q1)(q2);
-	ORD qor2 = qo1->ord()(q2)(q3);
-	ORD qor3 = qo1->ord()(q1)(q1);
-	ORD qor4 = qo1->ord()(q3)(q1);
+	//ORD qor1 = qo1->ord()(q1)(q2);
+	//ORD qor2 = qo1->ord()(q2)(q3);
+	//ORD qor3 = qo1->ord()(q1)(q1);
+	//ORD qor4 = qo1->ord()(q3)(q1);
 
-	UE_LOG(LogTemp, Warning, TEXT("ORD VSTAR TESTS %d %d %d %d"), qor1, qor2, qor3, qor4);
-
-
-	Arr<int, int> square = { [](int a) { return a * a; } };
-
-	ArrV Vsquare = { [=](VStar a) { return VStar(square(a.ResolveToUnsafe<int>())); } };
-
-	 //Usage Example
-	VStar ma1 = VStar(MaybeV::Just(4));
-	VStar ma2 = VStar(MaybeV::Nothing());
-	const IFunctor* const fo1 = ma1.getTypeclass()->Functor;
-	const IFunctor* const fo2 = ma2.getTypeclass()->Functor;
+	//UE_LOG(LogTemp, Warning, TEXT("ORD VSTAR TESTS %d %d %d %d"), qor1, qor2, qor3, qor4);
 
 
-	int a10 = ma1.ResolveToSafe<Maybe<int>>()->fromMaybe(-1);
+	//Arr<int, int> square = { [](int a) { return a * a; } };
+
+	//ArrV Vsquare = { [=](VStar a) { return VStar(square(a.ResolveToUnsafe<int>())); } };
+
+	// //Usage Example
+	//VStar ma1 = VStar(MaybeV::Just(4));
+	//VStar ma2 = VStar(MaybeV::Nothing());
+	//const IFunctor* const fo1 = ma1.getTypeclass()->Functor;
+	//const IFunctor* const fo2 = ma2.getTypeclass()->Functor;
 
 
-	auto ma3 = ma2.ResolveToSafe<Maybe<int>>();
+	//int a10 = ma1.ResolveToSafe<Maybe<int>>()->fromMaybe(-1);
 
-	int a11 = ma3->fromMaybe(-1);
 
-	VStar a2 = fo1->fmap()(Vsquare)(ma1);
-	VStar a3 = fo1->map_replace_by()(VStar(2))(ma1);
-	
-	int a4 = a2.ResolveToSafe<MaybeV>()->fromMaybe(-1);
-	int a5 = a3.ResolveToSafe<MaybeV>()->fromMaybe(-1);
+	//auto ma3 = ma2.ResolveToSafe<Maybe<int>>();
 
-	VStar a6 = fo1->fmap()(Vsquare)(ma2);
-	VStar a7 = fo1->map_replace_by()(VStar(2))(ma2);
+	//int a11 = ma3->fromMaybe(-1);
 
-	int a8 = a6.ResolveToSafe<MaybeV>()->fromMaybe(-1);
-	int a9 = a7.ResolveToSafe<MaybeV>()->fromMaybe(-1);
+	//VStar a2 = fo1->fmap()(Vsquare)(ma1);
+	//VStar a3 = fo1->map_replace_by()(VStar(2))(ma1);
+	//
+	//int a4 = a2.ResolveToSafe<MaybeV>()->fromMaybe(-1);
+	//int a5 = a3.ResolveToSafe<MaybeV>()->fromMaybe(-1);
 
-	UE_LOG(LogTemp, Warning, TEXT("MAYBE VSTAR %d %d %d %d %d %d"), a4, a5, a8, a9, a10, a11);
+	//VStar a6 = fo1->fmap()(Vsquare)(ma2);
+	//VStar a7 = fo1->map_replace_by()(VStar(2))(ma2);
+
+	//int a8 = a6.ResolveToSafe<MaybeV>()->fromMaybe(-1);
+	//int a9 = a7.ResolveToSafe<MaybeV>()->fromMaybe(-1);
+
+	//UE_LOG(LogTemp, Warning, TEXT("MAYBE VSTAR %d %d %d %d %d %d"), a4, a5, a8, a9, a10, a11);
 
 
 

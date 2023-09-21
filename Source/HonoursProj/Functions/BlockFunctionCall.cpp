@@ -17,17 +17,15 @@
 #include "Types/Types_gen.h"
 #include "Types/Type.h"
 
-#include "Types/Functor.h"
-#include "Types/Show.h"
-#include "Types/Maybe_gen.h"
-#include "Types/Func_gen.h"
-#include "Types/Int_gen.h"
+#include "Types/Typeclass/Functor.h"
+#include "Types/Typeclass/Show.h"
+#include "Types/Dataclass/Maybe_gen.h"
+#include "Types/Dataclass/BaseTypes.h"
 
 #include "MyUtils.h"
 
 
 #include "HUD/FunctionHUD.h"
-#include "BlockFunctionCounter.h"
 
 #include "Algo/AllOf.h"
 #include "Kismet/GameplayStatics.h"
@@ -65,7 +63,7 @@ Arr<VStarArray, VStarArrayReturn> ABlockFunctionCall::GetInnerFunc() {
 
 		auto [v0, v1] = Destruct<2, TArray, VStar>(values);
 
-		ArrV f = v0.GetUnsafe<ArrV>();
+		ArrV f = v0.ResolveToUnsafe<ArrV>();
 
 		VStar result = f(v1);
 

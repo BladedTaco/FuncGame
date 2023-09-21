@@ -16,8 +16,8 @@
 #include "Types/Types_gen.h"
 #include "Types/Type.h"
 
-#include "Types/Int_gen.h"
-#include "Types/Maybe_gen.h"
+#include "Types/Dataclass/BaseTypes.h"
+#include "Types/Dataclass/Maybe_gen.h"
 
 
 #include "MyUtils.h"
