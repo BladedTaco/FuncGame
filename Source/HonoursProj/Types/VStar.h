@@ -315,7 +315,7 @@ public:
 
 
 	template <typename T>
-	typename std::enable_if_t< std::is_same_v<T, int> , bool>
+	typename std::enable_if_t< std::is_same_v<T, Int> , bool>
 	ValidCast(const UType* type) const {
 		return type->GetType() == EType::INT;
 	}
@@ -445,6 +445,89 @@ public:
 		// Unreachable
 		return false;
 	}
+
+
+
+	// ListV
+	template <typename T>
+	typename std::enable_if_t< std::is_same_v<T, ListV>, bool>
+		ValidCast(const UType* type) const {
+		return type->GetType() == EType::LIST;
+	}
+
+	// List<...>
+	template <typename T>
+	typename std::enable_if_t<
+		is_instance_n<1, T, List>
+		&& !std::is_same_v<T, ListV>
+	, bool>
+		ValidCast(const UType* type) const {
+		using T_0 = extract<T, 0>;
+		// handle not a list
+		if (type->GetType() != EType::LIST) {
+			return false;
+		}
+		// Handle is a ListV
+		else if (type->GetTemplates()[0]->GetType() == EType::NONE) {
+
+			return true;
+			//// Nothing Maybes can cast to anything
+			//if (GetUnsafePtr<MaybeV>()->_isNothing) {
+			//	return true;
+			//}
+			//// Just Maybes can only cast to their inner values
+			//return GetUnsafePtr<MaybeV>()->_value.ValidCast<T_0>();
+
+		}
+		// Handle is a List<T>
+		else {
+			return ValidCast<T_0>(type->GetTemplates()[0]);
+		}
+		// Unreachable
+		return false;
+	}
+
+
+	// EitherV
+	template <typename T>
+	typename std::enable_if_t< std::is_same_v<T, EitherV>, bool>
+		ValidCast(const UType* type) const {
+		return type->GetType() == EType::LIST;
+	}
+
+	// Either<...>
+	template <typename T>
+	typename std::enable_if_t<
+		is_instance_n<2, T, Either>
+		&& !std::is_same_v<T, EitherV>
+	, bool>
+		ValidCast(const UType* type) const {
+		using Left = extract<T, 0>;
+		using Right = extract<T, 1>;
+
+		// handle not an arrow
+		if (type->GetType() != EType::EITHER) {
+			return false;
+		}
+
+		// Destructure Templates
+		auto templates = type->GetTemplates();
+		auto [from, to] = Destruct<2, TArray, UType*>(templates);
+
+		// Handle is a ArrV
+		if (from->GetType() == EType::NONE || to->GetType() == EType::NONE) {
+			return false;
+			//return GetUnsafePtr<MaybeV>()->_value.ValidCast<T_0>();
+		}
+		// Handle is a Arr<...>
+		else {
+			return ValidCast<Left>(from) && ValidCast<Right>(to);
+		}
+		// Unreachable
+		return false;
+	}
+
+
 
 public:
 	template <typename T>

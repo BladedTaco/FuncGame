@@ -152,17 +152,28 @@ UClass* ATypeRepr::GetRepr(EType Type) {
 		// Populate ClassMap
 		const auto& TypeRepr = Assets()->TypeRepr;
 		ATypeRepr::ClassMap = {
-			{ EType::INT	, *TypeRepr.Int.Class		},
-			{ EType::FLOAT	, *TypeRepr.Float.Class		},
-			{ EType::BOOL	, *TypeRepr.Bool.Class		},
-			{ EType::CHAR	, *TypeRepr.Char.Class		},
-			{ EType::ANY	, *TypeRepr.Template.Class	},
-			{ EType::MAYBE	, *TypeRepr.Maybe.Class		},
-			{ EType::NUM	, *TypeRepr.Number.Class	},
-			{ EType::FUNCTOR, *TypeRepr.Functor.Class	},
-			{ EType::ORDINAL, *TypeRepr.Ordinal.Class	},
-			{ EType::SHOW	, *TypeRepr.Show.Class		},
-			{ EType::FUNC	, *TypeRepr.Function.Class	}
+			{ EType::APPLICATIVE	, *TypeRepr.Applicative.Class	},
+			{ EType::BOOL			, *TypeRepr.Bool.Class			},
+			{ EType::BOUNDED		, *TypeRepr.Bounded.Class		},
+			{ EType::CHAR			, *TypeRepr.Char.Class			},
+			{ EType::EITHER			, *TypeRepr.Either.Class		},
+			{ EType::ENUM			, *TypeRepr.Enum.Class			},
+			{ EType::EQ				, *TypeRepr.Eq.Class			},
+			{ EType::FLOAT			, *TypeRepr.Float.Class			},
+			{ EType::FOLDABLE		, *TypeRepr.Foldable.Class		},
+			{ EType::FUNC			, *TypeRepr.Function.Class		},
+			{ EType::FUNCTOR		, *TypeRepr.Functor.Class		},
+			{ EType::INT			, *TypeRepr.Int.Class			},
+			{ EType::LIST			, *TypeRepr.List.Class			},
+			{ EType::MAYBE			, *TypeRepr.Maybe.Class			},
+			{ EType::MONAD			, *TypeRepr.Monad.Class			},
+			{ EType::MONOID			, *TypeRepr.Monoid.Class		},
+			{ EType::NUM			, *TypeRepr.Number.Class		},
+			{ EType::ORDINAL		, *TypeRepr.Ordinal.Class		},
+			{ EType::SEMIGROUP		, *TypeRepr.Semigroup.Class		},
+			{ EType::SHOW			, *TypeRepr.Show.Class			},
+			{ EType::ANY			, *TypeRepr.Template.Class		},
+			{ EType::TRAVERSABLE	, *TypeRepr.Traversable.Class	}
 		};
 	}
 

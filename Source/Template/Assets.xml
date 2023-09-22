@@ -1,18 +1,31 @@
 <root>
     <ResourceType Name='Material'>
-        <Object Name="Base" Type="UMaterial" Location="/Game/MyContent/Materials/BaseMaterial.BaseMaterial"/>
+        <!-- ([^ ]*Materials/)([^.]*)(Material.*) -->
+        <!-- <Object Name="$2" Type="UMaterialInstance" Location="$1$2$3"/> -->
+        <Object Name="Base" Type="UMaterial" Location="Material'/Game/MyContent/Materials/BaseMaterial.BaseMaterial'"/>
+        <Object Name="Font" Type="UMaterial" Location="Material'/Game/MyContent/Materials/FontMaterial.FontMaterial'"/>
+        <Object Name="PostProcess" Type="UMaterial" Location="Material'/Game/MyContent/Materials/PostProcessMaterial.PostProcessMaterial'"/>
+        <Object Name="Shiny" Type="UMaterial" Location="Material'/Game/MyContent/Materials/ShinyMaterial.ShinyMaterial'"/>
+
         <Object Name="Black" Type="UMaterialInstance" Location="/Game/MyContent/Materials/BlackMaterial.BlackMaterial"/>
-        <Object Name="Brown" Type="UMaterialInstance" Location="/Game/MyContent/Materials/BrownMaterial.BrownMaterial"/>
-        <Object Name="Green" Type="UMaterialInstance" Location="/Game/MyContent/Materials/GreenMaterial.GreenMaterial"/>
-        <Object Name="Purple" Type="UMaterialInstance" Location="/Game/MyContent/Materials/PurpleMaterial.PurpleMaterial"/>
-        <Object Name="DarkGrey" Type="UMaterialInstance" Location="/Game/MyContent/Materials/DarkGreyMaterial.DarkGreyMaterial"/>
-        <Object Name="White" Type="UMaterialInstance" Location="/Game/MyContent/Materials/WhiteMaterial.WhiteMaterial"/>
+        <Object Name="Blood" Type="UMaterialInstance" Location="/Game/MyContent/Materials/BloodMaterial.BloodMaterial"/>
         <Object Name="Blue" Type="UMaterialInstance" Location="/Game/MyContent/Materials/BlueMaterial.BlueMaterial"/>
-        <Object Name="Orange" Type="UMaterialInstance" Location="/Game/MyContent/Materials/OrangeMaterial.OrangeMaterial"/>
-        <Object Name="Grey" Type="UMaterialInstance" Location="/Game/MyContent/Materials/GreyMaterial.GreyMaterial"/>
-        <Object Name="Pink" Type="UMaterialInstance" Location="/Game/MyContent/Materials/PinkMaterial.PinkMaterial"/>
-        <Object Name="Red" Type="UMaterialInstance" Location="/Game/MyContent/Materials/RedMaterial.RedMaterial"/>
+        <Object Name="Brown" Type="UMaterialInstance" Location="/Game/MyContent/Materials/BrownMaterial.BrownMaterial"/>
+        <Object Name="Copper" Type="UMaterialInstance" Location="/Game/MyContent/Materials/CopperMaterial.CopperMaterial"/>
+        <Object Name="DarkGrey" Type="UMaterialInstance" Location="/Game/MyContent/Materials/DarkGreyMaterial.DarkGreyMaterial"/>
         <Object Name="Gold" Type="UMaterialInstance" Location="/Game/MyContent/Materials/GoldMaterial.GoldMaterial"/>
+        <Object Name="Green" Type="UMaterialInstance" Location="/Game/MyContent/Materials/GreenMaterial.GreenMaterial"/>
+        <Object Name="Grey" Type="UMaterialInstance" Location="/Game/MyContent/Materials/GreyMaterial.GreyMaterial"/>
+        <Object Name="Orange" Type="UMaterialInstance" Location="/Game/MyContent/Materials/OrangeMaterial.OrangeMaterial"/>
+        <Object Name="Pink" Type="UMaterialInstance" Location="/Game/MyContent/Materials/PinkMaterial.PinkMaterial"/>
+        <Object Name="Purple" Type="UMaterialInstance" Location="/Game/MyContent/Materials/PurpleMaterial.PurpleMaterial"/>
+        <Object Name="Red" Type="UMaterialInstance" Location="/Game/MyContent/Materials/RedMaterial.RedMaterial"/>
+        <Object Name="RoyalPurple" Type="UMaterialInstance" Location="/Game/MyContent/Materials/RoyalPurpleMaterial.RoyalPurpleMaterial"/>
+        <Object Name="Silver" Type="UMaterialInstance" Location="/Game/MyContent/Materials/SilverMaterial.SilverMaterial"/>
+        <Object Name="Turquoise" Type="UMaterialInstance" Location="/Game/MyContent/Materials/TurquoiseMaterial.TurquoiseMaterial"/>
+        <Object Name="Void" Type="UMaterialInstance" Location="/Game/MyContent/Materials/VoidMaterial.VoidMaterial"/>
+        <Object Name="White" Type="UMaterialInstance" Location="/Game/MyContent/Materials/WhiteMaterial.WhiteMaterial"/>
+
     </ResourceType>
     <ResourceType Name='Mesh'>    
         <Object Name="PuzzleCube" Type="UStaticMesh" Location="/Game/MyContent/Meshes/PuzzleCube.PuzzleCube"/>
@@ -36,17 +49,28 @@
         <Class Name="ASH" Type="UWidgetComponent" Location="/Game/MyContent/Blueprints/BP_AutoScalingHUD"/>
     </ResourceType>
 	<ResourceType Name='TypeRepr'>
+        <Class Name="Applicative" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Applicative"/>
+        <Class Name="Bool" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Bool"/>
+        <Class Name="Bounded" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Bounded"/>
+        <Class Name="Char" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Char"/>
+        <Class Name="Either" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Either"/>
+        <Class Name="Enum" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Enum"/>
+        <Class Name="Eq" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Eq"/>
         <Class Name="Float" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Float"/>
+        <Class Name="Foldable" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Foldable"/>
         <Class Name="Function" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Function"/>
         <Class Name="Functor" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Functor"/>
         <Class Name="Int" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Int"/>
+        <Class Name="List" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_List"/>
+        <Class Name="Maybe" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Maybe"/>
+        <Class Name="Monad" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Monad"/>
+        <Class Name="Monoid" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Monoid"/>
+        <Class Name="Number" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Number"/>
         <Class Name="Ordinal" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Ordinal"/>
+        <Class Name="Semigroup" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Semigroup"/>
         <Class Name="Show" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Show"/>
         <Class Name="Template" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Template"/>
-        <Class Name="Bool" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Bool"/>
-        <Class Name="Char" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Char"/>
-        <Class Name="Maybe" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Maybe"/>
-        <Class Name="Number" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Number"/>
+        <Class Name="Traversable" Type="AActor" Location="/Game/MyContent/Blueprints/Types/TypeRepr_Traversable"/>
     </ResourceType>
     
 

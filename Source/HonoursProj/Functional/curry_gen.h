@@ -50,6 +50,8 @@ template <typename To, typename From>
 class Func : public virtual IFunc {
 private:
 	Function<To, From> _func;
+	friend ArrV;
+	friend ArrVV;
 public:
 	Func(Function<To, From> f) {
 		_func = f;
@@ -60,29 +62,66 @@ public:
 	Func(const ArrV* f) {
 		_func = [f](From x) -> To { return To(f->operator()(x)); };
 	}
-	To operator()(const VStar& a) const {
-		return _func(a.ResolveToUnsafe<From>());
+	Func(const ArrV& f) {
+		_func = [f](From x) -> To { return To(f(x)); };
+	} 
+	ArrV ToArrV() const {
+		return curry([_f = _func](const VStar& x){ return VStar(_f(x)); });
 	}
 	To operator()(From a) const {
 		return _func(a);
 	}
+	To operator()(const From& a) const {
+		return _func(a);
+	}
+	To operator()(const VStar& a) const {
+		return _func(a.ResolveToUnsafe<From>());
+	}
 };
-template <typename To>
-class Func<To, VStar> : public virtual IFunc {
+template <>
+class Func<VStar, VStar> : public virtual IFunc {
 	using From = const VStar&;
+	using To = VStar;
 private:
 	Function<To, From> _func;
+	friend ArrVV;
 public:
 	Func(Function<To, From> f) {
 		_func = f;
 	}
 	Func(const Func<To, From>* f) {
-		_func = f->_func;
+		_func = [f](From x) -> To { return f->operator()(x); };
 	}
 	Func(const ArrV* f) {
 		_func = [f](From x) -> To { return f->operator()(x).ResolveToUnsafe<To>(); };
 	}
 	To operator()(From a) const {
+		return _func(a);
+	}
+}; 
+template <typename To>
+class Func<To, VStar> : public virtual IFunc {
+private:
+	Function<To, const VStar&> _func;
+	friend ArrV;
+	friend ArrVV;
+public:
+	Func(Function<To, const VStar&> f) {
+		_func = f;
+	}
+	Func(const Func<To, const VStar&>* f) {
+		_func = f->_func;
+	}
+	Func(const ArrV* f) {
+		_func = [f](const VStar& x) -> To { return f->operator()(x).ResolveToUnsafe<To>(); };
+	}
+	Func(const ArrVV* f) {
+		_func = [f](const VStar& x) -> VStar { return VStar(f->operator()(x)); };
+	}
+	ArrV ToArrV() const {
+		return curry([_f = _func](VStar x){ return VStar(_f(x)); });
+	}
+	To operator()(const VStar& a) const {
 		return _func(a);
 	}
 };
@@ -91,6 +130,8 @@ class Func<To, void> : public virtual IFunc {
 	using From = void;
 private:
 	Function<To, From> _func;
+	friend ArrV;
+	friend ArrVV;
 public:
 	Func(Function<To, From> f) {
 		_func = f;
@@ -100,6 +141,9 @@ public:
 	}
 	Func(const ArrV* f) {
 		_func = [f](From x) -> To { return To(f->operator()(x)); };
+	}
+	Func(const ArrV& f) {
+		_func = [f](From x) -> To { return To(f(x)); };
 	}
 	To operator()() const {
 		return _func();
@@ -110,6 +154,8 @@ class Func<To, const VStar&> : public virtual IFunc {
 	using From = const VStar&;
 private:
 	Function<To, From> _func;
+	friend ArrV;
+	friend ArrVV;
 public:
 	Func(Function<To, From> f) {
 		_func = f;
@@ -119,6 +165,9 @@ public:
 	}
 	Func(const ArrV* f) {
 		_func = [f](From x) -> To { return To(f->operator()(x)); };
+	}
+	Func(const ArrV& f) {
+		_func = [f](From x) -> To { return To(f(x)); };
 	}
 	To operator()(From a) const {
 		return _func(a);
@@ -130,6 +179,8 @@ class Func<VStarArrayReturn, VStarArray> : public virtual IFunc {
 	using To = VStarArrayReturn;
 private:
 	Function<To, From> _func;
+	friend ArrV;
+	friend ArrVV;
 public:
 	Func(Function<To, From> f) {
 		_func = f;

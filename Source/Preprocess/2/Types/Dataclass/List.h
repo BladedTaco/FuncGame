@@ -112,14 +112,14 @@ private:
 
 	virtual TSharedPtr<const Typeclass> _GetTypeclass() const override {
         // No Instance Retains all Typeclasses
-        if (isEmpty().get()) return IList::_GetTypeclass(); 
+        if (isEmpty().get()) return NoopPtr(&IList::Instances); 
 
         // Copy
-        TSharedPtr<Typeclass> out = MakeShared();
-        *out = IEither::Instances;
-        
+        TSharedPtr<Typeclass> out = MakeShareable(new Typeclass());
+        *out = IList::Instances;
+         
         // Change
-        const Typeclass* inner = _head.getTypeclass();
+        auto inner = _head.getTypeclass();
         if (!inner->Ordinal) out->Ordinal = NULL;
         if (!inner->Eq) out->Eq = NULL;
         if (!inner->Show) out->Show = NULL;
@@ -140,10 +140,10 @@ public:
     {};
 
 public:
-    Bool isEmpty() { return !_head.Valid(); }
-    Bool isInfinite() { return _next.Valid(); }
+    Bool isEmpty() const { return !_head.Valid(); }
+    Bool isInfinite() const { return _next.Valid(); }
     A head(A fallback) {
-        return isEmpty() ? fallback : _head.ResolveToUnsafe<A>();
+        return isEmpty().get() ? fallback : _head.ResolveToUnsafe<A>();
 	}
     List<A> rest() {
         // strict list
@@ -151,7 +151,8 @@ public:
         // No Next
         if (!_next.Valid()) return List();
         // Generate next
-        return List(_next(_head), _next);
+        ArrV nex = _next.ResolveToUnsafe<ArrV>();
+        return List(nex(_head), nex);
     }
 
 	// Cast Construction
@@ -187,39 +188,31 @@ public:
         : _head(InHead)
         , _rest(InRest)
     {};
-    List(VStar seed, Arr<A, A> InNext)
+    List(VStar seed, ArrV InNext)
         : _head(seed)
         , _next(InNext)
     {};
 
 public:
-    Bool isEmpty() { return !_head.Valid(); }
-    Bool isInfinite() { return _next.Valid(); }
+    Bool isEmpty() const { return !_head.Valid(); }
+    Bool isInfinite() const { return _next.Valid(); }
     template <typename A>
     A head(A fallback) {
-        return isEmpty() ? fallback : _head.ResolveToUnsafe<A>();
-	}
+        return isEmpty().get() ? fallback : _head.ResolveToUnsafe<A>();
+	}  
     template <>
     VStar head(VStar fallback) {
-        return isEmpty() ? fallback : _head;
+        return isEmpty().get()  ? fallback : _head;
 	}
-    template <typename A>
+    template <typename A = VStar>
     List<A> rest() {
         // strict list
         if (_rest.Valid()) return _rest.ResolveToUnsafe<List<A>>();
         // No Next
         if (!_next.Valid()) return List();
         // Generate next
-        return List(_next(_head), _next);
-    }
-    template <>
-    ListV rest() {
-        // strict list
-        if (_rest.Valid()) return _rest.ResolveToUnsafe<ListV>();
-        // No Next
-        if (!_next.Valid()) return ListV();
-        // Generate next
-        return ListV(_next(_head), _next);
+        ArrV nex = _next.ResolveToUnsafe<ArrV>();
+        return List(nex(_head), nex);
     }
 
 	// Cast Construction
@@ -253,18 +246,21 @@ auto rest = curry([](List<A> l_a, A a) -> A {
     return l_a.rest(a);
 });
 
-template <typename A>
-auto cons = curry([](A head, List<A> list) {
-    return List<A>(head, list);
+template <typename A = VStar>
+auto cons = curry([](A value, List<A> list) {
+    return List<A>(value, list);
 });
-
+auto consV = curry([](VStar headV, VStar listV) {
+    return ListV(headV, listV.ResolveToUnsafe<ListV>());
+}); 
+ 
 inline FString IList::Show::_show(const VStar& a) const {
 	// Resolve Variables
 	ListV m_a = a.ResolveToUnsafe<ListV>();
 
 	// Logic
-	return m_a.isEmpty()
-		? FString(TEXT("[]"));
+	return m_a.isEmpty().get()
+		? FString(TEXT("[]"))
         : FString::Format(TEXT("[{0}, ...]"), { m_a._head.getTypeclass()->Show->show()(m_a._head) });
 }
 
@@ -282,8 +278,8 @@ inline ORD IList::Ordinal::_ord( const VStar& a, const VStar& b) const {
     if (_ae || _be) return ORD(_be - _ae);
 
     // Compare and recurse
-    ORD order = _a.head({}).getTypeclass()->Ordinal->ord()(_a.head({}))(_b.head({}));
-    return order != ORD::EQ ? order : ord()(_a.rest())(_b.rest());
+    ORD order = _a.head(VStar()).getTypeclass()->Ordinal->ord()(_a.head(VStar()))(_b.head(VStar()));
+    return order != ORD::EQ ? order : ord()(VStar(_a.rest()))(VStar(_b.rest()));
 }
 
 
@@ -297,7 +293,7 @@ inline VStar IList::Functor::_fmap(const VStar& f, const VStar& f_a) const {
 
     // map and recurse
 	ArrV g = f.ResolveToUnsafe<ArrV>();
-    return ListV(g(l_a._head), fmap()(f)(l_a.rest()));
+    return VStar(ListV(g(l_a._head), fmap()(f)(l_a.rest()).ResolveToUnsafe<ListV>()));
 }
 
 
@@ -307,7 +303,7 @@ inline VStar IList::Applicative::_pure(const VStar& value) const {
 
 inline VStar IList::Applicative::_apply(const VStar& boxedFunc, const VStar& app) const {
 	ListV m_a = boxedFunc.ResolveToUnsafe<ListV>();
-	ListV _app = _app.ResolveToUnsafe<ListV>();
+	ListV _app = app.ResolveToUnsafe<ListV>();
 
     // empty is no op
 	if (m_a.isEmpty().get() || _app.isEmpty().get()) return m_a;
@@ -326,34 +322,40 @@ inline  VStar IList::Monad::_bind(const VStar& m_a, const VStar& a_to_mb) const 
 	ArrV arr = a_to_mb.ResolveToUnsafe<ArrV>();
 
     // map head to list, then append with maps of rest of list
-    return boxedFunc.getTypeclass()->Semigroup->mappend()
-        (arr(m_a._head))    // map head to list
-        (bind()(m_a.rest())(a_to_mb)); // pipe rest of values into function
+    return m_a.getTypeclass()->Semigroup->mappend()
+        (arr(_ma._head))    // map head to list
+        (bind()(_ma.rest())(a_to_mb)); // pipe rest of values into function
 }
 
 inline VStar IList::Foldable::_foldr(const VStar& f, const VStar& initial, const VStar& foldable) const {
     ListV _ma = foldable.ResolveToUnsafe<ListV>();
 
     // left is initial
-    if (_ma.isEmpty()) return initial;
+    if (_ma.isEmpty().get()) return initial;
 
     // right is apply transformation
 	ArrV g = f.ResolveToUnsafe<ArrV>();
 
     // a 'g' b 'g' c 'g' initial
-    return g(_ma._head)(foldr()(f)(initial)(_ma.rest()));
+    return g(_ma._head).ResolveToUnsafe<ArrV>()(foldr()(f)(initial)(_ma.rest()));
 }
 
-inline VStar IList::Traversable::_traverse( const Typeclass* applic, const VStar& f, const VStar& foldable) const {
+inline VStar IList::Traversable::_traverse( const VStar& applic, const VStar& f, const VStar& foldable) const {
     ListV _ma = foldable.ResolveToUnsafe<ListV>();
-
 	ArrV g = f.ResolveToUnsafe<ArrV>();
 
-    ArrV cons_f = curry([](const VStar& x, const VStar& ys) {
-        return applic->Applicative->liftA2()(cons)(g(x))(ys);
+
+	// traverse :: Applicative f => (a -> f b) -> t a -> f (t b) = 0;
+    Arr<VStar, Arr<VStar, ArrVV>> cons_f = curry([applic, g](VStar x, VStar ys) -> ArrVV {
+        return applic.getTypeclass()->Applicative->liftA2()(consV)(g(x))(ys);
     });
-    
-    return foldr()(cons_f)(applic->Applicative->pure()(ListV()))(_ma);
+
+    ArrV cons_f2 = cons_f.ToArrV();
+
+    return foldr()
+        (cons_f2)
+        (applic.getTypeclass()->Applicative->pure()(ListV()))
+        (_ma);
 }
 
 
@@ -361,10 +363,10 @@ inline VStar IList::Semigroup::_mappend( const VStar& left, const VStar& right) 
     ListV _ma = left.ResolveToUnsafe<ListV>();
 
     // nothing in left, return right
-    if (_ma.isEmpty()) return right;
+    if (_ma.isEmpty().get()) return right;
 
     // else cons recursively
-    return cons(_ma._head)(mappend()(_ma.rest())(right));
+    return cons<VStar>(_ma._head)(mappend()(_ma.rest())(right));
 }
 
 inline VStar IList::Monoid::_mempty() const {

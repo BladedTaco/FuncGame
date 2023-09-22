@@ -108,14 +108,14 @@ private:
 	friend MaybeV;
 
 	virtual TSharedPtr<const Typeclass> _GetTypeclass() const override {
-        if (_isNothing) return IMaybe::_GetTypeclass();
+        if (_isNothing) return NoopPtr(&Instances);
 
 		// Copy
         TSharedPtr<Typeclass> out = MakeShareable(new Typeclass());
-        *out = IEither::Instances;
+        *out = IMaybe::Instances;
 
 		// Change based on inner
-        const Typeclass* inner = _value.getTypeclass();
+        TSharedPtr<const Typeclass> inner = _value->GetTypeclass();
         if (!inner->Semigroup) out->Semigroup = NULL;
         if (!inner->Monoid) out->Monoid = NULL;
         if (!inner->Ordinal) out->Ordinal = NULL;

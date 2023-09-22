@@ -6,7 +6,7 @@
 #include "Functional/Typeclass.h"
 
 #include "Types/Unpack.h"
-
+;
 // Functor Interface
 class IBounded {
 	TypeclassVirtual(VStar, minBound) = 0;

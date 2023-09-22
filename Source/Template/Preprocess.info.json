@@ -162,13 +162,6 @@
       "Properties": {}
     },
     {
-      "Filename": "List_gen.h",
-      "ProcessFile": false,
-      "Project": null,
-      "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Dataclass",
-      "Properties": {}
-    },
-    {
       "Filename": "Maybe_gen.h",
       "ProcessFile": false,
       "Project": null,
@@ -194,6 +187,13 @@
       "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types",
+      "Properties": {}
+    },
+    {
+      "Filename": "List_gen.h",
+      "ProcessFile": true,
+      "Project": null,
+      "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Dataclass",
       "Properties": {}
     }
   ]

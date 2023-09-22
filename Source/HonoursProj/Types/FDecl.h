@@ -49,8 +49,8 @@ typedef  List<VStar> ListV;
 typedef  Tuple<VStar, VStar> TupleV;
 
 typedef Func<VStar, VStar> ArrV;
-typedef Func<ArrV, VStar> ArrVV;
-typedef Func<ArrVV, VStar> ArrVVV;
+typedef Func<Func<VStar, VStar>, VStar> ArrVV;
+typedef Func<Func<Func<VStar, VStar>, VStar>, VStar> ArrVVV;
 
 
 // Curried Function Shorthand as Arrow From -> To

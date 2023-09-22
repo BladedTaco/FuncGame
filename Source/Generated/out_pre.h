@@ -1,267 +1,376 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
-#include "MacroUtils.h"
+#include "Types/FDecl.h"
 
-#include "Preprocess/Include.h"
-
+ 
 #ifndef PP__PREPROCESSING
 
-#include "CoreMinimal.h"
-#include "Types_gen.generated.h"
+#include "Misc/Optional.h"
 
 #else
 
-include "CoreMinimal.h"
-include "Algo/Transform.h"
+include "Misc/Optional.h"
 
 #endif
 
+#include "Types/Typeclass/Functor.h"
+#include "Types/Typeclass/Applicative.h"
+#include "Types/Typeclass/Monad.h"
+#include "Types/Typeclass/Semigroup.h"
+#include "Types/Typeclass/Monoid.h"
+#include "Types/Typeclass/Foldable.h"
+#include "Types/Typeclass/Traversable.h"
+#include "Types/Typeclass/Alternative.h"
+#include "Types/Typeclass/Eq.h"
+#include "Types/Typeclass/Ordinal.h"
+#include "Types/Typeclass/Show.h"
+#include "Types/Typeclass/Read.h"
+
+FUNCTOR(List);
+APPLICATIVE(List);
+MONAD(List);
+
+SEMIGROUP(List);
+MONOID(List);
+
+FOLDABLE(List);
+TRAVERSABLE(List);
+
+ALTERNATIVE(List);
+
+// Dependant
+EQ(List);
+ORDINAL(List);
+SHOW(List);
+READ(List);
 
 
 
-template <typename IntType, typename EnumType, EnumType... Vals>
-inline constexpr bool IsMember(IntType n) {
-	return ((n == static_cast< IntType >(Vals)) || ...);
-}
+class IList : public virtual ITypeclass {
+private:
+	virtual TSharedPtr<const Typeclass> _GetTypeclass() const override {
+		return NoopPtr(&Instances);
+	}
+public:
+	IFUNCTOR(List);
+    IAPPLICATIVE(List);
+    IMONAD(List);
 
+    ISEMIGROUP(List);
+    IMONOID(List);
 
+    IFOLDABLE(List);
+    ITRAVERSABLE(List);
 
+    // IALTERNATIVE(List);
 
-#define _ENUM_LOOP(ARGS) , IGNORE_FIRST ARGS PP__NEWLINE
-#define _NAMESPACE_LOOP(NS, ITEM) , UNBRACKET ITEM = (uint8)NS::UNBRACKET ITEM PP__NEWLINE
-#define _ITEM_LOOP(NS, ITEM) , NS::UNBRACKET ITEM
+    // Dependant
+    // IEQ(List);
+    IORDINAL(List);
+    ISHOW(List);
+    // IREAD(List);
 
-
-#define _UENUM_BASE_LOOP(...) MAP_BLIST(_NAMESPACE_LOOP, __VA_ARGS__)
-#define _IS_ENUM_BASE_LOOP(...) MAP_BLIST(_ITEM_LOOP, __VA_ARGS__)
-
-#define _UENUM_BASE(UENUM_SPECIFIERS, BASE, NAME, ...)			PP__NEWLINE \
-_UENUM UENUM_SPECIFIERS											PP__NEWLINE \
-enum class NAME : uint8 {										PP__NEWLINE \
-	ERROR = 0, 													PP__NEWLINE \
-	_UENUM_BASE_LOOP( BZIP(BASE, BRACKET_LIST2(__VA_ARGS__)))	PP__NEWLINE \
-};																PP__NEWLINE	\
-template <typename IntType>										PP__NEWLINE \
-inline constexpr bool Is ## NAME(IntType from) {				PP__NEWLINE \
-	return IsMember<IntType, NAME, _IS_ENUM_BASE_LOOP( BZIP(NAME, BRACKET_LIST2(__VA_ARGS__)))>(from); PP__NEWLINE \
-}
- 
-#define _CHILD_UENUMS(...) LOOP3(_UENUM_BASE, __VA_ARGS__)
-
-// COMPOSITE_UENUM((Blueprint Specifiers), NAME, (Name, Members)...)
-#define PP_COMPOSITE_UENUM(UENUM_SPECIFIERS, NAME, ...)	PP__NEWLINE \
-_UENUM UENUM_SPECIFIERS									PP__NEWLINE \
-enum class NAME : uint8 {								PP__NEWLINE \
-	ERROR = 0, 											PP__NEWLINE \
-	MAP_LIST(_ENUM_LOOP, __VA_ARGS__)					PP__NEWLINE \
-};														PP__NEWLINE \
-_CHILD_UENUMS(MZIP2((UENUM_SPECIFIERS, NAME), __VA_ARGS__))
-
-
-
-#define PP_USTRUCT_LOOP(UPROP, MEMBER)	\
-NULLARY((_UPROPERTY UPROP PP__NEWLINE), (), UNBRACKET UPROP)	\
-UNBRACKET MEMBER;									PP__NEWLINE 
-
-// PP_USTRUCT((USTRUCT_SPECIFIER...), NAME, (UPROPERTY_SPECIFIER, MEMBER)...)
-#define PP_USTRUCT(USTRUCT_SPECIFIERS, NAME, ...)	\
-_USTRUCT USTRUCT_SPECIFIERS				PP__NEWLINE \
-struct NAME {							PP__NEWLINE \
-	_GENERATED_BODY()					PP__NEWLINE \
-public:									PP__NEWLINE \
-	LOOP(PP_USTRUCT_LOOP, __VA_ARGS__)				\
+public:
+	InlineStaticConstStruct(Typeclass, Instances,
+		TypeclassInst(List, Functor);
+		TypeclassInst(List, Applicative);
+		TypeclassInst(List, Monad);
+		TypeclassInst(List, Semigroup);
+		TypeclassInst(List, Monoid);
+		TypeclassInst(List, Foldable);
+		TypeclassInst(List, Traversable);
+		// TypeclassInst(List, Alternative);
+		// TypeclassInst(List, Eq);
+		TypeclassInstAs(List, Ordinal, Eq);
+		TypeclassInst(List, Ordinal);
+		TypeclassInst(List, Show);
+		// TypeclassInst(List, Read);
+	);
 };
 
 
-// Define the Type UENUMS
-PP_COMPOSITE_UENUM((BlueprintType), EType
-	, (ETypeBase, NONE, INT, FLOAT, BOOL, CHAR)
-	, (ETypeClass, ANY, EQ, ORDINAL, ENUM, BOUNDED, SHOW, READ, FUNCTOR, APPLICATIVE, MONAD, SEMIGROUP, FOLDABLE, TRAVERSABLE, MONOID, NUM, ALTERNATIVE)
-	, (ETypeData, EITHER, FUNC, LIST, MAYBE)
-)
 
 
+// Functor Maybe
+template <typename A>
+class List : public virtual IList {
+private:
+    VStar _head;
+    VStar _rest;
+    VStar _next;
 
-// PP_TYPECLASS_MEMBERSHIP(TYPECLS, INSTS...)
-#define PP_TRUE_CASE(INST) case EType::INST: return true; PP__NEWLINE
+	friend IList::Ordinal;
+	friend IList::Show;
+	friend IList::Functor;
+	friend IList::Applicative;
+	friend IList::Monad;
+	friend IList::Monoid;
+	friend IList::Semigroup;
+	friend IList::Foldable;
+	friend IList::Traversable;
+	friend ListV;
+
+	virtual TSharedPtr<const Typeclass> _GetTypeclass() const override {
+        // No Instance Retains all Typeclasses
+        if (isEmpty().get()) return NoopPtr(&IList::Instances); 
+
+        // Copy
+        TSharedPtr<Typeclass> out = MakeShareable(new Typeclass());
+        *out = IList::Instances;
+         
+        // Change
+        auto inner = _head.getTypeclass();
+        if (!inner->Ordinal) out->Ordinal = NULL;
+        if (!inner->Eq) out->Eq = NULL;
+        if (!inner->Show) out->Show = NULL;
+
+        return out;
+	}
+public:
+	virtual ~List() = default;
+
+    List(){};
+    List(A InHead, List<A> InRest)
+        : _head(InHead)
+        , _rest(InRest)
+    {};
+    List(A seed, Arr<A, A> InNext)
+        : _head(seed)
+        , _next(InNext)
+    {};
+
+public:
+    Bool isEmpty() const { return !_head.Valid(); }
+    Bool isInfinite() const { return _next.Valid(); }
+    A head(A fallback) {
+        return isEmpty().get() ? fallback : _head.ResolveToUnsafe<A>();
+	}
+    List<A> rest() {
+        // strict list
+        if (_rest.Valid()) return _rest.ResolveToUnsafe<List<A>>();
+        // No Next
+        if (!_next.Valid()) return List();
+        // Generate next
+        ArrV nex = _next.ResolveToUnsafe<ArrV>();
+        return List(nex(_head), nex);
+    }
+
+	// Cast Construction
+	List(const ListV* other);
+};
 
 
-// PP_TYPECLASS_MEMBERSHIP(TYPECLS, INSTS...)
-#define PP_TYPECLASS_MEMBERSHIP(TYPECLS, ...)						\
-case EType::TYPECLS:									PP__NEWLINE \
-	switch (lhs) {										PP__NEWLINE \
-		LOOP2(PP_TRUE_CASE, BRACKET_LIST(__VA_ARGS__))				\
-	default: return false;								PP__NEWLINE \
-	}													PP__NEWLINE \
-	break;												PP__NEWLINE
+// Functor Maybe
+template <>
+class List<VStar> : public virtual IList {
+private:
+    VStar _head;
+    VStar _rest;
+    VStar _next;
 
-//PP_TYPECLASS_TESTS((TYPECLS, INSTS)...)
-#define PP_TYPECLASS_TESTS(...)					\
-switch (rhs) { PP__NEWLINE						\
-	LOOP3(PP_TYPECLASS_MEMBERSHIP, __VA_ARGS__)	\
+	friend IList::Ordinal;
+	friend IList::Show;
+	friend IList::Functor;
+	friend IList::Applicative;
+	friend IList::Monad;
+	friend IList::Semigroup;
+	friend IList::Foldable;
+	friend IList::Traversable;
+	friend ListV;
+
+	template <typename A>
+	friend List<A>::List(const ListV* other);
+public:
+	virtual ~List() = default;
+
+    List(){};
+    List(VStar InHead, ListV InRest)
+        : _head(InHead)
+        , _rest(InRest)
+    {};
+    List(VStar seed, ArrV InNext)
+        : _head(seed)
+        , _next(InNext)
+    {};
+
+public:
+    Bool isEmpty() const { return !_head.Valid(); }
+    Bool isInfinite() const { return _next.Valid(); }
+    template <typename A>
+    A head(A fallback) {
+        return isEmpty().get() ? fallback : _head.ResolveToUnsafe<A>();
+	}  
+    template <>
+    VStar head(VStar fallback) {
+        return isEmpty().get()  ? fallback : _head;
+	}
+    template <typename A = VStar>
+    List<A> rest() {
+        // strict list
+        if (_rest.Valid()) return _rest.ResolveToUnsafe<List<A>>();
+        // No Next
+        if (!_next.Valid()) return List();
+        // Generate next
+        ArrV nex = _next.ResolveToUnsafe<ArrV>();
+        return List(nex(_head), nex);
+    }
+
+	// Cast Construction
+	List(const ListV* other);
+};
+
+template <typename A>
+List<A>::List(const ListV* other) {
+    _head = other->_head;
+    _rest = other->_rest;
+    _next = other->_next;
 }
 
-#define OPERATOR_IMPL(CLS, OP, IMPL) inline bool operator ## OP (const CLS lhs, const CLS rhs) { UNBRACKET IMPL } PP__NEWLINE
+template <typename A>
+auto isEmpty = curry([](List<A> l_a) -> Bool {
+    return l_a.isEmpty();
+});
 
-#define ALL_ORDINALS(CLS) \
-OPERATOR_IMPL(CLS, > , (return   rhs < lhs; )) \
-OPERATOR_IMPL(CLS, <=, (return (lhs == rhs) || (lhs < rhs);)) \
-OPERATOR_IMPL(CLS, >=, (return (lhs == rhs) || (lhs > rhs);))
+template <typename A>
+auto isInfinite = curry([](List<A> l_a) -> Bool {
+    return l_a.isInfinite();
+});
 
-// Define Category like less than
-inline bool operator< (const EType lhs, const EType rhs) {
-	// Everything is less than any except any
-	if (rhs == EType::ANY) { return lhs != EType::ANY; }
-	// Loop through each Typeclass
-	PP_TYPECLASS_TESTS((EQ, BOOL, EITHER, INT, LIST, MAYBE), (ORDINAL, BOOL, EITHER, INT, LIST, MAYBE), (ENUM, BOOL, INT), (BOUNDED, BOOL, INT), (SHOW, BOOL, EITHER, INT, LIST, MAYBE), (READ, BOOL, EITHER, INT, LIST, MAYBE), (FUNCTOR, EITHER, FUNC, LIST, MAYBE), (APPLICATIVE, EITHER, FUNC, LIST, MAYBE), (MONAD, EITHER, FUNC, LIST, MAYBE), (SEMIGROUP, EITHER, FUNC, LIST, MAYBE), (FOLDABLE, EITHER, LIST, MAYBE), (TRAVERSABLE, EITHER, LIST, MAYBE), (MONOID, FUNC, LIST, MAYBE), (NUM, INT), (ALTERNATIVE, LIST, MAYBE));
-	// RHS is DataClass or Base, it cannot be greater
-	return false;
+template <typename A>
+auto head = curry([](List<A> l_a, A a) -> A {
+    return l_a.head(a);
+});
+
+template <typename A>
+auto rest = curry([](List<A> l_a, A a) -> A {
+    return l_a.rest(a);
+});
+
+template <typename A = VStar>
+auto cons = curry([](A value, List<A> list) {
+    return List<A>(value, list);
+});
+auto consV = curry([](VStar headV, VStar listV) {
+    return ListV(headV, listV.ResolveToUnsafe<ListV>());
+}); 
+ 
+inline FString IList::Show::_show(const VStar& a) const {
+	// Resolve Variables
+	ListV m_a = a.ResolveToUnsafe<ListV>();
+
+	// Logic
+	return m_a.isEmpty().get()
+		? FString(TEXT("[]"))
+        : FString::Format(TEXT("[{0}, ...]"), { m_a._head.getTypeclass()->Show->show()(m_a._head) });
 }
-ALL_ORDINALS(EType);
 
 
 
 
-//
-//
-//
-//
-//
-//_USTRUCT(BlueprintType)
-//struct FTypeInfo {
-//	_GENERATED_BODY()
-//public:
-//	virtual EType GetType() { return EType::ANY; };
-//	virtual TArray<FTypeInfo> GetTemplates() { return {}; };
-//};
-//
-//
-//
-//_USTRUCT(BlueprintType)
-//struct FTypeConst : FTypeInfo {
-//	_GENERATED_BODY()
-//
-//private:
-//	UPROPERTY(VisibleAnywhere)
-//		EType Type;
-//	UPROPERTY(VisibleAnywhere)
-//		TArray<FTypeInfo> Templates;
-//
-//public:
-//	virtual EType GetType() override {
-//		return Type;
-//	};
-//	virtual TArray<FTypeInfo> GetTemplates() override {
-//		return Templates;
-//	};
-//};
-//
-//
-//_USTRUCT(BlueprintType)
-//struct FTypePtr : FTypeInfo {
-//_GENERATED_BODY()
-//
-//private:
-//	UPROPERTY(VisibleAnywhere)
-//		TWeakPtr<FTypeInfo> Type;
-//
-//public:
-//	virtual EType GetType() override {
-//		return ( EType )Type.Pin().Get()->Templates[Index];
-//	};
-//	virtual TArray<FTypeInfo> GetTemplates() override {
-//		return {};
-//	};
-//};
-//
-//
-//
-//USTRUCT(BlueprintType)
-//struct FTypeInfo {
-//	GENERATED_BODY()
-//public:
-//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-//		EType Type;
-//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-//		bool Dependant;
-//	FTypeInfo* DependsOn = NULL;
-//	TArray<FTypeInfo> Templates;
-//public:
-//	// Base Constructor is Template Variable Constructor
-//	FTypeInfo() : FTypeInfo(ETypeClass::ANY) {};
-//	// Copy Constructor
-//	FTypeInfo(const FTypeInfo& copy)
-//		: Type(copy.Type)
-//		, Templates({})
-//		, Dependant(copy.Dependant)
-//		, DependsOn(copy.DependsOn) {
-//		// Dependant Types do not have copied templates
-//		if (!Dependant) {
-//			// Recursive copy
-//			for (FTypeInfo i : copy.Templates) {
-//				Templates.Add({ i });
-//			}
-//		}
-//	};
-//
-//	// Base Type Constructor
-//	FTypeInfo(ETypeBase type)
-//		: Type(( EType )type)
-//		, Templates({})
-//		, Dependant(false)
-//		, DependsOn(NULL) {};
-//	// Data Type Constructor
-//	FTypeInfo(ETypeData type, TArray<FTypeInfo> templates)
-//		: Type(( EType )type)
-//		, Templates(templates)
-//		, Dependant(false)
-//		, DependsOn(NULL) {};
-//	// Class Type Constructor / Template Variable Constructor
-//	FTypeInfo(ETypeClass type)
-//		: Type(( EType )type)
-//		, Templates({})
-//		, Dependant(true)
-//		, DependsOn(NULL) {};
-//
-//	// Template Variable Accessor Constructor
-//	FTypeInfo(FTypeInfo* depends)
-//		: Type(depends->Type)
-//		, Templates(depends->Templates)
-//		, Dependant(true)
-//		, DependsOn(depends) {};
-//};
 
-//
-//
-//_USTRUCT(BlueprintType)
-//struct FTypeVar {
-//	_GENERATED_BODY()
-//public:
-//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-//		ETypeClass Type;
-//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-//		TWeakPtr<FTypeInfo> Instance;
-//};
+inline ORD IList::Ordinal::_ord( const VStar& a, const VStar& b) const {
+	ListV _a = a.ResolveToUnsafe<ListV>();
+	ListV _b = b.ResolveToUnsafe<ListV>();
+
+    // Empty list is Smaller than Non-empty
+    int _ae = _a.isEmpty().get();
+    int _be = _b.isEmpty().get();
+    if (_ae || _be) return ORD(_be - _ae);
+
+    // Compare and recurse
+    ORD order = _a.head(VStar()).getTypeclass()->Ordinal->ord()(_a.head(VStar()))(_b.head(VStar()));
+    return order != ORD::EQ ? order : ord()(VStar(_a.rest()))(VStar(_b.rest()));
+}
 
 
-//// Define the Type USTRUCT
-//PP_USTRUCT(
-//	(BlueprintType), FTypeInfo
-//,  	((EditAnywhere, BlueprintReadWrite), (EType Type))
-//,  	((), (FTypeInfo* DependsOn = NULL))
-//,	((), (TArray<FTypeInfo> Templates))
-//)
-//
-//
-//
-//PP__NEWLINE
-//
-//// Define the Function USTRUCT
-//PP_USTRUCT(
-//	(BlueprintType), FFunctionInfo
-//,	((EditAnywhere, BlueprintReadWrite), (TArray<FTypeInfo> Inputs))
-//,	((EditAnywhere, BlueprintReadWrite), (TArray<FTypeInfo> Outputs))
-//)
 
+inline VStar IList::Functor::_fmap(const VStar& f, const VStar& f_a) const {
+	// Resolve Variables
+	ListV l_a = f_a.ResolveToUnsafe<ListV>();
+
+    // Empty is empty
+    if (l_a.isEmpty().get()) return ListV();
+
+    // map and recurse
+	ArrV g = f.ResolveToUnsafe<ArrV>();
+    return VStar(ListV(g(l_a._head), fmap()(f)(l_a.rest()).ResolveToUnsafe<ListV>()));
+}
+
+
+inline VStar IList::Applicative::_pure(const VStar& value) const {
+    return ListV(value, ListV());
+}	
+
+inline VStar IList::Applicative::_apply(const VStar& boxedFunc, const VStar& app) const {
+	ListV m_a = boxedFunc.ResolveToUnsafe<ListV>();
+	ListV _app = app.ResolveToUnsafe<ListV>();
+
+    // empty is no op
+	if (m_a.isEmpty().get() || _app.isEmpty().get()) return m_a;
+
+    // else apply every function to first element, then second, etc. and join
+    return boxedFunc.getTypeclass()->Semigroup->mappend()
+        (fmap()(m_a._head)(app))    // apply over list
+        (apply()(m_a.rest())(app)); // apply rest of functiosn over list
+}
+
+inline  VStar IList::Monad::_bind(const VStar& m_a, const VStar& a_to_mb) const {
+	ListV _ma = m_a.ResolveToUnsafe<ListV>();
+
+	if (_ma.isEmpty().get()) return _ma;
+
+	ArrV arr = a_to_mb.ResolveToUnsafe<ArrV>();
+
+    // map head to list, then append with maps of rest of list
+    return m_a.getTypeclass()->Semigroup->mappend()
+        (arr(_ma._head))    // map head to list
+        (bind()(_ma.rest())(a_to_mb)); // pipe rest of values into function
+}
+
+inline VStar IList::Foldable::_foldr(const VStar& f, const VStar& initial, const VStar& foldable) const {
+    ListV _ma = foldable.ResolveToUnsafe<ListV>();
+
+    // left is initial
+    if (_ma.isEmpty().get()) return initial;
+
+    // right is apply transformation
+	ArrV g = f.ResolveToUnsafe<ArrV>();
+
+    // a 'g' b 'g' c 'g' initial
+    return g(_ma._head).ResolveToUnsafe<ArrV>()(foldr()(f)(initial)(_ma.rest()));
+}
+
+inline VStar IList::Traversable::_traverse( const VStar& applic, const VStar& f, const VStar& foldable) const {
+    ListV _ma = foldable.ResolveToUnsafe<ListV>();
+	ArrV g = f.ResolveToUnsafe<ArrV>();
+
+    ArrVV t = curry([](VStar _a, VStar _b) -> VStar { return VStar();});
+
+    // ArrV _t = t.ToArrV();
+
+    // ArrVV cons_f = curry([applic, g](VStar x, VStar ys) -> VStar {
+    //     return VStar(applic.getTypeclass()->Applicative->liftA2()(consV)(g(x))(ys));
+    // });
+
+    ArrV cons_f2 = t.ToArrV();
+
+    return foldr()
+        (cons_f2)
+        (applic.getTypeclass()->Applicative->pure()(ListV()))
+        (_ma);
+}
+
+
+inline VStar IList::Semigroup::_mappend( const VStar& left, const VStar& right) const {
+    ListV _ma = left.ResolveToUnsafe<ListV>();
+
+    // nothing in left, return right
+    if (_ma.isEmpty().get()) return right;
+
+    // else cons recursively
+    return cons<VStar>(_ma._head)(mappend()(_ma.rest())(right));
+}
+
+inline VStar IList::Monoid::_mempty() const {
+    return ListV();
+}

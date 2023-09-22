@@ -98,11 +98,11 @@ private:
 	friend IEither::Traversable;
 
     Either(Left InLeft, bool ignored) : left(InLeft) {};
-    Either(bool ignored, Right InLeft) : right(InRight) {};
+    Either(bool ignored, Right InRight) : right(InRight) {};
 
 	virtual TSharedPtr<const Typeclass> _GetTypeclass() const override {
-        const Typeclass* inner = get().getTypeclass();
-        TSharedPtr<Typeclass> out = MakeShared();
+        TSharedPtr<const Typeclass> inner = get().getTypeclass();
+        TSharedPtr<Typeclass> out = MakeShareable(new Typeclass());
         *out = IEither::Instances;
         
         if (!inner->Ordinal) out->Ordinal = NULL;
@@ -124,23 +124,26 @@ public:
 
 
 public:
-    Bool isLeft() {
+    Bool isLeft() const {
         return left.Valid();
     }
-    Bool isRight(){
+    Bool isRight() const {
         return right.Valid();
     };
 
-    Left fromLeft(Left fallback) {
+    Left fromLeft(Left fallback) const {
         return isLeft().get() ? left.ResolveToUnsafe<Left>() : fallback;
     }
-    Right fromRight(Right fallback) {
+    Right fromRight(Right fallback) const {
         return isRight().get() ? right.ResolveToUnsafe<Right>() : fallback;
     }
 
-    VStar get() {
+    VStar get() const {
         return isLeft().get() ? left : right;
     }
+
+	// Cast Construction
+	Either(const EitherV* other);
 };
 
 template <>
@@ -164,7 +167,7 @@ private:
 	friend Either<Left, Right>::Either(const EitherV* other);
 
     Either(VStar InLeft, bool ignored) : left(InLeft) {};
-    Either(bool ignored, VStar InLeft) : right(InRight) {};
+    Either(bool ignored, VStar InRight) : right(InRight) {};
 public:
 	virtual ~Either() = default;
 
@@ -177,42 +180,42 @@ public:
     }
 
 public:
-    Bool isLeft() {
+    Bool isLeft() const {
         return left.Valid();
     }
-    Bool isRight(){
+    Bool isRight() const {
         return right.Valid();
     };
 
     template <typename Left>
-    Left fromLeft(Left fallback) {
+    Left fromLeft(Left fallback) const {
         return isLeft().get() ? left.ResolveToUnsafe<Left>() : fallback;
     }
     template <>
-    VStar fromLeft(VStar fallback) {
+    VStar fromLeft(VStar fallback) const {
         return isLeft().get() ? left : fallback;
     }
 
-    template <Typename Right>
-    Right fromRight(Right fallback) {
+    template <typename Right>
+    Right fromRight(Right fallback) const {
         return isRight().get() ? right.ResolveToUnsafe<Right>() : fallback;
     }
     template <>
-    VStar fromRight(VStar fallback) {
+    VStar fromRight(VStar fallback) const {
         return isRight().get() ? right : fallback;
     }
 
-    VStar get() {
+    VStar get() const {
         return isLeft().get() ? left : right;
     }
-};
+}; 
 
 template <typename Left, typename Right>
 Either<Left, Right>::Either(const EitherV* other) {
-    if (other->isLeft()) {
-        left = other->fromLeft({});
+    if (other->isLeft().get()) {
+        left = other->get().ResolveToUnsafe<Left>();
     } else {
-        right = other->fromLeft({});
+        right = other->get().ResolveToUnsafe<Right>();
     }
 }
 
@@ -241,9 +244,9 @@ auto fromRight = curry([](Either<L,R> l_a, R a) -> R {
 
 inline FString IEither::Show::_show(const VStar& me) const {
 	// Resolve
-	EitherV a = me.ResolveToUnsafe<EitherV>().get();
+	EitherV a = me.ResolveToUnsafe<EitherV>();
 
-    return FString(a.isLeft() ? "L:" : "R:") + a.get().getTypeclass()->Show->show()(a.get());
+    return FString(a.isLeft().get() ? "L:" : "R:") + a.get().getTypeclass()->Show->show()(a.get());
 }
 
 //SHOW((), Bool, ());
@@ -289,12 +292,12 @@ inline VStar IEither::Applicative::_apply(const VStar& boxedFunc, const VStar& a
 }
 
 inline  VStar IEither::Monad::_bind(const VStar& m_a, const VStar& a_to_mb) const {
-	EitherV _ma = boxedFunc.ResolveToUnsafe<EitherV>();
+	EitherV _ma = m_a.ResolveToUnsafe<EitherV>();
 
-	if (_ma.isLeft.get()) return _ma;
+	if (_ma.isLeft().get()) return _ma;
 
 	ArrV arr = a_to_mb.ResolveToUnsafe<ArrV>();
-	return arr(_ma._value);
+	return arr(_ma.get());
 }
 
 inline VStar IEither::Foldable::_foldr(const VStar& f, const VStar& initial, const VStar& foldable) const {
@@ -306,29 +309,29 @@ inline VStar IEither::Foldable::_foldr(const VStar& f, const VStar& initial, con
     // right is apply transformation
 	ArrV g = f.ResolveToUnsafe<ArrV>();
 
-    return g(_ma.get())(initial);
+    return g(_ma.get()).ResolveToUnsafe<ArrV>()(initial);
 }
 
-inline VStar IEither::Traversable::_traverse(const Typeclass* applic, const VStar& f, const VStar& foldable) const {
+inline VStar IEither::Traversable::_traverse(const VStar& applic, const VStar& f, const VStar& foldable) const {
     EitherV _ma = foldable.ResolveToUnsafe<EitherV>();
 
-    const IApplicative* applic = foldable.getType().getTemplates()[0]
+    // const IApplicative* applic = foldable.getType().getTemplates()[0]
 
     // _ (Left x) -> pure (Left x)
     if (_ma.isLeft().get()) {
-        return applic->Applicative->pure()(EitherV::AsLeft(_ma.get()));
+        return applic.getTypeclass()->Applicative->pure()(EitherV::AsLeft(_ma.get()));
     }
 
     // f (Right y) -> Right <$> f y
 	ArrV g = f.ResolveToUnsafe<ArrV>();
     return _ma.get().getTypeclass()->Functor->fmap()(ArrV(EitherV::AsRight))(g(_ma.get()));
 }
-
+ 
 inline VStar IEither::Semigroup::_mappend( const VStar& left, const VStar& right) const {
     EitherV _ma = left.ResolveToUnsafe<EitherV>();
 
     // Left is use other
-    if (_ma.isLeft()) return right;
+    if (_ma.isLeft().get()) return right;
     // Right is use me
     return _ma;
 }

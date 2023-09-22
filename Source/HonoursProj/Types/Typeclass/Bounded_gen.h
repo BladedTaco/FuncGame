@@ -8,6 +8,7 @@
 #include "Functional\Prelude.h"
 #include "Functional\Typeclass.h"
 #include "Types\Unpack.h"
+;
 class IBounded {
 	public: const Arr<void, VStar > minBound() const { return curry([this]( ) -> VStar { return this->_minBound ( ); }); }; private: virtual VStar _minBound ( ) const = 0;
 	public: const Arr<void, VStar > maxBound() const { return curry([this]( ) -> VStar { return this->_maxBound ( ); }); }; private: virtual VStar _maxBound ( ) const = 0;

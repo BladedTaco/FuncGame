@@ -368,3 +368,19 @@ FromType() {
 	return UTypeConst::New(ETypeData::FUNC, { FromType<From>(), FromType<To>() });
 };
 
+template <class T>
+typename std::enable_if_t< is_instance_n<1, T, List>, UTypeConst*>
+FromType() {
+	using T_0 = extract<T, 0>;
+	return UTypeConst::New(ETypeData::LIST, { FromType<T_0>() });
+};
+
+template <class T>
+typename std::enable_if_t< is_instance_n<2, T, Either>, UTypeConst*>
+FromType() {
+	using Left = extract<T, 0>;
+	using Right = extract<T, 1>;
+	return UTypeConst::New(ETypeData::EITHER, { FromType<Left>(), FromType<Right>() });
+};
+
+

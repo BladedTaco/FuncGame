@@ -50,7 +50,7 @@ void ABlockFunctionGreaterThan::SetFunctionTypes() {
 		{"B", UTypePtr::New(F) },
 	};
 	Outputs = {
-		{"A < B", UTypeConst::New(ETypeBase::BOOL)}
+		{"A > B", UTypeConst::New(ETypeBase::BOOL)}
 	};
 }
 

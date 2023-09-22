@@ -155,10 +155,10 @@ private:
 	friend class ::Functor<Maybe<A>>;
 	friend MaybeV;
 	virtual TSharedPtr<const Typeclass> _GetTypeclass() const override {
-        if (_isNothing) return IMaybe::_GetTypeclass();
+        if (_isNothing) return NoopPtr(&Instances);
         TSharedPtr<Typeclass> out = MakeShareable(new Typeclass());
-        *out = IEither::Instances;
-        const Typeclass* inner = _value.getTypeclass();
+        *out = IMaybe::Instances;
+        TSharedPtr<const Typeclass> inner = _value->GetTypeclass();
         if (!inner->Semigroup) out->Semigroup = NULL;
         if (!inner->Monoid) out->Monoid = NULL;
         if (!inner->Ordinal) out->Ordinal = NULL;

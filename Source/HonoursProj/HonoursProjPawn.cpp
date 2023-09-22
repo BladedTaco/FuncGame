@@ -8,10 +8,25 @@
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
 
+#include "Types/Typeclass/Applicative.h"
+#include "Types/Typeclass/Bounded.h"
+#include "Types/Typeclass/Enum.h"
+#include "Types/Typeclass/Eq.h"
+#include "Types/Typeclass/Foldable.h"
 #include "Types/Typeclass/Functor.h"
-#include "Types/Dataclass/Maybe_gen.h"
+#include "Types/Typeclass/Monad.h"
+#include "Types/Typeclass/Monoid.h"
+#include "Types/Typeclass/Num.h"
 #include "Types/Typeclass/Ordinal.h"
+#include "Types/Typeclass/Semigroup.h"
+#include "Types/Typeclass/Show.h"
+#include "Types/Typeclass/Traversable.h"
+
 #include "Types/Dataclass/BaseTypes.h"
+#include "Types/Dataclass/List_gen.h"
+#include "Types/Dataclass/Either_gen.h"
+#include "Types/Dataclass/Maybe_gen.h"
+
 #include "Types/Types_gen.h"
 
 #include "Types/Unpack.h"
@@ -126,6 +141,44 @@ void AHonoursProjPawn::OnLClickRelease() {
 	}
 	RemoveInactive();
 
+	VStar tInt = VStar(Int(1));
+	VStar tBool = VStar(Bool(true));
+	//VStar tArr
+	VStar tMaybe = VStar(MaybeV::Just(tInt));
+	VStar tEither = VStar(EitherV::AsLeft(tInt));
+	VStar tList = VStar(ListV(tInt, ListV()));
+
+	
+	UE_LOG(LogTemp, Warning, TEXT("CAST TESTS %d %d %d %d %d"), 
+		tInt.ResolveToSafe<Int>()->get(),
+		tBool.ResolveToSafe<Bool>()->get(),
+		tMaybe.ResolveToSafe<Maybe<Int>>()->fromMaybe(Int(0)).get(),
+		tEither.ResolveToSafe<Either<Int, VStar>>()->get().ResolveToSafe<Int>()->get(),
+		tList.ResolveToSafe<List<Int>>()->head(Int(0)).get()
+	);
+
+
+
+//#include "Types/Typeclass/Applicative.h"
+//#include "Types/Typeclass/Bounded.h"
+//#include "Types/Typeclass/Enum.h"
+//#include "Types/Typeclass/Eq.h"
+//#include "Types/Typeclass/Foldable.h"
+//#include "Types/Typeclass/Functor.h"
+//#include "Types/Typeclass/Monad.h"
+//#include "Types/Typeclass/Monoid.h"
+//#include "Types/Typeclass/Num.h"
+//#include "Types/Typeclass/Ordinal.h"
+//#include "Types/Typeclass/Semigroup.h"
+//#include "Types/Typeclass/Show.h"
+//#include "Types/Typeclass/Traversable.h"
+//
+//#include "Types/Dataclass/BaseTypes.h"
+//#include "Types/Dataclass/List_gen.h"
+//#include "Types/Dataclass/Either_gen.h"
+//#include "Types/Dataclass/Maybe_gen.h"
+//
+//#include "Types/Types_gen.h"
 
 
 

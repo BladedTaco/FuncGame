@@ -15,32 +15,50 @@
 
 struct FResource_Material {
 		ConstructorHelpers::FObjectFinderOptional<UMaterial> Base;
+		ConstructorHelpers::FObjectFinderOptional<UMaterial> Font;
+		ConstructorHelpers::FObjectFinderOptional<UMaterial> PostProcess;
+		ConstructorHelpers::FObjectFinderOptional<UMaterial> Shiny;
 		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Black;
-		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Brown;
-		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Green;
-		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Purple;
-		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> DarkGrey;
-		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> White;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Blood;
 		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Blue;
-		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Orange;
-		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Grey;
-		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Pink;
-		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Red;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Brown;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Copper;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> DarkGrey;
 		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Gold;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Green;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Grey;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Orange;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Pink;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Purple;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Red;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> RoyalPurple;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Silver;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Turquoise;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> Void;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> White;
 		FResource_Material()
-		:	Base(TEXT("/Game/MyContent/Materials/BaseMaterial.BaseMaterial"))
+		:	Base(TEXT("Material'/Game/MyContent/Materials/BaseMaterial.BaseMaterial'"))
+		,	Font(TEXT("Material'/Game/MyContent/Materials/FontMaterial.FontMaterial'"))
+		,	PostProcess(TEXT("Material'/Game/MyContent/Materials/PostProcessMaterial.PostProcessMaterial'"))
+		,	Shiny(TEXT("Material'/Game/MyContent/Materials/ShinyMaterial.ShinyMaterial'"))
 		,	Black(TEXT("/Game/MyContent/Materials/BlackMaterial.BlackMaterial"))
-		,	Brown(TEXT("/Game/MyContent/Materials/BrownMaterial.BrownMaterial"))
-		,	Green(TEXT("/Game/MyContent/Materials/GreenMaterial.GreenMaterial"))
-		,	Purple(TEXT("/Game/MyContent/Materials/PurpleMaterial.PurpleMaterial"))
-		,	DarkGrey(TEXT("/Game/MyContent/Materials/DarkGreyMaterial.DarkGreyMaterial"))
-		,	White(TEXT("/Game/MyContent/Materials/WhiteMaterial.WhiteMaterial"))
+		,	Blood(TEXT("/Game/MyContent/Materials/BloodMaterial.BloodMaterial"))
 		,	Blue(TEXT("/Game/MyContent/Materials/BlueMaterial.BlueMaterial"))
-		,	Orange(TEXT("/Game/MyContent/Materials/OrangeMaterial.OrangeMaterial"))
-		,	Grey(TEXT("/Game/MyContent/Materials/GreyMaterial.GreyMaterial"))
-		,	Pink(TEXT("/Game/MyContent/Materials/PinkMaterial.PinkMaterial"))
-		,	Red(TEXT("/Game/MyContent/Materials/RedMaterial.RedMaterial"))
+		,	Brown(TEXT("/Game/MyContent/Materials/BrownMaterial.BrownMaterial"))
+		,	Copper(TEXT("/Game/MyContent/Materials/CopperMaterial.CopperMaterial"))
+		,	DarkGrey(TEXT("/Game/MyContent/Materials/DarkGreyMaterial.DarkGreyMaterial"))
 		,	Gold(TEXT("/Game/MyContent/Materials/GoldMaterial.GoldMaterial"))
+		,	Green(TEXT("/Game/MyContent/Materials/GreenMaterial.GreenMaterial"))
+		,	Grey(TEXT("/Game/MyContent/Materials/GreyMaterial.GreyMaterial"))
+		,	Orange(TEXT("/Game/MyContent/Materials/OrangeMaterial.OrangeMaterial"))
+		,	Pink(TEXT("/Game/MyContent/Materials/PinkMaterial.PinkMaterial"))
+		,	Purple(TEXT("/Game/MyContent/Materials/PurpleMaterial.PurpleMaterial"))
+		,	Red(TEXT("/Game/MyContent/Materials/RedMaterial.RedMaterial"))
+		,	RoyalPurple(TEXT("/Game/MyContent/Materials/RoyalPurpleMaterial.RoyalPurpleMaterial"))
+		,	Silver(TEXT("/Game/MyContent/Materials/SilverMaterial.SilverMaterial"))
+		,	Turquoise(TEXT("/Game/MyContent/Materials/TurquoiseMaterial.TurquoiseMaterial"))
+		,	Void(TEXT("/Game/MyContent/Materials/VoidMaterial.VoidMaterial"))
+		,	White(TEXT("/Game/MyContent/Materials/WhiteMaterial.WhiteMaterial"))
 		{}
 };
 
@@ -91,29 +109,51 @@ struct FResource_HUD {
 };
 
 struct FResource_TypeRepr {
+		ConstructorHelpers::FClassFinder<AActor> Applicative;
+		ConstructorHelpers::FClassFinder<AActor> Bool;
+		ConstructorHelpers::FClassFinder<AActor> Bounded;
+		ConstructorHelpers::FClassFinder<AActor> Char;
+		ConstructorHelpers::FClassFinder<AActor> Either;
+		ConstructorHelpers::FClassFinder<AActor> Enum;
+		ConstructorHelpers::FClassFinder<AActor> Eq;
 		ConstructorHelpers::FClassFinder<AActor> Float;
+		ConstructorHelpers::FClassFinder<AActor> Foldable;
 		ConstructorHelpers::FClassFinder<AActor> Function;
 		ConstructorHelpers::FClassFinder<AActor> Functor;
 		ConstructorHelpers::FClassFinder<AActor> Int;
+		ConstructorHelpers::FClassFinder<AActor> List;
+		ConstructorHelpers::FClassFinder<AActor> Maybe;
+		ConstructorHelpers::FClassFinder<AActor> Monad;
+		ConstructorHelpers::FClassFinder<AActor> Monoid;
+		ConstructorHelpers::FClassFinder<AActor> Number;
 		ConstructorHelpers::FClassFinder<AActor> Ordinal;
+		ConstructorHelpers::FClassFinder<AActor> Semigroup;
 		ConstructorHelpers::FClassFinder<AActor> Show;
 		ConstructorHelpers::FClassFinder<AActor> Template;
-		ConstructorHelpers::FClassFinder<AActor> Bool;
-		ConstructorHelpers::FClassFinder<AActor> Char;
-		ConstructorHelpers::FClassFinder<AActor> Maybe;
-		ConstructorHelpers::FClassFinder<AActor> Number;
+		ConstructorHelpers::FClassFinder<AActor> Traversable;
 		FResource_TypeRepr()
-		:	Float(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Float"))
+		:	Applicative(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Applicative"))
+		,	Bool(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Bool"))
+		,	Bounded(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Bounded"))
+		,	Char(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Char"))
+		,	Either(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Either"))
+		,	Enum(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Enum"))
+		,	Eq(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Eq"))
+		,	Float(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Float"))
+		,	Foldable(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Foldable"))
 		,	Function(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Function"))
 		,	Functor(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Functor"))
 		,	Int(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Int"))
+		,	List(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_List"))
+		,	Maybe(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Maybe"))
+		,	Monad(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Monad"))
+		,	Monoid(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Monoid"))
+		,	Number(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Number"))
 		,	Ordinal(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Ordinal"))
+		,	Semigroup(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Semigroup"))
 		,	Show(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Show"))
 		,	Template(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Template"))
-		,	Bool(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Bool"))
-		,	Char(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Char"))
-		,	Maybe(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Maybe"))
-		,	Number(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Number"))
+		,	Traversable(TEXT("/Game/MyContent/Blueprints/Types/TypeRepr_Traversable"))
 		{}
 };
 
