@@ -14,6 +14,7 @@ class HONOURSPROJ_API ABlockFunctionUnitPosition : public ABlockFunctionUnit
 {
 	GENERATED_BODY()
 public:
+	ABlockFunctionUnitPosition();
 
 	virtual void SetFunctionTypes() override;
 	virtual Arr<VStarArray, VStarArrayReturn> GetInnerFunc() override;

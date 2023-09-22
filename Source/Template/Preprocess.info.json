@@ -2,196 +2,196 @@
   "FilesToGenerate": [
     {
       "Filename": "curry_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Functional",
       "Properties": {}
     },
     {
       "Filename": "Alternative_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Typeclass",
       "Properties": {}
     },
     {
       "Filename": "Applicative_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Typeclass",
       "Properties": {}
     },
     {
       "Filename": "Arrow_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Typeclass",
       "Properties": {}
     },
     {
       "Filename": "Bounded_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Typeclass",
       "Properties": {}
     },
     {
       "Filename": "Enum_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Typeclass",
       "Properties": {}
     },
     {
       "Filename": "Eq_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Typeclass",
       "Properties": {}
     },
     {
       "Filename": "Foldable_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Typeclass",
       "Properties": {}
     },
     {
       "Filename": "Functor_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Typeclass",
       "Properties": {}
     },
     {
       "Filename": "Monad_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Typeclass",
       "Properties": {}
     },
     {
       "Filename": "Monoid_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Typeclass",
       "Properties": {}
     },
     {
       "Filename": "Num_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Typeclass",
       "Properties": {}
     },
     {
       "Filename": "Ordinal_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Typeclass",
       "Properties": {}
     },
     {
       "Filename": "Read_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Typeclass",
       "Properties": {}
     },
     {
       "Filename": "Semigroup_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Typeclass",
       "Properties": {}
     },
     {
       "Filename": "Show_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Typeclass",
       "Properties": {}
     },
     {
       "Filename": "Traversable_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Typeclass",
       "Properties": {}
     },
     {
       "Filename": "Bool_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Dataclass",
       "Properties": {}
     },
     {
       "Filename": "Char_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Dataclass",
       "Properties": {}
     },
     {
       "Filename": "Either_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Dataclass",
       "Properties": {}
     },
     {
       "Filename": "Float_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Dataclass",
       "Properties": {}
     },
     {
       "Filename": "Func_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Dataclass",
       "Properties": {}
     },
     {
       "Filename": "Int_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Dataclass",
       "Properties": {}
     },
     {
       "Filename": "List_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Dataclass",
       "Properties": {}
     },
     {
       "Filename": "Maybe_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Dataclass",
       "Properties": {}
     },
     {
       "Filename": "Ordering_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Dataclass",
       "Properties": {}
     },
     {
       "Filename": "Tuple_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types\\Dataclass",
       "Properties": {}
     },
     {
       "Filename": "Types_gen.h",
-      "ProcessFile": true,
+      "ProcessFile": false,
       "Project": null,
       "Path": "S:\\Semester 8\\FIT444X - Honours Thesis\\Unreal\\HonoursProj 4.27\\Source\\HonoursProj\\Types",
       "Properties": {}

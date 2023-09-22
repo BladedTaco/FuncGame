@@ -16,7 +16,7 @@
     string ProjectDir = Host.ResolveParameterValue(null, null, "dir");
     PP pp = new PP(ProjectDir);
 
-    bool SkipOldFiles = false;
+    bool SkipOldFiles = true;
 
     // Start Common File Header
     var fileManager = new T4FileManager(this);

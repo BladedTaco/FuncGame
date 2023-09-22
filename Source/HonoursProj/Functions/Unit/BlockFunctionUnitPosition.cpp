@@ -5,6 +5,10 @@
 
 #include "Types/Dataclass/BaseTypes.h"
 
+ABlockFunctionUnitPosition::ABlockFunctionUnitPosition() {
+	
+}
+
 void ABlockFunctionUnitPosition::SetFunctionTypes() {
 
 	FunctionName = FString(TEXT("Get Position"));

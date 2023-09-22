@@ -18,6 +18,10 @@
 
 #include "HUD/FunctionHUD.h"
 
+
+
+#include "AssetLoader_gen.h"
+
 #include "BlockFunction.generated.h"
 
 class ULocationBoundsComponent;

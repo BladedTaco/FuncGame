@@ -7,6 +7,8 @@
 
 #include "Level/Unit.h"
 
+#include "AssetLoader_gen.h"
+
 #include "BlockFunctionUnit.generated.h"
 
 /**
