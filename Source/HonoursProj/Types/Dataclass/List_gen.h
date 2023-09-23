@@ -314,8 +314,10 @@ inline VStar IList::Foldable::_foldr(const VStar& f, const VStar& initial, const
 inline VStar IList::Traversable::_traverse( const VStar& applic, const VStar& f, const VStar& foldable) const {
     ListV _ma = foldable.ResolveToUnsafe<ListV>();
 	ArrV g = f.ResolveToUnsafe<ArrV>();
-    ArrVV t = curry([](VStar _a, VStar _b) -> VStar { return VStar();});
-    ArrV cons_f2 = t.ToArrV();
+    Arr<VStar, Arr<VStar, VStar>> cons_f = curry([applic, g](VStar x, VStar ys) -> VStar {
+        return applic.getTypeclass()->Applicative->liftA2()(consV)(g(x))(ys);
+    });
+    ArrV cons_f2 = cons_f.ToArrV();
     return foldr()
         (cons_f2)
         (applic.getTypeclass()->Applicative->pure()(ListV()))

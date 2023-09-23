@@ -346,7 +346,7 @@ inline VStar IList::Traversable::_traverse( const VStar& applic, const VStar& f,
 
 
 	// traverse :: Applicative f => (a -> f b) -> t a -> f (t b) = 0;
-    Arr<VStar, Arr<VStar, ArrVV>> cons_f = curry([applic, g](VStar x, VStar ys) -> ArrVV {
+    Arr<VStar, Arr<VStar, VStar>> cons_f = curry([applic, g](VStar x, VStar ys) -> VStar {
         return applic.getTypeclass()->Applicative->liftA2()(consV)(g(x))(ys);
     });
 

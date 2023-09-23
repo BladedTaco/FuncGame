@@ -281,10 +281,15 @@ inline constexpr bool is_instance_n = []() {
 static_assert(!is_instance_n<2, X<int>, X>, "");
 static_assert(is_instance_n<2, X<int, int>, X>, "");
 static_assert(!is_instance_n<2, X<int, int, int>, X>, "");
+static_assert(is_instance_n<2, ArrVV, Func>, "");
 
 static_assert(!is_instance<int, Number>, "");
 static_assert(is_instance<Number<int>, Number>, "");
 static_assert(is_instance<Number<X<int>>, Number>, "");
+static_assert(is_instance<ArrVV, Func>, "");
+static_assert(is_instance<ArrV, Func>, "");
+static_assert(is_instance<Arr<VStar, ListV>, Func>, "");
+static_assert(is_instance<extract<Arr<VStar, ArrV>, 0>, Func>, "");
 
 
 static_assert(is_instance<Number<int>, Number>, "");

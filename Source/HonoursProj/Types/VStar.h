@@ -265,6 +265,18 @@ public:
 			storedInstances = value.GetTypeclass();
 		}
 	}
+	// Todo: Check UType against T
+	template <typename T>
+	VStar(Arr<VStar, T> value) {
+		// Copy the value onto the heap
+		storedValue = shared_void(new ArrV(value.ToArrV()));
+		// Todo, decide if this should be make const or deepcopy
+		storedType = FromType<ArrV>();
+		// Get Instances Pointer
+		if constexpr (IsDataclass<T>::value) {
+			storedInstances = value.GetTypeclass();
+		}
+	}
 
 	template <>
 	VStar(UType* type) {
@@ -492,7 +504,7 @@ public:
 	template <typename T>
 	typename std::enable_if_t< std::is_same_v<T, EitherV>, bool>
 		ValidCast(const UType* type) const {
-		return type->GetType() == EType::LIST;
+		return type->GetType() == EType::EITHER;
 	}
 
 	// Either<...>
@@ -512,16 +524,23 @@ public:
 
 		// Destructure Templates
 		auto templates = type->GetTemplates();
-		auto [from, to] = Destruct<2, TArray, UType*>(templates);
+		auto [l, r] = Destruct<2, TArray, UType*>(templates);
 
-		// Handle is a ArrV
-		if (from->GetType() == EType::NONE || to->GetType() == EType::NONE) {
-			return false;
+		// Handle is a EitherV
+		if (l->GetType() == EType::NONE || r->GetType() == EType::NONE) {
+
+			EitherV* e = GetUnsafePtr<EitherV>();
+
+			if (e->isLeft().get()) {
+				return ValidCast<Left>(l);
+			} else {
+				return ValidCast<Right>(r);
+			}
 			//return GetUnsafePtr<MaybeV>()->_value.ValidCast<T_0>();
 		}
-		// Handle is a Arr<...>
+		// Handle is a Either<...>
 		else {
-			return ValidCast<Left>(from) && ValidCast<Right>(to);
+			return ValidCast<Left>(l) && ValidCast<Right>(r);
 		}
 		// Unreachable
 		return false;

@@ -41,11 +41,10 @@ template <typename To> class Func<To, VStar>;
 
 
 // Dataclass Shorthands
-typedef  Number<VStar>  NumberV;
 typedef  Maybe<VStar>  MaybeV;
+typedef  List<VStar> ListV;
 
 typedef  Either<VStar, VStar> EitherV;
-typedef  List<VStar> ListV;
 typedef  Tuple<VStar, VStar> TupleV;
 
 typedef Func<VStar, VStar> ArrV;

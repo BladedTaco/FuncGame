@@ -194,9 +194,19 @@ private:
 public:
 	virtual ~Either() = default;
 public:
+    template <typename L>
+    static EitherV AsLeft(L InLeft) {
+        return EitherV(VStar(InLeft), false);
+    }
+    template <>
     static EitherV AsLeft(VStar InLeft) {
         return EitherV(InLeft, false);
     }
+    template <typename R>
+    static EitherV AsRight(R InRight) {
+        return EitherV(false, VStar(InRight));
+    }
+    template <>
     static EitherV AsRight(VStar InRight) {
         return EitherV(false, InRight);
     }
@@ -293,8 +303,9 @@ inline VStar IEither::Traversable::_traverse(const VStar& applic, const VStar& f
     if (_ma.isLeft().get()) {
         return applic.getTypeclass()->Applicative->pure()(EitherV::AsLeft(_ma.get()));
     }
+    ArrV right = curry([](VStar a) -> VStar { return VStar(EitherV::AsRight(a));});
 	ArrV g = f.ResolveToUnsafe<ArrV>();
-    return _ma.get().getTypeclass()->Functor->fmap()(ArrV(EitherV::AsRight))(g(_ma.get()));
+    return _ma.get().getTypeclass()->Functor->fmap()(right)(g(_ma.get()));
 }
 inline VStar IEither::Semigroup::_mappend( const VStar& left, const VStar& right) const {
     EitherV _ma = left.ResolveToUnsafe<EitherV>();

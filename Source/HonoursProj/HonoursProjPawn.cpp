@@ -145,17 +145,22 @@ void AHonoursProjPawn::OnLClickRelease() {
 	VStar tBool = VStar(Bool(true));
 	//VStar tArr
 	VStar tMaybe = VStar(MaybeV::Just(tInt));
-	VStar tEither = VStar(EitherV::AsLeft(tInt));
+	VStar tEitherR = VStar(EitherV::AsRight(tInt));
+	VStar tEitherL = VStar(EitherV::AsLeft(tInt));
 	VStar tList = VStar(ListV(tInt, ListV()));
 
+
+
+	Int t0 = *tInt.ResolveToSafe<Int>();
+	Int t1 = Int(tBool.ResolveToSafe<Bool>()->get());
+	Int t2 = tMaybe.ResolveToSafe<MaybeV>()->fromMaybe(Int(0));
+	Int t4 = tList.ResolveToSafe<ListV>()->head(Int(0));
+	Int t3r = tEitherR.ResolveToSafe<EitherV>()->fromRight(Int(0));
+	Int t3l = tEitherL.ResolveToSafe<EitherV>()->fromLeft(Int(0));
+
+
 	
-	UE_LOG(LogTemp, Warning, TEXT("CAST TESTS %d %d %d %d %d"), 
-		tInt.ResolveToSafe<Int>()->get(),
-		tBool.ResolveToSafe<Bool>()->get(),
-		tMaybe.ResolveToSafe<Maybe<Int>>()->fromMaybe(Int(0)).get(),
-		tEither.ResolveToSafe<Either<Int, VStar>>()->get().ResolveToSafe<Int>()->get(),
-		tList.ResolveToSafe<List<Int>>()->head(Int(0)).get()
-	);
+	UE_LOG(LogTemp, Warning, TEXT("CAST TESTS %d %d %d %d %d %d"), t0.get(), t1.get(), t2.get(), t3l.get(), t3r.get(), t4.get());
 
 
 

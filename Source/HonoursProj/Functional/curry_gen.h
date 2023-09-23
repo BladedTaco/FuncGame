@@ -95,6 +95,9 @@ public:
 	Func(const ArrV* f) {
 		_func = [f](From x) -> To { return f->operator()(x).ResolveToUnsafe<To>(); };
 	}
+	ArrV ToArrV() const {
+		return ArrV(_func);
+	}
 	To operator()(From a) const {
 		return _func(a);
 	}
@@ -119,6 +122,9 @@ public:
 		_func = [f](const VStar& x) -> VStar { return VStar(f->operator()(x)); };
 	}
 	ArrV ToArrV() const {
+		if constexpr (is_instance_n<2, To, Arr>) {
+			return curry([_f = _func](VStar x){ return VStar(_f(x).ToArrV()); });
+		}
 		return curry([_f = _func](VStar x){ return VStar(_f(x)); });
 	}
 	To operator()(const VStar& a) const {
