@@ -52,10 +52,6 @@ Arr<VStarArray, VStarArrayReturn> ABlockFunctionCounter::GetInnerFunc() {
 
 		VStar out = VStar(Int((int)CurrentValue));
 
-		// Show
-		const IShow* const show = out.getTypeclass()->Show;
-		this->HUD.Inst()->LastResult = show->show()(out);
-
 		return { out };
 
 	});

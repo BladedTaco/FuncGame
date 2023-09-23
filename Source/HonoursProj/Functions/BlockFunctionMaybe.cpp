@@ -62,12 +62,6 @@ Arr<VStarArray, VStarArrayReturn> ABlockFunctionMaybe::GetInnerFunc() {
 			result = VStar( MaybeV::Just(t0) );
 		}
 
-		const IShow* const show = result.getTypeclass()->Show;
-		//this->TextComponent->SetText(FText::FromString(show->show()(result)));
-
-		this->HUD.Inst()->LastResult = show->show()(result);
-
-		//this->TextComponent->SetText(FText::Format(FText::FromString(FString("Type {0}")), FText::FromString(result.Type()->ToString())));
 
 		return { result };
 	} );

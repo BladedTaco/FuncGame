@@ -519,9 +519,10 @@ TArray<UType*> UTypeVar::GetTemplates() const {
 }
 
 void UTypeVar::BeginDestroy() {
+	GetColourGroup()->FreeColour(MoveTemp(ColourIndex));
+
 	Super::BeginDestroy();
 
-	GetColourGroup()->FreeColour(MoveTemp(ColourIndex));
 }
 
 bool UTypeVar::ApplyEvidence(UType* InType) {

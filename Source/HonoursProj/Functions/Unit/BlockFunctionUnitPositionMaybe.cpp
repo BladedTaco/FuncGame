@@ -7,7 +7,7 @@
 #include "Types/Dataclass/Maybe_gen.h"
 
 ABlockFunctionUnitPositionMaybe::ABlockFunctionUnitPositionMaybe() {
-	
+	FunctionIcon->SetStaticMesh(Assets()->Icon.Position.Get());
 }
 
 void ABlockFunctionUnitPositionMaybe::SetFunctionTypes() {

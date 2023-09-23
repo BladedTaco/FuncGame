@@ -149,8 +149,6 @@ void AHonoursProjPawn::OnLClickRelease() {
 	VStar tEitherL = VStar(EitherV::AsLeft(tInt));
 	VStar tList = VStar(ListV(tInt, ListV()));
 
-
-
 	Int t0 = *tInt.ResolveToSafe<Int>();
 	Int t1 = Int(tBool.ResolveToSafe<Bool>()->get());
 	Int t2 = tMaybe.ResolveToSafe<MaybeV>()->fromMaybe(Int(0));

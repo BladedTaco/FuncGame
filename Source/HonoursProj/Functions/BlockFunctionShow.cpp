@@ -33,7 +33,7 @@ void ABlockFunctionShow::SetFunctionTypes() {
 
 	//UTypeVar* A = UTypeVar::New(ETypeClass::SHOW);
 	//TypeVars = { A };
-	UTypeVar* A = UTypeVar::New(ETypeClass::ANY);
+	UTypeVar* A = UTypeVar::New(ETypeClass::SHOW);
 	TypeVars = { A };
 
 

@@ -33,6 +33,7 @@ public:
 	virtual AHonoursProjBlock* HandleClick(UPrimitiveComponent* ClickedComponent) override;
 	virtual AHonoursProjBlock* HandleRClick(UPrimitiveComponent* ClickedComponent) override;
 
+	UFUNCTION(BlueprintCallable)
 	bool TrySetPosition(int X, int Y);
 
 public:
@@ -63,4 +64,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	FVector2D Position;
+
+	UPROPERTY(EditAnywhere)
+	bool bOnBoard = true;
 };

@@ -6,7 +6,7 @@
 #include "Types/Dataclass/BaseTypes.h"
 
 ABlockFunctionUnitPosition::ABlockFunctionUnitPosition() {
-	
+	FunctionIcon->SetStaticMesh(Assets()->Icon.Position.Get());
 }
 
 void ABlockFunctionUnitPosition::SetFunctionTypes() {

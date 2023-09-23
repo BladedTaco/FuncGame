@@ -115,9 +115,9 @@ public:
 		TArray<class AFunctionOutput*> OutputBlocks;
 
 	// Function Representations
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool FunctionIconDisplay = true;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool ConnectorIconDisplay = true;
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* FunctionIcon;

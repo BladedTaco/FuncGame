@@ -67,6 +67,10 @@ void ABoard::Tick(float DeltaTime) {
 }
 
 FVector ABoard::GetPosition(int X, int Y) {
+	if (X == -1 && Y == -1) {
+		return Positions[0] + (Positions[0] - Positions[Width + 1]);
+	}
+
 	// Handle bounds checking
 	if (X < 0 || X > Width || Y < 0 || Y > Height) return FVector::ZeroVector;
 	// Return Position

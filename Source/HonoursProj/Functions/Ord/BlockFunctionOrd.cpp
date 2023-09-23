@@ -6,7 +6,7 @@
 
 // Set Function Icon Mesh
 ABlockFunctionOrd::ABlockFunctionOrd() {
-	FunctionIcon->SetStaticMesh(Assets()->Icon.Ordinal.Get());
+	FunctionIcon->SetStaticMesh(Assets()->Icon.OrdinalFunc.Get());
 	FunctionIcon->SetMaterial(0, Assets()->Material.DarkGrey.Get());
 	FunctionIcon->SetMaterial(1, Assets()->Material.DarkGrey.Get());
 	FunctionIcon->SetMaterial(2, Assets()->Material.DarkGrey.Get());

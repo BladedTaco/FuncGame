@@ -7,7 +7,7 @@
 #include "Level/StatusBar.h"
 
 ABlockFunctionUnitHealth::ABlockFunctionUnitHealth() {
-	
+	FunctionIcon->SetStaticMesh(Assets()->Icon.Health.Get());
 }
 
 void ABlockFunctionUnitHealth::SetFunctionTypes() {

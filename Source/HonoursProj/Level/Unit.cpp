@@ -90,6 +90,11 @@ bool AUnit::TrySetPosition(int X, int Y) {
 	// Fail on no board
 	if (!IsValid(Board)) return false;
 
+	if (!bOnBoard) {
+		X = -1;
+		Y = -1;
+	}
+
 	// Get Position from Board
 	FVector NewPos = Board->GetPosition(X, Y);
 	

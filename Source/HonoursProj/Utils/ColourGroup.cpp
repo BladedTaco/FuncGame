@@ -1,5 +1,7 @@
 #include "Utils/ColourGroup.h"
 
+#include "Engine.h"
+
 UColourGroup::UColourGroup() {
 	ColourStack = {};
 	ColourSet = {};
@@ -22,11 +24,17 @@ void UColourGroup::FreeColour(TSharedRef<int>&& Index) {
 
 	// Push to Stack for Re-use
 	ColourStack.Add(Popped);
+
+	if (GEngine) {
+		GEngine->ForceGarbageCollection();
+	}
 }
 
 bool UColourGroup::ReferenceColour(TSharedRef<int> Source, TSharedRef<int>& Dest) {
 	// Simply Copy Index Pointer
-	*Dest = *Source;
+	TSharedRef<int> copy = Dest;
+	FreeColour(MoveTemp(copy));
+	*Dest = -1;
 	Dest = Source;
 
 	return true;
@@ -49,7 +57,12 @@ bool UColourGroup::ReferenceColour(TSharedRef<int> Source, TSharedRef<int>& Dest
 
 bool UColourGroup::ReferenceColour(TSharedPtr<int> Source, TSharedPtr<int>& Dest) {
 	if (!Source.IsValid()) return false;
-	if (Dest.IsValid()) *Dest = *Source;
+
+	if (Dest.IsValid()) {
+		TSharedRef<int> copy = Dest.ToSharedRef();
+		FreeColour(MoveTemp(copy));
+		*Dest = -1;
+	}
 	Dest = Source;
 	return true;
 }
@@ -57,6 +70,11 @@ bool UColourGroup::ReferenceColour(TSharedPtr<int> Source, TSharedPtr<int>& Dest
 bool UColourGroup::DuplicateColour(TSharedRef<int> Source, TSharedRef<int> Dest) {
 	// Find Colour
 	FColor* Colour = ColourSet.Find(*Source);
+
+
+	if (GEngine) {
+		GEngine->ForceGarbageCollection();
+	}
 
 	// Return Failure
 	if (!Colour) return false;
@@ -88,10 +106,18 @@ void UColourGroup::Unify(int A, int B) {
 // Makes A and B Different Colours
 void UColourGroup::Split(int A, int B) {
 	ColourSet.Split(A, B);
+
+	if (GEngine) {
+		GEngine->ForceGarbageCollection();
+	}
 }
 
 void UColourGroup::Split(int A) {
 	ColourSet.Split(A);
+
+	if (GEngine) {
+		GEngine->ForceGarbageCollection();
+	}
 }
 
 // Generates the Next Colour in the Sequence, or Pops from Returned Stack

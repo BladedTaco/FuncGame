@@ -6,7 +6,7 @@
 #include "Types/Dataclass/BaseTypes.h"
 
 ABlockFunctionTrackCountdown::ABlockFunctionTrackCountdown() {
-	
+	FunctionIcon->SetStaticMesh(Assets()->Icon.Counter.Get());
 }
 
 void ABlockFunctionTrackCountdown::SetFunctionTypes() {

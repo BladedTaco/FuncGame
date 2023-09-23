@@ -42,6 +42,13 @@
         <Object Name="Ordinal" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/ordinal.ordinal'"/>
         <Object Name="Maybe" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/maybe.maybe'"/>
         <Object Name="Call" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Functions/Call.Call'"/>
+        <Object Name="OrdinalFunc" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Functions/OrdinalIcon.OrdinalIcon'"/>
+        <Object Name="Position" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Functions/Position.Position'"/>
+
+        <Object Name="Stamina" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Functions/Stamina.Stamina'"/>
+        <Object Name="Mana" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Functions/Mana.Mana'"/>
+        <Object Name="Health" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Functions/Health.Health'"/>
+        
     </ResourceType>
 	<ResourceType Name='HUD'>
         <Class Name="Function" Type="UUserWidget" Location="/Game/MyContent/Blueprints/HUD_Function"/>

@@ -87,6 +87,11 @@ struct FResource_Icon {
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Ordinal;
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Maybe;
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Call;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> OrdinalFunc;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Position;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Stamina;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Mana;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Health;
 		FResource_Icon()
 		:	Percentage(TEXT("StaticMesh'/Game/MyContent/Meshes/percent.percent'"))
 		,	Counter(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/Counter.Counter'"))
@@ -94,6 +99,11 @@ struct FResource_Icon {
 		,	Ordinal(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/ordinal.ordinal'"))
 		,	Maybe(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/maybe.maybe'"))
 		,	Call(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/Call.Call'"))
+		,	OrdinalFunc(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/OrdinalIcon.OrdinalIcon'"))
+		,	Position(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/Position.Position'"))
+		,	Stamina(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/Stamina.Stamina'"))
+		,	Mana(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/Mana.Mana'"))
+		,	Health(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/Health.Health'"))
 		{}
 };
 
