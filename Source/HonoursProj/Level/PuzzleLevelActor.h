@@ -4,6 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+
+#include "LevelSequencePlayer.h"
+#include "MovieSceneSequencePlayer.h"
+
 #include "PuzzleLevelActor.generated.h"
 
 class ULevelSequence;
@@ -39,6 +43,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	ULevelSequence* TestSequence;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FQualifiedFrameTime TestStart;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<APartyMember*> Party;
 
@@ -47,6 +54,9 @@ public:
 public:
 
 	// Level Sequence Control
+	UFUNCTION(BlueprintCallable, Category = "Level Sequence")
+	void MarkTestStart();
+
 	UFUNCTION(BlueprintCallable, Category = "Level Sequence")
 	void RunTest();
 

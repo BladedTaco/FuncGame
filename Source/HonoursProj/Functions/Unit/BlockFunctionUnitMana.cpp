@@ -25,7 +25,8 @@ void ABlockFunctionUnitMana::SetFunctionTypes() {
 Arr<VStarArray, VStarArrayReturn> ABlockFunctionUnitMana::GetInnerFunc() {
 	return Arr<VStarArray, VStarArrayReturn>([this](VStarArray values) -> VStarArrayReturn {
 
-		int MaxVal, CurrVal = -1;
+		int MaxVal = -1;
+		int CurrVal = -1;
 
 		VStar CurrentOut;
 		VStar MaxOut;

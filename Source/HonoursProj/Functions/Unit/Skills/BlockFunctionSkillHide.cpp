@@ -8,7 +8,7 @@
 
 ABlockFunctionSkillHide::ABlockFunctionSkillHide() {
 	FunctionIcon->SetStaticMesh(Assets()->Icon.Position.Get());
-	FunctionIcon->SetMaterial(0, Assets()->Material.Shiny.Get())
+	FunctionIcon->SetMaterial(0, Assets()->Material.Shiny.Get());
 }
 
 void ABlockFunctionSkillHide::SetFunctionTypes() {

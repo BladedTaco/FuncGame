@@ -28,5 +28,5 @@ public:
 
 	// Level Sequence Control
 	UFUNCTION(BlueprintCallable, Category = "Level Sequence")
-	bool Attack();
+	bool Attack(AUnit* Target, float Damage);
 };

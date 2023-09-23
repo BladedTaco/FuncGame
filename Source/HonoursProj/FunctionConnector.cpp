@@ -107,13 +107,13 @@ void AFunctionConnector::PostLoad() {
 	);
 
 	// Next tick, align connectors
-	GetWorld()->GetTimerManager().SetTimerForNextTick([this]() {
-		if (IsValid(this->Function)) {
+	GetWorld()->GetTimerManager().SetTimerForNextTick([me = this]() {
+		if (IsValid(me) && me->IsValidLowLevel() && IsValid(me->Function)) {
 			FVector min, max, extent;
-			this->Function->GetBlockMesh()->GetLocalBounds(min, max);
-			FVector newLoc = this->GetActorLocation();
-			newLoc.Z = this->Function->GetActorLocation().Z + extent.Z;
-			this->SetActorLocation(newLoc);
+			me->Function->GetBlockMesh()->GetLocalBounds(min, max);
+			FVector newLoc = me->GetActorLocation();
+			newLoc.Z = me->Function->GetActorLocation().Z + extent.Z;
+			me->SetActorLocation(newLoc);
 		}
 	});
 }

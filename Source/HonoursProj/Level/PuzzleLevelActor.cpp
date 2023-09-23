@@ -3,8 +3,6 @@
 
 #include "PuzzleLevelActor.h"
 
-#include "LevelSequencePlayer.h"
-#include "MovieSceneSequencePlayer.h"
 
 #include "AssetLoader_gen.h"
 #include "Components/StaticMeshComponent.h"
@@ -27,20 +25,6 @@ void APuzzleLevelActor::BeginPlay()
 	Super::BeginPlay();
 	
 	StartLocation = GetActorLocation();
-}
-
-// Called every frame
-void APuzzleLevelActor::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	if (IsValid(SequenceObject)) {
-		double lerpVal = SequenceObject->GetCurrentTime().AsSeconds();
-		SetActorLocation(StartLocation + 400 * lerpVal * FVector::RightVector);
-	}
-}
-
-void APuzzleLevelActor::RunTest() {
 
 	if (!IsValid(SequenceObject)) {
 		// Create Level Sequence Player
@@ -49,12 +33,39 @@ void APuzzleLevelActor::RunTest() {
 		settings.bAutoPlay = false;
 		SequenceObject = ULevelSequencePlayer::CreateLevelSequencePlayer(GetWorld(), TestSequence, settings, SeqActor);
 	}
+}
+
+// Called every frame
+void APuzzleLevelActor::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	//if (IsValid(SequenceObject)) {
+	//	double lerpVal = SequenceObject->GetCurrentTime().AsSeconds();
+	//	SetActorLocation(StartLocation + 400 * lerpVal * FVector::RightVector);
+	//}
+}
+
+void APuzzleLevelActor::MarkTestStart() {
+
+	auto StartTime = SequenceObject->GetCurrentTime();
+
+	if (TestStart.Time.FrameNumber != StartTime.Time.FrameNumber) {
+		// Set Start Time
+		TestStart = StartTime;
+		// Pause Sequence
+		SequenceObject->Pause();
+	}
+}
+
+void APuzzleLevelActor::RunTest() {
 
 	// Set Initial Aggregate Test Success
 	TestSuccess = true;
 
-	// Play to Test End
-	SequenceObject->PlayTo(FMovieSceneSequencePlaybackParams(FString("TestEnd"), EUpdatePositionMethod::Play));
+	//// Play to Test End
+	// play
+	SequenceObject->Play();
 }
 
 void APuzzleLevelActor::FailTest() {
@@ -67,16 +78,17 @@ bool APuzzleLevelActor::EndTest() {
 
 	// If No Tests Failed
 	if (TestSuccess) {
-		// End the Sequence
-		SequenceObject->GoToEndAndStop();
-		SequenceObject = NULL;
+		// keep playing
+		//// End the Sequence
+		//SequenceObject->GoToEndAndStop();
+		//SequenceObject = NULL;
 		return true;
 	}
 
 
 	// Jump Back to Start, undoing effects
 	SequenceObject->Pause();
-	SequenceObject->SetPlaybackPosition(FMovieSceneSequencePlaybackParams(FString("TestStart"), EUpdatePositionMethod::Play));
+	SequenceObject->SetPlaybackPosition(FMovieSceneSequencePlaybackParams(TestStart.Time, EUpdatePositionMethod::Play));
 
 	// Return Test Failure
 	return false;

@@ -3,6 +3,8 @@
 
 #include "Level/Boss.h"
 
+#include "Level/StatusBar.h"
+
 // Sets default values
 ABoss::ABoss()
 {
@@ -25,7 +27,13 @@ void ABoss::Tick(float DeltaTime)
 
 }
 
-bool ABoss::Attack() {
+bool ABoss::Attack(AUnit* Target, float Damage) {
+
+	if (IsValid(Target) && Target->bOnBoard) {
+		Target->Health->CurrentValue -= Damage;
+		return true;
+	}
+
 	return false;
 }
 

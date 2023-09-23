@@ -207,9 +207,8 @@ void ABlockFunction::SpawnConnectors() {
 	GetBlockMesh()->GetLocalBounds(lower, upper);
 	extent = (upper - lower) * GetBlockMesh()->GetComponentScale();
 
-
 	// Call once
-	if (ConnectorsSpawned || HasAnyFlags(RF_Transient)) {
+	if (GetConnectors().Num() > 0 && ConnectorsSpawned || HasAnyFlags(RF_Transient)) {
 		FParameter p;
 		for (auto param : GetConnectors()) {
 			// Give Function
@@ -230,6 +229,9 @@ void ABlockFunction::SpawnConnectors() {
 		}
 		return;
 	}
+
+	InputBlocks = {};
+	OutputBlocks = {};
 
 	ConnectorsSpawned = true;
 
