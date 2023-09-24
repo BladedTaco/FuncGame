@@ -46,6 +46,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FQualifiedFrameTime TestStart;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FQualifiedFrameTime LoopStart;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<APartyMember*> Party;
 
@@ -56,6 +59,8 @@ public:
 	// Level Sequence Control
 	UFUNCTION(BlueprintCallable, Category = "Level Sequence")
 	void MarkTestStart();
+	UFUNCTION(BlueprintCallable, Category = "Level Sequence")
+	void MarkLoopStart();
 
 	UFUNCTION(BlueprintCallable, Category = "Level Sequence")
 	void RunTest();

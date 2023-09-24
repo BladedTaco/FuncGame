@@ -28,7 +28,7 @@ Arr<VStarArray, VStarArrayReturn> ABlockFunctionSkillHide::GetInnerFunc() {
 		if (IsValid(Unit)) {
 			auto [t0] = Destruct<1, TArray, VStar>(values);
 
-			Unit->bOnBoard = t0.ResolveToUnsafe<Bool>().get() && TrySkill();
+			Unit->bOnBoard = !(t0.ResolveToUnsafe<Bool>().get() && TrySkill());
 		}
 
 		return { };

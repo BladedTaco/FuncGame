@@ -50,12 +50,27 @@ void APuzzleLevelActor::MarkTestStart() {
 
 	auto StartTime = SequenceObject->GetCurrentTime();
 
-	if (TestStart.Time.FrameNumber != StartTime.Time.FrameNumber) {
-		// Set Start Time
+	//if (TestStart.Time.FrameNumber != StartTime.Time.FrameNumber) {
+	// Set Start Time
+
+	if (TestStart.Time.FrameNumber <= StartTime.Time.FrameNumber) {
+
 		TestStart = StartTime;
-		// Pause Sequence
-		SequenceObject->Pause();
+
+
+
+		// Jump to Loop Start 
+		SequenceObject->SetPlaybackPosition(FMovieSceneSequencePlaybackParams(LoopStart.Time.FrameNumber, EUpdatePositionMethod::Play));
+		SequenceObject->Play();
 	}
+	//}
+}
+
+void APuzzleLevelActor::MarkLoopStart() {
+	auto StartTime = SequenceObject->GetCurrentTime();
+
+	LoopStart = StartTime;
+	SequenceObject->Play();
 }
 
 void APuzzleLevelActor::RunTest() {
@@ -65,6 +80,8 @@ void APuzzleLevelActor::RunTest() {
 
 	//// Play to Test End
 	// play
+	SequenceObject->SetPlaybackPosition(FMovieSceneSequencePlaybackParams(TestStart.Time.FrameNumber - 1, EUpdatePositionMethod::Play));
+	SequenceObject->SetPlaybackPosition(FMovieSceneSequencePlaybackParams(TestStart.Time.FrameNumber + 1, EUpdatePositionMethod::Jump));
 	SequenceObject->Play();
 }
 
@@ -87,8 +104,9 @@ bool APuzzleLevelActor::EndTest() {
 
 
 	// Jump Back to Start, undoing effects
-	SequenceObject->Pause();
-	SequenceObject->SetPlaybackPosition(FMovieSceneSequencePlaybackParams(TestStart.Time, EUpdatePositionMethod::Play));
+	//SequenceObject->Pause();
+	SequenceObject->SetPlaybackPosition(FMovieSceneSequencePlaybackParams(LoopStart.Time, EUpdatePositionMethod::Jump));
+	SequenceObject->Play();
 
 	// Return Test Failure
 	return false;

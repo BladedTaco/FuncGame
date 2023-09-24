@@ -103,6 +103,9 @@ bool AUnit::TrySetPosition(int X, int Y) {
 
 	// Set Position
 	TokenActor->SetActorLocation(NewPos);
+	if (bOnBoard) {
+		Position = FVector2D(X, Y);
+	}
 
 	// Return Success
 	return true;

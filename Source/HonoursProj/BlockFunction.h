@@ -85,6 +85,9 @@ public:
 	void Propagate(MaskedBitFlags<EPropagable> Values, bool Origin = true);
 	void PropagateToEnds(MaskedBitFlags<EPropagable> Values);
 
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+	void PropagateMasked(EPropagable Values, EPropagable Mask);
+
 	inline bool IsStatus(EPropagable InTest) const { return EnumHasAllFlags(Status, InTest); }
 
 	// Components

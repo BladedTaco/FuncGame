@@ -328,6 +328,10 @@ void ABlockFunction::PropagateToEnds(MaskedBitFlags<EPropagable> Values) {
 	}
 }
 
+void ABlockFunction::PropagateMasked(EPropagable Values, EPropagable Mask) {
+	Propagate({ Mask, Values }, true);
+}
+
 // Updates to either Text or Icon Display
 void ABlockFunction::UpdateDisplayType() {
 	// Use either HUD or Icon
@@ -620,6 +624,17 @@ VStarArrayReturn ABlockFunction::GetValue() {
 	// On Invalid, cancel
 	if (!IsStatus(EPropagable::VALID)) {
 		return {};
+	}
+
+	// End Function
+	if (OutputBlocks.Num() == 0) {
+		VStarArray InputValues = CollectInputs();
+
+		for (const auto& input : InputValues) {
+			if (!input.Valid()) return {};
+		}
+
+		return GetInnerFunc()(InputValues);
 	}
 
 	// Collect Output Types and Values

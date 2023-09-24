@@ -27,7 +27,9 @@ Arr<VStarArray, VStarArrayReturn> ABlockFunctionUnitPositionSet::GetInnerFunc() 
 		if (IsValid(Unit)) {
 			auto [t0, t1] = Destruct<2, TArray, VStar>(values);
 
-			Unit->Position = FVector2D(t0.ResolveToUnsafe<Int>().get(), t1.ResolveToUnsafe<Int>().get());
+			UE_LOG(LogTemp, Warning, TEXT("set Pos %d"), 
+
+			Unit->TrySetPosition(t0.ResolveToUnsafe<Int>().get(), t1.ResolveToUnsafe<Int>().get()));
 		}
 
 		return { };
