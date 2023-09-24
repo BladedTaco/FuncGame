@@ -25,7 +25,11 @@ void ABlockFunctionUnitPositionMaybe::SetFunctionTypes() {
 Arr<VStarArray, VStarArrayReturn> ABlockFunctionUnitPositionMaybe::GetInnerFunc() {
 	return Arr<VStarArray, VStarArrayReturn>([this](VStarArray values) -> VStarArrayReturn {
 
-		FVector2D PositionVec = IsValid(Unit) ? Unit->Position : FVector2D(-1);
+		FVector2D PositionVec = FVector2D(-1);
+
+		if (IsValid(Unit) && Unit->bOnBoard) {
+			PositionVec = Unit->Position;
+		}
 
 		VStar XOut;
 		VStar YOut;

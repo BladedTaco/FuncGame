@@ -26,7 +26,7 @@
 #include "HUD/FunctionHUD.h"
 
 ABlockFunctionApply::ABlockFunctionApply() {
-
+	FunctionIcon->SetStaticMesh(Assets()->TypeIcon.Applicative.Get());
 }
 
 void ABlockFunctionApply::SetFunctionTypes() {

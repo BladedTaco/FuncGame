@@ -25,6 +25,10 @@
 
 #include "HUD/FunctionHUD.h"
 
+ABlockFunctionFmap::ABlockFunctionFmap() {
+	FunctionIcon->SetStaticMesh(Assets()->TypeIcon.Functor.Get());
+}
+
 void ABlockFunctionFmap::SetFunctionTypes() {
 
 	FunctionName = FString(TEXT("FMap"));

@@ -92,6 +92,7 @@ struct FResource_Icon {
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Stamina;
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Mana;
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Health;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> LiftA2;
 		FResource_Icon()
 		:	Percentage(TEXT("StaticMesh'/Game/MyContent/Meshes/percent.percent'"))
 		,	Counter(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/Counter.Counter'"))
@@ -104,6 +105,54 @@ struct FResource_Icon {
 		,	Stamina(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/Stamina.Stamina'"))
 		,	Mana(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/Mana.Mana'"))
 		,	Health(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/Health.Health'"))
+		,	LiftA2(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/LiftA2.LiftA2'"))
+		{}
+};
+
+struct FResource_TypeIcon {
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Applicative;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Bool;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Bounded;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Chain;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Char;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Int;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Either;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Enum;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Foldable;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Functor;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Key;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> List;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Lock;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Maybe;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Mirror;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Monad;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Ordinal;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Percent;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Show;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Template;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Traversable;
+		FResource_TypeIcon()
+		:	Applicative(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/Applicative.Applicative'"))
+		,	Bool(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/bool.bool'"))
+		,	Bounded(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/Bounded.Bounded'"))
+		,	Chain(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/Chain.Chain'"))
+		,	Char(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/char.char'"))
+		,	Int(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/d20.d20'"))
+		,	Either(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/Either.Either'"))
+		,	Enum(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/Enum.Enum'"))
+		,	Foldable(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/Foldable.Foldable'"))
+		,	Functor(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/functor.functor'"))
+		,	Key(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/key.key'"))
+		,	List(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/List.List'"))
+		,	Lock(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/lock.lock'"))
+		,	Maybe(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/maybe.maybe'"))
+		,	Mirror(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/Mirror.Mirror'"))
+		,	Monad(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/Monad.Monad'"))
+		,	Ordinal(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/ordinal.ordinal'"))
+		,	Percent(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/percent.percent'"))
+		,	Show(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/show.show'"))
+		,	Template(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/template.template'"))
+		,	Traversable(TEXT("StaticMesh'/Game/MyContent/Meshes/Types/Traversable.Traversable'"))
 		{}
 };
 
@@ -174,6 +223,7 @@ struct FAssets {
 		FResource_Mesh Mesh;
 		FResource_Data Data;
 		FResource_Icon Icon;
+		FResource_TypeIcon TypeIcon;
 		FResource_HUD HUD;
 		FResource_TypeRepr TypeRepr;
 		FAssets()
@@ -181,6 +231,7 @@ struct FAssets {
 		,	Mesh({})
 		,	Data({})
 		,	Icon({})
+		,	TypeIcon({})
 		,	HUD({})
 		,	TypeRepr({})
 		{}

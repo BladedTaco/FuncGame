@@ -153,6 +153,10 @@ void AFunctionConnector::BeginDestroy() {
 		Function->OutputBlocks.Remove(Cast<AFunctionOutput>(this));
 
 		HandleRClick(GetBlockMesh());
+
+		if (IsValid(TypeRepr)) {
+			TypeRepr->Destroy();
+		}
 	}
 	Super::BeginDestroy();
 }

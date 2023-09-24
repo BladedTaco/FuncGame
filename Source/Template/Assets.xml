@@ -48,7 +48,32 @@
         <Object Name="Stamina" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Functions/Stamina.Stamina'"/>
         <Object Name="Mana" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Functions/Mana.Mana'"/>
         <Object Name="Health" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Functions/Health.Health'"/>
+        <Object Name="LiftA2" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Functions/LiftA2.LiftA2'"/>
         
+        
+    </ResourceType>
+    <ResourceType Name='TypeIcon'>
+        <Object Name="Applicative" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/Applicative.Applicative'"/>
+        <Object Name="Bool" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/bool.bool'"/>
+        <Object Name="Bounded" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/Bounded.Bounded'"/>
+        <Object Name="Chain" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/Chain.Chain'"/>
+        <Object Name="Char" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/char.char'"/>
+        <Object Name="Int" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/d20.d20'"/>
+        <Object Name="Either" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/Either.Either'"/>
+        <Object Name="Enum" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/Enum.Enum'"/>
+        <Object Name="Foldable" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/Foldable.Foldable'"/>
+        <Object Name="Functor" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/functor.functor'"/>
+        <Object Name="Key" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/key.key'"/>
+        <Object Name="List" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/List.List'"/>
+        <Object Name="Lock" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/lock.lock'"/>
+        <Object Name="Maybe" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/maybe.maybe'"/>
+        <Object Name="Mirror" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/Mirror.Mirror'"/>
+        <Object Name="Monad" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/Monad.Monad'"/>
+        <Object Name="Ordinal" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/ordinal.ordinal'"/>
+        <Object Name="Percent" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/percent.percent'"/>
+        <Object Name="Show" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/show.show'"/>
+        <Object Name="Template" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/template.template'"/>
+        <Object Name="Traversable" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/Traversable.Traversable'"/>
     </ResourceType>
 	<ResourceType Name='HUD'>
         <Class Name="Function" Type="UUserWidget" Location="/Game/MyContent/Blueprints/HUD_Function"/>

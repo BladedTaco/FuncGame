@@ -26,7 +26,7 @@
 #include "HUD/FunctionHUD.h"
 
 ABlockFunctionLiftA2::ABlockFunctionLiftA2() {
-
+	FunctionIcon->SetStaticMesh(Assets()->Icon.LiftA2.Get());
 }
 
 void ABlockFunctionLiftA2::SetFunctionTypes() {

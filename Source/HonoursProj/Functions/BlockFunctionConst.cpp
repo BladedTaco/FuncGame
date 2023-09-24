@@ -26,7 +26,7 @@
 #include "HUD/FunctionHUD.h"
 
 ABlockFunctionConst::ABlockFunctionConst() {
-
+	FunctionIcon->SetStaticMesh(Assets()->TypeIcon.Key.Get());
 }
 
 void ABlockFunctionConst::SetFunctionTypes() {
