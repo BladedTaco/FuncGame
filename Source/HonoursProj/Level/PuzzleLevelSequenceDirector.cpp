@@ -9,6 +9,8 @@
 
 void UPuzzleLevelSequenceDirector::ReplaceActor(AActor* Replace, const TArray<AActor*>& With) {
 	
+	if (!IsValid(Replace)) return;
+
 	TArray<AActor*> ValidWith = {};
 	for (AActor* block : With) {
 		if (IsValid(block)) {
@@ -27,7 +29,5 @@ void UPuzzleLevelSequenceDirector::ReplaceActor(AActor* Replace, const TArray<AA
 		}
 	}
 
-	if (auto func = Cast<ABlockFunction>(Replace)) {
-		func->Destroy();
-	}
+	Replace->Destroy();
 }
