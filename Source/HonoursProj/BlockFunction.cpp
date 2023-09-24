@@ -329,7 +329,7 @@ void ABlockFunction::PropagateToEnds(MaskedBitFlags<EPropagable> Values) {
 }
 
 void ABlockFunction::PropagateMasked(EPropagable Values, EPropagable Mask) {
-	Propagate({ Mask, Values }, true);
+	PropagateToEnds({ Mask, Values });
 }
 
 // Updates to either Text or Icon Display

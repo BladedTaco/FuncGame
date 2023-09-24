@@ -376,7 +376,17 @@ UType* UTypePtr::DeepCopy(TMap<UType*, UType*>& ptrMap) const {
 }
 
 bool UTypePtr::UnifyWith_Impl(UType* concreteType) {
-	if (!Get()->UnifyWith_Impl(concreteType)) return false;
+	if (CopyTemplates) {
+		// Copy Templates, require full unification
+		if (!Get()->UnifyWith_Impl(concreteType)) return false;
+	} else {
+		// no copy templtes, only type matching
+		UTypeConst* t = Get()->VolatileConst();
+		t->Type = concreteType->GetType();
+		if (!Get()->UnifyWith_Impl(t)) return false;
+
+		//if (Intersection(Get()->GetType(), concreteType->GetType()) == EType::NONE) return false;
+	}
 
 	// Unify Colours
 	GetColourGroup()->Unify(GetColourIndex(), concreteType->GetColourIndex());
@@ -420,7 +430,7 @@ TArray<UType*> UTypePtr::GetTemplates() const {
 	if (!Type) return Templates;
 
 	// Get Pointed to Templates
-	auto templates = Type->GetTemplates();
+	auto templates = Type->GetTemplates(Type->GetType());
 
 	// If Equal Numbers
 	if (templates.Num() == Templates.Num()) {

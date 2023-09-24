@@ -78,7 +78,7 @@ protected:
 UCLASS()
 class HONOURSPROJ_API UTypeConst : public UType {
 	GENERATED_BODY()
-
+	friend UTypePtr;
 private:
 	UPROPERTY(VisibleAnywhere)
 		EType Type = EType::ANY;

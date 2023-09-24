@@ -25,9 +25,7 @@ void UColourGroup::FreeColour(TSharedRef<int>&& Index) {
 	// Push to Stack for Re-use
 	ColourStack.Add(Popped);
 
-	if (GEngine) {
-		GEngine->ForceGarbageCollection();
-	}
+	CheckGarbageCollect();
 }
 
 bool UColourGroup::ReferenceColour(TSharedRef<int> Source, TSharedRef<int>& Dest) {
@@ -71,10 +69,7 @@ bool UColourGroup::DuplicateColour(TSharedRef<int> Source, TSharedRef<int> Dest)
 	// Find Colour
 	FColor* Colour = ColourSet.Find(*Source);
 
-
-	if (GEngine) {
-		GEngine->ForceGarbageCollection();
-	}
+	CheckGarbageCollect();
 
 	// Return Failure
 	if (!Colour) return false;
@@ -107,17 +102,13 @@ void UColourGroup::Unify(int A, int B) {
 void UColourGroup::Split(int A, int B) {
 	ColourSet.Split(A, B);
 
-	if (GEngine) {
-		GEngine->ForceGarbageCollection();
-	}
+	CheckGarbageCollect();
 }
 
 void UColourGroup::Split(int A) {
 	ColourSet.Split(A);
 
-	if (GEngine) {
-		GEngine->ForceGarbageCollection();
-	}
+	CheckGarbageCollect();
 }
 
 // Generates the Next Colour in the Sequence, or Pops from Returned Stack
@@ -159,4 +150,14 @@ int UColourGroup::SplitRange(int Index, int Min, int Max) {
 
 	// Return Middle of Range
 	return (Min + Max) / 2;
+}
+
+void UColourGroup::CheckGarbageCollect() {
+	// Garbage Collect every 500 calls
+	if (++GarbageCollectCounter < 500) return;
+	GarbageCollectCounter = 0;
+
+	if (GEngine) {
+		GEngine->ForceGarbageCollection();
+	}
 }

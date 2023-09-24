@@ -53,7 +53,7 @@ void FTypeProperty::CustomizeHeader(TSharedRef<IPropertyHandle> StructPropertyHa
 			StructPropertyHandle->GetValue(obj);
 
 
-			if (obj && IsValid(obj)) {
+			if (obj && IsValid(obj) && obj->IsValidLowLevel()) {
 				if (UFunction* f = obj->FindFunction("UToString")) {
 					Params params = {};
 					obj->ProcessEvent(f, &params);

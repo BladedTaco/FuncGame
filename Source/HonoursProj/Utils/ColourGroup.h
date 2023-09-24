@@ -42,4 +42,7 @@ private:
 	FColor NextColour();
 	// Splits a Range in a Binary Search Midpoint Fashion
 	static int SplitRange(int Index, int Min, int Max);
+
+	int GarbageCollectCounter = 0;
+	void CheckGarbageCollect();
 };

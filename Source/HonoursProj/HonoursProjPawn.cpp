@@ -141,6 +141,8 @@ void AHonoursProjPawn::OnLClickRelease() {
 	}
 	RemoveInactive();
 
+
+	// Casting Tests
 	VStar tInt = VStar(Int(1));
 	VStar tBool = VStar(Bool(true));
 	//VStar tArr
@@ -155,10 +157,38 @@ void AHonoursProjPawn::OnLClickRelease() {
 	Int t4 = tList.ResolveToSafe<ListV>()->head(Int(0));
 	Int t3r = tEitherR.ResolveToSafe<EitherV>()->fromRight(Int(0));
 	Int t3l = tEitherL.ResolveToSafe<EitherV>()->fromLeft(Int(0));
-
-
 	
 	UE_LOG(LogTemp, Warning, TEXT("CAST TESTS %d %d %d %d %d %d"), t0.get(), t1.get(), t2.get(), t3l.get(), t3r.get(), t4.get());
+
+	// Function Fmap/Apply/liftA2/Monad tests
+
+	VStar arr = PreludeV::constant.ToArrV()(VStar(Int(5)));
+	VStar arrm = PreludeV::constant.ToArrV()(VStar(MaybeV::Just(Int(5))));
+	ArrV arr2 = PreludeV::constant.ToArrV();
+
+	VStar r1 = tMaybe.getTypeclass()->Functor->fmap()(arr)(tMaybe); // 5
+	VStar r2 = tMaybe.getTypeclass()->Applicative->apply()(MaybeV::Just(arr))(tMaybe); // 5
+	VStar r3 = tMaybe.getTypeclass()->Applicative->liftA2()(arr2)(MaybeV::Just(Int(10)))(tMaybe); // 10
+	VStar r4 = tMaybe.getTypeclass()->Monad->bind()(tMaybe)(arrm); // 5
+
+	MaybeV m1 = r1.ResolveToUnsafe<MaybeV>();
+	MaybeV m2 = r2.ResolveToUnsafe<MaybeV>();
+	MaybeV m3 = r3.ResolveToUnsafe<MaybeV>();
+	MaybeV m4 = r4.ResolveToUnsafe<MaybeV>();
+
+	Int i1 = m1.fromMaybe(Int(-1));
+	Int i2 = m2.fromMaybe(Int(-1));
+	Int i3 = m3.fromMaybe(Int(-1));
+	Int i4 = m4.fromMaybe(Int(-1));
+
+	UE_LOG(LogTemp, Warning, TEXT("FAM TESTS %d %d %d %d"), i1.get(), i2.get(), i3.get(), i4.get());
+
+	UE_LOG(LogTemp, Warning, TEXT("FAM TESTS %s %s %s %s"), 
+		*m1.fromMaybe(VStar()).Type()->ToString(),
+		*m2.fromMaybe(VStar()).Type()->ToString(), 
+		*m3.fromMaybe(VStar()).Type()->ToString(), 
+		*m4.fromMaybe(VStar()).Type()->ToString()
+	);
 
 
 

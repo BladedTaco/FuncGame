@@ -16,13 +16,15 @@ void UPuzzleLevelSequenceDirector::ReplaceActor(AActor* Replace, const TArray<AA
 		}
 	}
 
-	FVector Loc = Replace->GetActorLocation();
-	float AngleStep = 360 / ValidWith.Num();
-	float Angle = 0;
-	FVector Arm = FVector(20, 0, 0);
-	for (AActor* block : ValidWith) {
-		block->SetActorLocation(Loc + Arm.RotateAngleAxis(Angle, FVector::UpVector));
-		Angle += AngleStep;
+	if (ValidWith.Num() > 0) {
+		FVector Loc = Replace->GetActorLocation();
+		float AngleStep = 360 / ValidWith.Num();
+		float Angle = 0;
+		FVector Arm = FVector(200, 0, 0);
+		for (AActor* block : ValidWith) {
+			block->SetActorLocation(Loc + Arm.RotateAngleAxis(Angle, FVector::UpVector));
+			Angle += AngleStep;
+		}
 	}
 
 	if (auto func = Cast<ABlockFunction>(Replace)) {

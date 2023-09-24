@@ -62,9 +62,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	ABoard* Board;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FVector2D Position;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool bOnBoard = true;
 };
