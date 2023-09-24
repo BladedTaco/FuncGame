@@ -59,8 +59,8 @@ UAutoScalingHUD::UAutoScalingHUD() {
 }
 
 void UAutoScalingHUD::InvalidateAllWidgets() {
-	for (auto HUD : UAutoScalingHUD::AllHUDs) {
-		if (IsValid(HUD) && IsValid(HUD->LastBounds)) {
+	for (UAutoScalingHUD* HUD : AllHUDs) {
+		if (IsValid(HUD) && HUD->IsValidLowLevel() && IsValid(HUD->LastBounds)) {
 			HUD->SizeToBounds(HUD->LastBounds);
 		}
 	}
@@ -125,6 +125,8 @@ void UAutoScalingHUD::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 }
 
 void UAutoScalingHUD::OnComponentCreated() {
+	Super::OnComponentCreated();
+
 	UAutoScalingHUD::AllHUDs.Add(this);
 
 	InitWidget();

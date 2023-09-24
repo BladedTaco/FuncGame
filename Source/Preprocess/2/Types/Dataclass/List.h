@@ -247,11 +247,11 @@ auto rest = curry([](List<A> l_a, A a) -> A {
 });
 
 template <typename A = VStar>
-auto cons = curry([](A value, List<A> list) {
+auto cons = curry([](A value, List<A> list) -> List<A> {
     return List<A>(value, list);
 });
-auto consV = curry([](VStar headV, VStar listV) {
-    return ListV(headV, listV.ResolveToUnsafe<ListV>());
+inline auto consV = curry([](VStar headV, VStar listV) -> VStar {
+    return VStar(ListV(headV, listV.ResolveToUnsafe<ListV>()));
 }); 
  
 inline FString IList::Show::_show(const VStar& a) const {
@@ -347,7 +347,7 @@ inline VStar IList::Traversable::_traverse( const VStar& applic, const VStar& f,
 
 	// traverse :: Applicative f => (a -> f b) -> t a -> f (t b) = 0;
     Arr<VStar, Arr<VStar, VStar>> cons_f = curry([applic, g](VStar x, VStar ys) -> VStar {
-        return applic.getTypeclass()->Applicative->liftA2()(consV)(g(x))(ys);
+        return applic.getTypeclass()->Applicative->liftA2()(consV.ToArrV())(g(x))(ys);
     });
 
     ArrV cons_f2 = cons_f.ToArrV();
@@ -366,7 +366,7 @@ inline VStar IList::Semigroup::_mappend( const VStar& left, const VStar& right) 
     if (_ma.isEmpty().get()) return right;
 
     // else cons recursively
-    return cons<VStar>(_ma._head)(mappend()(_ma.rest())(right));
+    return consV(_ma._head)(mappend()(_ma.rest())(right));
 }
 
 inline VStar IList::Monoid::_mempty() const {

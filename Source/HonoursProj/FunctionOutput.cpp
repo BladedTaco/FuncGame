@@ -77,6 +77,9 @@ UType* AFunctionOutput::ResolveType_Impl() {
 	auto TVar = Cast<UTypeVar>(arrowPtr->Get());
 	TVar->ResetColour();
 	TVar->ApplyEvidence(Function->Outputs[Index].Type->DeepCopy(ptrMap));
+	
+	
+	LastType = arrow;
 
 	// Return the arrow with applied type
 	return arrow;
@@ -93,6 +96,23 @@ const TArray<AFunctionInput*> AFunctionOutput::GetConnectedInputs() {
 	});
 	// Return filtered connectedTo
 	return connectedTo;
+}
+
+UType* AFunctionOutput::ResolveArrow(UType* Arrow, UType* MyType) {
+	// Get a pointer to the arrow
+	UTypePtr* arrowPtr = UTypePtr::New(Arrow);
+
+	// Move down the arrow until a TypeVar is found
+	while (arrowPtr && arrowPtr->Valid() && !arrowPtr->Get()->IsA<UTypeVar>()) {
+		arrowPtr = Cast<UTypePtr>(arrowPtr->GetTemplates()[1]);
+	}
+	// Apply the Outputs Type to the TypeVar
+	//Cast<UTypeVar>(arrowPtr->Get())->ApplyEvidence(ParameterInfo.Type);
+	auto TVar = Cast<UTypeVar>(arrowPtr->Get());
+	TVar->ResetColour();
+	TVar->ApplyEvidence(MyType);
+
+	return arrowPtr;
 }
 
 VStar AFunctionOutput::GetValue_Impl() {

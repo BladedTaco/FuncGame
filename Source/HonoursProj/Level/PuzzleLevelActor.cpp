@@ -104,7 +104,7 @@ bool APuzzleLevelActor::EndTest() {
 
 
 	// Jump Back to Start, undoing effects
-	//SequenceObject->Pause();
+	SequenceObject->Pause();
 	SequenceObject->SetPlaybackPosition(FMovieSceneSequencePlaybackParams(LoopStart.Time, EUpdatePositionMethod::Jump));
 	SequenceObject->Play();
 

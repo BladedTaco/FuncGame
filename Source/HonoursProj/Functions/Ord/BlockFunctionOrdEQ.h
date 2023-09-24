@@ -8,7 +8,7 @@
 #include "BlockFunctionOrdEQ.generated.h"
 
 UCLASS()
-class HONOURSPROJ_API ABlockFunctionOrdEQ : public ABlockFunction
+class HONOURSPROJ_API ABlockFunctionOrdEQ : public ABlockFunctionOrd
 {
 	GENERATED_BODY()
 public:

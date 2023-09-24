@@ -81,7 +81,14 @@ void AFunctionConnector::SetupHUD() {
 	if (ParameterInfo.Type && HUD.Inst().IsValid()) {
 		HUD.Instance->Name = ParameterInfo.Name;
 		HUD.Instance->Type = ParameterInfo.Type->ToString();
-		SpawnRepr(ParameterInfo.Type);
+
+		if (IsA<AFunctionOutput>()) {
+			UType* OutType = Cast<AFunctionOutput>(this)->LastType;
+			if (IsValid(OutType)) SpawnRepr(OutType);
+		} else {
+			SpawnRepr(ParameterInfo.Type);
+		}
+
 	}
 }
 
@@ -144,6 +151,8 @@ void AFunctionConnector::BeginDestroy() {
 	if (Function) {
 		Function->InputBlocks.Remove(Cast<AFunctionInput>(this));
 		Function->OutputBlocks.Remove(Cast<AFunctionOutput>(this));
+
+		HandleRClick(GetBlockMesh());
 	}
 	Super::BeginDestroy();
 }

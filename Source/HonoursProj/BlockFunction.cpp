@@ -531,14 +531,12 @@ UType* ABlockFunction::ResolveType() {
 
 	// Update Status on Valid
 	if (Valid) {
-
 		// Update Repr
 		for (int idx = InputBlocks.Num(); idx-- > 0;) {
 			AFunctionInput* input = InputBlocks[idx];
 
 			input->SpawnRepr(Inputs[idx].Type);
 		}
-
 
 		Status |= EPropagable::VALID;
 	// Propagate on invalid
@@ -558,6 +556,16 @@ UType* ABlockFunction::ResolveType() {
 			outArrow = UTypeConst::New(ETypeData::FUNC, { input->ParameterInfo.Type, UTypePtr::New(outArrow) });
 		}
 	}
+
+	//if (Valid) {
+	//	// Update Repr
+	//	for (int idx = OutputBlocks.Num(); idx-- > 0;) {
+	//		AFunctionOutput* output = OutputBlocks[idx];
+	//		TMap<UType*, UType*> ptrMap = {};
+	//		output->SpawnRepr(output->ResolveArrow(outArrow->DeepCopy(ptrMap), Outputs[idx].Type));
+	//	}
+	//}
+
 
 	// Set OutputArrow
 	OutputArrow = outArrow;

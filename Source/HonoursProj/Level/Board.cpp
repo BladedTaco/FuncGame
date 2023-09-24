@@ -72,7 +72,7 @@ FVector ABoard::GetPosition(int X, int Y) {
 	}
 
 	// Handle bounds checking
-	if (X < 0 || X > Width || Y < 0 || Y > Height) return FVector::ZeroVector;
+	if (X < 0 || X >= Width || Y < 0 || Y >= Height) return FVector::ZeroVector;
 	// Return Position
 	return Positions[Y * Width + X];
 }

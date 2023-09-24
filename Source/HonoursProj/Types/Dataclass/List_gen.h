@@ -259,11 +259,11 @@ auto rest = curry([](List<A> l_a, A a) -> A {
     return l_a.rest(a);
 });
 template <typename A = VStar>
-auto cons = curry([](A value, List<A> list) {
+auto cons = curry([](A value, List<A> list) -> List<A> {
     return List<A>(value, list);
 });
-auto consV = curry([](VStar headV, VStar listV) {
-    return ListV(headV, listV.ResolveToUnsafe<ListV>());
+inline auto consV = curry([](VStar headV, VStar listV) -> VStar {
+    return VStar(ListV(headV, listV.ResolveToUnsafe<ListV>()));
 }); 
 inline FString IList::Show::_show(const VStar& a) const {
 	ListV m_a = a.ResolveToUnsafe<ListV>();
@@ -315,7 +315,7 @@ inline VStar IList::Traversable::_traverse( const VStar& applic, const VStar& f,
     ListV _ma = foldable.ResolveToUnsafe<ListV>();
 	ArrV g = f.ResolveToUnsafe<ArrV>();
     Arr<VStar, Arr<VStar, VStar>> cons_f = curry([applic, g](VStar x, VStar ys) -> VStar {
-        return applic.getTypeclass()->Applicative->liftA2()(consV)(g(x))(ys);
+        return applic.getTypeclass()->Applicative->liftA2()(consV.ToArrV())(g(x))(ys);
     });
     ArrV cons_f2 = cons_f.ToArrV();
     return foldr()
@@ -326,7 +326,7 @@ inline VStar IList::Traversable::_traverse( const VStar& applic, const VStar& f,
 inline VStar IList::Semigroup::_mappend( const VStar& left, const VStar& right) const {
     ListV _ma = left.ResolveToUnsafe<ListV>();
     if (_ma.isEmpty().get()) return right;
-    return cons<VStar>(_ma._head)(mappend()(_ma.rest())(right));
+    return consV(_ma._head)(mappend()(_ma.rest())(right));
 }
 inline VStar IList::Monoid::_mempty() const {
     return ListV();

@@ -49,6 +49,7 @@ class Functor;
 class IFunc : public virtual ITypeclass {
 private:
 	virtual TSharedPtr<const Typeclass> _GetTypeclass() const override;
+
 public:
 	class Functor;
 	static const Functor FunctorInst;
@@ -83,65 +84,41 @@ private:
 	friend ArrVV;
 public:
 	// Copyable Lambdas
-	Func(Function<To, From> f) {
-		_func = f;
-	}
-	Func(const Func<To, From>* f) {
-		_func = f->_func;
-	}
-	Func(const ArrV* f) {
-		_func = [f](From x) -> To { return To(f->operator()(x)); };
-	}
-	Func(const ArrV& f) {
-		_func = [f](From x) -> To { return To(f(x)); };
-	} 
-	//// Copyable Lambdas
-	//Func(Func<To, From>& other) {
-	//	_func = other._func;
-	//}
-	//To operator()(VStarArray a) const {
-	//	return _func(std::move(a));
-	//}
-	ArrV ToArrV() const {
-		return curry([_f = _func](const VStar& x){ return VStar(_f(x)); });
-	}
-	To operator()(From a) const {
-		return _func(a);
-	}
-	To operator()(const From& a) const {
-		return _func(a);
-	}
-	To operator()(const VStar& a) const {
-		return _func(a.ResolveToUnsafe<From>());
-	}
+	virtual ~Func() = default;
+	Func(Function<To, From> f);
+	Func(const Func<To, From>* f);
+	Func(const ArrV* f);
+	Func(const ArrV& f);
+	ArrV ToArrV() const;
+	To operator()(From a) const;
+	// To operator()(const From &a) const;
+	// To operator()(const VStar &a) const;
 };
 
 template <>
 class Func<VStar, VStar> : public virtual IFunc {
-	using From = const VStar&;
-	using To = VStar;
+	using _From = const VStar&;
+	using _To = VStar;
 private:
-	Function<To, From> _func;
+	Function<_To, _From> _func;
 	friend ArrVV;
 	//friend class Functor<Func<To, From>>;
 public:
+	virtual ~Func() = default;
 	// Copyable Lambdas
-	Func(Function<To, From> f) {
+	inline Func(Function<_To, _From> f) {
 		_func = f;
 	}
-	Func(const Func<To, From>* f) {
-		_func = [f](From x) -> To { return f->operator()(x); };
+	inline Func(const Func<_To, _From>* f) {
+		_func = [f](VStar x) -> VStar { return f->operator()(x); };
 	}
-	Func(const ArrV* f) {
-		_func = [f](From x) -> To { return f->operator()(x).ResolveToUnsafe<To>(); };
+	inline Func(const ArrV* f) {
+		_func = [f](VStar x) -> VStar { return f->operator()(x); };
 	}
-	// Func(const ArrVV* f) {
-	// 	_func = [f](From x) -> VStar { return VStar(f->operator()(x)); };
-	// }
-	ArrV ToArrV() const {
+	inline ArrV ToArrV() const {
 		return ArrV(_func);
 	}
-	To operator()(From a) const {
+	inline _To operator()(_From a) const {
 		return _func(a);
 	}
 }; 
@@ -155,111 +132,305 @@ private:
 	friend ArrVV;
 	//friend class Functor<Func<To, From>>;
 public:
+	virtual ~Func() = default;
 	// Copyable Lambdas
-	Func(Function<To, const VStar&> f) {
-		_func = f;
-	}
-	Func(const Func<To, const VStar&>* f) {
-		_func = f->_func;
-	}
-	Func(const ArrV* f) {
-		_func = [f](const VStar& x) -> To { return f->operator()(x).ResolveToUnsafe<To>(); };
-	}
-	Func(const ArrVV* f) {
-		_func = [f](const VStar& x) -> VStar { return VStar(f->operator()(x)); };
-	}
-	ArrV ToArrV() const {
-		if constexpr (is_instance_n<2, To, Arr>) {
-			return curry([_f = _func](VStar x){ return VStar(_f(x).ToArrV()); });
-		}
-
-		return curry([_f = _func](VStar x){ return VStar(_f(x)); });
-	}
-	To operator()(const VStar& a) const {
-		return _func(a);
-	}
+	Func(Function<To, const VStar&> f);
+	Func(const Func<To, const VStar&>* f);
+	Func(const ArrV* f);
+	Func(const ArrVV* f);
+	ArrV ToArrV() const;
+	To operator()(const VStar& a) const;
 };
 
 
 template <typename To>
 class Func<To, void> : public virtual IFunc {
-	using From = void;
+	using _From = void;
 private:
-	Function<To, From> _func;
+	Function<To> _func;
 	friend ArrV;
 	friend ArrVV;
 	//friend class Functor<Func<To, From>>;
 public:
+	virtual ~Func() = default;
 	// Copyable Lambdas
-	Func(Function<To, From> f) {
-		_func = f;
-	}
-	Func(const Func<To, From>* f) {
-		_func = f->_func;
-	}
-	Func(const ArrV* f) {
-		_func = [f](From x) -> To { return To(f->operator()(x)); };
-	}
-	Func(const ArrV& f) {
-		_func = [f](From x) -> To { return To(f(x)); };
-	}
-	To operator()() const {
-		return _func();
-	}
+	Func(Function<To> f);
+	Func(const Func<To, _From>* f);
+	Func(const ArrV* f);
+	Func(const ArrV& f);
+	ArrV ToArrV() const;
+	To operator()() const;
 };
 
 
 template <typename To>
 class Func<To, const VStar&> : public virtual IFunc {
-	using From = const VStar&;
+	using _From = const VStar&;
 private:
-	Function<To, From> _func;
+	Function<To, _From> _func;
 	friend ArrV;
 	friend ArrVV;
 	//friend class Functor<Func<To, From>>;
 public:
+	virtual ~Func() = default;
 	// Copyable Lambdas
-	Func(Function<To, From> f) {
-		_func = f;
-	}
-	Func(const Func<To, From>* f) {
-		_func = f->_func;
-	}
-	Func(const ArrV* f) {
-		_func = [f](From x) -> To { return To(f->operator()(x)); };
-	}
-	Func(const ArrV& f) {
-		_func = [f](From x) -> To { return To(f(x)); };
-	}
-	To operator()(From a) const {
-		return _func(a);
-	}
+	Func(Function<To, _From> f);
+	Func(const Func<To, _From>* f);
+	Func(const ArrV* f);
+	Func(const ArrV& f);
+	ArrV ToArrV() const;
+	To operator()(_From a) const;
 };
 
 template <>
 class Func<VStarArrayReturn, VStarArray> : public virtual IFunc {
-	using From = VStarArray;
-	using To = VStarArrayReturn;
+	using _From = VStarArray;
+	using _To = VStarArrayReturn;
 private:
-	Function<To, From> _func;
+	Function<_To, _From> _func;
 	friend ArrV;
 	friend ArrVV;
 	//friend class Functor<Func<To, From>>;
 public:
+	virtual ~Func() = default;
 	// Copyable Lambdas
-	Func(Function<To, From> f) {
+	Func(Function<_To, _From> f) {
 		_func = f;
 	}
-	Func(const Func<To, From>* f) {
+	Func(const Func<_To, _From>* f) {
 		_func = f->_func;
 	}
-	To operator()(From a) const {
+	_To operator()(_From a) const {
 		return _func(std::move(a));
 	}
-	To operator()(TArray<VStar> a) const {
+	_To operator()(TArray<VStar> a) const {
 		return _func(std::move(a));
 	}
+
 };
+
+
+
+
+
+
+
+
+
+
+
+// TO FROM
+
+// A Func is an arrow ((->) From) To
+template <typename To, typename From>
+Func<To, From>::Func(Function<To, From> f) {
+	_func = f;
+}
+template <typename To, typename From>
+Func<To, From>::Func(const Func<To, From>* f) {
+	_func = f->_func;
+}
+template <typename To, typename From>
+Func<To, From>::Func(const ArrV* f) {
+	_func = [f](From x) -> To { return To(f->operator()(x)); };
+}
+template <typename To, typename From>
+Func<To, From>::Func(const ArrV& f) {
+	_func = [f](From x) -> To { return To(f(x)); };
+} 
+	//// Copyable Lambdas
+	//Func(Func<To, From>& other) {
+	//	_func = other._func;
+	//}
+	//To operator()(VStarArray a) const {
+	//	return _func(std::move(a));
+	//}
+template <typename To, typename From>
+inline ArrV Func<To, From>::ToArrV() const {
+	auto _f = _func;
+	if constexpr (is_instance_n<2, To, Arr>) {
+		return curry([_f](VStar x){ return VStar(_f(x).ToArrV()); });
+	}
+
+	return curry([_f](VStar x){ return VStar(_f(x)); });
+}
+template <typename To, typename From>
+inline To Func<To, From>::operator()(From a) const {
+	return _func(a);
+}
+// template <typename To, typename From>
+// inline To Func<To, From>::operator()(const From& a) const {
+// 	return _func(a);
+// }
+// template <typename To, typename From>
+// inline To Func<To, From>::operator()(const VStar& a) const {
+// 	return _func(a.ResolveToUnsafe<From>());
+// }
+
+
+// VSTAR VSTAR
+// Func<VStar, VStar>::Func(Function<VStar, const VStar&> f) {
+// 	_func = f;
+// }
+// // template <>
+// Func<VStar, VStar>::Func(const Func<VStar, const VStar&>* f) {
+// 	_func = [f](VStar x) -> VStar { return f->operator()(x); };
+// }
+// // template <>
+// Func<VStar, VStar>::Func(const ArrV* f) {
+// 	_func = [f](VStar x) -> VStar { return f->operator()(x).ResolveToUnsafe<VStar>(); };
+// }
+// // Func(const ArrVV* f) {
+// // 	_func = [f](From x) -> VStar { return VStar(f->operator()(x)); };
+// // }
+// // template <>
+// inline ArrV Func<VStar, VStar>::ToArrV() const {
+// 	return ArrV(_func);
+// }
+// // template <>
+// inline VStar Func<VStar, VStar>::operator()(const VStar& a) const {
+// 	return _func(a);
+// }
+
+
+
+	
+// TO VSTAR
+// Copyable Lambdas
+template <typename To>
+Func<To, VStar>::Func(Function<To, const VStar&> f) {
+	_func = f;
+}
+template <typename To>
+Func<To, VStar>::Func(const Func<To, const VStar&>* f) {
+	_func = f->_func;
+}
+template <typename To>
+Func<To, VStar>::Func(const ArrV* f) {
+	_func = [f](const VStar& x) -> To { return f->operator()(x).ResolveToUnsafe<To>(); };
+}
+template <typename To>
+Func<To, VStar>::Func(const ArrVV* f) {
+	_func = [f](const VStar& x) -> VStar { return VStar(f->operator()(x)); };
+}
+template <typename To>
+inline ArrV Func<To, VStar>::ToArrV() const {
+	if constexpr (is_instance_n<2, To, Arr>) {
+		return curry([_f = _func](VStar x){ return VStar(_f(x).ToArrV()); });
+	}
+
+	return curry([_f = _func](VStar x){ return VStar(_f(x)); });
+}
+template <typename To>
+inline To Func<To, VStar>::operator()(const VStar& a) const {
+	return _func(a);
+}
+
+
+// TO VOID
+
+// Copyable Lambdas
+template <typename To>
+Func<To, void>::Func(Function<To> f) {
+	_func = f;
+}
+template <typename To>
+Func<To, void>::Func(const Func<To, void>* f) {
+	_func = f->_func;
+}
+template <typename To>
+Func<To, void>::Func(const ArrV* f) {
+	_func = [f]() -> To { return To(f->operator()(VStar())); };
+}
+template <typename To>
+Func<To, void>::Func(const ArrV& f) {
+	_func = [f]() -> To { return To(f(VStar())); };
+}
+
+template <typename To>
+inline ArrV Func<To, void>::ToArrV() const {
+	if constexpr (is_instance_n<2, To, Arr>) {
+		return curry([_f = _func](VStar x){ return VStar(_f().ToArrV()); });
+	}
+
+	return curry([_f = _func](VStar x){ return VStar(_f()); });
+}
+
+template <typename To>
+inline To Func<To, void>::operator()() const {
+	return _func();
+}
+
+
+
+// TO CONST VSTAR &
+
+// Copyable Lambdas
+template <typename To>
+Func<To, const VStar&>::Func(Function<To, const VStar&> f) {
+	_func = f;
+}
+template <typename To>
+Func<To, const VStar&>::Func(const Func<To, const VStar&>* f) {
+	_func = f->_func;
+}
+template <typename To>
+Func<To, const VStar&>::Func(const ArrV* f) {
+	_func = [f](const VStar& x) -> To { return To(f->operator()(x)); };
+}
+template <typename To>
+Func<To, const VStar&>::Func(const ArrV& f) {
+	_func = [f](const VStar& x) -> To { return To(f(x)); };
+}
+
+template <typename To>
+inline ArrV Func<To, const VStar&>::ToArrV() const {
+	if constexpr (is_instance_n<2, To, Arr>) {
+		return curry([_f = _func](VStar x){ return VStar(_f(x).ToArrV()); });
+	}
+
+	return curry([_f = _func](VStar x){ return VStar(_f(x)); });
+}
+
+template <typename To>
+inline To Func<To, const VStar&>::operator()(const VStar& a) const {
+	return _func(a);
+}
+
+
+
+// VSTARARRAYRETURN VSTARARRAY
+
+// Copyable Lambdas
+// // template <>
+// Func<VStarArrayReturn, VStarArray>::Func(Function<VStarArrayReturn, VStarArray> f) {
+// 	_func = f;
+// }
+// template <>
+// Func<VStarArrayReturn, VStarArray>::Func(const Func<VStarArrayReturn, VStarArray>* f) {
+// 	_func = f->_func;
+// }
+// inline VStarArrayReturn Func<VStarArrayReturn, VStarArray>::operator()(VStarArray a) const {
+// 	return _func(std::move(a));
+// }
+// inline VStarArrayReturn Func<VStarArrayReturn, VStarArray>::operator()(TArray<VStar> a) const {
+// 	return _func(std::move(a));
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //// A Func is an arrow ((->) From) To
 //template <typename To>

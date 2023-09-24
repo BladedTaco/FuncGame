@@ -8,7 +8,7 @@
 #include "BlockFunctionOrdMax.generated.h"
 
 UCLASS()
-class HONOURSPROJ_API ABlockFunctionOrdMax : public ABlockFunction
+class HONOURSPROJ_API ABlockFunctionOrdMax : public ABlockFunctionOrd
 {
 	GENERATED_BODY()
 public:

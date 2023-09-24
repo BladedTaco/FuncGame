@@ -29,6 +29,7 @@ Arr<VStarArray, VStarArrayReturn> ABlockFunctionSkillHide::GetInnerFunc() {
 			auto [t0] = Destruct<1, TArray, VStar>(values);
 
 			Unit->bOnBoard = !(t0.ResolveToUnsafe<Bool>().get() && TrySkill());
+			Unit->TrySetPosition(Unit->Position.X, Unit->Position.Y);
 		}
 
 		return { };

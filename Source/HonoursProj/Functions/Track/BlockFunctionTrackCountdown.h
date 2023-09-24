@@ -14,8 +14,8 @@ class HONOURSPROJ_API ABlockFunctionTrackCountdown : public ABlockFunctionTrack
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(EditAnywhere)
-	float Countdown = -1.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Interp)
+	float Countdown = 99.0f;
 
 	ABlockFunctionTrackCountdown();
 

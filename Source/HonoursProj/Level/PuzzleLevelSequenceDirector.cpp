@@ -5,6 +5,8 @@
 
 #include "GameFramework/Actor.h"
 
+#include "BlockFunction.h"
+
 void UPuzzleLevelSequenceDirector::ReplaceActor(AActor* Replace, const TArray<AActor*>& With) {
 	
 	TArray<AActor*> ValidWith = {};
@@ -21,5 +23,9 @@ void UPuzzleLevelSequenceDirector::ReplaceActor(AActor* Replace, const TArray<AA
 	for (AActor* block : ValidWith) {
 		block->SetActorLocation(Loc + Arm.RotateAngleAxis(Angle, FVector::UpVector));
 		Angle += AngleStep;
+	}
+
+	if (auto func = Cast<ABlockFunction>(Replace)) {
+		func->Destroy();
 	}
 }

@@ -7,9 +7,9 @@
 // Set Function Icon Mesh
 ABlockFunctionOrdMax::ABlockFunctionOrdMax() {
 	FunctionIcon->SetStaticMesh(Assets()->Icon.Ordinal.Get());
-	FunctionIcon->SetMaterial(0, Assets()->Material.DarkGrey.Get());
+	FunctionIcon->SetMaterial(0, Assets()->Material.White.Get());
 	FunctionIcon->SetMaterial(1, Assets()->Material.White.Get());
-	FunctionIcon->SetMaterial(2, Assets()->Material.DarkGrey.Get());
+	FunctionIcon->SetMaterial(2, Assets()->Material.White.Get());
 	FunctionIcon->SetMaterial(3, Assets()->Material.White.Get());
 }
 

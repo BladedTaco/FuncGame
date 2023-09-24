@@ -30,4 +30,9 @@ public:
 
 	virtual const TArray<AFunctionConnector*> GetConnections() override;
 	const TArray<AFunctionInput*> GetConnectedInputs();
+
+	UType* ResolveArrow(UType* Arrow, UType* MyType);
+
+	UPROPERTY(VisibleAnywhere)
+	UType* LastType = NULL;
 };
