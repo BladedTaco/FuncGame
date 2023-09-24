@@ -70,7 +70,7 @@ inline bool UnionFindSplit<T>::Contains(TFunction<bool(const T&)> Predicate) con
 // Add an Element to the Set
 template<typename T>
 inline void UnionFindSplit<T>::Add(TSharedRef<int> Index, T Object) {
-	if (Nodes.Num() > 200) {
+	if (Nodes.Num() > 500) {
 		UE_LOG(LogTemp, Warning, TEXT("Many Colours: %d"), Nodes.Num());
 	}
 

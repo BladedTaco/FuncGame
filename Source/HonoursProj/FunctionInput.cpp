@@ -98,9 +98,10 @@ const TArray<AFunctionOutput*> AFunctionInput::GetConnectedOutputs() {
 }
 
 VStar AFunctionInput::GetValue_Impl() {
-	UType* type = ResolveType();
+	//UType* type = ResolveType();
 	// Handle no connection
-	if (!connectedTo) return VStar(ResolveType()); 
+	//if (!connectedTo) return VStar(ResolveType());
+	if (!connectedTo) return VStar();
 
 	// Return value from connection
 	return connectedTo->GetValue();

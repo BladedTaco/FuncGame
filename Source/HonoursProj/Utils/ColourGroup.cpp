@@ -154,7 +154,8 @@ int UColourGroup::SplitRange(int Index, int Min, int Max) {
 
 void UColourGroup::CheckGarbageCollect() {
 	// Garbage Collect every 500 calls
-	if (++GarbageCollectCounter < 5000) return;
+	
+	if (++GarbageCollectCounter < 5000 || ColourSet.Num() > 1000) return;
 	GarbageCollectCounter = 0;
 
 	if (GEngine) {
