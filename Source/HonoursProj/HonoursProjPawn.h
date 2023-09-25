@@ -58,4 +58,7 @@ protected:
 		FVector PanOrigin;
 	UPROPERTY(VisibleAnywhere)
 		bool PanningCamera = false;
+
+	UPROPERTY(VisibleAnywhere)
+		bool CanZoom = false;
 };

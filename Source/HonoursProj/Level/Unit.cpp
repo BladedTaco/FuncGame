@@ -51,9 +51,12 @@ void AUnit::BeginPlay()
 	Super::BeginPlay();
 
 	// Create Token
-	TokenActor = GetWorld()->SpawnActor<AStaticMeshActor>();
-	TokenActor->GetStaticMeshComponent()->SetStaticMesh(IconMesh->GetStaticMesh());
-	TokenActor->GetStaticMeshComponent()->SetMobility(EComponentMobility::Movable);
+	if (!IsValid(TokenActor)) {
+		TokenActor = GetWorld()->SpawnActor<AStaticMeshActor>();
+		TokenActor->GetStaticMeshComponent()->SetStaticMesh(IconMesh->GetStaticMesh());
+		TokenActor->GetStaticMeshComponent()->SetMobility(EComponentMobility::Movable);
+		TokenActor->SetActorRotation(IconMesh->GetComponentRotation());
+	}
 
 	// Disable Collision for all Meshes
 	TArray<UStaticMeshComponent*> Meshes;

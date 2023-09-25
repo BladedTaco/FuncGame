@@ -38,6 +38,8 @@
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "HUD/AutoScalingHUD.h"
 
+#include "TimerManager.h"
+
 AHonoursProjPawn::AHonoursProjPawn(const FObjectInitializer& ObjectInitializer) 
 	: Super(ObjectInitializer)
 {
@@ -101,6 +103,9 @@ void AHonoursProjPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction("MClick", EInputEvent::IE_Released, this, &AHonoursProjPawn::OnMClickRelease);
 
 	PlayerInputComponent->BindAxis("Scroll", this, &AHonoursProjPawn::OnScroll);
+
+	FTimerHandle t;
+	GetWorld()->GetTimerManager().SetTimer(t, FTimerDelegate::CreateLambda([this]() {CanZoom = true; }), 1.0f, false);
 }
 
 void AHonoursProjPawn::CalcCamera(float DeltaTime, struct FMinimalViewInfo& OutResult)
@@ -438,6 +443,7 @@ void AHonoursProjPawn::OnMClickRelease() {
 }
 
 void AHonoursProjPawn::OnScroll(float axis) {
+	if (!CanZoom) return;
 	if (-0.01 < axis && axis < 0.01) { return; }
 
 	if (MainCamera) {
