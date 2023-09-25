@@ -300,13 +300,14 @@ void AFunctionConnector::SpawnRepr(UType* Type) {
 	if (TypeRepr && IsValid(TypeRepr)) {
 		// Update Existing Repr
 		auto newRepr = TypeRepr->UpdateRepr(Type);
-		if (TypeRepr == newRepr) return; // Do Nothing on Identical
+		if (TypeRepr == newRepr || !IsValid(newRepr)) return; // Do Nothing on Identical
 		TypeRepr = newRepr;
 	} else {
 		// Spawn new Repr
 		TypeRepr = ATypeRepr::CreateRepr(Type, GetWorld());
 	}
 
+	if (!IsValid(TypeRepr)) return;
 
 	// Fit to Plane and Move Up
 	FitActorToPlane(TypeRepr, TypeRepr->BoundingBox, GetBlockMesh());

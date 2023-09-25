@@ -190,6 +190,8 @@ UClass* ATypeRepr::GetRepr(EType Type) {
 }
 
 ATypeRepr* ATypeRepr::CreateRepr(UType* Type, UWorld* World, int32 StencilValue) {
+	if (!IsValid(World) || !IsValid(Type)) return NULL;
+
 	auto me = World->SpawnActor<ATypeRepr>(GetRepr(Type->GetType()));
 	me->FullType = Type->VolatileConst();
 	me->UpdateStencilValue(StencilValue);
@@ -207,12 +209,13 @@ ATypeRepr* ATypeRepr::CreateRepr(UType* Type, UWorld* World, int32 StencilValue)
 		return me;
 	}
 	// MisMatch, Invalid Representation
-	if (templates.Num() != planes.Num()) return nullptr;
+	if (templates.Num() != planes.Num()) return NULL;
 
 	// For Each Template/Plane Pair
 	for (int idx = templates.Num(); idx --> 0;) {
 		// Create Specialized TypeRepr, and Fit it to Plane.
 		auto repr = CreateRepr(templates[idx], World, StencilValue - 1);
+		if (!IsValid(repr)) return NULL;
 		FitActorToPlane(repr, repr->BoundingBox, planes[idx]);
 		planes[idx]->SetVisibility(false);
 	}

@@ -44,6 +44,7 @@ public:
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	virtual void BeginPlay() override;
 	virtual void OnComponentCreated() override;
 	virtual void DestroyComponent(bool bPromoteChildren = false) override;
 	virtual void BeginDestroy() override;

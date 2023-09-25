@@ -93,6 +93,12 @@ struct FResource_Icon {
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Mana;
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Health;
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> LiftA2;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Abs;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Minus;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Plus;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> PositionAdd;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Sign;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Times;
 		FResource_Icon()
 		:	Percentage(TEXT("StaticMesh'/Game/MyContent/Meshes/percent.percent'"))
 		,	Counter(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/Counter.Counter'"))
@@ -106,6 +112,12 @@ struct FResource_Icon {
 		,	Mana(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/Mana.Mana'"))
 		,	Health(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/Health.Health'"))
 		,	LiftA2(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/LiftA2.LiftA2'"))
+		,	Abs(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/Abs.Abs'"))
+		,	Minus(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/Minus.Minus'"))
+		,	Plus(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/Plus.Plus'"))
+		,	PositionAdd(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/PositionAdd.PositionAdd'"))
+		,	Sign(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/Sign.Sign'"))
+		,	Times(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/Times.Times'"))
 		{}
 };
 

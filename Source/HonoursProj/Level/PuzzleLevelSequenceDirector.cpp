@@ -23,6 +23,7 @@ void UPuzzleLevelSequenceDirector::ReplaceActor(AActor* Replace, const TArray<AA
 		float AngleStep = 360 / ValidWith.Num();
 		float Angle = 0;
 		FVector Arm = FVector(200, 0, 0);
+		if (ValidWith.Num() == 1) Arm = FVector::ZeroVector;
 		for (AActor* block : ValidWith) {
 			block->SetActorLocation(Loc + Arm.RotateAngleAxis(Angle, FVector::UpVector));
 			Angle += AngleStep;

@@ -60,7 +60,7 @@ UAutoScalingHUD::UAutoScalingHUD() {
 
 void UAutoScalingHUD::InvalidateAllWidgets() {
 	for (UAutoScalingHUD* HUD : AllHUDs) {
-		if (IsValid(HUD) && HUD->IsValidLowLevel() && IsValid(HUD->LastBounds)) {
+		if (HUD && IsValid(HUD) && HUD->IsValidLowLevel() && IsValid(HUD->LastBounds)) {
 			HUD->SizeToBounds(HUD->LastBounds);
 		}
 	}
@@ -68,7 +68,7 @@ void UAutoScalingHUD::InvalidateAllWidgets() {
 
 void UAutoScalingHUD::SizeToBounds(UStaticMeshComponent* Mesh) {
 	
-	if (!IsValid(this) || OwnerNeedsInitialization() || !IsValid(GetOwner()) || !IsValid(Mesh)) return;
+	if (!IsValid(this) || OwnerNeedsInitialization() || !IsValid(GetOwner()) || !IsValid(Mesh) || !Mesh->IsValidLowLevel()) return;
 
 	LastBounds = Mesh;
 
@@ -124,10 +124,14 @@ void UAutoScalingHUD::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	}
 }
 
+void UAutoScalingHUD::BeginPlay() {
+	if (!AllHUDs.Contains(this)) {
+		AllHUDs.Add(this);
+	}
+}
+
 void UAutoScalingHUD::OnComponentCreated() {
 	Super::OnComponentCreated();
-
-	UAutoScalingHUD::AllHUDs.Add(this);
 
 	InitWidget();
 	UpdateWidget();

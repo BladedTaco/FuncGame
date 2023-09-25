@@ -55,7 +55,12 @@ void AUnit::BeginPlay()
 		TokenActor = GetWorld()->SpawnActor<AStaticMeshActor>();
 		TokenActor->GetStaticMeshComponent()->SetStaticMesh(IconMesh->GetStaticMesh());
 		TokenActor->GetStaticMeshComponent()->SetMobility(EComponentMobility::Movable);
+		int idx = 0;
+		for (auto mat : IconMesh->GetMaterials()) {
+			TokenActor->GetStaticMeshComponent()->SetMaterial(idx++, mat);
+		}
 		TokenActor->SetActorRotation(IconMesh->GetComponentRotation());
+		TokenActor->SetActorScale3D(IconMesh->GetComponentScale());
 	}
 
 	// Disable Collision for all Meshes
