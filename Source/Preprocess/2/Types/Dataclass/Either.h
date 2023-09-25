@@ -28,6 +28,8 @@ static const inline T NAME = []{ T ${}; __VA_ARGS__; return $; }()
 #include "Types/Typeclass/Show.h"
 #include "Types/Typeclass/Read.h"
 
+#include "Types/Dataclass/BaseTypes.h"
+
 FUNCTOR(Either);
 APPLICATIVE(Either);
 MONAD(Either);

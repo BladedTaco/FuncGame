@@ -20,7 +20,7 @@ class HONOURSPROJ_API ABlockFunctionUnit : public ABlockFunction
 	GENERATED_BODY()
 public:
 	UPROPERTY(EditAnywhere)
-	class AUnit* Unit;
+	AUnit* Unit;
 
 	//virtual void SetFunctionTypes() override;
 	//virtual Arr<VStarArray, VStarArrayReturn> GetInnerFunc() override;

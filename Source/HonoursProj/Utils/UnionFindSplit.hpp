@@ -83,6 +83,9 @@ inline void UnionFindSplit<T>::Add(TSharedRef<int> Index, T Object) {
 template<typename T>
 inline T UnionFindSplit<T>::Remove(TSharedRef<int>&& Index) {
 	int Idx = *Index;
+
+	if (!Nodes.IsValidIndex(Idx)) return T();
+
 	// Check for a Node to Replace the Node.
 	Node<T>* Replacement = Nodes.FindByPredicate([Idx](const Node<T>& Item) {
 		return Item.Parent == Idx && Item.Index.IsValid() && *Item.Index.Pin() != Idx;

@@ -10,6 +10,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Rendering/SlateRenderer.h"
 
+#include "HUDBlock.h"
+
 #if WITH_EDITOR
 #include "Editor.h"
 #include "Kismet2/KismetEditorUtilities.h"
@@ -58,12 +60,24 @@ UAutoScalingHUD::UAutoScalingHUD() {
 	
 }
 
-void UAutoScalingHUD::InvalidateAllWidgets() {
-	for (UAutoScalingHUD* HUD : AllHUDs) {
-		if (HUD && IsValid(HUD) && HUD->IsValidLowLevel() && IsValid(HUD->LastBounds)) {
-			HUD->SizeToBounds(HUD->LastBounds);
+void UAutoScalingHUD::InvalidateAllWidgets(const UWorld* World) {
+	if (!IsValid(World)) return;
+
+	TArray<AActor*> actors;
+	UGameplayStatics::GetAllActorsOfClass(World, AHUDBlock::StaticClass(), actors);
+
+	for (auto actor : actors) {
+		if (auto HUD = Cast<AHUDBlock>(actor)) {
+			auto HUD_C = HUD->GetHUDComponent();
+			if (IsValid(HUD_C)) HUD_C->SizeToBounds(HUD_C->LastBounds);
 		}
 	}
+
+	//for (UAutoScalingHUD* HUD : AllHUDs) {
+	//	if (HUD && IsValid(HUD) && HUD->IsValidLowLevel() && IsValid(HUD->LastBounds)) {
+	//		HUD->SizeToBounds(HUD->LastBounds);
+	//	}
+	//}
 }
 
 void UAutoScalingHUD::SizeToBounds(UStaticMeshComponent* Mesh) {
@@ -125,6 +139,8 @@ void UAutoScalingHUD::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 }
 
 void UAutoScalingHUD::BeginPlay() {
+	Super::BeginPlay();
+
 	if (!AllHUDs.Contains(this)) {
 		AllHUDs.Add(this);
 	}
@@ -141,7 +157,7 @@ void UAutoScalingHUD::OnComponentCreated() {
 }
 
 void UAutoScalingHUD::DestroyComponent(bool bPromoteChildren) {
-	UAutoScalingHUD::AllHUDs.Remove(this);
+	AllHUDs.Remove(this);
 
 	if (auto widget = GetUserWidgetObject()) {
 		widget->ReleaseSlateResources(true);

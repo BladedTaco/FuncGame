@@ -22,15 +22,16 @@ void ABlockFunctionUnitPositionMoveLR::SetFunctionTypes() {
 
 Arr<VStarArray, VStarArrayReturn> ABlockFunctionUnitPositionMoveLR::GetInnerFunc() {
 	return Arr<VStarArray, VStarArrayReturn>([this](VStarArray values) -> VStarArrayReturn {
-
-
+		// early exit
+		if (IsValid(RootingUnit) && RootingUnit->bOnBoard) return {};
 
 		// Destruct Values
 		auto [t0] = Destruct<1, TArray, VStar>(values);
 
 		int dx = t0.ResolveToUnsafe<Int>().get();
 
-		if (IsValid(Unit)) {
+
+		if (dx == FMath::Sign(dx) && IsValid(Unit)) {
 			Unit->TrySetPosition(Unit->Position.X + dx, Unit->Position.Y);
 		}
 

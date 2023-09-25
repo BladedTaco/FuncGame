@@ -56,9 +56,11 @@ AHonoursProjBlock* AFunctionInput::HandleRClick(UPrimitiveComponent* ClickedComp
 		connectedTo->connectedTo.Remove(this);
 		connectedTo = NULL;
 	}
+	if (IsValid(ConnectMesh)) {
 	// Make ConnectMesh Invisible
-	ConnectMesh->SetVisibility(false);
-	ConnectMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		ConnectMesh->SetVisibility(false);
+		ConnectMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
 	// Return self
 	return this;
 }

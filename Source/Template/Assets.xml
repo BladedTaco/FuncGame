@@ -1,4 +1,7 @@
 <root>
+
+<!-- ([^. ]*\.)([^']*)' -->
+<!-- <Object Name="$2" Type="UStaticMesh" Location="$1$2'"/> -->
     <ResourceType Name='Material'>
         <!-- ([^ ]*Materials/)([^.]*)(Material.*) -->
         <!-- <Object Name="$2" Type="UMaterialInstance" Location="$1$2$3"/> -->
@@ -56,6 +59,8 @@
         <Object Name="PositionAdd" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Functions/PositionAdd.PositionAdd'"/>
         <Object Name="Sign" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Functions/Sign.Sign'"/>
         <Object Name="Times" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Functions/Times.Times'"/>
+
+        <Object Name="Shield" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Shielder.Shielder'"/>
     </ResourceType>
     <ResourceType Name='TypeIcon'>
         <Object Name="Applicative" Type="UStaticMesh" Location="StaticMesh'/Game/MyContent/Meshes/Types/Applicative.Applicative'"/>

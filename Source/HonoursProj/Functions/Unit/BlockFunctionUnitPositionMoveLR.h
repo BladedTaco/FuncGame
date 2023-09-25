@@ -14,6 +14,10 @@ class HONOURSPROJ_API ABlockFunctionUnitPositionMoveLR : public ABlockFunctionUn
 {
 	GENERATED_BODY()
 public:
+	// When set, if bOnBoard, prevents movement
+	UPROPERTY(EditAnywhere)
+	AUnit* RootingUnit;
+
 	ABlockFunctionUnitPositionMoveLR();
 
 	virtual void SetFunctionTypes() override;

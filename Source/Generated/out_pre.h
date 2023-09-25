@@ -1,125 +1,112 @@
 #pragma once
 
-#include "Types/FDecl.h"
 
- 
 #ifndef PP__PREPROCESSING
 
-#include "Misc/Optional.h"
+#include "Types/VStar.h"
 
 #else
 
-include "Misc/Optional.h"
+include "Types/VStar.h"
 
 #endif
 
+#include "Types/FDecl.h"
+
+
+#define InlineStaticConstStruct(T, NAME, ...) \
+static const inline T NAME = []{ T ${}; __VA_ARGS__; return $; }()
+ 
 #include "Types/Typeclass/Functor.h"
 #include "Types/Typeclass/Applicative.h"
 #include "Types/Typeclass/Monad.h"
 #include "Types/Typeclass/Semigroup.h"
-#include "Types/Typeclass/Monoid.h"
 #include "Types/Typeclass/Foldable.h"
 #include "Types/Typeclass/Traversable.h"
-#include "Types/Typeclass/Alternative.h"
 #include "Types/Typeclass/Eq.h"
 #include "Types/Typeclass/Ordinal.h"
 #include "Types/Typeclass/Show.h"
 #include "Types/Typeclass/Read.h"
 
-FUNCTOR(List);
-APPLICATIVE(List);
-MONAD(List);
+#include "Types/Dataclass/BaseTypes.h"
 
-SEMIGROUP(List);
-MONOID(List);
-
-FOLDABLE(List);
-TRAVERSABLE(List);
-
-ALTERNATIVE(List);
+FUNCTOR(Either);
+APPLICATIVE(Either);
+MONAD(Either);
+SEMIGROUP(Either);
+FOLDABLE(Either);
+TRAVERSABLE(Either);
 
 // Dependant
-EQ(List);
-ORDINAL(List);
-SHOW(List);
-READ(List);
+EQ(Either);
+ORDINAL(Either);
+SHOW(Either);
+READ(Either);
 
 
-
-class IList : public virtual ITypeclass {
+class IEither : public virtual ITypeclass {
 private:
 	virtual TSharedPtr<const Typeclass> _GetTypeclass() const override {
 		return NoopPtr(&Instances);
 	}
 public:
-	IFUNCTOR(List);
-    IAPPLICATIVE(List);
-    IMONAD(List);
-
-    ISEMIGROUP(List);
-    IMONOID(List);
-
-    IFOLDABLE(List);
-    ITRAVERSABLE(List);
-
-    // IALTERNATIVE(List);
+    IFUNCTOR();
+    IAPPLICATIVE();
+    IMONAD();
+    ISEMIGROUP();
+    IFOLDABLE();
+    ITRAVERSABLE();
 
     // Dependant
-    // IEQ(List);
-    IORDINAL(List);
-    ISHOW(List);
-    // IREAD(List);
+    // IEQ();
+    IORDINAL();
+    ISHOW();
+    // IREAD();
 
 public:
 	InlineStaticConstStruct(Typeclass, Instances,
-		TypeclassInst(List, Functor);
-		TypeclassInst(List, Applicative);
-		TypeclassInst(List, Monad);
-		TypeclassInst(List, Semigroup);
-		TypeclassInst(List, Monoid);
-		TypeclassInst(List, Foldable);
-		TypeclassInst(List, Traversable);
-		// TypeclassInst(List, Alternative);
-		// TypeclassInst(List, Eq);
-		TypeclassInstAs(List, Ordinal, Eq);
-		TypeclassInst(List, Ordinal);
-		TypeclassInst(List, Show);
-		// TypeclassInst(List, Read);
+		TypeclassInst(Either, Functor);
+		TypeclassInst(Either, Applicative);
+		TypeclassInst(Either, Monad);
+		TypeclassInst(Either, Semigroup);
+		TypeclassInst(Either, Foldable);
+		TypeclassInst(Either, Traversable);
+		// TypeclassInst(Either, Eq);
+		TypeclassInstAs(Either, Ordinal, Eq);
+		TypeclassInst(Either, Ordinal);
+		TypeclassInst(Either, Show);
+		// TypeclassInst(Either, Read);
 	);
 };
 
 
 
 
-// Functor Maybe
-template <typename A>
-class List : public virtual IList {
+template <typename Left, typename Right>
+class Either : public virtual IEither {
 private:
-    VStar _head;
-    VStar _rest;
-    VStar _next;
+    VStar left;
+    VStar right;
 
-	friend IList::Ordinal;
-	friend IList::Show;
-	friend IList::Functor;
-	friend IList::Applicative;
-	friend IList::Monad;
-	friend IList::Monoid;
-	friend IList::Semigroup;
-	friend IList::Foldable;
-	friend IList::Traversable;
-	friend ListV;
+    friend IEither;
+
+	friend IEither::Ordinal;
+	friend IEither::Show;
+	friend IEither::Functor;
+	friend IEither::Applicative;
+	friend IEither::Monad;
+	friend IEither::Semigroup;
+	friend IEither::Foldable;
+	friend IEither::Traversable;
+
+    Either(Left InLeft, bool ignored) : left(InLeft) {};
+    Either(bool ignored, Right InRight) : right(InRight) {};
 
 	virtual TSharedPtr<const Typeclass> _GetTypeclass() const override {
-        // No Instance Retains all Typeclasses
-        if (isEmpty().get()) return NoopPtr(&IList::Instances); 
-
-        // Copy
+        TSharedPtr<const Typeclass> inner = get().getTypeclass();
         TSharedPtr<Typeclass> out = MakeShareable(new Typeclass());
-        *out = IList::Instances;
-         
-        // Change
-        auto inner = _head.getTypeclass();
+        *out = IEither::Instances;
+        
         if (!inner->Ordinal) out->Ordinal = NULL;
         if (!inner->Eq) out->Eq = NULL;
         if (!inner->Show) out->Show = NULL;
@@ -127,248 +114,239 @@ private:
         return out;
 	}
 public:
-	virtual ~List() = default;
-
-    List(){};
-    List(A InHead, List<A> InRest)
-        : _head(InHead)
-        , _rest(InRest)
-    {};
-    List(A seed, Arr<A, A> InNext)
-        : _head(seed)
-        , _next(InNext)
-    {};
+	virtual ~Either() = default;
 
 public:
-    Bool isEmpty() const { return !_head.Valid(); }
-    Bool isInfinite() const { return _next.Valid(); }
-    A head(A fallback) {
-        return isEmpty().get() ? fallback : _head.ResolveToUnsafe<A>();
-	}
-    List<A> rest() {
-        // strict list
-        if (_rest.Valid()) return _rest.ResolveToUnsafe<List<A>>();
-        // No Next
-        if (!_next.Valid()) return List();
-        // Generate next
-        ArrV nex = _next.ResolveToUnsafe<ArrV>();
-        return List(nex(_head), nex);
+    static Either<Left, Right> AsLeft(Left InLeft) {
+        return Either<Left, Right>(InLeft, false);
+    }
+    static Either<Left, Right> AsRight(Right InRight) {
+        return Either<Left, Right>(false, InRight);
+    }
+
+
+public:
+    Bool isLeft() const {
+        return left.Valid();
+    }
+    Bool isRight() const {
+        return right.Valid();
+    };
+
+    Left fromLeft(Left fallback) const {
+        return isLeft().get() ? left.ResolveToUnsafe<Left>() : fallback;
+    }
+    Right fromRight(Right fallback) const {
+        return isRight().get() ? right.ResolveToUnsafe<Right>() : fallback;
+    }
+
+    VStar get() const {
+        return isLeft().get() ? left : right;
     }
 
 	// Cast Construction
-	List(const ListV* other);
+	Either(const EitherV* other);
 };
 
-
-// Functor Maybe
 template <>
-class List<VStar> : public virtual IList {
+class Either<VStar, VStar> : public virtual IEither {
 private:
-    VStar _head;
-    VStar _rest;
-    VStar _next;
+    VStar left;
+    VStar right;
 
-	friend IList::Ordinal;
-	friend IList::Show;
-	friend IList::Functor;
-	friend IList::Applicative;
-	friend IList::Monad;
-	friend IList::Semigroup;
-	friend IList::Foldable;
-	friend IList::Traversable;
-	friend ListV;
+    friend IEither;
 
-	template <typename A>
-	friend List<A>::List(const ListV* other);
+	friend IEither::Ordinal;
+	friend IEither::Show;
+	friend IEither::Functor;
+	friend IEither::Applicative;
+	friend IEither::Monad;
+	friend IEither::Semigroup;
+	friend IEither::Foldable;
+	friend IEither::Traversable;
+
+	template <typename Left, typename Right>
+	friend Either<Left, Right>::Either(const EitherV* other);
+
+    Either(VStar InLeft, bool ignored) : left(InLeft) {};
+    Either(bool ignored, VStar InRight) : right(InRight) {};
 public:
-	virtual ~List() = default;
-
-    List(){};
-    List(VStar InHead, ListV InRest)
-        : _head(InHead)
-        , _rest(InRest)
-    {};
-    List(VStar seed, ArrV InNext)
-        : _head(seed)
-        , _next(InNext)
-    {};
+	virtual ~Either() = default;
 
 public:
-    Bool isEmpty() const { return !_head.Valid(); }
-    Bool isInfinite() const { return _next.Valid(); }
-    template <typename A>
-    A head(A fallback) {
-        return isEmpty().get() ? fallback : _head.ResolveToUnsafe<A>();
-	}  
+    template <typename L>
+    static EitherV AsLeft(L InLeft) {
+        return EitherV(VStar(InLeft), false);
+    }
     template <>
-    VStar head(VStar fallback) {
-        return isEmpty().get()  ? fallback : _head;
-	}
-    template <typename A = VStar>
-    List<A> rest() {
-        // strict list
-        if (_rest.Valid()) return _rest.ResolveToUnsafe<List<A>>();
-        // No Next
-        if (!_next.Valid()) return List();
-        // Generate next
-        ArrV nex = _next.ResolveToUnsafe<ArrV>();
-        return List(nex(_head), nex);
+    static EitherV AsLeft(VStar InLeft) {
+        return EitherV(InLeft, false);
     }
 
-	// Cast Construction
-	List(const ListV* other);
-};
+    template <typename R>
+    static EitherV AsRight(R InRight) {
+        return EitherV(false, VStar(InRight));
+    }
+    template <>
+    static EitherV AsRight(VStar InRight) {
+        return EitherV(false, InRight);
+    }
 
-template <typename A>
-List<A>::List(const ListV* other) {
-    _head = other->_head;
-    _rest = other->_rest;
-    _next = other->_next;
+public:
+    Bool isLeft() const {
+        return left.Valid();
+    }
+    Bool isRight() const {
+        return right.Valid();
+    };
+
+    template <typename Left>
+    Left fromLeft(Left fallback) const {
+        return isLeft().get() ? left.ResolveToUnsafe<Left>() : fallback;
+    }
+    template <>
+    VStar fromLeft(VStar fallback) const {
+        return isLeft().get() ? left : fallback;
+    }
+
+    template <typename Right>
+    Right fromRight(Right fallback) const {
+        return isRight().get() ? right.ResolveToUnsafe<Right>() : fallback;
+    }
+    template <>
+    VStar fromRight(VStar fallback) const {
+        return isRight().get() ? right : fallback;
+    }
+
+    VStar get() const {
+        return isLeft().get() ? left : right;
+    }
+}; 
+
+template <typename Left, typename Right>
+Either<Left, Right>::Either(const EitherV* other) {
+    if (other->isLeft().get()) {
+        left = other->get().ResolveToUnsafe<Left>();
+    } else {
+        right = other->get().ResolveToUnsafe<Right>();
+    }
 }
 
-template <typename A>
-auto isEmpty = curry([](List<A> l_a) -> Bool {
-    return l_a.isEmpty();
+
+
+template <typename L, typename R>
+auto isLeft = curry([](Either<L,R> l_a) -> Bool {
+    return l_a.isLeft();
 });
 
-template <typename A>
-auto isInfinite = curry([](List<A> l_a) -> Bool {
-    return l_a.isInfinite();
+template <typename L, typename R>
+auto isRight = curry([](Either<L,R> l_a) -> Bool {
+    return l_a.isRight();
 });
 
-template <typename A>
-auto head = curry([](List<A> l_a, A a) -> A {
-    return l_a.head(a);
+template <typename L, typename R>
+auto fromLeft = curry([](Either<L,R> l_a, L a) -> L {
+    return l_a.fromLeft(a);
 });
 
-template <typename A>
-auto rest = curry([](List<A> l_a, A a) -> A {
-    return l_a.rest(a);
+template <typename L, typename R>
+auto fromRight = curry([](Either<L,R> l_a, R a) -> R {
+    return l_a.fromRight(a);
 });
 
-template <typename A = VStar>
-auto cons = curry([](A value, List<A> list) -> List<A> {
-    return List<A>(value, list);
-});
-inline auto consV = curry([](VStar headV, VStar listV) -> VStar {
-    return VStar(ListV(headV, listV.ResolveToUnsafe<ListV>()));
-}); 
- 
-inline FString IList::Show::_show(const VStar& a) const {
+
+inline FString IEither::Show::_show(const VStar& me) const {
+	// Resolve
+	EitherV a = me.ResolveToUnsafe<EitherV>();
+
+    return FString(a.isLeft().get() ? "L:" : "R:") + a.get().getTypeclass()->Show->show()(a.get());
+}
+
+//SHOW((), Bool, ());
+
+
+inline ORD IEither::Ordinal::_ord( const VStar& a, const VStar& b) const {
+	EitherV _a = a.ResolveToUnsafe<EitherV>();
+	EitherV _b = b.ResolveToUnsafe<EitherV>();
+
+    // Left < Right, check for both sides
+    if (_a.isLeft().get() && _b.isRight().get()) return ORD::LT;
+    if (_a.isRight().get() && _b.isLeft().get()) return ORD::GT;
+    
+    // Handle equal case
+    return _a.get().getTypeclass()->Ordinal->ord()(_a.get())(_b.get());
+}
+
+
+inline VStar IEither::Functor::_fmap(const VStar& f, const VStar& f_a) const {
 	// Resolve Variables
-	ListV m_a = a.ResolveToUnsafe<ListV>();
+	EitherV m_a = f_a.ResolveToUnsafe<EitherV>();
 
-	// Logic
-	return m_a.isEmpty().get()
-		? FString(TEXT("[]"))
-        : FString::Format(TEXT("[{0}, ...]"), { m_a._head.getTypeclass()->Show->show()(m_a._head) });
-}
+    // Left is no op
+    if (m_a.isLeft().get()) return m_a;
 
-
-
-
-
-inline ORD IList::Ordinal::_ord( const VStar& a, const VStar& b) const {
-	ListV _a = a.ResolveToUnsafe<ListV>();
-	ListV _b = b.ResolveToUnsafe<ListV>();
-
-    // Empty list is Smaller than Non-empty
-    int _ae = _a.isEmpty().get();
-    int _be = _b.isEmpty().get();
-    if (_ae || _be) return ORD(_be - _ae);
-
-    // Compare and recurse
-    ORD order = _a.head(VStar()).getTypeclass()->Ordinal->ord()(_a.head(VStar()))(_b.head(VStar()));
-    return order != ORD::EQ ? order : ord()(VStar(_a.rest()))(VStar(_b.rest()));
-}
-
-
-
-inline VStar IList::Functor::_fmap(const VStar& f, const VStar& f_a) const {
-	// Resolve Variables
-	ListV l_a = f_a.ResolveToUnsafe<ListV>();
-
-    // Empty is empty
-    if (l_a.isEmpty().get()) return ListV();
-
-    // map and recurse
+    // Right is op
 	ArrV g = f.ResolveToUnsafe<ArrV>();
-    return VStar(ListV(g(l_a._head), fmap()(f)(l_a.rest()).ResolveToUnsafe<ListV>()));
+    return EitherV::AsRight(g(m_a.get()));
 }
 
-
-inline VStar IList::Applicative::_pure(const VStar& value) const {
-    return ListV(value, ListV());
+inline VStar IEither::Applicative::_pure(const VStar& value) const {
+    return EitherV::AsRight(value);
 }	
 
-inline VStar IList::Applicative::_apply(const VStar& boxedFunc, const VStar& app) const {
-	ListV m_a = boxedFunc.ResolveToUnsafe<ListV>();
-	ListV _app = app.ResolveToUnsafe<ListV>();
+inline VStar IEither::Applicative::_apply(const VStar& boxedFunc, const VStar& app) const {
+	EitherV m_a = boxedFunc.ResolveToUnsafe<EitherV>();
 
-    // empty is no op
-	if (m_a.isEmpty().get() || _app.isEmpty().get()) return m_a;
+    // left is no op
+	if (m_a.isLeft().get()) return m_a;
 
-    // else apply every function to first element, then second, etc. and join
-    return boxedFunc.getTypeclass()->Semigroup->mappend()
-        (fmap()(m_a._head)(app))    // apply over list
-        (apply()(m_a.rest())(app)); // apply rest of functiosn over list
+    // right is op
+    return app.getTypeclass()->Functor->fmap()(m_a.get())(app);
 }
 
-inline  VStar IList::Monad::_bind(const VStar& m_a, const VStar& a_to_mb) const {
-	ListV _ma = m_a.ResolveToUnsafe<ListV>();
+inline  VStar IEither::Monad::_bind(const VStar& m_a, const VStar& a_to_mb) const {
+	EitherV _ma = m_a.ResolveToUnsafe<EitherV>();
 
-	if (_ma.isEmpty().get()) return _ma;
+	if (_ma.isLeft().get()) return _ma;
 
 	ArrV arr = a_to_mb.ResolveToUnsafe<ArrV>();
-
-    // map head to list, then append with maps of rest of list
-    return m_a.getTypeclass()->Semigroup->mappend()
-        (arr(_ma._head))    // map head to list
-        (bind()(_ma.rest())(a_to_mb)); // pipe rest of values into function
+	return arr(_ma.get());
 }
 
-inline VStar IList::Foldable::_foldr(const VStar& f, const VStar& initial, const VStar& foldable) const {
-    ListV _ma = foldable.ResolveToUnsafe<ListV>();
+inline VStar IEither::Foldable::_foldr(const VStar& f, const VStar& initial, const VStar& foldable) const {
+    EitherV _ma = foldable.ResolveToUnsafe<EitherV>();
 
     // left is initial
-    if (_ma.isEmpty().get()) return initial;
+    if (_ma.isLeft().get()) return initial;
 
     // right is apply transformation
 	ArrV g = f.ResolveToUnsafe<ArrV>();
 
-    // a 'g' b 'g' c 'g' initial
-    return g(_ma._head).ResolveToUnsafe<ArrV>()(foldr()(f)(initial)(_ma.rest()));
+    return g(_ma.get()).ResolveToUnsafe<ArrV>()(initial);
 }
 
-inline VStar IList::Traversable::_traverse( const VStar& applic, const VStar& f, const VStar& foldable) const {
-    ListV _ma = foldable.ResolveToUnsafe<ListV>();
+inline VStar IEither::Traversable::_traverse(const VStar& applic, const VStar& f, const VStar& foldable) const {
+    EitherV _ma = foldable.ResolveToUnsafe<EitherV>();
+
+    // const IApplicative* applic = foldable.getType().getTemplates()[0]
+
+    // _ (Left x) -> pure (Left x)
+    if (_ma.isLeft().get()) {
+        return applic.getTypeclass()->Applicative->pure()(EitherV::AsLeft(_ma.get()));
+    }
+
+    ArrV right = curry([](VStar a) -> VStar { return VStar(EitherV::AsRight(a));});
+
+    // f (Right y) -> Right <$> f y
 	ArrV g = f.ResolveToUnsafe<ArrV>();
-
-
-	// traverse :: Applicative f => (a -> f b) -> t a -> f (t b) = 0;
-    Arr<VStar, Arr<VStar, VStar>> cons_f = curry([applic, g](VStar x, VStar ys) -> VStar {
-        return applic.getTypeclass()->Applicative->liftA2()(consV.ToArrV())(g(x))(ys);
-    });
-
-    ArrV cons_f2 = cons_f.ToArrV();
-
-    return foldr()
-        (cons_f2)
-        (applic.getTypeclass()->Applicative->pure()(ListV()))
-        (_ma);
+    return _ma.get().getTypeclass()->Functor->fmap()(right)(g(_ma.get()));
 }
+ 
+inline VStar IEither::Semigroup::_mappend( const VStar& left, const VStar& right) const {
+    EitherV _ma = left.ResolveToUnsafe<EitherV>();
 
-
-inline VStar IList::Semigroup::_mappend( const VStar& left, const VStar& right) const {
-    ListV _ma = left.ResolveToUnsafe<ListV>();
-
-    // nothing in left, return right
-    if (_ma.isEmpty().get()) return right;
-
-    // else cons recursively
-    return consV(_ma._head)(mappend()(_ma.rest())(right));
-}
-
-inline VStar IList::Monoid::_mempty() const {
-    return ListV();
+    // Left is use other
+    if (_ma.isLeft().get()) return right;
+    // Right is use me
+    return _ma;
 }

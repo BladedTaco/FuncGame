@@ -448,7 +448,7 @@ void AHonoursProjPawn::OnScroll(float axis) {
 
 	if (MainCamera) {
 		MainCamera->SetOrthoWidth(MainCamera->OrthoWidth * (100 - 10*axis)/100 );
-		UAutoScalingHUD::InvalidateAllWidgets();
+		UAutoScalingHUD::InvalidateAllWidgets(GetWorld());
 	}
 
 

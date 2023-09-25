@@ -99,6 +99,7 @@ struct FResource_Icon {
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> PositionAdd;
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Sign;
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Times;
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Shield;
 		FResource_Icon()
 		:	Percentage(TEXT("StaticMesh'/Game/MyContent/Meshes/percent.percent'"))
 		,	Counter(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/Counter.Counter'"))
@@ -118,6 +119,7 @@ struct FResource_Icon {
 		,	PositionAdd(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/PositionAdd.PositionAdd'"))
 		,	Sign(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/Sign.Sign'"))
 		,	Times(TEXT("StaticMesh'/Game/MyContent/Meshes/Functions/Times.Times'"))
+		,	Shield(TEXT("StaticMesh'/Game/MyContent/Meshes/Shielder.Shielder'"))
 		{}
 };
 

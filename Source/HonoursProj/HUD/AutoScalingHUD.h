@@ -23,7 +23,7 @@ private:
 
 	inline static TArray<UAutoScalingHUD*> AllHUDs = {};
 
-	class UStaticMeshComponent* LastBounds;
+	class UStaticMeshComponent* LastBounds = NULL;
 
 public:
 	virtual bool ShouldActivate() const override { return true;  }
@@ -37,8 +37,9 @@ public:
 public:
 
 	UAutoScalingHUD();
+	virtual ~UAutoScalingHUD() = default;
 
-	static void InvalidateAllWidgets();
+	static void InvalidateAllWidgets(const UWorld* World);
 
 	void SizeToBounds(class UStaticMeshComponent* Mesh);
 

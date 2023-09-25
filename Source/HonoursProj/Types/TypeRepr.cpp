@@ -11,6 +11,9 @@
 #include "VStar.h"
 #include "Typeclass/Show.h"
 #include "Types/Dataclass/Maybe_gen.h"
+#include "Types/Dataclass/Either_gen.h"
+#include "Types/Dataclass/List_gen.h"
+
 
 #include "Types/Dataclass/BaseTypes.h"
 
@@ -74,6 +77,30 @@ void ATypeRepr::UpdateValue(VStar value) {
 				return;
 			}
 		}
+		// Either
+		if (type == EType::EITHER) {
+			auto either = value.ResolveToSafe<EitherV>();
+			if (either->isLeft().get()) {
+				GetChildTypes()[0]->UpdateValue(either->get());
+				GetChildTypes()[1]->UpdateValue(VStar());
+				return;
+			} else  {
+				GetChildTypes()[0]->UpdateValue(VStar());
+				GetChildTypes()[1]->UpdateValue(either->get());
+				return;
+			}
+		}
+		// List
+		if (type == EType::LIST) {
+			auto lst = value.ResolveToSafe<ListV>();
+			if (lst->isEmpty().get()) {
+				GetChildTypes()[0]->UpdateValue(VStar());
+				return;
+			} else {
+				GetChildTypes()[0]->UpdateValue(lst->head(VStar()));
+				return;
+			}
+		}
 		// Functions dont support concrete values
 
 	// TypeClasses / incomplete types have no written values
@@ -103,6 +130,8 @@ void ATypeRepr::UpdateText(FString text) {
 }
 
 TArray<UStaticMeshComponent*> ATypeRepr::GetChildBoundingPlanes() {
+	if (!IsValid(ChildBoundingPlanesParent)) return {};
+
 	// Initialize Arrays
 	TArray<USceneComponent*> components;
 	TArray<UStaticMeshComponent*> outComponents;
