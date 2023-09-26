@@ -159,15 +159,29 @@ TArray<UType*> UType::GetTemplates(ETypeClass As) const {
 	switch (GetType()) {
 	case EType::FUNC:
 		switch (As) {
-		case ETypeClass::FUNCTOR: {
+		case ETypeClass::FUNCTOR:
+		case ETypeClass::APPLICATIVE:
+		case ETypeClass::MONAD: {
 			auto [t0, t1] = Destruct<2, TArray, UType*>(templates);
 			return { t1 };
 		};
 		default:
-			return templates;	
+			return templates;
+		};
+	break;
+	case EType::EITHER:
+		switch (As) {
+		case ETypeClass::FUNCTOR:
+		case ETypeClass::APPLICATIVE:
+		case ETypeClass::MONAD: {
+			auto [t0, t1] = Destruct<2, TArray, UType*>(templates);
+			return { t1 };
+		};
+		default:
+			return templates;
 		}
+	break;
 	}
-
 	// Return templates as normal
 	return templates;
 }
@@ -182,6 +196,12 @@ TArray<UType*> UType::GetTemplates(ETypeData As) const {
 		if (templates.Num() == 1) {
 			return { UTypeVar::New(ETypeClass::ANY, false) , templates[0] };
 		}
+	break;
+	case ETypeData::EITHER:
+		if (templates.Num() == 1) {
+			return {UTypeVar::New(ETypeClass::ANY, false),  templates[0] };
+		}
+		break;
 	default:
 		return templates;
 	}
@@ -278,18 +298,22 @@ bool UTypeConst::RestrictTo(UType* other) {
 
 
 	// For each Template pair
-	auto otherTemplates = other->GetTemplates(GetType());
+	auto myTemplates = UType::GetTemplates(Type);
+	auto otherTemplates = other->GetTemplates(Type);
 	if (otherTemplates.Num() == 0) {
 		// Copy Colours
 		ColourPtr = other->ShareColour();
 		return true;
 	}
 
-	for (int i = Templates.Num() - 1; i >= 0; i--) {
+	for (int i = myTemplates.Num() - 1; i >= 0; i--) {
 		// Get Template as Const Type
-		auto t = Cast<UTypeConst>(Templates[i]);
+		auto t = Cast<UTypeConst>(myTemplates[i]);
 		// If NonConst, Make Const
-		if (!t) { Templates[i] = t = UTypeConst::MakeConst(t); }
+		if (!t) { 
+			t = UTypeConst::MakeConst(myTemplates[i]);
+			myTemplates[i] = t;
+		}
 		// Edit Type Recursively
 		if (!t->RestrictTo(otherTemplates[i])) {
 			return false;
@@ -391,8 +415,10 @@ bool UTypePtr::UnifyWith_Impl(UType* concreteType) {
 	// Unify Colours
 	GetColourGroup()->Unify(GetColourIndex(), concreteType->GetColourIndex());
 
-	auto otherTemplates = concreteType->GetTemplates(GetType());
-	auto myTemplates = UType::GetTemplates(GetType());
+	EType inter = Intersection(GetType(), concreteType->GetType());
+
+	auto otherTemplates = concreteType->GetTemplates(inter);
+	auto myTemplates = UType::GetTemplates(inter);
 	return myTemplates.Num() == 0
 		|| otherTemplates.Num() == 0
 		|| Algo::CompareByPredicate(myTemplates, otherTemplates, [](UType* me, UType* other) {

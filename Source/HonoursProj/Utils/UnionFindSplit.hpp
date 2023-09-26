@@ -140,7 +140,7 @@ inline T UnionFindSplit<T>::Remove(TSharedRef<int>&& Index) {
 template<typename T>
 inline Node<T>* UnionFindSplit<T>::FindNode(int Index) {
 	// Invalid Pointer
-	if (Index == -1) return NULL;
+	if (Index == -1 || !Nodes.IsValidIndex(Index)) return NULL;
 
 	// Get the Node associated with the Index
 	Node<T>* Node = &Nodes[Index];

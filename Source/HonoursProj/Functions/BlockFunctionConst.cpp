@@ -57,7 +57,7 @@ Arr<VStarArray, VStarArrayReturn> ABlockFunctionConst::GetInnerFunc() {
 		// Destruct Values
 		auto [t0, t1] = Destruct<2, TArray, VStar>(values);
 
-		VStar out = t0;
+		VStar out = PreludeV::constant(t0)(t1);
 
 		return { out };
 

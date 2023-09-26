@@ -50,7 +50,7 @@ ATypeRepr::ATypeRepr()
 }
 
 void ATypeRepr::UpdateValue(VStar value) {
-	if (!value.Valid()) return UpdateText("?");
+	if (!value.Valid() || !IsValid(this)) return UpdateText("?");
 
 	// Get the Type
 	EType type = value.Type()->GetType();
@@ -80,6 +80,9 @@ void ATypeRepr::UpdateValue(VStar value) {
 		// Either
 		if (type == EType::EITHER) {
 			auto either = value.ResolveToSafe<EitherV>();
+			if (GetChildTypes().Num() < 2) {
+				return;
+			}
 			if (either->isLeft().get()) {
 				GetChildTypes()[0]->UpdateValue(either->get());
 				GetChildTypes()[1]->UpdateValue(VStar());
@@ -111,6 +114,8 @@ void ATypeRepr::UpdateValue(VStar value) {
 }
 
 void ATypeRepr::UpdateText(FString text) {
+	if (!IsValid(this)) return;
+
 	// Set all text components to given text
 	for (auto plane : GetChildBoundingPlanes()) {
 		if (auto textComp = Cast<UTextWidget>(plane->GetChildComponent(0))) {
@@ -130,7 +135,7 @@ void ATypeRepr::UpdateText(FString text) {
 }
 
 TArray<UStaticMeshComponent*> ATypeRepr::GetChildBoundingPlanes() {
-	if (!IsValid(ChildBoundingPlanesParent)) return {};
+	if (!IsValid(this) || !IsValid(ChildBoundingPlanesParent)) return {};
 
 	// Initialize Arrays
 	TArray<USceneComponent*> components;
@@ -225,7 +230,7 @@ ATypeRepr* ATypeRepr::CreateRepr(UType* Type, UWorld* World, int32 StencilValue)
 	me->FullType = Type->VolatileConst();
 	me->UpdateStencilValue(StencilValue);
 
-	auto templates = Type->GetTemplates();
+	auto templates = Type->GetTemplates(Type->GetType());
 	auto planes = me->GetChildBoundingPlanes();
 
 	// No Templates, Terminal Type

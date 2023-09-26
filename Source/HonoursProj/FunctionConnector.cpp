@@ -301,6 +301,7 @@ void AFunctionConnector::SpawnRepr(UType* Type) {
 		// Update Existing Repr
 		auto newRepr = TypeRepr->UpdateRepr(Type);
 		if (TypeRepr == newRepr || !IsValid(newRepr)) return; // Do Nothing on Identical
+		TypeRepr->Destroy();
 		TypeRepr = newRepr;
 	} else {
 		// Spawn new Repr
