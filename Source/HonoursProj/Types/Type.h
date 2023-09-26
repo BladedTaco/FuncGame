@@ -31,7 +31,7 @@ public:
 
 	virtual UType* DeepCopy(TMap<UType*, UType*>& ptrMap) const PURE_VIRTUAL(UType::DeepCopy, return NULL; );
 
-	UTypeConst* VolatileConst();
+	UTypeConst* VolatileConst() const;
 
 	virtual void ResetColour() PURE_VIRTUAL(UType::ResetColour, return; );
 
@@ -108,7 +108,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 		static UTypeConst* MakeConst(const UType* InType);
 	UFUNCTION(BlueprintCallable)
-		bool RestrictTo(UType* InType);
+		bool RestrictTo(const UType* InType);
 };
 
 // A Class that relies entirely on a TypeVar for its Type Information
@@ -123,6 +123,8 @@ private:
 		TArray<UType*> Templates = {};
 	UPROPERTY(VisibleAnywhere)
 		bool CopyTemplates = false;
+
+	UTypeConst* GetUncopiedConst(const UType* FillWith);
 
 public:
 	UFUNCTION(BlueprintCallable)

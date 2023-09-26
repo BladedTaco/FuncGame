@@ -48,7 +48,7 @@ bool UType::Supercedes(const UType* other) const {
 	//UE_LOG(LogTemp, Warning, TEXT("%s >= %s"), *UEnum::GetValueAsString(myType), *UEnum::GetValueAsString(otherType));
 
 	// Check Satisfies on all Template Pairs
-	return Algo::CompareByPredicate(GetTemplates(), other->GetTemplates(myType), [](UType* a, UType* b) {
+	return Algo::CompareByPredicate(GetTemplates(myType), other->GetTemplates(myType), [](UType* a, UType* b) {
 		return a->Supercedes(b);
 	});
 }
@@ -66,10 +66,13 @@ FString UType::ToString() const {
 		if (templates.Num() == 1) {
 			fromStr = "?";
 			toStr = templates[0]->ToString();
-		} else {
+		} else if (templates.Num() == 2) {
 			auto [from, to] = Destruct<2, TArray, UType*>(templates);
 			fromStr = from->ToString();
 			toStr = to->ToString();
+		} else {
+			fromStr = "?";
+			toStr = "?";
 		}
 		return FString::Format(TEXT("({0} -> {1})"), { fromStr, toStr });
 	}
@@ -159,6 +162,8 @@ TArray<UType*> UType::GetTemplates(ETypeClass As) const {
 	switch (GetType()) {
 	case EType::FUNC:
 		switch (As) {
+		case ETypeClass::SEMIGROUP:
+		case ETypeClass::MONOID:
 		case ETypeClass::FUNCTOR:
 		case ETypeClass::APPLICATIVE:
 		case ETypeClass::MONAD: {
@@ -171,6 +176,10 @@ TArray<UType*> UType::GetTemplates(ETypeClass As) const {
 	break;
 	case EType::EITHER:
 		switch (As) {
+		case ETypeClass::EQ:
+		case ETypeClass::ORDINAL:
+		case ETypeClass::FOLDABLE:
+		case ETypeClass::TRAVERSABLE:
 		case ETypeClass::FUNCTOR:
 		case ETypeClass::APPLICATIVE:
 		case ETypeClass::MONAD: {
@@ -291,7 +300,7 @@ UTypeConst* UTypeConst::MakeConst(const UType* InType) {
 }
 
 // Constrict the Constant Type to the other InType
-bool UTypeConst::RestrictTo(UType* other) {
+bool UTypeConst::RestrictTo(const UType* other) {
 	// Set InType to intersection of this InType and 
 	Type = Intersection(Type, other->GetType());
 	if (Type == EType::NONE) return false;
@@ -307,27 +316,25 @@ bool UTypeConst::RestrictTo(UType* other) {
 	}
 
 	for (int i = myTemplates.Num() - 1; i >= 0; i--) {
-		// Get Template as Const Type
-		auto t = Cast<UTypeConst>(myTemplates[i]);
-		// If NonConst, Make Const
-		if (!t) { 
-			t = UTypeConst::MakeConst(myTemplates[i]);
-			myTemplates[i] = t;
-		}
+		// Make Const or Copy
+		UTypeConst* constTemp = myTemplates[i]->VolatileConst();
 		// Edit Type Recursively
-		if (!t->RestrictTo(otherTemplates[i])) {
+		if (!constTemp->RestrictTo(otherTemplates[i])) {
 			return false;
 		}
+		myTemplates[i] = constTemp;
 	}
+
+	// Success in Restricting
+
+	// Paste over Templates
+	Templates = myTemplates;
 
 	// Copy Colours
 	ColourPtr = other->ShareColour();
 
 	// return success
 	return true;
-	//Algo::CompareByPredicate(Templates, other->GetTemplates(GetType()), [](UType* me, UType* bound) {
-
-	//})
 }
 
 
@@ -399,15 +406,60 @@ UType* UTypePtr::DeepCopy(TMap<UType*, UType*>& ptrMap) const {
 	return out;
 }
 
+
+UTypeConst* UTypePtr::GetUncopiedConst(const UType* FillWith) {
+	UTypeConst* FillConst = FillWith->VolatileConst();
+	UTypeConst* MyConst = VolatileConst();
+
+	auto myTs = MyConst->GetTemplates();
+	auto fillTs = FillConst->GetTemplates();
+
+	auto tc = UTypeConst::New(ETypeBase::NONE);
+	tc->Type = EType::ANY;
+
+
+	if (Templates.Num() == 1) {
+		if (fillTs.Num() > 0) {
+			FillConst->Templates = { 
+				fillTs[0],
+				tc
+			};
+		}
+	} else if (Templates.Num() == 2) {
+		FillConst->Templates = {
+			tc,
+			tc
+		};
+	}
+
+	return FillConst;
+}
+
 bool UTypePtr::UnifyWith_Impl(UType* concreteType) {
 	if (CopyTemplates) {
 		// Copy Templates, require full unification
 		if (!Get()->UnifyWith_Impl(concreteType)) return false;
 	} else {
 		// no copy templtes, only type matching
-		UTypeConst* t = Get()->VolatileConst();
-		t->Type = concreteType->GetType();
-		if (!Get()->UnifyWith_Impl(t)) return false;
+	
+		//UTypeConst* tConst = VolatileConst();
+		
+		// functor a
+		// either b a
+		// either b any U Get()
+
+		if (!Get()->UnifyWith_Impl(GetUncopiedConst(concreteType))) return false;
+
+		//if (!Get()->UnifyWith_Impl(tConst)
+		//	|| !Get()->UnifyWith_Impl(concreteType)
+		//	|| !tConst->UnifyWith_Impl(concreteType)
+		//) return false;
+
+		//// Paste over templates TODO
+
+		//UTypeConst* t = Get()->VolatileConst();
+		//t->Type = concreteType->GetType();
+		//if (!Get()->UnifyWith_Impl(t)) return false;
 
 		//if (Intersection(Get()->GetType(), concreteType->GetType()) == EType::NONE) return false;
 	}
@@ -456,26 +508,30 @@ TArray<UType*> UTypePtr::GetTemplates() const {
 	if (!Type) return Templates;
 
 	// Get Pointed to Templates
-	auto templates = Type->GetTemplates(Type->GetType());
+	auto myTemplates = Templates;
+	auto templates = Type->GetTemplates();
 
 	// If Equal Numbers
-	if (templates.Num() == Templates.Num()) {
+	if (templates.Num() == myTemplates.Num()) {
 		// Return based on CopyTemplates
-		return CopyTemplates ? templates : Templates;
+		return CopyTemplates ? templates : myTemplates;
 	}
 
 	// If One is Zero
-	if (templates.Num() * Templates.Num() == 0) {
-		return templates.Num() == 0 ? Templates : templates;
+	if (templates.Num() * myTemplates.Num() == 0) {
+		return templates.Num() == 0 ? myTemplates : templates;
 	}
 
 	// Else Handle Partial Pasting
-	if (templates.Num() == 2 && Templates.Num() == 1) {
-		return { templates[0], Templates[0] };
+	if (templates.Num() == 2 && myTemplates.Num() == 1) {
+		return { templates[0], myTemplates[0] };
+	}
+	if (templates.Num() == 1 && myTemplates.Num() == 2) {
+		return { myTemplates[0], templates[0] };
 	}
 
 	// Else fall through to own templates
-	return Templates;
+	return myTemplates;
 }
 
 // Return Type Pointer has Valid Pointer
@@ -566,7 +622,7 @@ bool UTypeVar::ApplyEvidence(UType* InType) {
 
 	if (Instance && IsValid(Instance)) {
 		// try to apply bound to copy, returning on failure
-		auto copyInst = Cast<UTypeConst>(Instance->VolatileConst());
+		auto copyInst = Instance->VolatileConst();
 		if (!copyInst->RestrictTo(ConstIn)) return false;
 
 		// Copy back to original instance on success
@@ -658,6 +714,6 @@ UType* UType::RecursiveCopy() {
 	return DeepCopy(map);
 }
 
-UTypeConst* UType::VolatileConst() {
+UTypeConst* UType::VolatileConst() const {
 	return UTypeConst::MakeConst(this);
 }

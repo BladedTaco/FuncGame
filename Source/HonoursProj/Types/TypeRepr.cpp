@@ -230,7 +230,7 @@ ATypeRepr* ATypeRepr::CreateRepr(UType* Type, UWorld* World, int32 StencilValue)
 	me->FullType = Type->VolatileConst();
 	me->UpdateStencilValue(StencilValue);
 
-	auto templates = Type->GetTemplates(Type->GetType());
+	auto templates = Type->GetTemplates();
 	auto planes = me->GetChildBoundingPlanes();
 
 	// No Templates, Terminal Type
@@ -243,13 +243,19 @@ ATypeRepr* ATypeRepr::CreateRepr(UType* Type, UWorld* World, int32 StencilValue)
 		return me;
 	}
 	// MisMatch, Invalid Representation
-	if (templates.Num() != planes.Num()) return NULL;
+	if (templates.Num() != planes.Num()) {
+		me->Destroy();
+		return NULL;
+	}
 
 	// For Each Template/Plane Pair
 	for (int idx = templates.Num(); idx --> 0;) {
 		// Create Specialized TypeRepr, and Fit it to Plane.
 		auto repr = CreateRepr(templates[idx], World, StencilValue - 1);
-		if (!IsValid(repr)) return NULL;
+		if (!IsValid(repr)) {
+			me->Destroy();
+			return NULL;
+		}
 		FitActorToPlane(repr, repr->BoundingBox, planes[idx]);
 		planes[idx]->SetVisibility(false);
 	}
