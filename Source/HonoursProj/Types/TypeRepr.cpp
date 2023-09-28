@@ -230,7 +230,7 @@ ATypeRepr* ATypeRepr::CreateRepr(UType* Type, UWorld* World, int32 StencilValue)
 	me->FullType = Type->VolatileConst();
 	me->UpdateStencilValue(StencilValue);
 
-	auto templates = Type->GetTemplates();
+	auto templates = Type->GetTemplates(Type->GetType());
 	auto planes = me->GetChildBoundingPlanes();
 
 	// No Templates, Terminal Type

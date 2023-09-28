@@ -448,7 +448,7 @@ bool UTypePtr::UnifyWith_Impl(UType* concreteType) {
 		// either b a
 		// either b any U Get()
 
-		if (!Get()->UnifyWith_Impl(GetUncopiedConst(concreteType))) return false;
+		//if (!Get()->UnifyWith_Impl(GetUncopiedConst(concreteType))) return false;
 
 		//if (!Get()->UnifyWith_Impl(tConst)
 		//	|| !Get()->UnifyWith_Impl(concreteType)
@@ -457,9 +457,9 @@ bool UTypePtr::UnifyWith_Impl(UType* concreteType) {
 
 		//// Paste over templates TODO
 
-		//UTypeConst* t = Get()->VolatileConst();
-		//t->Type = concreteType->GetType();
-		//if (!Get()->UnifyWith_Impl(t)) return false;
+		UTypeConst* t = Get()->VolatileConst();
+		t->Type = concreteType->GetType();
+		if (!Get()->UnifyWith_Impl(t)) return false;
 
 		//if (Intersection(Get()->GetType(), concreteType->GetType()) == EType::NONE) return false;
 	}

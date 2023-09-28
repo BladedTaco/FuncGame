@@ -4,5 +4,7 @@
 #include "HUD/TextHUD.h"
 
 void UTextWidget::SetText(FString NewText) {
-	Cast<UTextHUD>(GetUserWidgetObject())->Text = NewText;
+	if (auto tHUD = Cast<UTextHUD>(GetUserWidgetObject())) {
+		tHUD->Text = NewText;
+	}
 }
