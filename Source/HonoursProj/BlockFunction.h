@@ -136,7 +136,7 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void OnConstruction(const FTransform& Transform) override;
-	virtual void BeginDestroy() override;
+	virtual void EndPlay(EEndPlayReason::Type Reason) override;
 	virtual void PostInitializeComponents() override;
 	virtual void PostInitProperties() override;
 	virtual void PostLoad() override;

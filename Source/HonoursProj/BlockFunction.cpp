@@ -174,11 +174,14 @@ void ABlockFunction::PostLoad()  {
 }
 
 
-void ABlockFunction::BeginDestroy() {
+void ABlockFunction::EndPlay(EEndPlayReason::Type Reason) {
+	// Destroy All Connectors
 	for (auto connector : GetConnectors()) {
+		if (connector->TypeRepr) connector->TypeRepr->Destroy();
 		connector->Destroy();
 	}
-	Super::BeginDestroy();
+	// Super
+	Super::EndPlay(Reason);
 }
 
 void ABlockFunction::SpawnConnectors() {

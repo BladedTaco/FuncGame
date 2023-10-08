@@ -305,9 +305,13 @@ void ATypeRepr::BeginPlay() {
 	SetActorEnableCollision(false);
 }
 
-void ATypeRepr::BeginDestroy() {
+void ATypeRepr::EndPlay(EEndPlayReason::Type Reason) {
+	// Make meshes invisible
+	UpdateVisibility(false);
+	// Destroy Child TypeReprs
 	DestroyChildren();
-	Super::BeginDestroy();
+	// Super
+	Super::EndPlay(Reason);
 }
 
 void ATypeRepr::DestroyChildren() {

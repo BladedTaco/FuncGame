@@ -56,7 +56,7 @@ public:
 
 	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void BeginPlay() override;
-	virtual void BeginDestroy() override;
+	virtual void EndPlay(EEndPlayReason::Type Reason) override;
 
 
 	void DestroyChildren();

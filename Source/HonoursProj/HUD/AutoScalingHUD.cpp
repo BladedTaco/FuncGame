@@ -166,7 +166,7 @@ void UAutoScalingHUD::DestroyComponent(bool bPromoteChildren) {
 	Super::DestroyComponent(bPromoteChildren);
 }
 
-void UAutoScalingHUD::BeginDestroy() {
+void UAutoScalingHUD::EndPlay(EEndPlayReason::Type Reason) {
 	if (auto widget = GetUserWidgetObject()) {
 		SetWidget(nullptr);
 		//GetSlateWindow()->RequestDestroyWindow();
@@ -176,7 +176,7 @@ void UAutoScalingHUD::BeginDestroy() {
 		widget->RemoveFromRoot();
 		//widget->Destruct();
 	}
-	Super::BeginDestroy();
+	Super::EndPlay(Reason);
 }
 
 

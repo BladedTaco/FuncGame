@@ -147,18 +147,22 @@ void AFunctionConnector::OnConstruction(const FTransform& Transform) {
 	Tick(0.1f);
 }
 
-void AFunctionConnector::BeginDestroy() {
+void AFunctionConnector::EndPlay(EEndPlayReason::Type Reason) {
 	if (Function) {
+		// Remove From Parent
 		Function->InputBlocks.Remove(Cast<AFunctionInput>(this));
 		Function->OutputBlocks.Remove(Cast<AFunctionOutput>(this));
 
+		// Remove any connections
 		HandleRClick(GetBlockMesh());
 
-		if (IsValid(TypeRepr)) {
+		// Destroy TypeRepr
+		if (TypeRepr) {
 			TypeRepr->Destroy();
+			TypeRepr = NULL;
 		}
 	}
-	Super::BeginDestroy();
+	Super::EndPlay(Reason);
 }
 
 FTransform AFunctionConnector::Connect(FVector a, FVector b) {

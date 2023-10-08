@@ -48,7 +48,7 @@ public:
 	virtual void BeginPlay() override;
 	virtual void OnComponentCreated() override;
 	virtual void DestroyComponent(bool bPromoteChildren = false) override;
-	virtual void BeginDestroy() override;
+	virtual void EndPlay(EEndPlayReason::Type Reason) override;
 };
 
 // Generic Version

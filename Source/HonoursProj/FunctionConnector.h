@@ -46,7 +46,7 @@ public:
 
 public:
 	virtual void OnConstruction(const FTransform& Transform) override;
-	virtual void BeginDestroy() override;
+	virtual void EndPlay(EEndPlayReason::Type Reason) override;
 	virtual void PostLoad() override;
 
 	// Sets default values for this actor's properties
