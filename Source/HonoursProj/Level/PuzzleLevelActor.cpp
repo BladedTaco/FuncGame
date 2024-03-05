@@ -54,10 +54,7 @@ void APuzzleLevelActor::MarkTestStart() {
 	// Set Start Time
 
 	if (TestStart.Time.FrameNumber <= StartTime.Time.FrameNumber) {
-
 		TestStart = StartTime;
-
-
 
 		// Jump to Loop Start 
 		SequenceObject->SetPlaybackPosition(FMovieSceneSequencePlaybackParams(LoopStart.Time.FrameNumber, EUpdatePositionMethod::Play));
@@ -69,11 +66,16 @@ void APuzzleLevelActor::MarkTestStart() {
 void APuzzleLevelActor::MarkLoopStart() {
 	auto StartTime = SequenceObject->GetCurrentTime();
 
+	// Save Last LoopStart
+	if (LoopStart.Time.FrameNumber > FallbackLoopStart.Time.FrameNumber) FallbackLoopStart = LoopStart;
+
 	LoopStart = StartTime;
 	SequenceObject->Play();
 }
 
 void APuzzleLevelActor::RunTest() {
+	// Skip on Test earlier than current time
+	if (TestStart.Time.FrameNumber < SequenceObject->GetCurrentTime().Time.FrameNumber) return;
 
 	// Set Initial Aggregate Test Success
 	TestSuccess = true;
@@ -101,6 +103,10 @@ bool APuzzleLevelActor::EndTest() {
 		//SequenceObject = NULL;
 		return true;
 	}
+
+	//if (LoopStart.Time > TestStart.Time) {
+	//	LoopStart = FallbackLoopStart;
+	//}
 
 
 	// Jump Back to Start, undoing effects

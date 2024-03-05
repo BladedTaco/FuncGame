@@ -48,6 +48,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FQualifiedFrameTime LoopStart;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FQualifiedFrameTime FallbackLoopStart;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<APartyMember*> Party;

@@ -10,7 +10,7 @@ ALevelSelectBlock::ALevelSelectBlock()
 	TextComponent = CreateDefaultSubobject<UTextRenderComponent>(TEXT("LevelText"));
 	TextComponent->SetRelativeLocation(FVector::UpVector * 100);
 	TextComponent->SetWorldRotation(FRotator(90, 0, 180));
-	TextComponent->SetRelativeScale3D(FVector(10));
+	TextComponent->SetRelativeScale3D(FVector(5));
 	TextComponent->SetupAttachment(RootComponent);
 
 	// Set Up Text Component Text
